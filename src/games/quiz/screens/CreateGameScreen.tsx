@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -14,7 +14,8 @@ import {
 } from '../../../core/ui';
 import {spacing} from '../../../theme';
 import type {RootStackParamList} from '../../../core/navigation/types';
-import {generateGameCode} from '../gameCode';
+import {getNickname, setNickname} from '../../../core/identity/deviceId';
+import {createRoom} from '../../../core/rooms/roomService';
 import {
   TOPICS,
   QUESTION_COUNT_OPTIONS,
@@ -39,9 +40,46 @@ export function CreateGameScreen({navigation}: Props) {
   const [name, setName] = useState('');
   const [count, setCount] = useState<number>(DEFAULT_QUESTION_COUNT);
   const [topicIds, setTopicIds] = useState<string[]>(DEFAULT_TOPIC_IDS);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Prefill the name from the last game so returning hosts don't retype it.
+  useEffect(() => {
+    getNickname().then(saved => {
+      if (saved) {
+        setName(saved);
+      }
+    });
+  }, []);
 
   const matchCount = useMemo(() => countMatchingQuestions(topicIds), [topicIds]);
   const tooFew = matchCount < count;
+
+  async function handleCreate() {
+    const trimmed = name.trim();
+    setCreating(true);
+    setError(null);
+    try {
+      await setNickname(trimmed);
+      const room = await createRoom(topicIds, count, trimmed);
+      navigation.navigate('QuizLobby', {
+        roomId: room.id,
+        code: room.code,
+        isHost: true,
+        name: trimmed,
+        topicIds,
+        count,
+      });
+    } catch (e) {
+      setError(
+        e instanceof Error && e.name === 'BackendUnavailableError'
+          ? 'Online play isn’t set up yet.'
+          : 'Couldn’t create the game. Check your connection and try again.',
+      );
+    } finally {
+      setCreating(false);
+    }
+  }
 
   function toggleTopic(id: string) {
     if (id === 'all') {
@@ -111,21 +149,19 @@ export function CreateGameScreen({navigation}: Props) {
             {tooFew ? ` · only ${matchCount} will be used` : ''}
           </Text>
         </View>
+
+        {error && (
+          <Text variant="secondary" color="error" center>
+            {error}
+          </Text>
+        )}
       </ScrollView>
 
       <StickyFooter>
         <Button
-          label="Create game"
-          disabled={!name.trim() || matchCount === 0}
-          onPress={() =>
-            navigation.navigate('QuizLobby', {
-              code: generateGameCode(),
-              isHost: true,
-              name: name.trim(),
-              topicIds,
-              count,
-            })
-          }
+          label={creating ? 'Creating…' : 'Create game'}
+          disabled={!name.trim() || matchCount === 0 || creating}
+          onPress={handleCreate}
         />
       </StickyFooter>
     </Screen>

@@ -23,13 +23,13 @@ const BAR_HEIGHT: Record<number, number> = {1: 96, 2: 68, 3: 52};
 
 /** Final results: top-3 podium, the rest as a list, and play-again / home. */
 export function PodiumScreen({navigation, route}: Props) {
-  const {code} = route.params;
-  const you = useQuizStore(s => s.you);
+  const {roomId, code} = route.params;
+  const contestants = useQuizStore(s => s.contestants);
   const topicIds = useQuizStore(s => s.topicIds);
   const total = useQuizStore(s => s.count);
   const playAgain = useQuizStore(s => s.playAgain);
 
-  const standings = useMemo(() => rankContestants([you]), [you]);
+  const standings = useMemo(() => rankContestants(contestants), [contestants]);
 
   const top3 = standings.slice(0, 3);
   const rest = standings.slice(3);
@@ -39,7 +39,7 @@ export function PodiumScreen({navigation, route}: Props) {
 
   function handlePlayAgain() {
     playAgain();
-    navigation.replace('QuizQuestion', {code, topicIds, count: total});
+    navigation.replace('QuizQuestion', {roomId, code, topicIds, count: total});
   }
 
   return (

@@ -10,6 +10,12 @@ type TimerRingProps = {
   running: boolean;
   /** Fired once when the ring reaches zero. */
   onTimeout: () => void;
+  /**
+   * Absolute deadline (ms epoch) to count down to. When set, the ring follows
+   * the shared host clock (M4) instead of ticking from mount — so every device
+   * shows the same time left. `durationMs` stays the ring's full scale.
+   */
+  deadlineTs?: number;
   size?: number;
 };
 
@@ -24,9 +30,14 @@ export function TimerRing({
   durationMs,
   running,
   onTimeout,
+  deadlineTs,
   size = 120,
 }: TimerRingProps) {
-  const [remaining, setRemaining] = useState(durationMs);
+  const computeLeft = () =>
+    deadlineTs != null
+      ? Math.max(0, deadlineTs - Date.now())
+      : durationMs;
+  const [remaining, setRemaining] = useState(computeLeft);
   const startRef = useRef(Date.now());
   const firedRef = useRef(false);
 
@@ -35,7 +46,10 @@ export function TimerRing({
       return;
     }
     const id = setInterval(() => {
-      const left = Math.max(0, durationMs - (Date.now() - startRef.current));
+      const left =
+        deadlineTs != null
+          ? Math.max(0, deadlineTs - Date.now())
+          : Math.max(0, durationMs - (Date.now() - startRef.current));
       setRemaining(left);
       if (left <= 0 && !firedRef.current) {
         firedRef.current = true;
@@ -44,7 +58,7 @@ export function TimerRing({
       }
     }, TICK_MS);
     return () => clearInterval(id);
-  }, [durationMs, running, onTimeout]);
+  }, [durationMs, running, onTimeout, deadlineTs]);
 
   const fraction = remaining / durationMs;
   const radius = (size - STROKE) / 2;

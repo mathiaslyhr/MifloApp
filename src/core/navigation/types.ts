@@ -12,17 +12,27 @@ export type RootStackParamList = {
   // Football quiz (Game 1)
   QuizCreate: undefined;
   QuizJoin: undefined;
-  // Host picks topics/count on Create; guests get them from the room in M3, so
-  // they're optional on the params for now.
+  // Host picks topics/count on Create and carries them into the lobby; guests
+  // get them from the room, so they're optional on the params.
   QuizLobby: {
+    roomId: string;
     code: string;
     isHost: boolean;
     name: string;
     topicIds?: string[];
     count?: number;
   };
-  QuizQuestion: {code: string; topicIds?: string[]; count?: number};
-  QuizPodium: {code: string};
+  // roomId is optional so local/solo play still works without a backend.
+  // isHost marks who drives the synced phase clock (M4).
+  QuizQuestion: {
+    roomId?: string;
+    isHost?: boolean;
+    code: string;
+    name?: string;
+    topicIds?: string[];
+    count?: number;
+  };
+  QuizPodium: {roomId?: string; code: string};
 };
 
 export type RootRouteName = keyof RootStackParamList;

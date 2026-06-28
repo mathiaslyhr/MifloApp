@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -11,18 +11,56 @@ import {
 } from '../../../core/ui';
 import {spacing} from '../../../theme';
 import type {RootStackParamList} from '../../../core/navigation/types';
+import {getNickname, setNickname} from '../../../core/identity/deviceId';
+import {joinRoom} from '../../../core/rooms/roomService';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'QuizJoin'>;
 
 /**
- * Guest entry: type the host's game code and a display name, then drop into the
- * lobby. Static for M1 — no validation against a real room yet.
+ * Guest entry: type the host's game code and a display name, then join the real
+ * room. An unknown/closed code surfaces inline without navigating.
  */
 export function JoinScreen({navigation}: Props) {
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
+  const [joining, setJoining] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const canJoin = code.trim().length === 4 && name.trim().length > 0;
+  // Prefill the name from the last game.
+  useEffect(() => {
+    getNickname().then(saved => {
+      if (saved) {
+        setName(saved);
+      }
+    });
+  }, []);
+
+  const canJoin = code.trim().length === 4 && name.trim().length > 0 && !joining;
+
+  async function handleJoin() {
+    const trimmedName = name.trim();
+    const trimmedCode = code.trim().toUpperCase();
+    setJoining(true);
+    setError(null);
+    try {
+      await setNickname(trimmedName);
+      const room = await joinRoom(trimmedCode, trimmedName);
+      navigation.navigate('QuizLobby', {
+        roomId: room.id,
+        code: room.code,
+        isHost: false,
+        name: trimmedName,
+      });
+    } catch (e) {
+      setError(
+        e instanceof Error && e.name === 'BackendUnavailableError'
+          ? 'Online play isn’t set up yet.'
+          : 'Invalid or closed code',
+      );
+    } finally {
+      setJoining(false);
+    }
+  }
 
   return (
     <Screen>
@@ -60,19 +98,19 @@ export function JoinScreen({navigation}: Props) {
               returnKeyType="done"
             />
           </View>
+
+          {error && (
+            <Text variant="secondary" color="error">
+              {error}
+            </Text>
+          )}
         </View>
 
         <StickyFooter>
           <Button
-            label="Join game"
+            label={joining ? 'Joining…' : 'Join game'}
             disabled={!canJoin}
-            onPress={() =>
-              navigation.navigate('QuizLobby', {
-                code: code.trim().toUpperCase(),
-                isHost: false,
-                name: name.trim(),
-              })
-            }
+            onPress={handleJoin}
           />
         </StickyFooter>
       </KeyboardAvoidingView>

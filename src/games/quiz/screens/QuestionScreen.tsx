@@ -1,52 +1,152 @@
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, Screen, ScreenHeader, StickyFooter, Text} from '../../../core/ui';
 import {minTapTarget, spacing} from '../../../theme';
 import type {RootStackParamList} from '../../../core/navigation/types';
 import {getById} from '../../../data/football';
+import {ensureSession} from '../../../core/supabase/client';
+import {
+  finishGame,
+  setPhase,
+  subscribePlayers,
+  subscribeRoom,
+  updateScore,
+} from '../../../core/rooms/roomService';
 import {AnswerOption, type AnswerState} from '../components/AnswerOption';
 import {StandingRow} from '../components/StandingRow';
 import {TimerRing} from '../components/TimerRing';
+import {
+  fractionRemaining,
+  nextTransition,
+  phaseDurationMs,
+} from '../gameClock';
 import {
   QUESTION_DURATION_MS,
   REVEAL_DURATION_MS,
   STANDINGS_DURATION_MS,
   rankContestants,
 } from '../scoring';
-import {useQuizStore} from '../store';
+import {contestantsFromPlayers, useQuizStore} from '../store';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'QuizQuestion'>;
 
 /**
  * The whole in-round screen, driven by `phase`: question → reveal → standings,
- * all without navigation so nothing jumps mid-round. Each phase auto-advances on
- * a timer (the footer button just skips the wait); in M3 those transitions come
- * from the host's Realtime broadcast instead of these local timers.
+ * all without navigation so nothing jumps mid-round.
+ *
+ * Solo runs the phases on local timers. A networked game (M4) follows the host's
+ * shared clock instead: the host writes each transition + an absolute deadline to
+ * the room, every device renders from `subscribeRoom`, and the countdown ticks to
+ * that deadline — so all phones reveal and advance together.
  */
 export function QuestionScreen({navigation, route}: Props) {
-  const {code, topicIds, count} = route.params;
+  const {roomId, isHost, code, topicIds, count} = route.params;
   const questions = useQuizStore(s => s.questions);
   const index = useQuizStore(s => s.index);
   const total = useQuizStore(s => s.count);
   const phase = useQuizStore(s => s.phase);
   const selected = useQuizStore(s => s.selected);
+  const answered = useQuizStore(s => s.answered);
   const lastPoints = useQuizStore(s => s.lastPoints);
   const you = useQuizStore(s => s.you);
+  const contestants = useQuizStore(s => s.contestants);
   const prevRankById = useQuizStore(s => s.prevRankById);
   const lockAnswer = useQuizStore(s => s.lockAnswer);
   const reveal = useQuizStore(s => s.reveal);
   const showStandings = useQuizStore(s => s.showStandings);
   const next = useQuizStore(s => s.next);
   const start = useQuizStore(s => s.start);
+  const syncContestants = useQuizStore(s => s.syncContestants);
 
-  // Safety net if reached without a deck (e.g. dev fast-refresh); the normal
-  // path starts the game from the Lobby.
+  // Absolute deadline for the current phase, from the host clock (networked).
+  const [deadlineTs, setDeadlineTs] = useState<number | null>(null);
+  const deadlineRef = useRef<number | null>(null);
+
+  // Safety net if reached without a deck (e.g. dev fast-refresh). Only for solo;
+  // a networked game is always hydrated from the Lobby before navigating here.
   useEffect(() => {
-    if (questions.length === 0) {
+    if (questions.length === 0 && !roomId) {
       start(topicIds ?? [], count ?? 10, 'You');
     }
-  }, [questions.length, start, topicIds, count]);
+  }, [questions.length, roomId, start, topicIds, count]);
+
+  // Networked game: pull other players' live scores in as they come.
+  const myUserId = useRef<string | null>(null);
+  useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    ensureSession().then(uid => {
+      myUserId.current = uid;
+    });
+    return subscribePlayers(roomId, players => {
+      syncContestants(contestantsFromPlayers(players, myUserId.current));
+    });
+  }, [roomId, syncContestants]);
+
+  // Networked game: follow the host's phase clock. The room row is the source of
+  // truth — drive the local phase machine off it (these store actions are
+  // idempotent / guarded, so re-applying the same state is safe).
+  useEffect(() => {
+    if (!roomId) {
+      return;
+    }
+    return subscribeRoom(roomId, room => {
+      if (room.status === 'finished') {
+        navigation.replace('QuizPodium', {roomId, code});
+        return;
+      }
+      if (!room.phase) {
+        return;
+      }
+      const dl = room.phaseDeadline ? Date.parse(room.phaseDeadline) : null;
+      setDeadlineTs(dl);
+      deadlineRef.current = dl;
+
+      const st = useQuizStore.getState();
+      if (room.currentIndex !== st.index) {
+        next(); // advanced to the next question
+      } else if (room.phase === 'reveal') {
+        reveal();
+      } else if (room.phase === 'standings') {
+        showStandings();
+      }
+    });
+  }, [roomId, code, navigation, next, reveal, showStandings]);
+
+  // Host only: schedule the next transition at the current deadline and write it.
+  useEffect(() => {
+    if (!roomId || !isHost || deadlineTs == null) {
+      return;
+    }
+    const delay = Math.max(0, deadlineTs - Date.now());
+    const id = setTimeout(async () => {
+      const t = nextTransition(phase, index, total);
+      try {
+        if ('finished' in t && t.finished) {
+          await finishGame(roomId);
+        } else {
+          await setPhase(
+            roomId,
+            t.phase,
+            t.index,
+            Date.now() + phaseDurationMs(t.phase),
+          );
+        }
+      } catch {
+        // A failed write leaves the deadline passed; the next render retries.
+      }
+    }, delay);
+    return () => clearTimeout(id);
+  }, [roomId, isHost, phase, index, total, deadlineTs]);
+
+  // Push our cumulative score after each reveal so other devices rank us right.
+  useEffect(() => {
+    if (roomId && phase === 'reveal') {
+      updateScore(roomId, you.score).catch(() => {});
+    }
+  }, [roomId, phase, you.score]);
 
   const startRef = useRef(Date.now());
   useEffect(() => {
@@ -58,26 +158,41 @@ export function QuestionScreen({navigation, route}: Props) {
 
   const submit = useCallback(
     (optionIndex: number | null) => {
-      const elapsed = Date.now() - startRef.current;
-      const fraction = Math.max(0, 1 - elapsed / QUESTION_DURATION_MS);
+      const fraction =
+        roomId && deadlineRef.current != null
+          ? fractionRemaining(deadlineRef.current, Date.now())
+          : Math.max(0, 1 - (Date.now() - startRef.current) / QUESTION_DURATION_MS);
       lockAnswer(optionIndex, fraction);
-      reveal();
+      // Solo reveals immediately; networked waits for the host to flip the phase.
+      if (!roomId) {
+        reveal();
+      }
     },
-    [lockAnswer, reveal],
+    [roomId, lockAnswer, reveal],
   );
 
-  const handleTimeout = useCallback(() => submit(null), [submit]);
+  // Time's up: solo reveals; networked just freezes the choice (host reveals).
+  const handleTimeout = useCallback(() => {
+    if (roomId) {
+      lockAnswer(null, 0);
+    } else {
+      submit(null);
+    }
+  }, [roomId, lockAnswer, submit]);
 
   const advance = useCallback(() => {
     if (isLast) {
-      navigation.replace('QuizPodium', {code});
+      navigation.replace('QuizPodium', {roomId, code});
     } else {
       next();
     }
-  }, [isLast, navigation, code, next]);
+  }, [isLast, navigation, roomId, code, next]);
 
-  // Auto-advance the timed phases; the footer button calls the same handlers.
+  // Solo only: auto-advance the timed phases (networked uses the host clock).
   useEffect(() => {
+    if (roomId) {
+      return;
+    }
     if (phase === 'reveal') {
       const id = setTimeout(showStandings, REVEAL_DURATION_MS);
       return () => clearTimeout(id);
@@ -86,11 +201,11 @@ export function QuestionScreen({navigation, route}: Props) {
       const id = setTimeout(advance, STANDINGS_DURATION_MS);
       return () => clearTimeout(id);
     }
-  }, [phase, index, showStandings, advance]);
+  }, [roomId, phase, index, showStandings, advance]);
 
   const standings = useMemo(
-    () => rankContestants([you], prevRankById),
-    [you, prevRankById],
+    () => rankContestants(contestants, prevRankById),
+    [contestants, prevRankById],
   );
 
   if (!question) {
@@ -167,6 +282,7 @@ export function QuestionScreen({navigation, route}: Props) {
                 durationMs={QUESTION_DURATION_MS}
                 running={phase === 'question'}
                 onTimeout={handleTimeout}
+                deadlineTs={roomId ? deadlineTs ?? undefined : undefined}
               />
             )}
           </View>
@@ -182,10 +298,20 @@ export function QuestionScreen({navigation, route}: Props) {
                 label={option}
                 state={stateFor(i)}
                 onPress={() => submit(i)}
-                disabled={phase !== 'question'}
+                disabled={phase !== 'question' || (!!roomId && answered)}
               />
             ))}
           </View>
+
+          {phase === 'question' && roomId && answered && (
+            <Text
+              variant="secondary"
+              color="textSecondary"
+              center
+              style={styles.about}>
+              Answer locked — waiting for the others…
+            </Text>
+          )}
 
           {phase === 'reveal' && footballer && (
             <Text
@@ -200,13 +326,15 @@ export function QuestionScreen({navigation, route}: Props) {
       )}
 
       <StickyFooter>
-        {phase === 'reveal' && (
+        {/* Solo lets you skip the wait; networked phases advance on the host
+            clock, so no manual controls (a spacer keeps the layout steady). */}
+        {!roomId && phase === 'reveal' && (
           <Button label="Continue" onPress={showStandings} />
         )}
-        {phase === 'standings' && (
+        {!roomId && phase === 'standings' && (
           <Button label={isLast ? 'See podium' : 'Next question'} onPress={advance} />
         )}
-        {phase === 'question' && <View style={styles.footerSpacer} />}
+        {(roomId || phase === 'question') && <View style={styles.footerSpacer} />}
       </StickyFooter>
     </Screen>
   );
