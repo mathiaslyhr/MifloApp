@@ -12,10 +12,16 @@ export type RootStackParamList = {
   // Football quiz (Game 1)
   QuizCreate: undefined;
   QuizJoin: undefined;
-  QuizLobby: {code: string; isHost: boolean; name: string};
-  QuizQuestion: {code: string};
-  QuizReveal: {code: string};
-  QuizLeaderboard: {code: string};
+  // Host picks topics/count on Create; guests get them from the room in M3, so
+  // they're optional on the params for now.
+  QuizLobby: {
+    code: string;
+    isHost: boolean;
+    name: string;
+    topicIds?: string[];
+    count?: number;
+  };
+  QuizQuestion: {code: string; topicIds?: string[]; count?: number};
   QuizPodium: {code: string};
 };
 

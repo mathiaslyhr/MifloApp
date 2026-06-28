@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -20,8 +20,8 @@ import {
   QUESTION_COUNT_OPTIONS,
   DEFAULT_QUESTION_COUNT,
   DEFAULT_TOPIC_IDS,
-  MATCHING_QUESTION_COUNT,
 } from '../mockData';
+import {countMatchingQuestions} from '../questions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'QuizCreate'>;
 
@@ -39,6 +39,9 @@ export function CreateGameScreen({navigation}: Props) {
   const [name, setName] = useState('');
   const [count, setCount] = useState<number>(DEFAULT_QUESTION_COUNT);
   const [topicIds, setTopicIds] = useState<string[]>(DEFAULT_TOPIC_IDS);
+
+  const matchCount = useMemo(() => countMatchingQuestions(topicIds), [topicIds]);
+  const tooFew = matchCount < count;
 
   function toggleTopic(id: string) {
     if (id === 'all') {
@@ -104,7 +107,8 @@ export function CreateGameScreen({navigation}: Props) {
         <View style={styles.infoRow}>
           <Icon name="layers" size={18} color="textSecondary" />
           <Text variant="secondary" color="textSecondary">
-            {MATCHING_QUESTION_COUNT} questions match your topics
+            {matchCount} questions match your topics
+            {tooFew ? ` · only ${matchCount} will be used` : ''}
           </Text>
         </View>
       </ScrollView>
@@ -112,12 +116,14 @@ export function CreateGameScreen({navigation}: Props) {
       <StickyFooter>
         <Button
           label="Create game"
-          disabled={!name.trim()}
+          disabled={!name.trim() || matchCount === 0}
           onPress={() =>
             navigation.navigate('QuizLobby', {
               code: generateGameCode(),
               isHost: true,
               name: name.trim(),
+              topicIds,
+              count,
             })
           }
         />

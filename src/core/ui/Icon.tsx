@@ -7,10 +7,12 @@ export type IconName =
   | 'chevron-up'
   | 'chevron-down'
   | 'check'
+  | 'x'
   | 'layers'
   | 'share'
   | 'clock'
-  | 'people';
+  | 'people'
+  | 'trophy';
 
 type IconProps = {
   name: IconName;
@@ -58,6 +60,16 @@ function renderGlyph(name: IconName, common: object): React.ReactNode {
       return <Path {...common} d="M6 9l6 6 6-6" />;
     case 'check':
       return <Path {...common} d="M5 12.5l4.5 4.5L19 7" />;
+    case 'x':
+      return <Path {...common} d="M6 6l12 12M18 6L6 18" />;
+    case 'trophy':
+      return (
+        <>
+          <Path {...common} d="M7 4h10v5a5 5 0 0 1-10 0V4z" />
+          <Path {...common} d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3" />
+          <Path {...common} d="M10 14.5V18M14 14.5V18M8 20h8" />
+        </>
+      );
     case 'layers':
       return (
         <>

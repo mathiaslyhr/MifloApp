@@ -9,8 +9,6 @@ import {
   JoinScreen,
   LobbyScreen,
   QuestionScreen,
-  RevealScreen,
-  LeaderboardScreen,
   PodiumScreen,
 } from '../../games/quiz/screens';
 
@@ -61,25 +59,17 @@ export function RootNavigator() {
           component={LobbyScreen}
           options={{headerShown: false}}
         />
+        {/* In-game screens: no native header, and no swipe-back so a game
+            can't be abandoned mid-question by an accidental gesture. */}
         <Stack.Screen
           name="QuizQuestion"
           component={QuestionScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="QuizReveal"
-          component={RevealScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="QuizLeaderboard"
-          component={LeaderboardScreen}
-          options={{title: 'Standings'}}
+          options={{headerShown: false, gestureEnabled: false}}
         />
         <Stack.Screen
           name="QuizPodium"
           component={PodiumScreen}
-          options={{headerShown: false}}
+          options={{headerShown: false, gestureEnabled: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

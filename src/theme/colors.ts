@@ -22,6 +22,7 @@ export const colors = {
 
   // Tinted fills (status/accent backgrounds, used behind content)
   successMuted: '#11271B', // dark-green fill behind a correct answer
+  errorMuted: '#2A1414', // dark-red fill behind a wrong answer
   primaryMuted: '#1E1C45', // accent-tinted fill: selected / "you" highlight
   badgeHost: '#1E1E3A', // dark-navy pill behind the "host" badge
 

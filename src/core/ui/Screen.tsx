@@ -4,7 +4,7 @@ import {SafeAreaView, type Edge} from 'react-native-safe-area-context';
 import {colors, screenPadding} from '../../theme';
 
 type ScreenProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /** Which safe-area edges to inset. Defaults to top + bottom. */
   edges?: readonly Edge[];
   /** Apply the default 16pt horizontal padding. Defaults to true. */
