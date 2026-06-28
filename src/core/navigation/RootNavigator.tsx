@@ -49,17 +49,17 @@ export function RootNavigator() {
         <Stack.Screen
           name="QuizCreate"
           component={CreateGameScreen}
-          options={{title: 'Create game'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="QuizJoin"
           component={JoinScreen}
-          options={{title: 'Join game'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="QuizLobby"
           component={LobbyScreen}
-          options={{title: 'Lobby'}}
+          options={{headerShown: false}}
         />
         <Stack.Screen
           name="QuizQuestion"

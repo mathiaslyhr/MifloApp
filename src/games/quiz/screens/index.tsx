@@ -2,21 +2,12 @@ import React from 'react';
 import {Placeholder} from '../../../core/ui/Placeholder';
 
 /**
- * M0 placeholders for the quiz flow. Navigation is fully wired now; M1
- * replaces each of these with the pixel-matched static UI, then M3/M4 make
- * them live.
+ * Quiz flow screens. Real M1 static UI is being filled in one screen at a
+ * time; the rest stay as placeholders until their turn.
  */
-export const CreateGameScreen = () => (
-  <Placeholder title="Create game" note="Question count, topics & live count — M1" />
-);
-
-export const JoinScreen = () => (
-  <Placeholder title="Join game" note="Enter code & nickname — M1" />
-);
-
-export const LobbyScreen = () => (
-  <Placeholder title="Lobby" note="Game code, players & start — M1" />
-);
+export {CreateGameScreen} from './CreateGameScreen';
+export {JoinScreen} from './JoinScreen';
+export {LobbyScreen} from './LobbyScreen';
 
 export const QuestionScreen = () => (
   <Placeholder title="Question" note="Timer, prompt & answers — M1" />

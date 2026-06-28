@@ -1,3 +1,13 @@
 export {Text} from './Text';
 export {Screen} from './Screen';
 export {Button} from './Button';
+export {Icon} from './Icon';
+export type {IconName} from './Icon';
+export {Chip} from './Chip';
+export {SegmentedOptions} from './SegmentedOptions';
+export type {SegmentedOption} from './SegmentedOptions';
+export {StickyFooter} from './StickyFooter';
+export {TextField} from './TextField';
+export {Avatar} from './Avatar';
+export {Badge} from './Badge';
+export {ScreenHeader} from './ScreenHeader';

@@ -12,7 +12,7 @@ export type RootStackParamList = {
   // Football quiz (Game 1)
   QuizCreate: undefined;
   QuizJoin: undefined;
-  QuizLobby: {code: string; isHost: boolean};
+  QuizLobby: {code: string; isHost: boolean; name: string};
   QuizQuestion: {code: string};
   QuizReveal: {code: string};
   QuizLeaderboard: {code: string};

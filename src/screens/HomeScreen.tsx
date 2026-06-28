@@ -1,18 +1,17 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Screen, Text, Button} from '../core/ui';
-import {GameTile} from '../core/ui/GameTile';
-import {spacing} from '../theme';
-import {games} from '../games/registry';
+import {colors, radii, spacing} from '../theme';
+import {APP_STORE_URL} from '../core/config';
 import type {RootStackParamList} from '../core/navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 /**
- * The launcher/hub. App-level and game-agnostic: it lists whatever games are
- * registered and routes to each game's entry screen. For v1 that's the
- * football quiz; more tiles drop in later.
+ * The front page. Two primary actions — host a game or join one — plus a QR
+ * code friends can scan to grab Miflo from the App Store and pile in.
  */
 export function HomeScreen({navigation}: Props) {
   return (
@@ -24,21 +23,38 @@ export function HomeScreen({navigation}: Props) {
         </Text>
       </View>
 
-      <View style={styles.list}>
-        {games.map(game => (
-          <GameTile
-            key={game.id}
-            game={game}
-            onPress={() => navigation.navigate(game.entryRoute)}
-          />
-        ))}
+      <View style={styles.actions}>
+        <Button
+          label="Create game"
+          onPress={() => navigation.navigate('QuizCreate')}
+        />
+        <Button
+          label="Join game"
+          variant="secondary"
+          onPress={() => navigation.navigate('QuizJoin')}
+        />
       </View>
 
-      <Button
-        label="Join a game"
-        variant="secondary"
-        onPress={() => navigation.navigate('QuizJoin')}
-      />
+      <View style={styles.spacer} />
+
+      <View style={styles.qrCard}>
+        <View style={styles.qrFrame}>
+          <QRCode
+            value={APP_STORE_URL}
+            size={88}
+            backgroundColor="white"
+            color="black"
+          />
+        </View>
+        <View style={styles.qrText}>
+          <Text variant="body" style={styles.qrTitle}>
+            Scan to get Miflo
+          </Text>
+          <Text variant="secondary" color="textSecondary">
+            Send the app to friends so they can join
+          </Text>
+        </View>
+      </View>
     </Screen>
   );
 }
@@ -49,8 +65,27 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   tagline: {marginTop: spacing.xs},
-  list: {
-    flex: 1,
+  actions: {
     gap: spacing.md,
   },
+  spacer: {flex: 1},
+  qrCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
+  },
+  qrFrame: {
+    backgroundColor: 'white',
+    borderRadius: radii.button,
+    padding: spacing.sm,
+  },
+  qrText: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  qrTitle: {fontWeight: '500'},
 });

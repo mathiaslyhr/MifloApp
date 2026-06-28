@@ -20,6 +20,14 @@ export const colors = {
   success: '#32C36C',
   error: '#F0544A',
 
+  // Tinted fills (status/accent backgrounds, used behind content)
+  successMuted: '#11271B', // dark-green fill behind a correct answer
+  primaryMuted: '#1E1C45', // accent-tinted fill: selected / "you" highlight
+  badgeHost: '#1E1E3A', // dark-navy pill behind the "host" badge
+
+  // Avatars
+  avatarNeutral: '#2A2A2A', // non-host avatar circle
+
   // Transparent helper
   transparent: 'transparent',
 } as const;
