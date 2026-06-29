@@ -29,7 +29,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'man-city', from: 2011, to: 2021},
       {clubId: 'barcelona', from: 2021, to: 2022},
     ],
-    honours: [],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2010]},
+      {type: 'league-title', count: 5, years: [2012, 2014, 2018, 2019, 2021]},
+    ],
   },
   {
     id: 'Álvarez, Julián',
@@ -292,6 +295,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2022]},
+      {type: 'europa-league', count: 1, years: [2012]},
+      {type: 'league-title', count: 5, years: [2014, 2015, 2020, 2022, 2024]},
     ],
   },
   {
@@ -302,11 +307,14 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [17],
     clubs: [
       {clubId: 'chelsea', from: 2012, to: 2014},
+      {clubId: 'wolfsburg', from: 2014, to: 2015},
       {clubId: 'man-city', from: 2015, to: 2025},
       {clubId: 'napoli', from: 2025},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 6, years: [2018, 2019, 2021, 2022, 2023, 2024]},
+      {type: 'player-of-the-season', count: 2, years: [2020, 2022]},
     ],
   },
   {
@@ -509,6 +517,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 6, years: [2018, 2019, 2021, 2022, 2023, 2024]},
+      {type: 'player-of-the-season', count: 1, years: [2024]},
     ],
   },
   {
@@ -610,6 +620,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 2, years: [2023, 2024]},
+      {type: 'golden-boot', count: 1, years: [2023]},
     ],
   },
   {
@@ -640,7 +652,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'chelsea', from: 2012, to: 2019},
       {clubId: 'real-madrid', from: 2019, to: 2023},
     ],
-    honours: [],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2022]},
+      {type: 'europa-league', count: 2, years: [2013, 2019]},
+      {type: 'league-title', count: 5, years: [2011, 2015, 2017, 2020, 2022]},
+      {type: 'player-of-the-season', count: 1, years: [2015]},
+    ],
   },
   {
     id: 'Henry, Thierry',
@@ -753,7 +770,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'tottenham', from: 2011, to: 2023},
       {clubId: 'bayern', from: 2023},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 2, years: [2025, 2026]},
+      {type: 'golden-boot', count: 2, years: [2024, 2026]},
+    ],
   },
   {
     id: 'Kimmich, Joshua',
@@ -778,7 +798,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'man-city', from: 2008, to: 2019},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 4, years: [2012, 2014, 2018, 2019]},
+    ],
   },
   {
     id: 'Kroos, Toni',
@@ -881,10 +903,13 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'man-utd', from: 2017, to: 2019},
       {clubId: 'inter', from: 2019, to: 2021},
       {clubId: 'chelsea', from: 2021, to: 2022},
+      {clubId: 'inter', from: 2022, to: 2023, loan: true},
       {clubId: 'roma', from: 2023, to: 2024},
       {clubId: 'napoli', from: 2024},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 2, years: [2021, 2025]},
+    ],
   },
   {
     id: 'Mac Allister, Alexis',
@@ -909,9 +934,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'leicester', from: 2014, to: 2018},
       {clubId: 'man-city', from: 2018, to: 2023},
+      {clubId: 'al-ahli', from: 2023},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 5, years: [2016, 2019, 2021, 2022, 2023]},
     ],
   },
   {
@@ -1377,6 +1404,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 4, years: [2021, 2022, 2023, 2024]},
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'ballon-dor', count: 1, years: [2024]},
     ],
@@ -1483,11 +1511,15 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [11],
     clubs: [
       {clubId: 'chelsea', from: 2014, to: 2016},
+      {clubId: 'fiorentina', from: 2015, to: 2015, loan: true},
+      {clubId: 'roma', from: 2015, to: 2016, loan: true},
       {clubId: 'roma', from: 2016, to: 2017},
       {clubId: 'liverpool', from: 2017},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2019]},
+      {type: 'league-title', count: 2, years: [2020, 2025]},
+      {type: 'player-of-the-season', count: 3, years: [2018, 2022, 2025]},
     ],
   },
   {
@@ -1547,6 +1579,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'league-title', count: 7, years: [2017, 2018, 2019, 2021, 2022, 2023, 2024]},
     ],
   },
   {
@@ -1563,6 +1596,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'world-cup', count: 1, years: [2010]},
       {type: 'european-championship', count: 2, years: [2008, 2012]},
+      {type: 'league-title', count: 4, years: [2012, 2014, 2018, 2019]},
     ],
   },
   {
@@ -1574,8 +1608,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'leverkusen', from: 2013, to: 2015},
       {clubId: 'tottenham', from: 2015, to: 2025},
+      {clubId: 'lafc', from: 2025},
     ],
-    honours: [],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
   },
   {
     id: 'Suárez, Luis',
@@ -1620,6 +1657,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2009]},
+      {type: 'league-title', count: 3, years: [2009, 2012, 2014]},
     ],
   },
   {
@@ -1658,10 +1696,14 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['DF'],
     shirtNumbers: [4],
     clubs: [
+      {clubId: 'celtic', from: 2013, to: 2015},
+      {clubId: 'southampton', from: 2015, to: 2018},
       {clubId: 'liverpool', from: 2018},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2019]},
+      {type: 'league-title', count: 2, years: [2020, 2025]},
+      {type: 'player-of-the-season', count: 1, years: [2019]},
     ],
   },
   {
