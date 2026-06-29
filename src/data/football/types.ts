@@ -13,33 +13,39 @@ export type Position = 'GK' | 'DF' | 'MF' | 'FW';
 
 export type HonourType =
   | 'champions-league'
+  | 'europa-league'
   | 'world-cup'
   | 'european-championship'
   | 'league-title'
   | 'domestic-cup'
   | 'ballon-dor'
-  | 'golden-boot';
+  | 'golden-boot'
+  | 'player-of-the-season';
 
 /** Human-readable labels for honours, used when generating quiz copy. */
 export const HONOUR_LABELS: Record<HonourType, string> = {
   'champions-league': 'Champions League',
+  'europa-league': 'Europa League',
   'world-cup': 'World Cup',
   'european-championship': 'European Championship',
   'league-title': 'league title',
   'domestic-cup': 'domestic cup',
   'ballon-dor': 'Ballon d\'Or',
   'golden-boot': 'Golden Boot',
+  'player-of-the-season': 'Player of the Season',
 };
 
 /** Plural noun phrases for "How many X has … won?" style copy. */
 export const HONOUR_COUNT_LABELS: Record<HonourType, string> = {
   'champions-league': 'Champions League titles',
+  'europa-league': 'Europa League titles',
   'world-cup': 'World Cups',
   'european-championship': 'European Championships',
   'league-title': 'league titles',
   'domestic-cup': 'domestic cups',
   'ballon-dor': 'Ballon d\'Or awards',
   'golden-boot': 'Golden Boots',
+  'player-of-the-season': 'Player of the Season awards',
 };
 
 export const POSITION_LABELS: Record<Position, string> = {

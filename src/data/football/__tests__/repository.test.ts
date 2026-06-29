@@ -28,7 +28,7 @@ describe('data integrity', () => {
 });
 
 describe('matches', () => {
-  const messi = getById('lionel-messi')!;
+  const messi = getById('Messi, Lionel')!;
 
   const cases: [string, Criterion, boolean][] = [
     ['club hit', {kind: 'club', clubId: 'barcelona'}, true],
@@ -52,7 +52,7 @@ describe('matches', () => {
 
 describe('leaguesOf', () => {
   it('derives leagues from club spells', () => {
-    const messi = getById('lionel-messi')!;
+    const messi = getById('Messi, Lionel')!;
     expect(leaguesOf(messi).sort()).toEqual(['la-liga', 'ligue-1', 'mls']);
   });
 });
@@ -63,7 +63,7 @@ describe('find / intersection', () => {
       {kind: 'league', league: 'premier-league'},
       {kind: 'nationality', country: 'Belgium'},
     ]);
-    expect(result.map(f => f.id)).toContain('kevin-de-bruyne');
+    expect(result.map(f => f.id)).toContain('De Bruyne, Kevin');
     expect(
       result.every(
         f =>
@@ -78,7 +78,7 @@ describe('find / intersection', () => {
       {kind: 'club', clubId: 'barcelona'},
       {kind: 'nationality', country: 'Argentina'},
     );
-    expect(result.map(f => f.id)).toContain('lionel-messi');
+    expect(result.map(f => f.id)).toContain('Messi, Lionel');
     expect(
       result.every(
         f =>

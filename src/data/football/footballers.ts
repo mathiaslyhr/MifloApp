@@ -1,35 +1,1750 @@
 /**
- * Curated footballer database (hand-maintained seed set), aggregated from the
- * batch modules under players/. Split by primary identity purely to keep diffs
- * reviewable — module membership has NO effect on queries: the repository
- * derives every category (leagues, honours, nationality, tags) from each
- * player's own data, so a player appears in every category they actually match.
+ * Curated footballer database — the single, hand-maintained source of truth.
  *
- * Reviewed for accuracy: club histories list the major senior clubs each player
- * actually played for (limited to clubs that exist in clubs.ts), and honours are
- * limited to ones that are easy to state exactly — Champions League, World Cup,
- * Ballon d'Or, European Championship. (Deliberately no league-title /
- * golden-boot counts, which are obscure and error-prone to maintain by hand.)
- * Years are approximate transfer years and only used as supporting data.
+ * ONE file on purpose: easy to scan and edit. Players are sorted alphabetically
+ * by `id`, where `id` is "Surname, First" (e.g. 'Messi, Lionel' for Lionel
+ * Messi). Players known by a single name use that name as the id ('Vitinha',
+ * 'Rodri', 'Neymar'). Module membership has NO effect on queries — the
+ * repository derives every category (leagues, honours, nationality, tags) from
+ * each player's own data, so a player appears in every category they match.
  *
- * Expand by editing/adding modules under players/ — the schema (types.ts) is the
- * stable part. Up to date as of mid-2026.
+ * `id` is internal only (Map key in repository.ts, runtime question wiring); it
+ * is never persisted, so the format is free to be human-friendly.
+ *
+ * Club spells reference clubs by id from clubs.ts (the single source of truth
+ * for club name/country/league); add missing clubs there. Honours cover the
+ * cleanly-stateable ones — see types.ts (HonourType). Up to date as of mid-2026.
  */
 import type {Footballer} from './types';
-import {LEGENDS} from './players/legends';
-import {PREMIER_LEAGUE} from './players/premier-league';
-import {LA_LIGA} from './players/la-liga';
-import {SERIE_A} from './players/serie-a';
-import {BUNDESLIGA} from './players/bundesliga';
-import {LIGUE_1} from './players/ligue-1';
-import {WORLD_CUP} from './players/world-cup';
 
 export const FOOTBALLERS: readonly Footballer[] = [
-  ...LEGENDS,
-  ...PREMIER_LEAGUE,
-  ...LA_LIGA,
-  ...SERIE_A,
-  ...BUNDESLIGA,
-  ...LIGUE_1,
-  ...WORLD_CUP,
+  {
+    id: 'Agüero, Sergio',
+    name: 'Sergio Agüero',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'atletico-madrid', from: 2006, to: 2011},
+      {clubId: 'man-city', from: 2011, to: 2021},
+      {clubId: 'barcelona', from: 2021, to: 2022},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Álvarez, Julián',
+    name: 'Julián Álvarez',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'river-plate', from: 2018, to: 2022},
+      {clubId: 'man-city', from: 2022, to: 2024},
+      {clubId: 'atletico-madrid', from: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Aubameyang, Pierre-Emerick',
+    name: 'Pierre-Emerick Aubameyang',
+    nationality: ['Gabon'],
+    positions: ['FW'],
+    shirtNumbers: [14, 17],
+    clubs: [
+      {clubId: 'dortmund', from: 2013, to: 2018},
+      {clubId: 'arsenal', from: 2018, to: 2022},
+      {clubId: 'barcelona', from: 2022, to: 2023},
+      {clubId: 'marseille', from: 2023, to: 2024},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Barella, Nicolò',
+    name: 'Nicolò Barella',
+    nationality: ['Italy'],
+    positions: ['MF'],
+    shirtNumbers: [23],
+    clubs: [
+      {clubId: 'inter', from: 2019},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Beckenbauer, Franz',
+    name: 'Franz Beckenbauer',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'bayern', from: 1964, to: 1977},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+      {type: 'world-cup', count: 1, years: [1974]},
+      {type: 'ballon-dor', count: 2, years: [1972, 1976]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Beckham, David',
+    name: 'David Beckham',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [7, 23],
+    clubs: [
+      {clubId: 'man-utd', from: 1992, to: 2003},
+      {clubId: 'real-madrid', from: 2003, to: 2007},
+      {clubId: 'ac-milan', from: 2009, to: 2010, loan: true},
+      {clubId: 'psg', from: 2013, to: 2013},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [1999]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Bellingham, Jude',
+    name: 'Jude Bellingham',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'dortmund', from: 2020, to: 2023},
+      {clubId: 'real-madrid', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2024]},
+    ],
+  },
+  {
+    id: 'Benzema, Karim',
+    name: 'Karim Benzema',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'lyon', from: 2005, to: 2009},
+      {clubId: 'real-madrid', from: 2009, to: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 5},
+      {type: 'ballon-dor', count: 1, years: [2022]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Bonucci, Leonardo',
+    name: 'Leonardo Bonucci',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [19],
+    clubs: [
+      {clubId: 'juventus', from: 2010, to: 2017},
+      {clubId: 'ac-milan', from: 2017, to: 2018},
+      {clubId: 'juventus', from: 2018, to: 2023},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Buffon, Gianluigi',
+    name: 'Gianluigi Buffon',
+    nationality: ['Italy'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'juventus', from: 2001, to: 2018},
+      {clubId: 'psg', from: 2018, to: 2019},
+      {clubId: 'juventus', from: 2019, to: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Busquets, Sergio',
+    name: 'Sergio Busquets',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'barcelona', from: 2008, to: 2023},
+      {clubId: 'inter-miami', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 1, years: [2012]},
+    ],
+  },
+  {
+    id: 'Cafu',
+    name: 'Cafu',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'roma', from: 1997, to: 2003},
+      {clubId: 'ac-milan', from: 2003, to: 2008},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2007]},
+      {type: 'world-cup', count: 2, years: [1994, 2002]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Cannavaro, Fabio',
+    name: 'Fabio Cannavaro',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'napoli', from: 1992, to: 1995},
+      {clubId: 'inter', from: 2002, to: 2004},
+      {clubId: 'juventus', from: 2004, to: 2006},
+      {clubId: 'real-madrid', from: 2006, to: 2009},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2006]},
+      {type: 'ballon-dor', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Casillas, Iker',
+    name: 'Iker Casillas',
+    nationality: ['Spain'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'real-madrid', from: 1999, to: 2015},
+      {clubId: 'porto', from: 2015, to: 2020},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 2, years: [2008, 2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Cavani, Edinson',
+    name: 'Edinson Cavani',
+    nationality: ['Uruguay'],
+    positions: ['FW'],
+    shirtNumbers: [9, 7],
+    clubs: [
+      {clubId: 'napoli', from: 2010, to: 2013},
+      {clubId: 'psg', from: 2013, to: 2020},
+      {clubId: 'man-utd', from: 2020, to: 2022},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Chiellini, Giorgio',
+    name: 'Giorgio Chiellini',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [3],
+    clubs: [
+      {clubId: 'juventus', from: 2005, to: 2022},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Chiesa, Federico',
+    name: 'Federico Chiesa',
+    nationality: ['Italy'],
+    positions: ['FW'],
+    shirtNumbers: [14],
+    clubs: [
+      {clubId: 'fiorentina', from: 2016, to: 2020},
+      {clubId: 'juventus', from: 2020, to: 2024},
+      {clubId: 'liverpool', from: 2024},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Courtois, Thibaut',
+    name: 'Thibaut Courtois',
+    nationality: ['Belgium'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'atletico-madrid', from: 2011, to: 2014, loan: true},
+      {clubId: 'chelsea', from: 2014, to: 2018},
+      {clubId: 'real-madrid', from: 2018},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'De Bruyne, Kevin',
+    name: 'Kevin De Bruyne',
+    nationality: ['Belgium'],
+    positions: ['MF'],
+    shirtNumbers: [17],
+    clubs: [
+      {clubId: 'chelsea', from: 2012, to: 2014},
+      {clubId: 'man-city', from: 2015, to: 2025},
+      {clubId: 'napoli', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'de Jong, Frenkie',
+    name: 'Frenkie de Jong',
+    nationality: ['Netherlands'],
+    positions: ['MF'],
+    shirtNumbers: [21],
+    clubs: [
+      {clubId: 'ajax', from: 2015, to: 2019},
+      {clubId: 'barcelona', from: 2019},
+    ],
+    honours: [],
+  },
+  {
+    id: 'De Paul, Rodrigo',
+    name: 'Rodrigo De Paul',
+    nationality: ['Argentina'],
+    positions: ['MF'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'valencia', from: 2014, to: 2016},
+      {clubId: 'atletico-madrid', from: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Del Piero, Alessandro',
+    name: 'Alessandro Del Piero',
+    nationality: ['Italy'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'juventus', from: 1993, to: 2012},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [1996]},
+      {type: 'world-cup', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Dembélé, Ousmane',
+    name: 'Ousmane Dembélé',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'dortmund', from: 2016, to: 2017},
+      {clubId: 'barcelona', from: 2017, to: 2023},
+      {clubId: 'psg', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'world-cup', count: 1, years: [2018]},
+    ],
+  },
+  {
+    id: 'Di María, Ángel',
+    name: 'Ángel Di María',
+    nationality: ['Argentina'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'benfica', from: 2007, to: 2010},
+      {clubId: 'real-madrid', from: 2010, to: 2014},
+      {clubId: 'man-utd', from: 2014, to: 2015},
+      {clubId: 'psg', from: 2015, to: 2022},
+      {clubId: 'juventus', from: 2022, to: 2023},
+      {clubId: 'benfica', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2014]},
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Donnarumma, Gianluigi',
+    name: 'Gianluigi Donnarumma',
+    nationality: ['Italy'],
+    positions: ['GK'],
+    shirtNumbers: [1, 99],
+    clubs: [
+      {clubId: 'ac-milan', from: 2015, to: 2021},
+      {clubId: 'psg', from: 2021},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'european-championship', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Drogba, Didier',
+    name: 'Didier Drogba',
+    nationality: ['Ivory Coast'],
+    positions: ['FW'],
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'marseille', from: 2003, to: 2004},
+      {clubId: 'chelsea', from: 2004, to: 2012},
+      {clubId: 'galatasaray', from: 2013, to: 2014},
+      {clubId: 'chelsea', from: 2014, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Dybala, Paulo',
+    name: 'Paulo Dybala',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    shirtNumbers: [10, 21],
+    clubs: [
+      {clubId: 'juventus', from: 2015, to: 2022},
+      {clubId: 'roma', from: 2022},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Eto\'o, Samuel',
+    name: 'Samuel Eto\'o',
+    nationality: ['Cameroon'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'barcelona', from: 2004, to: 2009},
+      {clubId: 'inter', from: 2009, to: 2011},
+      {clubId: 'chelsea', from: 2013, to: 2014},
+      {clubId: 'everton', from: 2014, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Fernandes, Bruno',
+    name: 'Bruno Fernandes',
+    nationality: ['Portugal'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'sporting', from: 2017, to: 2020},
+      {clubId: 'man-utd', from: 2020},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Fernández, Enzo',
+    name: 'Enzo Fernández',
+    nationality: ['Argentina'],
+    positions: ['MF'],
+    shirtNumbers: [5, 8],
+    clubs: [
+      {clubId: 'river-plate', from: 2019, to: 2022},
+      {clubId: 'benfica', from: 2022, to: 2023},
+      {clubId: 'chelsea', from: 2023},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Figo, Luís',
+    name: 'Luís Figo',
+    nationality: ['Portugal'],
+    positions: ['MF', 'FW'],
+    clubs: [
+      {clubId: 'sporting', from: 1989, to: 1995},
+      {clubId: 'barcelona', from: 1995, to: 2000},
+      {clubId: 'real-madrid', from: 2000, to: 2005},
+      {clubId: 'inter', from: 2005, to: 2009},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2002]},
+      {type: 'ballon-dor', count: 1, years: [2000]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Foden, Phil',
+    name: 'Phil Foden',
+    nationality: ['England'],
+    positions: ['MF', 'FW'],
+    shirtNumbers: [47],
+    clubs: [
+      {clubId: 'man-city', from: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'Gavi',
+    name: 'Gavi',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'barcelona', from: 2021},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Gerrard, Steven',
+    name: 'Steven Gerrard',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'liverpool', from: 1998, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2005]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Gnabry, Serge',
+    name: 'Serge Gnabry',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'arsenal', from: 2012, to: 2016},
+      {clubId: 'bayern', from: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Griezmann, Antoine',
+    name: 'Antoine Griezmann',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'real-sociedad', from: 2009, to: 2014},
+      {clubId: 'atletico-madrid', from: 2014, to: 2019},
+      {clubId: 'barcelona', from: 2019, to: 2021},
+      {clubId: 'atletico-madrid', from: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2018]},
+    ],
+  },
+  {
+    id: 'Gullit, Ruud',
+    name: 'Ruud Gullit',
+    nationality: ['Netherlands'],
+    positions: ['MF', 'FW'],
+    clubs: [
+      {clubId: 'ac-milan', from: 1987, to: 1993},
+      {clubId: 'chelsea', from: 1995, to: 1998},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'european-championship', count: 1, years: [1988]},
+      {type: 'ballon-dor', count: 1, years: [1987]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Gündoğan, İlkay',
+    name: 'İlkay Gündoğan',
+    nationality: ['Germany'],
+    positions: ['MF'],
+    shirtNumbers: [8, 19],
+    clubs: [
+      {clubId: 'dortmund', from: 2011, to: 2016},
+      {clubId: 'man-city', from: 2016, to: 2023},
+      {clubId: 'barcelona', from: 2023, to: 2024},
+      {clubId: 'man-city', from: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'Haaland, Erling',
+    name: 'Erling Haaland',
+    nationality: ['Norway'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'dortmund', from: 2020, to: 2022},
+      {clubId: 'man-city', from: 2022},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'Hakimi, Achraf',
+    name: 'Achraf Hakimi',
+    nationality: ['Morocco'],
+    positions: ['DF'],
+    shirtNumbers: [2],
+    clubs: [
+      {clubId: 'real-madrid', from: 2017, to: 2018},
+      {clubId: 'dortmund', from: 2018, to: 2020, loan: true},
+      {clubId: 'inter', from: 2020, to: 2021},
+      {clubId: 'psg', from: 2021},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+    ],
+  },
+  {
+    id: 'Hazard, Eden',
+    name: 'Eden Hazard',
+    nationality: ['Belgium'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [10, 7],
+    clubs: [
+      {clubId: 'lille', from: 2007, to: 2012},
+      {clubId: 'chelsea', from: 2012, to: 2019},
+      {clubId: 'real-madrid', from: 2019, to: 2023},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Henry, Thierry',
+    name: 'Thierry Henry',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [14],
+    clubs: [
+      {clubId: 'monaco', from: 1994, to: 1999},
+      {clubId: 'juventus', from: 1999, to: 1999},
+      {clubId: 'arsenal', from: 1999, to: 2007},
+      {clubId: 'barcelona', from: 2007, to: 2010},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2009]},
+      {type: 'world-cup', count: 1, years: [1998]},
+      {type: 'european-championship', count: 1, years: [2000]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Hummels, Mats',
+    name: 'Mats Hummels',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'bayern', from: 2006, to: 2008},
+      {clubId: 'dortmund', from: 2008, to: 2016},
+      {clubId: 'bayern', from: 2016, to: 2019},
+      {clubId: 'dortmund', from: 2019, to: 2024},
+      {clubId: 'roma', from: 2024, to: 2025},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+  },
+  {
+    id: 'Ibrahimović, Zlatan',
+    name: 'Zlatan Ibrahimović',
+    nationality: ['Sweden'],
+    positions: ['FW'],
+    shirtNumbers: [9, 10, 11],
+    clubs: [
+      {clubId: 'ajax', from: 2001, to: 2004},
+      {clubId: 'juventus', from: 2004, to: 2006},
+      {clubId: 'inter', from: 2006, to: 2009},
+      {clubId: 'barcelona', from: 2009, to: 2010},
+      {clubId: 'ac-milan', from: 2010, to: 2012},
+      {clubId: 'psg', from: 2012, to: 2016},
+      {clubId: 'man-utd', from: 2016, to: 2018},
+    ],
+    honours: [],
+    tags: ['legends'],
+  },
+  {
+    id: 'Immobile, Ciro',
+    name: 'Ciro Immobile',
+    nationality: ['Italy'],
+    positions: ['FW'],
+    shirtNumbers: [17],
+    clubs: [
+      {clubId: 'dortmund', from: 2014, to: 2015},
+      {clubId: 'sevilla', from: 2015, to: 2016},
+      {clubId: 'lazio', from: 2016, to: 2024},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Iniesta, Andrés',
+    name: 'Andrés Iniesta',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'barcelona', from: 2002, to: 2018},
+    ],
+    honours: [
+      {type: 'champions-league', count: 4},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 2, years: [2008, 2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Kaká',
+    name: 'Kaká',
+    nationality: ['Brazil'],
+    positions: ['MF'],
+    shirtNumbers: [22, 8],
+    clubs: [
+      {clubId: 'ac-milan', from: 2003, to: 2009},
+      {clubId: 'real-madrid', from: 2009, to: 2013},
+      {clubId: 'ac-milan', from: 2013, to: 2014},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2007]},
+      {type: 'world-cup', count: 1, years: [2002]},
+      {type: 'ballon-dor', count: 1, years: [2007]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Kane, Harry',
+    name: 'Harry Kane',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [9, 10],
+    clubs: [
+      {clubId: 'tottenham', from: 2011, to: 2023},
+      {clubId: 'bayern', from: 2023},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Kimmich, Joshua',
+    name: 'Joshua Kimmich',
+    nationality: ['Germany'],
+    positions: ['MF', 'DF'],
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'rb-leipzig', from: 2013, to: 2015},
+      {clubId: 'bayern', from: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Kompany, Vincent',
+    name: 'Vincent Kompany',
+    nationality: ['Belgium'],
+    positions: ['DF'],
+    shirtNumbers: [4],
+    clubs: [
+      {clubId: 'man-city', from: 2008, to: 2019},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Kroos, Toni',
+    name: 'Toni Kroos',
+    nationality: ['Germany'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'bayern', from: 2007, to: 2014},
+      {clubId: 'real-madrid', from: 2014, to: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 6},
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Kvaratskhelia, Khvicha',
+    name: 'Khvicha Kvaratskhelia',
+    nationality: ['Georgia'],
+    positions: ['FW'],
+    shirtNumbers: [7, 77],
+    clubs: [
+      {clubId: 'napoli', from: 2022, to: 2025},
+      {clubId: 'psg', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+    ],
+  },
+  {
+    id: 'Lahm, Philipp',
+    name: 'Philipp Lahm',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'bayern', from: 2002, to: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2013]},
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Lampard, Frank',
+    name: 'Frank Lampard',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'west-ham', from: 1995, to: 2001},
+      {clubId: 'chelsea', from: 2001, to: 2014},
+      {clubId: 'man-city', from: 2014, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Leão, Rafael',
+    name: 'Rafael Leão',
+    nationality: ['Portugal'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'sporting', from: 2017, to: 2018},
+      {clubId: 'lille', from: 2018, to: 2019},
+      {clubId: 'ac-milan', from: 2019},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Lewandowski, Robert',
+    name: 'Robert Lewandowski',
+    nationality: ['Poland'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'dortmund', from: 2010, to: 2014},
+      {clubId: 'bayern', from: 2014, to: 2022},
+      {clubId: 'barcelona', from: 2022},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2020]},
+    ],
+  },
+  {
+    id: 'Lukaku, Romelu',
+    name: 'Romelu Lukaku',
+    nationality: ['Belgium'],
+    positions: ['FW'],
+    shirtNumbers: [9, 10],
+    clubs: [
+      {clubId: 'chelsea', from: 2011, to: 2014},
+      {clubId: 'everton', from: 2014, to: 2017},
+      {clubId: 'man-utd', from: 2017, to: 2019},
+      {clubId: 'inter', from: 2019, to: 2021},
+      {clubId: 'chelsea', from: 2021, to: 2022},
+      {clubId: 'roma', from: 2023, to: 2024},
+      {clubId: 'napoli', from: 2024},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Mac Allister, Alexis',
+    name: 'Alexis Mac Allister',
+    nationality: ['Argentina'],
+    positions: ['MF'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'boca-juniors', from: 2016, to: 2019},
+      {clubId: 'liverpool', from: 2023},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Mahrez, Riyad',
+    name: 'Riyad Mahrez',
+    nationality: ['Algeria'],
+    positions: ['FW'],
+    shirtNumbers: [26],
+    clubs: [
+      {clubId: 'leicester', from: 2014, to: 2018},
+      {clubId: 'man-city', from: 2018, to: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'Maldini, Paolo',
+    name: 'Paolo Maldini',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [3],
+    clubs: [
+      {clubId: 'ac-milan', from: 1985, to: 2009},
+    ],
+    honours: [
+      {type: 'champions-league', count: 5},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Maradona, Diego',
+    name: 'Diego Maradona',
+    nationality: ['Argentina'],
+    positions: ['FW', 'MF'],
+    clubs: [
+      {clubId: 'boca-juniors', from: 1981, to: 1982},
+      {clubId: 'barcelona', from: 1982, to: 1984},
+      {clubId: 'napoli', from: 1984, to: 1991},
+      {clubId: 'sevilla', from: 1992, to: 1993},
+      {clubId: 'boca-juniors', from: 1995, to: 1997},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [1986]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Marquinhos',
+    name: 'Marquinhos',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'roma', from: 2012, to: 2013},
+      {clubId: 'psg', from: 2013},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+    ],
+  },
+  {
+    id: 'Martínez, Emiliano',
+    name: 'Emiliano Martínez',
+    nationality: ['Argentina'],
+    positions: ['GK'],
+    shirtNumbers: [23],
+    clubs: [
+      {clubId: 'arsenal', from: 2010, to: 2020},
+      {clubId: 'aston-villa', from: 2020},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Martínez, Lautaro',
+    name: 'Lautaro Martínez',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'inter', from: 2018},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Mbappé, Kylian',
+    name: 'Kylian Mbappé',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [7, 9, 10],
+    clubs: [
+      {clubId: 'monaco', from: 2015, to: 2017},
+      {clubId: 'psg', from: 2017, to: 2024},
+      {clubId: 'real-madrid', from: 2024},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2018]},
+    ],
+  },
+  {
+    id: 'Messi, Lionel',
+    name: 'Lionel Messi',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    shirtNumbers: [10, 30],
+    clubs: [
+      {clubId: 'barcelona', from: 2004, to: 2021},
+      {clubId: 'psg', from: 2021, to: 2023},
+      {clubId: 'inter-miami', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 4},
+      {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'ballon-dor', count: 8, years: [2009, 2010, 2011, 2012, 2015, 2019, 2021, 2023]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Modrić, Luka',
+    name: 'Luka Modrić',
+    nationality: ['Croatia'],
+    positions: ['MF'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'tottenham', from: 2008, to: 2012},
+      {clubId: 'real-madrid', from: 2012, to: 2025},
+      {clubId: 'ac-milan', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 6},
+      {type: 'ballon-dor', count: 1, years: [2018]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Müller, Thomas',
+    name: 'Thomas Müller',
+    nationality: ['Germany'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [25],
+    clubs: [
+      {clubId: 'bayern', from: 2008, to: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+  },
+  {
+    id: 'Musiala, Jamal',
+    name: 'Jamal Musiala',
+    nationality: ['Germany'],
+    positions: ['MF', 'FW'],
+    shirtNumbers: [10, 42],
+    clubs: [
+      {clubId: 'bayern', from: 2020},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Nazário, Ronaldo',
+    name: 'Ronaldo Nazário',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    clubs: [
+      {clubId: 'barcelona', from: 1996, to: 1997},
+      {clubId: 'inter', from: 1997, to: 2002},
+      {clubId: 'real-madrid', from: 2002, to: 2007},
+      {clubId: 'ac-milan', from: 2007, to: 2008},
+    ],
+    honours: [
+      {type: 'world-cup', count: 2, years: [1994, 2002]},
+      {type: 'ballon-dor', count: 2, years: [1997, 2002]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Nedvěd, Pavel',
+    name: 'Pavel Nedvěd',
+    nationality: ['Czech Republic'],
+    positions: ['MF'],
+    clubs: [
+      {clubId: 'lazio', from: 1996, to: 2001},
+      {clubId: 'juventus', from: 2001, to: 2009},
+    ],
+    honours: [
+      {type: 'ballon-dor', count: 1, years: [2003]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Nesta, Alessandro',
+    name: 'Alessandro Nesta',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'lazio', from: 1993, to: 2002},
+      {clubId: 'ac-milan', from: 2002, to: 2012},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'world-cup', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Neuer, Manuel',
+    name: 'Manuel Neuer',
+    nationality: ['Germany'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'schalke', from: 2006, to: 2011},
+      {clubId: 'bayern', from: 2011},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+  },
+  {
+    id: 'Neymar',
+    name: 'Neymar',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    shirtNumbers: [10, 11],
+    clubs: [
+      {clubId: 'santos', from: 2009, to: 2013},
+      {clubId: 'barcelona', from: 2013, to: 2017},
+      {clubId: 'psg', from: 2017, to: 2023},
+      {clubId: 'al-hilal', from: 2023, to: 2025},
+      {clubId: 'santos', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2015]},
+    ],
+  },
+  {
+    id: 'Ødegaard, Martin',
+    name: 'Martin Ødegaard',
+    nationality: ['Norway'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'real-madrid', from: 2015, to: 2021},
+      {clubId: 'real-sociedad', from: 2021, to: 2021, loan: true},
+      {clubId: 'arsenal', from: 2021},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Osimhen, Victor',
+    name: 'Victor Osimhen',
+    nationality: ['Nigeria'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'lille', from: 2019, to: 2020},
+      {clubId: 'napoli', from: 2020, to: 2024},
+      {clubId: 'galatasaray', from: 2024, to: 2025, loan: true},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Otamendi, Nicolás',
+    name: 'Nicolás Otamendi',
+    nationality: ['Argentina'],
+    positions: ['DF'],
+    shirtNumbers: [19],
+    clubs: [
+      {clubId: 'valencia', from: 2010, to: 2014},
+      {clubId: 'man-city', from: 2015, to: 2020},
+      {clubId: 'benfica', from: 2020},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Owen, Michael',
+    name: 'Michael Owen',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'liverpool', from: 1996, to: 2004},
+      {clubId: 'real-madrid', from: 2004, to: 2005},
+      {clubId: 'newcastle', from: 2005, to: 2009},
+      {clubId: 'man-utd', from: 2009, to: 2012},
+    ],
+    honours: [
+      {type: 'ballon-dor', count: 1, years: [2001]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Pedri',
+    name: 'Pedri',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'barcelona', from: 2020},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2024]},
+    ],
+  },
+  {
+    id: 'Pelé',
+    name: 'Pelé',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'santos', from: 1956, to: 1974},
+    ],
+    honours: [
+      {type: 'world-cup', count: 3, years: [1958, 1962, 1970]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Piqué, Gerard',
+    name: 'Gerard Piqué',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [3],
+    clubs: [
+      {clubId: 'man-utd', from: 2004, to: 2008},
+      {clubId: 'barcelona', from: 2008, to: 2022},
+    ],
+    honours: [
+      {type: 'champions-league', count: 4},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 1, years: [2012]},
+    ],
+  },
+  {
+    id: 'Pirlo, Andrea',
+    name: 'Andrea Pirlo',
+    nationality: ['Italy'],
+    positions: ['MF'],
+    shirtNumbers: [21],
+    clubs: [
+      {clubId: 'inter', from: 1998, to: 2001},
+      {clubId: 'ac-milan', from: 2001, to: 2011},
+      {clubId: 'juventus', from: 2011, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'world-cup', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Puyol, Carles',
+    name: 'Carles Puyol',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'barcelona', from: 1999, to: 2014},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 1, years: [2008]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Ramos, Sergio',
+    name: 'Sergio Ramos',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [4, 15],
+    clubs: [
+      {clubId: 'sevilla', from: 2004, to: 2005},
+      {clubId: 'real-madrid', from: 2005, to: 2021},
+      {clubId: 'psg', from: 2021, to: 2023},
+      {clubId: 'sevilla', from: 2023, to: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 4},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 2, years: [2008, 2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Raúl',
+    name: 'Raúl',
+    nationality: ['Spain'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'real-madrid', from: 1994, to: 2010},
+      {clubId: 'schalke', from: 2010, to: 2012},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Reus, Marco',
+    name: 'Marco Reus',
+    nationality: ['Germany'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'monchengladbach', from: 2009, to: 2012},
+      {clubId: 'dortmund', from: 2012, to: 2024},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Rice, Declan',
+    name: 'Declan Rice',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [41],
+    clubs: [
+      {clubId: 'west-ham', from: 2017, to: 2023},
+      {clubId: 'arsenal', from: 2023},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Rivaldo',
+    name: 'Rivaldo',
+    nationality: ['Brazil'],
+    positions: ['FW', 'MF'],
+    clubs: [
+      {clubId: 'barcelona', from: 1997, to: 2002},
+      {clubId: 'ac-milan', from: 2002, to: 2003},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2002]},
+      {type: 'ballon-dor', count: 1, years: [1999]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Roberto Carlos',
+    name: 'Roberto Carlos',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    clubs: [
+      {clubId: 'inter', from: 1995, to: 1996},
+      {clubId: 'real-madrid', from: 1996, to: 2007},
+    ],
+    honours: [
+      {type: 'champions-league', count: 3},
+      {type: 'world-cup', count: 1, years: [2002]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Rodri',
+    name: 'Rodri',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [16],
+    clubs: [
+      {clubId: 'atletico-madrid', from: 2018, to: 2019},
+      {clubId: 'man-city', from: 2019},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+      {type: 'european-championship', count: 1, years: [2024]},
+      {type: 'ballon-dor', count: 1, years: [2024]},
+    ],
+  },
+  {
+    id: 'Rodríguez, James',
+    name: 'James Rodríguez',
+    nationality: ['Colombia'],
+    positions: ['MF', 'FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'monaco', from: 2013, to: 2014},
+      {clubId: 'real-madrid', from: 2014, to: 2020},
+      {clubId: 'bayern', from: 2017, to: 2019, loan: true},
+      {clubId: 'everton', from: 2020, to: 2021},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2, years: [2016, 2017]},
+    ],
+  },
+  {
+    id: 'Romário',
+    name: 'Romário',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'barcelona', from: 1993, to: 1995},
+      {clubId: 'flamengo', from: 1995, to: 1996},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [1994]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Romero, Cristian',
+    name: 'Cristian Romero',
+    nationality: ['Argentina'],
+    positions: ['DF'],
+    shirtNumbers: [17],
+    clubs: [
+      {clubId: 'atalanta', from: 2019, to: 2021},
+      {clubId: 'tottenham', from: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+    ],
+  },
+  {
+    id: 'Ronaldinho',
+    name: 'Ronaldinho',
+    nationality: ['Brazil'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [10, 80],
+    clubs: [
+      {clubId: 'psg', from: 2001, to: 2003},
+      {clubId: 'barcelona', from: 2003, to: 2008},
+      {clubId: 'ac-milan', from: 2008, to: 2011},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2002]},
+      {type: 'ballon-dor', count: 1, years: [2005]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Ronaldo, Cristiano',
+    name: 'Cristiano Ronaldo',
+    nationality: ['Portugal'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'sporting', from: 2002, to: 2003},
+      {clubId: 'man-utd', from: 2003, to: 2009},
+      {clubId: 'real-madrid', from: 2009, to: 2018},
+      {clubId: 'juventus', from: 2018, to: 2021},
+      {clubId: 'man-utd', from: 2021, to: 2022},
+      {clubId: 'al-nassr', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 5},
+      {type: 'european-championship', count: 1, years: [2016]},
+      {type: 'ballon-dor', count: 5, years: [2008, 2013, 2014, 2016, 2017]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Saka, Bukayo',
+    name: 'Bukayo Saka',
+    nationality: ['England'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'arsenal', from: 2018},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Salah, Mohamed',
+    name: 'Mohamed Salah',
+    nationality: ['Egypt'],
+    positions: ['FW'],
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'chelsea', from: 2014, to: 2016},
+      {clubId: 'roma', from: 2016, to: 2017},
+      {clubId: 'liverpool', from: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2019]},
+    ],
+  },
+  {
+    id: 'Sané, Leroy',
+    name: 'Leroy Sané',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'schalke', from: 2014, to: 2016},
+      {clubId: 'man-city', from: 2016, to: 2020},
+      {clubId: 'bayern', from: 2020},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Schweinsteiger, Bastian',
+    name: 'Bastian Schweinsteiger',
+    nationality: ['Germany'],
+    positions: ['MF'],
+    clubs: [
+      {clubId: 'bayern', from: 2002, to: 2015},
+      {clubId: 'man-utd', from: 2015, to: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2013]},
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Shevchenko, Andriy',
+    name: 'Andriy Shevchenko',
+    nationality: ['Ukraine'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'ac-milan', from: 1999, to: 2006},
+      {clubId: 'chelsea', from: 2006, to: 2009},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2003]},
+      {type: 'ballon-dor', count: 1, years: [2004]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Silva, Bernardo',
+    name: 'Bernardo Silva',
+    nationality: ['Portugal'],
+    positions: ['MF'],
+    shirtNumbers: [20],
+    clubs: [
+      {clubId: 'benfica', from: 2014, to: 2015},
+      {clubId: 'monaco', from: 2015, to: 2017},
+      {clubId: 'man-city', from: 2017},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2023]},
+    ],
+  },
+  {
+    id: 'Silva, David',
+    name: 'David Silva',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [21],
+    clubs: [
+      {clubId: 'valencia', from: 2006, to: 2010},
+      {clubId: 'man-city', from: 2010, to: 2020},
+      {clubId: 'real-sociedad', from: 2020, to: 2023},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 2, years: [2008, 2012]},
+    ],
+  },
+  {
+    id: 'Son, Heung-min',
+    name: 'Heung-min Son',
+    nationality: ['South Korea'],
+    positions: ['FW'],
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'leverkusen', from: 2013, to: 2015},
+      {clubId: 'tottenham', from: 2015, to: 2025},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Suárez, Luis',
+    name: 'Luis Suárez',
+    nationality: ['Uruguay'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'ajax', from: 2007, to: 2011},
+      {clubId: 'liverpool', from: 2011, to: 2014},
+      {clubId: 'barcelona', from: 2014, to: 2020},
+      {clubId: 'atletico-madrid', from: 2020, to: 2022},
+      {clubId: 'inter-miami', from: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2015]},
+    ],
+  },
+  {
+    id: 'Totti, Francesco',
+    name: 'Francesco Totti',
+    nationality: ['Italy'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'roma', from: 1993, to: 2017},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2006]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Touré, Yaya',
+    name: 'Yaya Touré',
+    nationality: ['Ivory Coast'],
+    positions: ['MF'],
+    shirtNumbers: [42],
+    clubs: [
+      {clubId: 'barcelona', from: 2007, to: 2010},
+      {clubId: 'man-city', from: 2010, to: 2018},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2009]},
+    ],
+  },
+  {
+    id: 'Valverde, Federico',
+    name: 'Federico Valverde',
+    nationality: ['Uruguay'],
+    positions: ['MF'],
+    shirtNumbers: [8, 15],
+    clubs: [
+      {clubId: 'real-madrid', from: 2016},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2, years: [2022, 2024]},
+    ],
+  },
+  {
+    id: 'van Basten, Marco',
+    name: 'Marco van Basten',
+    nationality: ['Netherlands'],
+    positions: ['FW'],
+    clubs: [
+      {clubId: 'ajax', from: 1981, to: 1987},
+      {clubId: 'ac-milan', from: 1987, to: 1995},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2},
+      {type: 'european-championship', count: 1, years: [1988]},
+      {type: 'ballon-dor', count: 3, years: [1988, 1989, 1992]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'van Dijk, Virgil',
+    name: 'Virgil van Dijk',
+    nationality: ['Netherlands'],
+    positions: ['DF'],
+    shirtNumbers: [4],
+    clubs: [
+      {clubId: 'liverpool', from: 2018},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2019]},
+    ],
+  },
+  {
+    id: 'Vinícius Júnior',
+    name: 'Vinícius Júnior',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    shirtNumbers: [7, 20],
+    clubs: [
+      {clubId: 'real-madrid', from: 2018},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2, years: [2022, 2024]},
+    ],
+  },
+  {
+    id: 'Vitinha',
+    name: 'Vitinha',
+    nationality: ['Portugal'],
+    positions: ['MF'],
+    shirtNumbers: [17],
+    clubs: [
+      {clubId: 'porto', from: 2020, to: 2022},
+      {clubId: 'psg', from: 2022},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2025]},
+    ],
+  },
+  {
+    id: 'Vlahović, Dušan',
+    name: 'Dušan Vlahović',
+    nationality: ['Serbia'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'fiorentina', from: 2018, to: 2022},
+      {clubId: 'juventus', from: 2022},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Weah, George',
+    name: 'George Weah',
+    nationality: ['Liberia'],
+    positions: ['FW'],
+    clubs: [
+      {clubId: 'monaco', from: 1988, to: 1992},
+      {clubId: 'psg', from: 1992, to: 1995},
+      {clubId: 'ac-milan', from: 1995, to: 2000},
+      {clubId: 'chelsea', from: 2000, to: 2000},
+      {clubId: 'man-city', from: 2000, to: 2000},
+    ],
+    honours: [
+      {type: 'ballon-dor', count: 1, years: [1995]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Wirtz, Florian',
+    name: 'Florian Wirtz',
+    nationality: ['Germany'],
+    positions: ['MF'],
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'leverkusen', from: 2020, to: 2025},
+      {clubId: 'liverpool', from: 2025},
+    ],
+    honours: [],
+  },
+  {
+    id: 'Xavi',
+    name: 'Xavi',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'barcelona', from: 1998, to: 2015},
+    ],
+    honours: [
+      {type: 'champions-league', count: 4},
+      {type: 'world-cup', count: 1, years: [2010]},
+      {type: 'european-championship', count: 2, years: [2008, 2012]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Zidane, Zinédine',
+    name: 'Zinédine Zidane',
+    nationality: ['France'],
+    positions: ['MF'],
+    clubs: [
+      {clubId: 'juventus', from: 1996, to: 2001},
+      {clubId: 'real-madrid', from: 2001, to: 2006},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2002]},
+      {type: 'world-cup', count: 1, years: [1998]},
+      {type: 'european-championship', count: 1, years: [2000]},
+      {type: 'ballon-dor', count: 1, years: [1998]},
+    ],
+    tags: ['legends'],
+  },
 ];
