@@ -58,20 +58,34 @@ describe('leaguesOf', () => {
 });
 
 describe('find / intersection', () => {
-  it('ANDs all criteria', () => {
+  it('ANDs all criteria (every result satisfies all, known member included)', () => {
     const result = find([
       {kind: 'league', league: 'premier-league'},
       {kind: 'nationality', country: 'Belgium'},
     ]);
-    expect(result.map(f => f.id)).toEqual(['kevin-de-bruyne']);
+    expect(result.map(f => f.id)).toContain('kevin-de-bruyne');
+    expect(
+      result.every(
+        f =>
+          f.nationality.includes('Belgium') &&
+          leaguesOf(f).includes('premier-league'),
+      ),
+    ).toBe(true);
   });
 
-  it('intersection powers a tic-tac-toe cell (Barcelona ∩ Argentina → Messi)', () => {
+  it('intersection powers a tic-tac-toe cell (Barcelona ∩ Argentina includes Messi)', () => {
     const result = intersection(
       {kind: 'club', clubId: 'barcelona'},
       {kind: 'nationality', country: 'Argentina'},
     );
-    expect(result.map(f => f.id)).toEqual(['lionel-messi']);
+    expect(result.map(f => f.id)).toContain('lionel-messi');
+    expect(
+      result.every(
+        f =>
+          f.nationality.includes('Argentina') &&
+          f.clubs.some(s => s.clubId === 'barcelona'),
+      ),
+    ).toBe(true);
   });
 
   it('empty criteria matches everyone', () => {

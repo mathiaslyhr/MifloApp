@@ -14,37 +14,64 @@ export const CLUBS: readonly Club[] = [
   {id: 'chelsea', name: 'Chelsea', country: 'England', league: 'premier-league'},
   {id: 'liverpool', name: 'Liverpool', country: 'England', league: 'premier-league'},
   {id: 'tottenham', name: 'Tottenham Hotspur', country: 'England', league: 'premier-league'},
+  {id: 'aston-villa', name: 'Aston Villa', country: 'England', league: 'premier-league'},
+  {id: 'everton', name: 'Everton', country: 'England', league: 'premier-league'},
+  {id: 'newcastle', name: 'Newcastle United', country: 'England', league: 'premier-league'},
+  {id: 'west-ham', name: 'West Ham United', country: 'England', league: 'premier-league'},
+  {id: 'leicester', name: 'Leicester City', country: 'England', league: 'premier-league'},
+  {id: 'leeds', name: 'Leeds United', country: 'England', league: 'premier-league'},
 
   // La Liga
   {id: 'real-madrid', name: 'Real Madrid', country: 'Spain', league: 'la-liga'},
   {id: 'barcelona', name: 'Barcelona', country: 'Spain', league: 'la-liga'},
   {id: 'atletico-madrid', name: 'Atlético Madrid', country: 'Spain', league: 'la-liga'},
+  {id: 'sevilla', name: 'Sevilla', country: 'Spain', league: 'la-liga'},
+  {id: 'valencia', name: 'Valencia', country: 'Spain', league: 'la-liga'},
+  {id: 'villarreal', name: 'Villarreal', country: 'Spain', league: 'la-liga'},
+  {id: 'real-sociedad', name: 'Real Sociedad', country: 'Spain', league: 'la-liga'},
+  {id: 'real-betis', name: 'Real Betis', country: 'Spain', league: 'la-liga'},
 
   // Serie A
   {id: 'juventus', name: 'Juventus', country: 'Italy', league: 'serie-a'},
   {id: 'inter', name: 'Inter', country: 'Italy', league: 'serie-a'},
   {id: 'ac-milan', name: 'AC Milan', country: 'Italy', league: 'serie-a'},
   {id: 'napoli', name: 'Napoli', country: 'Italy', league: 'serie-a'},
+  {id: 'roma', name: 'AS Roma', country: 'Italy', league: 'serie-a'},
+  {id: 'lazio', name: 'Lazio', country: 'Italy', league: 'serie-a'},
+  {id: 'fiorentina', name: 'Fiorentina', country: 'Italy', league: 'serie-a'},
+  {id: 'atalanta', name: 'Atalanta', country: 'Italy', league: 'serie-a'},
 
   // Bundesliga
   {id: 'bayern', name: 'Bayern München', country: 'Germany', league: 'bundesliga'},
   {id: 'dortmund', name: 'Borussia Dortmund', country: 'Germany', league: 'bundesliga'},
+  {id: 'leverkusen', name: 'Bayer Leverkusen', country: 'Germany', league: 'bundesliga'},
+  {id: 'schalke', name: 'Schalke 04', country: 'Germany', league: 'bundesliga'},
+  {id: 'rb-leipzig', name: 'RB Leipzig', country: 'Germany', league: 'bundesliga'},
+  {id: 'wolfsburg', name: 'VfL Wolfsburg', country: 'Germany', league: 'bundesliga'},
+  {id: 'monchengladbach', name: "Borussia M'gladbach", country: 'Germany', league: 'bundesliga'},
 
   // Ligue 1
   {id: 'psg', name: 'Paris Saint-Germain', country: 'France', league: 'ligue-1'},
   {id: 'monaco', name: 'AS Monaco', country: 'France', league: 'ligue-1'},
+  {id: 'marseille', name: 'Olympique de Marseille', country: 'France', league: 'ligue-1'},
+  {id: 'lyon', name: 'Olympique Lyonnais', country: 'France', league: 'ligue-1'},
+  {id: 'lille', name: 'Lille', country: 'France', league: 'ligue-1'},
 
   // Other (used by career history but not a primary quiz league)
   {id: 'inter-miami', name: 'Inter Miami', country: 'USA', league: 'mls'},
   {id: 'al-nassr', name: 'Al Nassr', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'al-hilal', name: 'Al Hilal', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'sporting', name: 'Sporting CP', country: 'Portugal', league: 'primeira-liga'},
+  {id: 'benfica', name: 'Benfica', country: 'Portugal', league: 'primeira-liga'},
+  {id: 'porto', name: 'FC Porto', country: 'Portugal', league: 'primeira-liga'},
   {id: 'ajax', name: 'Ajax', country: 'Netherlands', league: 'eredivisie'},
   {id: 'santos', name: 'Santos', country: 'Brazil', league: 'brasileirao'},
-  {id: 'aston-villa', name: 'Aston Villa', country: 'England', league: 'premier-league'},
-  {id: 'everton', name: 'Everton', country: 'England', league: 'premier-league'},
-  {id: 'leverkusen', name: 'Bayer Leverkusen', country: 'Germany', league: 'bundesliga'},
-  {id: 'roma', name: 'AS Roma', country: 'Italy', league: 'serie-a'},
+  {id: 'flamengo', name: 'Flamengo', country: 'Brazil', league: 'brasileirao'},
+  {id: 'palmeiras', name: 'Palmeiras', country: 'Brazil', league: 'brasileirao'},
+  {id: 'boca-juniors', name: 'Boca Juniors', country: 'Argentina', league: 'liga-argentina'},
+  {id: 'river-plate', name: 'River Plate', country: 'Argentina', league: 'liga-argentina'},
+  {id: 'galatasaray', name: 'Galatasaray', country: 'Turkey', league: 'super-lig'},
+  {id: 'celtic', name: 'Celtic', country: 'Scotland', league: 'scottish-premiership'},
 ];
 
 const CLUBS_BY_ID: ReadonlyMap<string, Club> = new Map(
