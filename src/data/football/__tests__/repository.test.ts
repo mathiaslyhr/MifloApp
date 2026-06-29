@@ -40,7 +40,7 @@ describe('matches', () => {
     ['position hit', {kind: 'position', position: 'FW'}, true],
     ['position miss', {kind: 'position', position: 'GK'}, false],
     ['honour hit', {kind: 'honour', honour: 'world-cup'}, true],
-    ['honour miss', {kind: 'honour', honour: 'golden-boot'}, false],
+    ['honour miss', {kind: 'honour', honour: 'european-championship'}, false],
     ['tag hit', {kind: 'tag', tag: 'legends'}, true],
     ['tag miss', {kind: 'tag', tag: 'unknown'}, false],
   ];
