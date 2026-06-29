@@ -77,6 +77,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2020]},
+      {type: 'league-title', count: 3, years: [2021, 2024, 2026]},
     ],
   },
   {
@@ -155,6 +156,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2020]},
+      {type: 'league-title', count: 8, years: [2012, 2013, 2014, 2015, 2016, 2017, 2019, 2020]},
     ],
   },
   {
@@ -264,9 +266,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [3],
     clubs: [
       {clubId: 'juventus', from: 2005, to: 2022},
+      {clubId: 'lafc', from: 2022, to: 2023},
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2020]},
+      {type: 'league-title', count: 9, years: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]},
     ],
   },
   {
@@ -282,6 +286,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2020]},
+      {type: 'league-title', count: 1, years: [2025]},
     ],
   },
   {
@@ -447,6 +452,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 5, years: [2016, 2017, 2018, 2019, 2020]},
     ],
   },
   {
@@ -730,8 +736,13 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'dortmund', from: 2014, to: 2015},
       {clubId: 'sevilla', from: 2015, to: 2016},
       {clubId: 'lazio', from: 2016, to: 2024},
+      {clubId: 'besiktas', from: 2024, to: 2025},
+      {clubId: 'bologna', from: 2025, to: 2026},
+      {clubId: 'paris-fc', from: 2026},
     ],
-    honours: [],
+    honours: [
+      {type: 'golden-boot', count: 1, years: [2020]},
+    ],
   },
   {
     id: 'Iniesta, Andrés',
@@ -881,7 +892,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'lille', from: 2018, to: 2019},
       {clubId: 'ac-milan', from: 2019},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 1, years: [2022]},
+    ],
   },
   {
     id: 'Lewandowski, Robert',
@@ -1022,6 +1035,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 3, years: [2021, 2024, 2026]},
     ],
   },
   {
@@ -1202,8 +1216,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'lille', from: 2019, to: 2020},
       {clubId: 'napoli', from: 2020, to: 2024},
       {clubId: 'galatasaray', from: 2024, to: 2025, loan: true},
+      {clubId: 'galatasaray', from: 2025},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
+    ],
   },
   {
     id: 'Otamendi, Nicolás',

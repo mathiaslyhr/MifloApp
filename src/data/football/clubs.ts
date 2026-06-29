@@ -42,6 +42,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'lazio', name: 'Lazio', country: 'Italy', league: 'serie-a'},
   {id: 'fiorentina', name: 'Fiorentina', country: 'Italy', league: 'serie-a'},
   {id: 'atalanta', name: 'Atalanta', country: 'Italy', league: 'serie-a'},
+  {id: 'bologna', name: 'Bologna', country: 'Italy', league: 'serie-a'},
 
   // Bundesliga
   {id: 'bayern', name: 'Bayern München', country: 'Germany', league: 'bundesliga'},
@@ -59,6 +60,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'lyon', name: 'Olympique Lyonnais', country: 'France', league: 'ligue-1'},
   {id: 'lille', name: 'Lille', country: 'France', league: 'ligue-1'},
   {id: 'rennes', name: 'Stade Rennais', country: 'France', league: 'ligue-1'},
+  {id: 'paris-fc', name: 'Paris FC', country: 'France', league: 'ligue-1'},
 
   // Other (used by career history but not a primary quiz league)
   {id: 'inter-miami', name: 'Inter Miami', country: 'USA', league: 'mls'},
@@ -77,6 +79,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'boca-juniors', name: 'Boca Juniors', country: 'Argentina', league: 'liga-argentina'},
   {id: 'river-plate', name: 'River Plate', country: 'Argentina', league: 'liga-argentina'},
   {id: 'galatasaray', name: 'Galatasaray', country: 'Turkey', league: 'super-lig'},
+  {id: 'besiktas', name: 'Beşiktaş', country: 'Turkey', league: 'super-lig'},
   {id: 'celtic', name: 'Celtic', country: 'Scotland', league: 'scottish-premiership'},
 ];
 
