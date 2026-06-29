@@ -65,6 +65,8 @@ export const CLUBS: readonly Club[] = [
   // Other (used by career history but not a primary quiz league)
   {id: 'inter-miami', name: 'Inter Miami', country: 'USA', league: 'mls'},
   {id: 'lafc', name: 'Los Angeles FC', country: 'USA', league: 'mls'},
+  {id: 'la-galaxy', name: 'LA Galaxy', country: 'USA', league: 'mls'},
+  {id: 'vancouver', name: 'Vancouver Whitecaps', country: 'Canada', league: 'mls'},
   {id: 'al-nassr', name: 'Al Nassr', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'al-hilal', name: 'Al Hilal', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'al-qadsiah', name: 'Al-Qadsiah', country: 'Saudi Arabia', league: 'saudi-pro-league'},
