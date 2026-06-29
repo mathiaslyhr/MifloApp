@@ -80,6 +80,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'palmeiras', name: 'Palmeiras', country: 'Brazil', league: 'brasileirao'},
   {id: 'boca-juniors', name: 'Boca Juniors', country: 'Argentina', league: 'liga-argentina'},
   {id: 'river-plate', name: 'River Plate', country: 'Argentina', league: 'liga-argentina'},
+  {id: 'rosario-central', name: 'Rosario Central', country: 'Argentina', league: 'liga-argentina'},
   {id: 'galatasaray', name: 'Galatasaray', country: 'Turkey', league: 'super-lig'},
   {id: 'besiktas', name: 'Beşiktaş', country: 'Turkey', league: 'super-lig'},
   {id: 'celtic', name: 'Celtic', country: 'Scotland', league: 'scottish-premiership'},

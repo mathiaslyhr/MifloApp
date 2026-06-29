@@ -48,6 +48,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 2, years: [2023, 2024]},
     ],
   },
   {
@@ -346,7 +347,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [7],
     clubs: [
       {clubId: 'valencia', from: 2014, to: 2016},
-      {clubId: 'atletico-madrid', from: 2021},
+      {clubId: 'atletico-madrid', from: 2021, to: 2025},
+      {clubId: 'inter-miami', from: 2025},
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
@@ -399,11 +401,13 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'man-utd', from: 2014, to: 2015},
       {clubId: 'psg', from: 2015, to: 2022},
       {clubId: 'juventus', from: 2022, to: 2023},
-      {clubId: 'benfica', from: 2023},
+      {clubId: 'benfica', from: 2023, to: 2025},
+      {clubId: 'rosario-central', from: 2025},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2014]},
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 7, years: [2010, 2012, 2016, 2018, 2019, 2020, 2022]},
     ],
   },
   {
@@ -497,6 +501,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 1, years: [2023]},
     ],
   },
   {
@@ -950,6 +955,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 1, years: [2025]},
     ],
   },
   {
@@ -1201,6 +1207,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2015]},
+      {type: 'league-title', count: 7, years: [2015, 2016, 2018, 2019, 2020, 2022, 2023]},
     ],
   },
   {
@@ -1247,6 +1254,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 3, years: [2018, 2019, 2023]},
     ],
   },
   {
@@ -1496,6 +1504,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'europa-league', count: 1, years: [2025]},
     ],
   },
   {
