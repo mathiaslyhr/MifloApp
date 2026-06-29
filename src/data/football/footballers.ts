@@ -123,6 +123,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2024]},
+      {type: 'league-title', count: 1, years: [2024]},
     ],
   },
   {
@@ -186,6 +187,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 3},
       {type: 'world-cup', count: 1, years: [2010]},
       {type: 'european-championship', count: 1, years: [2012]},
+      {type: 'league-title', count: 9, years: [2009, 2010, 2011, 2013, 2015, 2016, 2018, 2019, 2023]},
     ],
   },
   {
@@ -327,7 +329,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'ajax', from: 2015, to: 2019},
       {clubId: 'barcelona', from: 2019},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 4, years: [2019, 2023, 2025, 2026]},
+    ],
   },
   {
     id: 'De Paul, Rodrigo',
@@ -530,7 +534,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'barcelona', from: 2021},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
+    ],
   },
   {
     id: 'Gerrard, Steven',
@@ -574,6 +580,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2018]},
+      {type: 'europa-league', count: 1, years: [2018]},
     ],
   },
   {
@@ -889,6 +896,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2020]},
+      {type: 'league-title', count: 13, years: [2011, 2012, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025, 2026]},
+      {type: 'golden-boot', count: 2, years: [2021, 2022]},
     ],
   },
   {
@@ -1239,6 +1248,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2024]},
+      {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
     ],
   },
   {
@@ -1269,6 +1279,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 4},
       {type: 'world-cup', count: 1, years: [2010]},
       {type: 'european-championship', count: 1, years: [2012]},
+      {type: 'league-title', count: 9, years: [2008, 2009, 2010, 2011, 2013, 2015, 2016, 2018, 2019]},
     ],
   },
   {
@@ -1423,6 +1434,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 2, years: [2016, 2017]},
+      {type: 'league-title', count: 3, years: [2017, 2018, 2019]},
     ],
   },
   {
@@ -1629,6 +1641,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2015]},
+      {type: 'league-title', count: 6, years: [2011, 2015, 2016, 2018, 2019, 2021]},
+      {type: 'golden-boot', count: 2, years: [2014, 2016]},
     ],
   },
   {
@@ -1671,6 +1685,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'champions-league', count: 2, years: [2022, 2024]},
+      {type: 'league-title', count: 3, years: [2020, 2022, 2024]},
     ],
   },
   {
@@ -1713,10 +1728,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW'],
     shirtNumbers: [7, 20],
     clubs: [
+      {clubId: 'flamengo', from: 2017, to: 2018},
       {clubId: 'real-madrid', from: 2018},
     ],
     honours: [
       {type: 'champions-league', count: 2, years: [2022, 2024]},
+      {type: 'league-title', count: 3, years: [2020, 2022, 2024]},
     ],
   },
   {
