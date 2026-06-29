@@ -8,6 +8,8 @@
  */
 export type RootStackParamList = {
   Home: undefined;
+  // Personal career stats / scoreboard (game-agnostic, M5).
+  Stats: undefined;
 
   // Football quiz (Game 1)
   QuizCreate: undefined;

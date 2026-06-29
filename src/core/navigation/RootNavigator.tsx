@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {colors, fontFamily} from '../../theme';
 import type {RootStackParamList} from './types';
 import {HomeScreen} from '../../screens/HomeScreen';
+import {StatsScreen} from '../../screens/StatsScreen';
 import {
   CreateGameScreen,
   JoinScreen,
@@ -42,6 +43,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Stats"
+          component={StatsScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

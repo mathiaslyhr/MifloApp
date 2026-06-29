@@ -8,6 +8,7 @@
  */
 import type {Question} from '../../games/quiz/mockData';
 import {ensureSession, supabase} from '../supabase/client';
+import type {ResultEntry} from '../stats/types';
 import type {Room, RoomPlayer} from './types';
 
 /** Thrown when a room feature is used but the backend isn't configured. */
@@ -222,10 +223,20 @@ export async function setPhase(
   }
 }
 
-/** Host only — mark the game finished after the last standings. */
-export async function finishGame(roomId: string): Promise<void> {
+/**
+ * Host only — mark the game finished after the last standings, and persist each
+ * player's final result (M5). The host is the only device with the authoritative
+ * full standings, so it writes everyone's row in one idempotent RPC call.
+ */
+export async function finishGame(
+  roomId: string,
+  results: ResultEntry[],
+): Promise<void> {
   const client = await requireClient();
-  const {error} = await client.rpc('finish_game', {p_room_id: roomId});
+  const {error} = await client.rpc('finish_game', {
+    p_room_id: roomId,
+    p_results: results,
+  });
   if (error) {
     throw error;
   }

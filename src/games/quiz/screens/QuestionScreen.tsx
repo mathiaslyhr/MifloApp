@@ -125,7 +125,18 @@ export function QuestionScreen({navigation, route}: Props) {
       const t = nextTransition(phase, index, total);
       try {
         if ('finished' in t && t.finished) {
-          await finishGame(roomId);
+          // Host persists the final standings (M5). contestant.id is the
+          // player's user_id (set by contestantsFromPlayers).
+          const results = rankContestants(
+            useQuizStore.getState().contestants,
+          ).map(s => ({
+            user_id: s.contestant.id,
+            name: s.contestant.name,
+            score: s.contestant.score,
+            rank: s.rank,
+            is_winner: s.rank === 1,
+          }));
+          await finishGame(roomId, results);
         } else {
           await setPhase(
             roomId,
