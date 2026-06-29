@@ -7,6 +7,8 @@ import {Icon} from './Icon';
 type ChipProps = {
   label: string;
   selected?: boolean;
+  /** Dim and ignore taps — e.g. an individual topic while "All" is active. */
+  disabled?: boolean;
   onPress?: () => void;
 };
 
@@ -14,16 +16,18 @@ type ChipProps = {
  * Pill-shaped selectable filter (e.g. topics). Selected fills with the accent
  * and shows a leading check; idle sits on `surface` with a hairline border.
  */
-export function Chip({label, selected, onPress}: ChipProps) {
+export function Chip({label, selected, disabled, onPress}: ChipProps) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{selected: !!selected}}
+      accessibilityState={{selected: !!selected, disabled: !!disabled}}
+      disabled={disabled}
       onPress={onPress}
       style={({pressed}) => [
         styles.base,
         selected ? styles.selected : styles.idle,
         pressed && styles.pressed,
+        disabled && styles.disabled,
       ]}>
       <View style={styles.inner} pointerEvents="none">
         {selected && <Icon name="check" size={16} color="textPrimary" />}
@@ -60,6 +64,9 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.85,
+  },
+  disabled: {
+    opacity: 0.4,
   },
   labelSelected: {
     fontWeight: '500',

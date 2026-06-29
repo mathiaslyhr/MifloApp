@@ -24,14 +24,9 @@ export const TOPICS: readonly Topic[] = [
 
 export const QUESTION_COUNT_OPTIONS = [5, 10, 15, 20] as const;
 
-/** Default Create-screen selections matching the mockup. */
+/** Default Create-screen selections. Topics default to "All". */
 export const DEFAULT_QUESTION_COUNT = 10;
-export const DEFAULT_TOPIC_IDS = [
-  'current-stars',
-  'premier-league',
-  'champions-league',
-  'legends',
-];
+export const DEFAULT_TOPIC_IDS = ['all'];
 
 /** A person in a room (lobby/standings), not a footballer. */
 export type Player = {id: string; name: string; isHost?: boolean; isYou?: boolean};

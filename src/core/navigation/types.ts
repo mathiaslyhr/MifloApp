@@ -34,7 +34,9 @@ export type RootStackParamList = {
     topicIds?: string[];
     count?: number;
   };
-  QuizPodium: {roomId?: string; code: string};
+  // isHost lets the podium offer "Play again" only to the host (who drives the
+  // restart); guests follow the room back into the new game.
+  QuizPodium: {roomId?: string; code: string; isHost?: boolean};
 };
 
 export type RootRouteName = keyof RootStackParamList;

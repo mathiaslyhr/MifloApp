@@ -16,6 +16,7 @@ function mapResult(row: any): GameResult {
   return {
     id: row.id,
     roomCode: row.room_code ?? null,
+    gameType: row.game_type ?? 'quiz',
     name: row.name,
     score: row.score ?? 0,
     rank: row.rank ?? 0,

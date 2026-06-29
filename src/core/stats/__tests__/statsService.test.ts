@@ -8,6 +8,7 @@ function result(over: Partial<GameResult>): GameResult {
   return {
     id: Math.random().toString(),
     roomCode: 'ABCD',
+    gameType: 'quiz',
     name: 'You',
     score: 0,
     rank: 1,

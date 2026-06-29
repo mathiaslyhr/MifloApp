@@ -94,7 +94,7 @@ export function QuestionScreen({navigation, route}: Props) {
     }
     return subscribeRoom(roomId, room => {
       if (room.status === 'finished') {
-        navigation.replace('QuizPodium', {roomId, code});
+        navigation.replace('QuizPodium', {roomId, code, isHost});
         return;
       }
       if (!room.phase) {
@@ -113,7 +113,7 @@ export function QuestionScreen({navigation, route}: Props) {
         showStandings();
       }
     });
-  }, [roomId, code, navigation, next, reveal, showStandings]);
+  }, [roomId, isHost, code, navigation, next, reveal, showStandings]);
 
   // Host only: schedule the next transition at the current deadline and write it.
   useEffect(() => {
@@ -136,7 +136,7 @@ export function QuestionScreen({navigation, route}: Props) {
             rank: s.rank,
             is_winner: s.rank === 1,
           }));
-          await finishGame(roomId, results);
+          await finishGame(roomId, results, 'quiz');
         } else {
           await setPhase(
             roomId,
@@ -174,12 +174,17 @@ export function QuestionScreen({navigation, route}: Props) {
           ? fractionRemaining(deadlineRef.current, Date.now())
           : Math.max(0, 1 - (Date.now() - startRef.current) / QUESTION_DURATION_MS);
       lockAnswer(optionIndex, fraction);
-      // Solo reveals immediately; networked waits for the host to flip the phase.
+      // Solo reveals immediately. A networked game normally waits for the host to
+      // flip the phase — but if you're the only one in the room there's nobody to
+      // wait for, so bring the deadline to now and let the host clock reveal at
+      // once instead of running the timer down.
       if (!roomId) {
         reveal();
+      } else if (isHost && contestants.length <= 1) {
+        setDeadlineTs(Date.now());
       }
     },
-    [roomId, lockAnswer, reveal],
+    [roomId, isHost, contestants.length, lockAnswer, reveal],
   );
 
   // Time's up: solo reveals; networked just freezes the choice (host reveals).
@@ -231,7 +236,9 @@ export function QuestionScreen({navigation, route}: Props) {
 
   function stateFor(i: number): AnswerState {
     if (phase === 'question') {
-      return 'idle';
+      // Highlight your locked choice while the round waits to reveal, so the tap
+      // visibly registers (networked games don't reveal until the host clock flips).
+      return answered && i === selected ? 'selected' : 'idle';
     }
     if (i === question.correctIndex) {
       return 'correct';
@@ -294,6 +301,7 @@ export function QuestionScreen({navigation, route}: Props) {
                 running={phase === 'question'}
                 onTimeout={handleTimeout}
                 deadlineTs={roomId ? deadlineTs ?? undefined : undefined}
+                size={88}
               />
             )}
           </View>
@@ -314,7 +322,7 @@ export function QuestionScreen({navigation, route}: Props) {
             ))}
           </View>
 
-          {phase === 'question' && roomId && answered && (
+          {phase === 'question' && roomId && answered && contestants.length > 1 && (
             <Text
               variant="secondary"
               color="textSecondary"
@@ -362,7 +370,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
   },
   status: {
-    height: 140,
+    height: 104,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -371,7 +379,7 @@ const styles = StyleSheet.create({
   },
   prompt: {
     paddingHorizontal: spacing.md,
-    paddingBottom: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   options: {
     gap: spacing.md,

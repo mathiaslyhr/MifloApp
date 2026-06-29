@@ -3,8 +3,11 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {Icon, Text} from '../../../core/ui';
 import {colors, minTapTarget, radii, spacing} from '../../../theme';
 
-/** idle = tappable; correct/wrong/muted = post-answer reveal states. */
-export type AnswerState = 'idle' | 'correct' | 'wrong' | 'muted';
+/**
+ * idle = tappable; selected = your locked choice while the round waits to reveal;
+ * correct/wrong/muted = post-answer reveal states.
+ */
+export type AnswerState = 'idle' | 'selected' | 'correct' | 'wrong' | 'muted';
 
 type AnswerOptionProps = {
   label: string;
@@ -23,6 +26,7 @@ export function AnswerOption({
   onPress,
   disabled,
 }: AnswerOptionProps) {
+  const selected = state === 'selected';
   const correct = state === 'correct';
   const wrong = state === 'wrong';
   const muted = state === 'muted';
@@ -34,6 +38,7 @@ export function AnswerOption({
       onPress={onPress}
       style={({pressed}) => [
         styles.base,
+        selected && styles.selected,
         correct && styles.correct,
         wrong && styles.wrong,
         muted && styles.muted,
@@ -60,6 +65,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.divider,
+  },
+  selected: {
+    backgroundColor: colors.primaryMuted,
+    borderColor: colors.primary,
   },
   correct: {
     backgroundColor: colors.successMuted,

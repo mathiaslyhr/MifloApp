@@ -224,6 +224,25 @@ export async function setPhase(
 }
 
 /**
+ * Host only — replay a finished room: swap in a fresh deck, rewind the loop and
+ * zero every player's score. Guests follow the room back into the game via the
+ * same Realtime path as start_game.
+ */
+export async function restartGame(
+  roomId: string,
+  questions: Question[],
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('restart_game', {
+    p_room_id: roomId,
+    p_questions: questions,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/**
  * Host only — mark the game finished after the last standings, and persist each
  * player's final result (M5). The host is the only device with the authoritative
  * full standings, so it writes everyone's row in one idempotent RPC call.
@@ -231,11 +250,13 @@ export async function setPhase(
 export async function finishGame(
   roomId: string,
   results: ResultEntry[],
+  gameType: string = 'quiz',
 ): Promise<void> {
   const client = await requireClient();
   const {error} = await client.rpc('finish_game', {
     p_room_id: roomId,
     p_results: results,
+    p_game_type: gameType,
   });
   if (error) {
     throw error;

@@ -23,6 +23,42 @@ const STROKE = 6;
 const TICK_MS = 100;
 
 /**
+ * Ring colour by fraction of time left (1 = full, 0 = buzzer). Fades smoothly
+ * through five stops — bright green → dark green → yellow → orange → red — so the
+ * urgency builds continuously instead of snapping at one threshold.
+ */
+const TIMER_STOPS: {at: number; color: string}[] = [
+  {at: 1, color: colors.timerHigh},
+  {at: 0.75, color: colors.timerMid},
+  {at: 0.5, color: colors.timerWarn},
+  {at: 0.25, color: colors.timerCritical},
+  {at: 0, color: colors.timerDanger},
+];
+
+function parseHex(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 0xff, (n >> 8) & 0xff, n & 0xff];
+}
+
+function timerColor(fraction: number): string {
+  const f = Math.max(0, Math.min(1, fraction));
+  // Stops run high→low; find the pair the fraction sits between and blend.
+  for (let i = 0; i < TIMER_STOPS.length - 1; i++) {
+    const hi = TIMER_STOPS[i];
+    const lo = TIMER_STOPS[i + 1];
+    if (f <= hi.at && f >= lo.at) {
+      const span = hi.at - lo.at || 1;
+      const t = (f - lo.at) / span; // 0 at lo, 1 at hi
+      const a = parseHex(lo.color);
+      const b = parseHex(hi.color);
+      const ch = (j: number) => Math.round(a[j] + (b[j] - a[j]) * t);
+      return `rgb(${ch(0)}, ${ch(1)}, ${ch(2)})`;
+    }
+  }
+  return colors.timerDanger;
+}
+
+/**
  * Circular countdown. Drives its own tick so the rest of the Question screen
  * doesn't re-render every frame. Turns red in the final quarter for urgency.
  */
@@ -63,8 +99,7 @@ export function TimerRing({
   const fraction = remaining / durationMs;
   const radius = (size - STROKE) / 2;
   const circumference = 2 * Math.PI * radius;
-  const low = fraction <= 0.25;
-  const ringColor = low ? colors.error : colors.primary;
+  const ringColor = timerColor(fraction);
   const seconds = Math.ceil(remaining / 1000);
 
   return (
@@ -93,7 +128,7 @@ export function TimerRing({
         </G>
       </Svg>
       <View style={styles.center} pointerEvents="none">
-        <Text variant="title" color={low ? 'error' : 'textPrimary'}>
+        <Text variant="title" style={{color: ringColor}}>
           {seconds}
         </Text>
       </View>

@@ -8,6 +8,8 @@
 export type GameResult = {
   id: string;
   roomCode: string | null;
+  /** Which game this result came from — 'quiz' today; '1v1' etc. later. */
+  gameType: string;
   name: string;
   score: number;
   rank: number;

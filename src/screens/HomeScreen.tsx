@@ -1,8 +1,8 @@
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, Icon, Screen, Text} from '../core/ui';
+import {Button, Screen, Text} from '../core/ui';
 import {colors, radii, spacing} from '../theme';
 import {APP_STORE_URL} from '../core/config';
 import type {RootStackParamList} from '../core/navigation/types';
@@ -34,17 +34,6 @@ export function HomeScreen({navigation}: Props) {
           onPress={() => navigation.navigate('QuizJoin')}
         />
       </View>
-
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => navigation.navigate('Stats')}
-        hitSlop={8}
-        style={styles.statsLink}>
-        <Icon name="trophy" size={16} color="textSecondary" />
-        <Text variant="secondary" color="textSecondary">
-          Your stats
-        </Text>
-      </Pressable>
 
       <View style={styles.spacer} />
 
@@ -78,13 +67,6 @@ const styles = StyleSheet.create({
   tagline: {marginTop: spacing.xs},
   actions: {
     gap: spacing.md,
-  },
-  statsLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.lg,
   },
   spacer: {flex: 1},
   qrCard: {

@@ -136,6 +136,7 @@ export function CreateGameScreen({navigation}: Props) {
                 key={topic.id}
                 label={topic.label}
                 selected={topicIds.includes(topic.id)}
+                disabled={topicIds.includes('all') && topic.id !== 'all'}
                 onPress={() => toggleTopic(topic.id)}
               />
             ))}
