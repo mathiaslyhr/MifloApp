@@ -58,6 +58,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'arsenal', from: 2018, to: 2022},
       {clubId: 'barcelona', from: 2022, to: 2023},
       {clubId: 'marseille', from: 2023, to: 2024},
+      {clubId: 'al-qadsiah', from: 2024, to: 2025},
+      {clubId: 'marseille', from: 2025},
     ],
     honours: [],
   },
@@ -242,8 +244,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'napoli', from: 2010, to: 2013},
       {clubId: 'psg', from: 2013, to: 2020},
       {clubId: 'man-utd', from: 2020, to: 2022},
+      {clubId: 'valencia', from: 2022, to: 2023},
+      {clubId: 'boca-juniors', from: 2023, to: 2026},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 6, years: [2014, 2015, 2016, 2018, 2019, 2020]},
+    ],
   },
   {
     id: 'Chiellini, Giorgio',
@@ -349,15 +355,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ousmane Dembélé',
     nationality: ['France'],
     positions: ['FW'],
-    shirtNumbers: [10],
+    shirtNumbers: [10, 7],
     clubs: [
+      {clubId: 'rennes', from: 2015, to: 2016},
       {clubId: 'dortmund', from: 2016, to: 2017},
       {clubId: 'barcelona', from: 2017, to: 2023},
       {clubId: 'psg', from: 2023},
     ],
     honours: [
-      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'champions-league', count: 2, years: [2025, 2026]},
       {type: 'world-cup', count: 1, years: [2018]},
+      {type: 'league-title', count: 6, years: [2018, 2019, 2023, 2024, 2025, 2026]},
+      {type: 'ballon-dor', count: 1, years: [2025]},
+      {type: 'player-of-the-season', count: 1, years: [2025]},
     ],
   },
   {
@@ -387,11 +397,13 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [1, 99],
     clubs: [
       {clubId: 'ac-milan', from: 2015, to: 2021},
-      {clubId: 'psg', from: 2021},
+      {clubId: 'psg', from: 2021, to: 2025},
+      {clubId: 'man-city', from: 2025},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2025]},
       {type: 'european-championship', count: 1, years: [2020]},
+      {type: 'league-title', count: 4, years: [2022, 2023, 2024, 2025]},
     ],
   },
   {
@@ -613,7 +625,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psg', from: 2021},
     ],
     honours: [
-      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'champions-league', count: 3, years: [2018, 2025, 2026]},
+      {type: 'league-title', count: 6, years: [2021, 2022, 2023, 2024, 2025, 2026]},
     ],
   },
   {
@@ -794,7 +807,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psg', from: 2025},
     ],
     honours: [
-      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'champions-league', count: 2, years: [2025, 2026]},
+      {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
     ],
   },
   {
@@ -934,6 +948,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
   {
     id: 'Marquinhos',
     name: 'Marquinhos',
+    fullName: 'Marcos Aoás Corrêa',
     nationality: ['Brazil'],
     positions: ['DF'],
     shirtNumbers: [5],
@@ -942,7 +957,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psg', from: 2013},
     ],
     honours: [
-      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'champions-league', count: 2, years: [2025, 2026]},
+      {type: 'league-title', count: 11, years: [2014, 2015, 2016, 2018, 2019, 2020, 2022, 2023, 2024, 2025, 2026]},
     ],
   },
   {
@@ -985,6 +1001,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'world-cup', count: 1, years: [2018]},
+      {type: 'league-title', count: 7, years: [2017, 2018, 2019, 2020, 2022, 2023, 2024]},
+      {type: 'golden-boot', count: 1, years: [2025]},
     ],
   },
   {
@@ -1662,15 +1680,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
   {
     id: 'Vitinha',
     name: 'Vitinha',
+    fullName: 'Vítor Machado Ferreira',
     nationality: ['Portugal'],
     positions: ['MF'],
     shirtNumbers: [17],
     clubs: [
       {clubId: 'porto', from: 2020, to: 2022},
+      {clubId: 'wolves', from: 2020, to: 2021, loan: true},
       {clubId: 'psg', from: 2022},
     ],
     honours: [
-      {type: 'champions-league', count: 1, years: [2025]},
+      {type: 'champions-league', count: 2, years: [2025, 2026]},
+      {type: 'league-title', count: 5, years: [2022, 2023, 2024, 2025, 2026]},
     ],
   },
   {

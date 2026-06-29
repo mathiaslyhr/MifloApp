@@ -20,6 +20,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'west-ham', name: 'West Ham United', country: 'England', league: 'premier-league'},
   {id: 'leicester', name: 'Leicester City', country: 'England', league: 'premier-league'},
   {id: 'leeds', name: 'Leeds United', country: 'England', league: 'premier-league'},
+  {id: 'wolves', name: 'Wolverhampton Wanderers', country: 'England', league: 'premier-league'},
 
   // La Liga
   {id: 'real-madrid', name: 'Real Madrid', country: 'Spain', league: 'la-liga'},
@@ -56,11 +57,13 @@ export const CLUBS: readonly Club[] = [
   {id: 'marseille', name: 'Olympique de Marseille', country: 'France', league: 'ligue-1'},
   {id: 'lyon', name: 'Olympique Lyonnais', country: 'France', league: 'ligue-1'},
   {id: 'lille', name: 'Lille', country: 'France', league: 'ligue-1'},
+  {id: 'rennes', name: 'Stade Rennais', country: 'France', league: 'ligue-1'},
 
   // Other (used by career history but not a primary quiz league)
   {id: 'inter-miami', name: 'Inter Miami', country: 'USA', league: 'mls'},
   {id: 'al-nassr', name: 'Al Nassr', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'al-hilal', name: 'Al Hilal', country: 'Saudi Arabia', league: 'saudi-pro-league'},
+  {id: 'al-qadsiah', name: 'Al-Qadsiah', country: 'Saudi Arabia', league: 'saudi-pro-league'},
   {id: 'sporting', name: 'Sporting CP', country: 'Portugal', league: 'primeira-liga'},
   {id: 'benfica', name: 'Benfica', country: 'Portugal', league: 'primeira-liga'},
   {id: 'porto', name: 'FC Porto', country: 'Portugal', league: 'primeira-liga'},
