@@ -127,6 +127,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 1, years: [2024]},
       {type: 'league-title', count: 1, years: [2024]},
     ],
+    seasonStats: [
+      {season: '2023-24', clubId: 'real-madrid', competition: 'La Liga', goals: 19},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Benzema, Karim',
@@ -648,6 +652,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 2, years: [2023, 2024]},
       {type: 'golden-boot', count: 1, years: [2023]},
     ],
+    seasonStats: [
+      {season: '2022-23', clubId: 'man-city', competition: 'Premier League', appearances: 35, goals: 36, assists: 8},
+      {season: '2024-25', clubId: 'man-city', competition: 'Premier League', goals: 22},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Hakimi, Achraf',
@@ -665,6 +674,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 3, years: [2018, 2025, 2026]},
       {type: 'league-title', count: 6, years: [2021, 2022, 2023, 2024, 2025, 2026]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Hazard, Eden',
@@ -808,6 +818,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 2, years: [2025, 2026]},
       {type: 'golden-boot', count: 2, years: [2024, 2026]},
     ],
+    seasonStats: [
+      {season: '2023-24', clubId: 'bayern', competition: 'Bundesliga', appearances: 32, goals: 36, assists: 8},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Kimmich, Joshua',
@@ -823,6 +837,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 1, years: [2020]},
       {type: 'league-title', count: 10, years: [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025, 2026]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Kompany, Vincent',
@@ -868,6 +883,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2025, 2026]},
       {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Lahm, Philipp',
@@ -913,6 +929,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 1, years: [2022]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Lewandowski, Robert',
@@ -930,6 +947,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 13, years: [2011, 2012, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025, 2026]},
       {type: 'golden-boot', count: 2, years: [2021, 2022]},
     ],
+    seasonStats: [
+      {season: '2020-21', clubId: 'bayern', competition: 'Bundesliga', appearances: 29, goals: 41, assists: 7},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Lukaku, Romelu',
@@ -1074,6 +1095,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 7, years: [2017, 2018, 2019, 2020, 2022, 2023, 2024]},
       {type: 'golden-boot', count: 1, years: [2025]},
     ],
+    seasonStats: [
+      {season: '2024-25', clubId: 'real-madrid', competition: 'La Liga', goals: 31},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Messi, Lionel',
@@ -1092,6 +1117,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 12, years: [2005, 2006, 2009, 2010, 2011, 2013, 2015, 2016, 2018, 2019, 2022, 2023]},
       {type: 'ballon-dor', count: 8, years: [2009, 2010, 2011, 2012, 2015, 2019, 2021, 2023]},
       {type: 'golden-boot', count: 6, years: [2010, 2012, 2013, 2017, 2018, 2019]},
+    ],
+    seasonStats: [
+      {season: '2011-12', clubId: 'barcelona', competition: 'La Liga', goals: 50, assists: 16},
     ],
     tags: ['legends'],
   },
@@ -1474,6 +1502,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'ballon-dor', count: 1, years: [2024]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Rodríguez, James',
@@ -1560,6 +1589,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'ballon-dor', count: 5, years: [2008, 2013, 2014, 2016, 2017]},
       {type: 'golden-boot', count: 4, years: [2008, 2011, 2014, 2015]},
     ],
+    seasonStats: [
+      {season: '2014-15', clubId: 'real-madrid', competition: 'La Liga', goals: 48, assists: 16},
+    ],
     tags: ['legends'],
   },
   {
@@ -1574,6 +1606,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Salah, Mohamed',
@@ -1593,6 +1626,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 2, years: [2020, 2025]},
       {type: 'player-of-the-season', count: 3, years: [2018, 2022, 2025]},
     ],
+    seasonStats: [
+      {season: '2017-18', clubId: 'liverpool', competition: 'Premier League', appearances: 36, goals: 32, assists: 10},
+      {season: '2024-25', clubId: 'liverpool', competition: 'Premier League', goals: 29, assists: 18},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Sané, Leroy',
@@ -1799,6 +1837,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2022, 2024]},
       {type: 'league-title', count: 3, years: [2020, 2022, 2024]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Vitinha',
@@ -1816,6 +1855,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2025, 2026]},
       {type: 'league-title', count: 5, years: [2022, 2023, 2024, 2025, 2026]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Vlahović, Dušan',
@@ -1828,6 +1868,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'juventus', from: 2022},
     ],
     honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Weah, George',
@@ -1859,6 +1900,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 1, years: [2024]},
     ],
+    tags: ['current-stars'],
   },
   {
     id: 'Xavi',

@@ -23,7 +23,9 @@ export const CATEGORIES: readonly Category[] = [
   {id: 'ligue-1', criteria: [{kind: 'league', league: 'ligue-1'}]},
   {id: 'champions-league', criteria: [{kind: 'honour', honour: 'champions-league'}]},
   {id: 'world-cup', criteria: [{kind: 'honour', honour: 'world-cup'}]},
+  {id: 'ballon-dor', criteria: [{kind: 'honour', honour: 'ballon-dor'}]},
   {id: 'legends', criteria: [{kind: 'tag', tag: 'legends'}]},
+  {id: 'current-stars', criteria: [{kind: 'tag', tag: 'current-stars'}]},
 ];
 
 const CATEGORIES_BY_ID: ReadonlyMap<string, Category> = new Map(

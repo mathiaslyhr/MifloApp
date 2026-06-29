@@ -17,6 +17,8 @@ export const TOPICS: readonly Topic[] = [
   {id: 'ligue-1', label: 'Ligue 1'},
   {id: 'champions-league', label: 'Champions League'},
   {id: 'world-cup', label: 'World Cup'},
+  {id: 'ballon-dor', label: "Ballon d'Or"},
+  {id: 'current-stars', label: 'Current Stars'},
   {id: 'legends', label: 'Legends'},
 ];
 
@@ -25,8 +27,8 @@ export const QUESTION_COUNT_OPTIONS = [5, 10, 15, 20] as const;
 /** Default Create-screen selections matching the mockup. */
 export const DEFAULT_QUESTION_COUNT = 10;
 export const DEFAULT_TOPIC_IDS = [
+  'current-stars',
   'premier-league',
-  'la-liga',
   'champions-league',
   'legends',
 ];

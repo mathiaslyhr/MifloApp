@@ -82,6 +82,23 @@ export type Honour = {
   clubId?: string;
 };
 
+/**
+ * A single notable season's output for a player — the basis for "hard" stat
+ * trivia ("how many league goals did X score in 2024-25?"). Curated per player
+ * for standout seasons only; most players have none. `clubId` must reference a
+ * real club; `competition` is the human label used in question copy.
+ */
+export type SeasonStat = {
+  /** Season label as written in copy, e.g. "2024-25". */
+  season: string;
+  clubId: string;
+  /** e.g. "Premier League" — defaults to "league" in copy if omitted. */
+  competition?: string;
+  appearances?: number;
+  goals?: number;
+  assists?: number;
+};
+
 export type Footballer = {
   id: string;
   name: string;
@@ -92,7 +109,9 @@ export type Footballer = {
   shirtNumbers?: number[];
   clubs: ClubSpell[];
   honours: Honour[];
-  /** Facts that can't be derived, e.g. 'legends'. */
+  /** Standout single-season stat lines; drives "Stats" quiz questions. */
+  seasonStats?: SeasonStat[];
+  /** Facts that can't be derived, e.g. 'legends', 'current-stars'. */
   tags?: string[];
 };
 

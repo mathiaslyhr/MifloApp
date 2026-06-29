@@ -48,6 +48,29 @@ describe('referential integrity', () => {
       }
     }
   });
+
+  it('every season stat references a real club and a club the player had', () => {
+    for (const f of all()) {
+      const ownClubs = new Set(f.clubs.map(s => s.clubId));
+      for (const stat of f.seasonStats ?? []) {
+        expect(getClub(stat.clubId)).toBeDefined();
+        expect(ownClubs.has(stat.clubId)).toBe(true);
+      }
+    }
+  });
+
+  it('season stat tallies are sane (0–60 goals/assists, 0–60 apps)', () => {
+    for (const f of all()) {
+      for (const stat of f.seasonStats ?? []) {
+        for (const n of [stat.goals, stat.assists, stat.appearances]) {
+          if (n !== undefined) {
+            expect(n).toBeGreaterThanOrEqual(0);
+            expect(n).toBeLessThanOrEqual(60);
+          }
+        }
+      }
+    }
+  });
 });
 
 describe('honour integrity', () => {
@@ -90,6 +113,8 @@ describe('category pools are deep enough', () => {
     ['ligue-1', 8, 20],
     ['champions-league', 20, 40],
     ['world-cup', 15, 40],
+    ['ballon-dor', 12, 40],
+    ['current-stars', 12, 40],
     ['legends', 25, 60],
   ];
 
@@ -100,6 +125,13 @@ describe('category pools are deep enough', () => {
 
   it('the "all" pool dwarfs a single game', () => {
     expect(countMatchingQuestions(['all'])).toBeGreaterThanOrEqual(120);
+  });
+
+  it('the new data dimensions are actually populated', () => {
+    const currentStars = all().filter(f => (f.tags ?? []).includes('current-stars'));
+    expect(currentStars.length).toBeGreaterThanOrEqual(12);
+    const withSeasonStats = all().filter(f => (f.seasonStats ?? []).length > 0);
+    expect(withSeasonStats.length).toBeGreaterThanOrEqual(5);
   });
 });
 

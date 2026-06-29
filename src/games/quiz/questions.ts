@@ -195,6 +195,89 @@ const honourCount: Template = (f, rng) => {
   return built && {topic: 'Honours', prompt: `How many ${HONOUR_COUNT_LABELS[honour.type]} has ${f.name} won?`, ...built};
 };
 
+/** "What shirt number does X wear?" — only for players with a single known
+ *  number, so there's exactly one correct answer. Distractors are real numbers
+ *  worn elsewhere (never this player's). */
+const shirtNumber: Template = (f, rng) => {
+  if (!f.shirtNumbers || f.shirtNumbers.length !== 1) {
+    return null;
+  }
+  const own = new Set(f.shirtNumbers);
+  const correct = f.shirtNumbers[0];
+  const pool = [
+    ...new Set(all().flatMap(p => p.shirtNumbers ?? [])),
+  ].filter(n => !own.has(n));
+  const built = makeOptions(String(correct), pool.map(String), rng);
+  return built && {topic: 'Shirt', prompt: `What shirt number does ${f.name} wear?`, ...built};
+};
+
+/** "Which club does X play for now?" — correct is the open (current) spell.
+ *  Skips retired players and anyone with an ambiguous current club. */
+const currentClub: Template = (f, rng) => {
+  const open = f.clubs.filter(s => s.to === undefined && !s.loan);
+  if (open.length !== 1) {
+    return null;
+  }
+  const club = getClub(open[0].clubId);
+  if (!club) {
+    return null;
+  }
+  const own = new Set(f.clubs.map(s => s.clubId));
+  const distractors = CLUBS.filter(c => !own.has(c.id)).map(c => c.name);
+  const built = makeOptions(club.name, distractors, rng);
+  return built && {topic: 'Clubs', prompt: `Which club does ${f.name} play for now?`, ...built};
+};
+
+/** "Which club did X play for in [year]?" — only picks years covered by exactly
+ *  one spell, so loan/transfer overlaps can't create a second correct answer. */
+const clubInYear: Template = (f, rng) => {
+  const covers = (s: {from?: number; to?: number}, y: number): boolean =>
+    (s.from ?? -Infinity) <= y && y <= (s.to ?? Infinity);
+  const years = new Set<number>();
+  for (const s of f.clubs) {
+    if (s.from === undefined) {
+      continue;
+    }
+    // For an open spell, only its start year is a fair "in [year]" target.
+    for (let y = s.from; y <= (s.to ?? s.from); y++) {
+      years.add(y);
+    }
+  }
+  const unambiguous = [...years].filter(
+    y => f.clubs.filter(s => covers(s, y)).length === 1,
+  );
+  const year = pickRandom(unambiguous, rng);
+  if (year === undefined) {
+    return null;
+  }
+  const spell = f.clubs.find(s => covers(s, year));
+  const club = spell && getClub(spell.clubId);
+  if (!club) {
+    return null;
+  }
+  const own = new Set(f.clubs.map(s => s.clubId));
+  const distractors = CLUBS.filter(c => !own.has(c.id)).map(c => c.name);
+  const built = makeOptions(club.name, distractors, rng);
+  return built && {topic: 'Career', prompt: `Which club did ${f.name} play for in ${year}?`, ...built};
+};
+
+/** "How many [competition] goals did X score in [season]?" — the hard, stat-led
+ *  template. Numeric options spread around the real figure. */
+const seasonGoals: Template = (f, rng) => {
+  const withGoals = (f.seasonStats ?? []).filter(s => s.goals !== undefined);
+  const stat = pickRandom(withGoals, rng);
+  if (!stat || stat.goals === undefined) {
+    return null;
+  }
+  const goals = stat.goals;
+  const numbers = [-3, -5, -7, +4, +6, +9, -10]
+    .map(d => goals + d)
+    .filter(n => n >= 0 && n !== goals);
+  const competition = stat.competition ?? 'league';
+  const built = makeOptions(String(goals), numbers.map(String), rng);
+  return built && {topic: 'Stats', prompt: `How many ${competition} goals did ${f.name} score in ${stat.season}?`, ...built};
+};
+
 const TEMPLATES: Template[] = [
   bothClubs,
   reversePlayedFor,
@@ -203,6 +286,10 @@ const TEMPLATES: Template[] = [
   ballonDorYear,
   clubPlayedFor,
   honourCount,
+  shirtNumber,
+  currentClub,
+  clubInYear,
+  seasonGoals,
 ];
 
 /**
@@ -260,8 +347,29 @@ export function countMatchingQuestions(topicIds: readonly string[]): number {
 }
 
 /**
+ * Pick `count` questions favouring variety: at most one question per footballer
+ * until the distinct-player pool is exhausted, then backfill. Input is assumed
+ * pre-shuffled so the selection stays random.
+ */
+function pickDiverse(questions: readonly Question[], count: number): Question[] {
+  const seen = new Set<string>();
+  const firstPerPlayer: Question[] = [];
+  const overflow: Question[] = [];
+  for (const q of questions) {
+    if (q.footballerId && !seen.has(q.footballerId)) {
+      seen.add(q.footballerId);
+      firstPerPlayer.push(q);
+    } else {
+      overflow.push(q);
+    }
+  }
+  return [...firstPerPlayer, ...overflow].slice(0, count);
+}
+
+/**
  * Generate up to `count` random questions for the given topics. Returns fewer
- * if the pool is too small (see countMatchingQuestions).
+ * if the pool is too small (see countMatchingQuestions). Within a round we
+ * prefer distinct players so a game doesn't fixate on one footballer.
  *
  * For a "play again" round, pass `exclude` with the footballer ids from the
  * previous round (see usedFootballers) so most/all questions are about new
@@ -273,7 +381,8 @@ export function buildQuestions(
   options: BuildOptions = {},
 ): Question[] {
   const {rng = Math.random, exclude = NO_EXCLUSIONS} = options;
-  return sample(candidates(topicIds, rng, exclude), count, rng);
+  const shuffled = shuffle(candidates(topicIds, rng, exclude), rng);
+  return pickDiverse(shuffled, count);
 }
 
 /** Footballer ids covered by a question set — feed into the next round's exclude. */
