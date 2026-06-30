@@ -17,13 +17,14 @@ type Props = CompositeScreenProps<
   NativeStackScreenProps<RootStackParamList>
 >;
 
-type Destination = 'Profile' | 'Stats' | 'Settings' | 'Faq';
+type Destination = 'Profile' | 'Stats' | 'Settings' | 'Faq' | 'Feedback';
 
 const ROWS: {icon: IconName; label: string; route: Destination}[] = [
   {icon: 'person', label: 'Profile', route: 'Profile'},
   {icon: 'trophy', label: 'Your stats', route: 'Stats'},
   {icon: 'settings', label: 'Settings', route: 'Settings'},
   {icon: 'help', label: 'How to play', route: 'Faq'},
+  {icon: 'chat', label: 'Send feedback', route: 'Feedback'},
 ];
 
 /** The hub: links to profile, stats, settings, and the FAQ, plus app version. */

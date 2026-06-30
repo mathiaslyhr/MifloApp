@@ -29,6 +29,7 @@ export type RootStackParamList = {
   Profile: undefined;
   Settings: undefined;
   Faq: undefined;
+  Feedback: undefined;
 
   // Shared room screens — used by every game. Join discovers the room's game
   // type from the backend; Lobby carries it so it can start the right game.

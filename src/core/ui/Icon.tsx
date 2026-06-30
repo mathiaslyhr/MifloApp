@@ -18,7 +18,8 @@ export type IconName =
   | 'menu'
   | 'settings'
   | 'help'
-  | 'person';
+  | 'person'
+  | 'chat';
 
 type IconProps = {
   name: IconName;
@@ -145,6 +146,8 @@ function renderGlyph(name: IconName, common: object): React.ReactNode {
           <Path {...common} d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
         </>
       );
+    case 'chat':
+      return <Path {...common} d="M4 5h16v11H9l-4 4v-4H4V5z" />;
     default:
       return null;
   }

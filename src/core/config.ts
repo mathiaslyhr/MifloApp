@@ -19,7 +19,7 @@ export const APP_VERSION = '1.0 (1)';
  * Privacy policy linked from Settings. Placeholder until the page is published;
  * swap in the real URL here.
  */
-export const PRIVACY_POLICY_URL = 'https://miflo.app/privacy';
+export const PRIVACY_POLICY_URL = 'https://miflo.dk/privacy';
 
 /**
  * Supabase backend (rooms + realtime lobby). The anon key is the public client

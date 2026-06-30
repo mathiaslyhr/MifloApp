@@ -8,6 +8,7 @@ import {StatsScreen} from '../../screens/StatsScreen';
 import {ProfileScreen} from '../../screens/ProfileScreen';
 import {SettingsScreen} from '../../screens/SettingsScreen';
 import {FaqScreen} from '../../screens/FaqScreen';
+import {FeedbackScreen} from '../../screens/FeedbackScreen';
 import {JoinScreen, LobbyScreen} from '../rooms/screens';
 import {
   CreateGameScreen,
@@ -80,6 +81,11 @@ export function RootNavigator() {
         <Stack.Screen
           name="Faq"
           component={FaqScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Feedback"
+          component={FeedbackScreen}
           options={{headerShown: false}}
         />
         {/* Shared room screens, used by every game. */}
