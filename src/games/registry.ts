@@ -18,7 +18,7 @@ export const games: GameManifest[] = [
     title: 'Odd One Out',
     subtitle: 'Four players, one breaks the pattern',
     entryRoute: 'OddOneOutCreate',
-    available: false,
+    available: true,
   },
   {
     id: 'missing-xi',

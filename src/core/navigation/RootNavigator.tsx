@@ -11,8 +11,14 @@ import {
   QuestionScreen,
   PodiumScreen,
 } from '../../games/quiz/screens';
-// Side-effect import: registers each game's room config for the shared lobby.
+import {
+  CreateGameScreen as OddOneOutCreateScreen,
+  QuestionScreen as OddOneOutQuestionScreen,
+  PodiumScreen as OddOneOutPodiumScreen,
+} from '../../games/odd-one-out/screens';
+// Side-effect imports: register each game's room config for the shared lobby.
 import '../../games/quiz/room';
+import '../../games/odd-one-out/room';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -77,6 +83,22 @@ export function RootNavigator() {
         <Stack.Screen
           name="QuizPodium"
           component={PodiumScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
+        {/* Odd One Out */}
+        <Stack.Screen
+          name="OddOneOutCreate"
+          component={OddOneOutCreateScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="OddOneOutQuestion"
+          component={OddOneOutQuestionScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
+        <Stack.Screen
+          name="OddOneOutPodium"
+          component={OddOneOutPodiumScreen}
           options={{headerShown: false, gestureEnabled: false}}
         />
       </Stack.Navigator>
