@@ -2,16 +2,18 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, Screen, Text} from '../core/ui';
+import {Button, GameTile, Screen, Text} from '../core/ui';
 import {colors, radii, spacing} from '../theme';
 import {APP_STORE_URL} from '../core/config';
+import {games} from '../games/registry';
 import type {RootStackParamList} from '../core/navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 /**
- * The front page. Two primary actions — host a game or join one — plus a QR
- * code friends can scan to grab Miflo from the App Store and pile in.
+ * The front page. A tile per registered game (host flow), a single "Join game"
+ * action, plus a QR code friends can scan to grab Miflo from the App Store and
+ * pile in. The hub is game-agnostic — it renders whatever the registry lists.
  */
 export function HomeScreen({navigation}: Props) {
   return (
@@ -24,10 +26,13 @@ export function HomeScreen({navigation}: Props) {
       </View>
 
       <View style={styles.actions}>
-        <Button
-          label="Create game"
-          onPress={() => navigation.navigate('QuizCreate')}
-        />
+        {games.map(game => (
+          <GameTile
+            key={game.id}
+            game={game}
+            onPress={() => navigation.navigate(game.entryRoute)}
+          />
+        ))}
         <Button
           label="Join game"
           variant="secondary"

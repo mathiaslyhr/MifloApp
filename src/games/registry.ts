@@ -13,4 +13,18 @@ export const games: GameManifest[] = [
     entryRoute: 'QuizCreate',
     available: true,
   },
+  {
+    id: 'odd-one-out',
+    title: 'Odd One Out',
+    subtitle: 'Four players, one breaks the pattern',
+    entryRoute: 'OddOneOutCreate',
+    available: false,
+  },
+  {
+    id: 'missing-xi',
+    title: 'Missing XI',
+    subtitle: 'Name the missing player from iconic line-ups',
+    entryRoute: 'MissingXiCreate',
+    available: false,
+  },
 ];

@@ -11,3 +11,4 @@ export {TextField} from './TextField';
 export {Avatar} from './Avatar';
 export {Badge} from './Badge';
 export {ScreenHeader} from './ScreenHeader';
+export {GameTile} from './GameTile';

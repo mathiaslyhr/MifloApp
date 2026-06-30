@@ -37,6 +37,31 @@ export type RootStackParamList = {
   // isHost lets the podium offer "Play again" only to the host (who drives the
   // restart); guests follow the room back into the new game.
   QuizPodium: {roomId?: string; code: string; isHost?: boolean};
+
+  // Odd One Out (Game 2) — same room/phase model as the quiz, so the param
+  // shapes mirror Quiz*. Lobby/Join are shared across games (see core/rooms).
+  OddOneOutCreate: undefined;
+  OddOneOutQuestion: {
+    roomId?: string;
+    isHost?: boolean;
+    code: string;
+    name?: string;
+    topicIds?: string[];
+    count?: number;
+  };
+  OddOneOutPodium: {roomId?: string; code: string; isHost?: boolean};
+
+  // Missing XI (Game 3) — answers are typed player names; same room model.
+  MissingXiCreate: undefined;
+  MissingXiQuestion: {
+    roomId?: string;
+    isHost?: boolean;
+    code: string;
+    name?: string;
+    topicIds?: string[];
+    count?: number;
+  };
+  MissingXiPodium: {roomId?: string; code: string; isHost?: boolean};
 };
 
 export type RootRouteName = keyof RootStackParamList;
