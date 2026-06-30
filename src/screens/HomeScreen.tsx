@@ -87,7 +87,9 @@ const styles = StyleSheet.create({
   actions: {
     gap: spacing.md,
   },
-  spacer: {flex: 1},
+  // flex:1 pushes the QR card down on tall screens; minHeight keeps a gap when
+  // the content overflows and the flex space collapses to zero.
+  spacer: {flex: 1, minHeight: spacing.xl},
   qrCard: {
     flexDirection: 'row',
     alignItems: 'center',
