@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, GameTile, Screen, Text} from '../core/ui';
@@ -18,56 +18,70 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 export function HomeScreen({navigation}: Props) {
   return (
     <Screen>
-      <View style={styles.header}>
-        <Text variant="title">Miflo</Text>
-        <Text variant="secondary" color="textSecondary" style={styles.tagline}>
-          Party games for the room you're in
-        </Text>
-      </View>
-
-      <View style={styles.actions}>
-        {games.map(game => (
-          <GameTile
-            key={game.id}
-            game={game}
-            onPress={() => navigation.navigate(game.entryRoute)}
-          />
-        ))}
-        <Button
-          label="Join game"
-          variant="secondary"
-          onPress={() => navigation.navigate('Join')}
-        />
-      </View>
-
-      <View style={styles.spacer} />
-
-      <View style={styles.qrCard}>
-        <View style={styles.qrFrame}>
-          <QRCode
-            value={APP_STORE_URL}
-            size={88}
-            backgroundColor="white"
-            color="black"
-          />
-        </View>
-        <View style={styles.qrText}>
-          <Text variant="body" style={styles.qrTitle}>
-            Scan to get Miflo
-          </Text>
-          <Text variant="secondary" color="textSecondary">
-            Send the app to friends so they can join
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+          <Text variant="title">Miflo</Text>
+          <Text variant="secondary" color="textSecondary" style={styles.tagline}>
+            Party games for the room you're in
           </Text>
         </View>
-      </View>
+
+        <View style={styles.actions}>
+          {games.map(game => (
+            <GameTile
+              key={game.id}
+              game={game}
+              onPress={() => navigation.navigate(game.entryRoute)}
+            />
+          ))}
+          <Button
+            label="Join game"
+            variant="secondary"
+            onPress={() => navigation.navigate('Join')}
+          />
+        </View>
+
+        {/* Pins the QR card to the bottom on tall screens; collapses (and the
+            page scrolls) when the games + card don't fit. */}
+        <View style={styles.spacer} />
+
+        <View style={styles.qrCard}>
+          <View style={styles.qrFrame}>
+            <QRCode
+              value={APP_STORE_URL}
+              size={88}
+              backgroundColor="white"
+              color="black"
+            />
+          </View>
+          <View style={styles.qrText}>
+            <Text variant="body" style={styles.qrTitle}>
+              Scan to get Miflo
+            </Text>
+            <Text variant="secondary" color="textSecondary">
+              Send the app to friends so they can join
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  scroll: {flex: 1},
+  scrollContent: {
+    // Fill the viewport so the spacer can push the QR card down; grow past it
+    // (scroll) when the content is taller than the screen.
+    flexGrow: 1,
+    paddingBottom: spacing.lg,
+  },
   header: {
     paddingTop: spacing.xl,
-    paddingBottom: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   tagline: {marginTop: spacing.xs},
   actions: {
@@ -81,7 +95,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderRadius: radii.card,
     padding: spacing.lg,
-    marginBottom: spacing.lg,
   },
   qrFrame: {
     backgroundColor: 'white',
