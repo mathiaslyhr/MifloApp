@@ -6,6 +6,8 @@ export {CLUBS, getClub} from './clubs';
 export {CATEGORIES, getCategory} from './categories';
 export type {Category} from './categories';
 export {FOOTBALLERS} from './footballers';
+export {FAMOUS_LINEUPS} from './famousLineups';
+export type {FamousLineup, LineupPlayer} from './famousLineups';
 export {
   all,
   getById,

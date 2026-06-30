@@ -16,9 +16,15 @@ import {
   QuestionScreen as OddOneOutQuestionScreen,
   PodiumScreen as OddOneOutPodiumScreen,
 } from '../../games/odd-one-out/screens';
+import {
+  CreateGameScreen as MissingXiCreateScreen,
+  QuestionScreen as MissingXiQuestionScreen,
+  PodiumScreen as MissingXiPodiumScreen,
+} from '../../games/missing-xi/screens';
 // Side-effect imports: register each game's room config for the shared lobby.
 import '../../games/quiz/room';
 import '../../games/odd-one-out/room';
+import '../../games/missing-xi/room';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -99,6 +105,22 @@ export function RootNavigator() {
         <Stack.Screen
           name="OddOneOutPodium"
           component={OddOneOutPodiumScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
+        {/* Missing XI */}
+        <Stack.Screen
+          name="MissingXiCreate"
+          component={MissingXiCreateScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MissingXiQuestion"
+          component={MissingXiQuestionScreen}
+          options={{headerShown: false, gestureEnabled: false}}
+        />
+        <Stack.Screen
+          name="MissingXiPodium"
+          component={MissingXiPodiumScreen}
           options={{headerShown: false, gestureEnabled: false}}
         />
       </Stack.Navigator>

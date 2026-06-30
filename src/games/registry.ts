@@ -25,6 +25,6 @@ export const games: GameManifest[] = [
     title: 'Missing XI',
     subtitle: 'Name the missing player from iconic line-ups',
     entryRoute: 'MissingXiCreate',
-    available: false,
+    available: true,
   },
 ];
