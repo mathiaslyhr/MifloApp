@@ -1,15 +1,34 @@
+import type {NavigatorScreenParams} from '@react-navigation/native';
+
+/**
+ * The app shell: a floating "island" bottom-tab bar. Home is a quick landing,
+ * Games browses the registry, Menu is a hub for profile/stats/settings/FAQ.
+ * Game-flow screens live on the root stack (below) so they push above the tabs
+ * and the island is hidden mid-game.
+ */
+export type MainTabParamList = {
+  Home: undefined;
+  Games: undefined;
+  Menu: undefined;
+};
+
 /**
  * Root navigation contract.
  *
- * `Home` is the app-level launcher/hub and is game-agnostic. Quiz screens are
- * namespaced with a `Quiz` prefix so other games can add their own routes
- * later without colliding. Params are intentionally minimal for M0 and will
- * grow as the game loop is wired (M3+).
+ * `Main` is the tab shell and is game-agnostic. Quiz screens are namespaced
+ * with a `Quiz` prefix so other games can add their own routes later without
+ * colliding. Params are intentionally minimal for M0 and will grow as the game
+ * loop is wired (M3+).
  */
 export type RootStackParamList = {
-  Home: undefined;
-  // Personal career stats / scoreboard (game-agnostic, M5).
+  // Tab shell (Home / Games / Menu).
+  Main: NavigatorScreenParams<MainTabParamList>;
+  // Personal career stats / scoreboard (game-agnostic, M5), pushed from Menu.
   Stats: undefined;
+  // Menu detail screens, pushed above the tabs.
+  Profile: undefined;
+  Settings: undefined;
+  Faq: undefined;
 
   // Shared room screens — used by every game. Join discovers the room's game
   // type from the backend; Lobby carries it so it can start the right game.

@@ -12,3 +12,4 @@ export {Avatar} from './Avatar';
 export {Badge} from './Badge';
 export {ScreenHeader} from './ScreenHeader';
 export {GameTile} from './GameTile';
+export {IslandTabBar, useIslandInset, ISLAND_BAR_HEIGHT} from './IslandTabBar';

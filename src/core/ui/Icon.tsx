@@ -4,6 +4,7 @@ import {colors, type ColorToken} from '../../theme';
 
 export type IconName =
   | 'chevron-left'
+  | 'chevron-right'
   | 'chevron-up'
   | 'chevron-down'
   | 'check'
@@ -12,7 +13,12 @@ export type IconName =
   | 'share'
   | 'clock'
   | 'people'
-  | 'trophy';
+  | 'trophy'
+  | 'home'
+  | 'menu'
+  | 'settings'
+  | 'help'
+  | 'person';
 
 type IconProps = {
   name: IconName;
@@ -54,6 +60,8 @@ function renderGlyph(name: IconName, common: object): React.ReactNode {
   switch (name) {
     case 'chevron-left':
       return <Path {...common} d="M15 5l-7 7 7 7" />;
+    case 'chevron-right':
+      return <Path {...common} d="M9 5l7 7-7 7" />;
     case 'chevron-up':
       return <Path {...common} d="M6 15l6-6 6 6" />;
     case 'chevron-down':
@@ -100,6 +108,41 @@ function renderGlyph(name: IconName, common: object): React.ReactNode {
           <Path {...common} d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1" />
           <Path {...common} d="M16 5.2a3.5 3.5 0 0 1 0 6.6" />
           <Path {...common} d="M18 14.2a5 5 0 0 1 3 4.6V20" />
+        </>
+      );
+    case 'home':
+      return (
+        <>
+          <Path {...common} d="M4 11l8-7 8 7" />
+          <Path {...common} d="M6 9.5V20h12V9.5" />
+          <Path {...common} d="M10 20v-5h4v5" />
+        </>
+      );
+    case 'menu':
+      return <Path {...common} d="M4 7h16M4 12h16M4 17h16" />;
+    case 'settings':
+      return (
+        <>
+          <Circle {...common} cx={12} cy={12} r={3} />
+          <Path
+            {...common}
+            d="M12 2.5v2M12 19.5v2M4.2 7l1.7 1M18.1 16l1.7 1M4.2 17l1.7-1M18.1 8l1.7-1"
+          />
+        </>
+      );
+    case 'help':
+      return (
+        <>
+          <Circle {...common} cx={12} cy={12} r={9} />
+          <Path {...common} d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.8.4-.9.9-.9 1.7" />
+          <Path {...common} d="M12 16.5h.01" />
+        </>
+      );
+    case 'person':
+      return (
+        <>
+          <Circle {...common} cx={12} cy={8} r={3.5} />
+          <Path {...common} d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1" />
         </>
       );
     default:

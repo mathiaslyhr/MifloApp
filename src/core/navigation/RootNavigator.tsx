@@ -3,8 +3,11 @@ import {DarkTheme, NavigationContainer, type Theme as NavTheme} from '@react-nav
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {colors, fontFamily} from '../../theme';
 import type {RootStackParamList} from './types';
-import {HomeScreen} from '../../screens/HomeScreen';
+import {MainTabs} from './MainTabs';
 import {StatsScreen} from '../../screens/StatsScreen';
+import {ProfileScreen} from '../../screens/ProfileScreen';
+import {SettingsScreen} from '../../screens/SettingsScreen';
+import {FaqScreen} from '../../screens/FaqScreen';
 import {JoinScreen, LobbyScreen} from '../rooms/screens';
 import {
   CreateGameScreen,
@@ -54,13 +57,29 @@ export function RootNavigator() {
           contentStyle: {backgroundColor: colors.background},
         }}>
         <Stack.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Main"
+          component={MainTabs}
           options={{headerShown: false}}
         />
+        {/* Menu detail screens, pushed above the tab shell. */}
         <Stack.Screen
           name="Stats"
           component={StatsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Faq"
+          component={FaqScreen}
           options={{headerShown: false}}
         />
         {/* Shared room screens, used by every game. */}

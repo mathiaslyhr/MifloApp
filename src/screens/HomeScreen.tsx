@@ -1,26 +1,36 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
+import type {CompositeScreenProps} from '@react-navigation/native';
+import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, GameTile, Screen, Text} from '../core/ui';
+import {Button, Screen, Text, useIslandInset} from '../core/ui';
 import {colors, radii, spacing} from '../theme';
 import {APP_STORE_URL} from '../core/config';
-import {games} from '../games/registry';
-import type {RootStackParamList} from '../core/navigation/types';
+import type {
+  MainTabParamList,
+  RootStackParamList,
+} from '../core/navigation/types';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+type Props = CompositeScreenProps<
+  BottomTabScreenProps<MainTabParamList, 'Home'>,
+  NativeStackScreenProps<RootStackParamList>
+>;
 
 /**
- * The front page. A tile per registered game (host flow), a single "Join game"
- * action, plus a QR code friends can scan to grab Miflo from the App Store and
- * pile in. The hub is game-agnostic — it renders whatever the registry lists.
+ * The landing tab. Two big actions — Create a game (jumps to the Games tab to
+ * pick one) and Join a game (the shared join flow) — plus a QR code friends can
+ * scan to grab Miflo from the App Store and pile in.
  */
 export function HomeScreen({navigation}: Props) {
+  const bottomInset = useIslandInset();
+
   return (
-    <Screen>
+    <Screen edges={['top']}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, {paddingBottom: bottomInset}]}
+        scrollIndicatorInsets={{bottom: bottomInset}}
         showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text variant="title">Miflo</Text>
@@ -30,22 +40,19 @@ export function HomeScreen({navigation}: Props) {
         </View>
 
         <View style={styles.actions}>
-          {games.map(game => (
-            <GameTile
-              key={game.id}
-              game={game}
-              onPress={() => navigation.navigate(game.entryRoute)}
-            />
-          ))}
           <Button
-            label="Join game"
+            label="Create a game"
+            onPress={() => navigation.navigate('Games')}
+          />
+          <Button
+            label="Join a game"
             variant="secondary"
             onPress={() => navigation.navigate('Join')}
           />
         </View>
 
         {/* Pins the QR card to the bottom on tall screens; collapses (and the
-            page scrolls) when the games + card don't fit. */}
+            page scrolls) when the content doesn't fit. */}
         <View style={styles.spacer} />
 
         <View style={styles.qrCard}>
@@ -77,7 +84,6 @@ const styles = StyleSheet.create({
     // Fill the viewport so the spacer can push the QR card down; grow past it
     // (scroll) when the content is taller than the screen.
     flexGrow: 1,
-    paddingBottom: spacing.lg,
   },
   header: {
     paddingTop: spacing.xl,
