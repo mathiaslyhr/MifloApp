@@ -61,12 +61,13 @@ export function CreateGameScreen({navigation}: Props) {
     setError(null);
     try {
       await setNickname(trimmed);
-      const room = await createRoom(topicIds, count, trimmed);
-      navigation.navigate('QuizLobby', {
+      const room = await createRoom('quiz', topicIds, count, trimmed);
+      navigation.navigate('Lobby', {
         roomId: room.id,
         code: room.code,
         isHost: true,
         name: trimmed,
+        gameType: 'quiz',
         topicIds,
         count,
       });

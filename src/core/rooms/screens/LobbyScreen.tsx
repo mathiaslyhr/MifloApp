@@ -7,48 +7,45 @@ import {
   Text,
   Button,
   Avatar,
+  Badge,
   Icon,
   StickyFooter,
-} from '../../../core/ui';
+} from '../../ui';
 import {colors, radii, spacing} from '../../../theme';
-import type {RootStackParamList} from '../../../core/navigation/types';
-import {ensureSession} from '../../../core/supabase/client';
+import type {RootStackParamList} from '../../navigation/types';
+import {ensureSession} from '../../supabase/client';
 import {
   fetchPlayers,
   setPhase,
   startGame,
   subscribePlayers,
   subscribeRoom,
-} from '../../../core/rooms/roomService';
-import type {RoomPlayer} from '../../../core/rooms/types';
-import {PlayerRow} from '../components/PlayerRow';
-import {DEFAULT_QUESTION_COUNT, DEFAULT_TOPIC_IDS} from '../mockData';
-import {buildQuestions} from '../questions';
-import {QUESTION_DURATION_MS} from '../scoring';
-import {contestantsFromPlayers, useQuizStore} from '../store';
+} from '../roomService';
+import type {RoomPlayer} from '../types';
+import {getGameRoom} from '../gameRoom';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'QuizLobby'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
 
 /**
- * Pre-game room: shows the game code to share, the live roster (via Realtime),
- * and the host's start button. The host builds the shared deck and starts the
- * game; guests are taken into the game automatically when the room flips to
- * 'in_progress'. Both paths hydrate the store from the room before navigating so
+ * Shared pre-game room for every game: shows the game code to share, the live
+ * roster (via Realtime), and the host's start button. Game-specific behaviour —
+ * building the deck, hydrating the store, and which screen to start — comes from
+ * the game's registered room config (looked up by `gameType`). The host builds
+ * the shared deck and starts; guests are taken into the game automatically when
+ * the room flips to 'in_progress'. Both paths hydrate before navigating so
  * everyone plays the same deck against the same contestants.
  */
 export function LobbyScreen({navigation, route}: Props) {
-  const {roomId, code, isHost, topicIds, count} = route.params;
-  const questionCount = count ?? DEFAULT_QUESTION_COUNT;
-  const topics = topicIds ?? DEFAULT_TOPIC_IDS;
-  const subtitle = `${questionCount} questions · ${topics.length} topics`;
+  const {roomId, code, isHost, gameType, topicIds, count} = route.params;
+  const config = getGameRoom(gameType);
+  const lobbyConfig = {topicIds, count};
+  const subtitle = config.lobbySubtitle?.(lobbyConfig) ?? '';
 
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [starting, setStarting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const myUserId = useRef<string | null>(null);
   const navigatedRef = useRef(false);
-
-  const hydrate = useQuizStore(s => s.hydrate);
 
   // Live roster — fires on joins and (later) score changes.
   useEffect(() => {
@@ -71,18 +68,15 @@ export function LobbyScreen({navigation, route}: Props) {
       navigatedRef.current = true;
       // Use the freshest roster for contestants.
       const roster = await fetchPlayers(roomId).catch(() => players);
-      hydrate(
-        room.questions,
-        contestantsFromPlayers(roster, myUserId.current),
-      );
-      navigation.replace('QuizQuestion', {roomId, code, isHost: false});
+      config.hydrate(room.questions, roster, myUserId.current);
+      navigation.replace(config.questionRoute, {roomId, code, isHost: false});
     });
     return unsubscribe;
-  }, [isHost, roomId, code, navigation, hydrate, players]);
+  }, [isHost, roomId, code, navigation, config, players]);
 
   function shareCode() {
     Share.share({
-      message: `Join my Miflo quiz! Game code: ${code}`,
+      message: `Join my Miflo game! Game code: ${code}`,
     }).catch(() => {});
   }
 
@@ -90,19 +84,14 @@ export function LobbyScreen({navigation, route}: Props) {
     setStarting(true);
     setError(null);
     try {
-      const deck = buildQuestions(topics, questionCount);
+      const deck = config.buildDeck(lobbyConfig);
       await startGame(roomId, deck);
-      // Kick off the first question on the shared clock so guests get a deadline.
-      await setPhase(
-        roomId,
-        'question',
-        0,
-        Date.now() + QUESTION_DURATION_MS,
-      );
+      // Kick off the first phase on the shared clock so guests get a deadline.
+      await setPhase(roomId, 'question', 0, Date.now() + config.firstPhaseDurationMs);
       navigatedRef.current = true;
       const roster = await fetchPlayers(roomId).catch(() => players);
-      hydrate(deck, contestantsFromPlayers(roster, myUserId.current));
-      navigation.replace('QuizQuestion', {roomId, code, isHost: true});
+      config.hydrate(deck, roster, myUserId.current);
+      navigation.replace(config.questionRoute, {roomId, code, isHost: true});
     } catch {
       setError('Couldn’t start the game. Try again.');
       setStarting(false);
@@ -150,15 +139,16 @@ export function LobbyScreen({navigation, route}: Props) {
 
         <View>
           {players.map(player => (
-            <PlayerRow
-              key={player.id}
-              player={{
-                id: player.id,
-                name: player.name,
-                isHost: player.isHost,
-                isYou: player.userId === myUserId.current,
-              }}
-            />
+            <View key={player.id} style={styles.playerRow}>
+              <Avatar
+                name={player.name}
+                variant={player.isHost ? 'host' : 'neutral'}
+              />
+              <Text variant="body" style={styles.playerName}>
+                {player.name}
+              </Text>
+              {player.isHost && <Badge label="host" tone="host" />}
+            </View>
           ))}
           <View style={styles.waitingRow}>
             <Avatar variant="waiting" />
@@ -231,6 +221,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.xl,
     marginBottom: spacing.xs,
+  },
+  playerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.divider,
+  },
+  playerName: {
+    flex: 1,
   },
   waitingRow: {
     flexDirection: 'row',

@@ -6,10 +6,9 @@
  * All writes go through SECURITY DEFINER RPCs (see
  * supabase/migrations/0001_rooms.sql); the client only ever reads via RLS.
  */
-import type {Question} from '../../games/quiz/mockData';
 import {ensureSession, supabase} from '../supabase/client';
 import type {ResultEntry} from '../stats/types';
-import type {Room, RoomPlayer} from './types';
+import type {Deck, Room, RoomPlayer} from './types';
 
 /** Thrown when a room feature is used but the backend isn't configured. */
 export class BackendUnavailableError extends Error {
@@ -35,6 +34,7 @@ function mapRoom(row: any): Room {
     code: row.code,
     hostId: row.host_id,
     status: row.status,
+    gameType: row.game_type ?? 'quiz',
     topicIds: row.topic_ids ?? [],
     questionCount: row.question_count,
     questions: row.questions ?? null,
@@ -59,6 +59,7 @@ function mapPlayer(row: any): RoomPlayer {
 
 /** Host creates a room; the server mints the code and adds the host as a player. */
 export async function createRoom(
+  gameType: string,
   topicIds: string[],
   count: number,
   name: string,
@@ -68,6 +69,7 @@ export async function createRoom(
     p_topic_ids: topicIds,
     p_count: count,
     p_name: name,
+    p_game_type: gameType,
   });
   if (error) {
     throw error;
@@ -178,11 +180,11 @@ export function subscribeRoom(roomId: string, cb: (room: Room) => void): () => v
 }
 
 /** Host starts the game: stores the shared deck and flips status. */
-export async function startGame(roomId: string, questions: Question[]): Promise<void> {
+export async function startGame(roomId: string, deck: Deck): Promise<void> {
   const client = await requireClient();
   const {error} = await client.rpc('start_game', {
     p_room_id: roomId,
-    p_questions: questions,
+    p_questions: deck,
   });
   if (error) {
     throw error;
@@ -228,14 +230,11 @@ export async function setPhase(
  * zero every player's score. Guests follow the room back into the game via the
  * same Realtime path as start_game.
  */
-export async function restartGame(
-  roomId: string,
-  questions: Question[],
-): Promise<void> {
+export async function restartGame(roomId: string, deck: Deck): Promise<void> {
   const client = await requireClient();
   const {error} = await client.rpc('restart_game', {
     p_room_id: roomId,
-    p_questions: questions,
+    p_questions: deck,
   });
   if (error) {
     throw error;

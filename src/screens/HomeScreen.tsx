@@ -36,7 +36,7 @@ export function HomeScreen({navigation}: Props) {
         <Button
           label="Join game"
           variant="secondary"
-          onPress={() => navigation.navigate('QuizJoin')}
+          onPress={() => navigation.navigate('Join')}
         />
       </View>
 

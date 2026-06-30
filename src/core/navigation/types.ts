@@ -11,19 +11,23 @@ export type RootStackParamList = {
   // Personal career stats / scoreboard (game-agnostic, M5).
   Stats: undefined;
 
-  // Football quiz (Game 1)
-  QuizCreate: undefined;
-  QuizJoin: undefined;
+  // Shared room screens — used by every game. Join discovers the room's game
+  // type from the backend; Lobby carries it so it can start the right game.
+  Join: undefined;
   // Host picks topics/count on Create and carries them into the lobby; guests
   // get them from the room, so they're optional on the params.
-  QuizLobby: {
+  Lobby: {
     roomId: string;
     code: string;
     isHost: boolean;
     name: string;
+    gameType: string;
     topicIds?: string[];
     count?: number;
   };
+
+  // Football quiz (Game 1)
+  QuizCreate: undefined;
   // roomId is optional so local/solo play still works without a backend.
   // isHost marks who drives the synced phase clock (M4).
   QuizQuestion: {

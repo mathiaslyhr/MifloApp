@@ -5,13 +5,14 @@ import {colors, fontFamily} from '../../theme';
 import type {RootStackParamList} from './types';
 import {HomeScreen} from '../../screens/HomeScreen';
 import {StatsScreen} from '../../screens/StatsScreen';
+import {JoinScreen, LobbyScreen} from '../rooms/screens';
 import {
   CreateGameScreen,
-  JoinScreen,
-  LobbyScreen,
   QuestionScreen,
   PodiumScreen,
 } from '../../games/quiz/screens';
+// Side-effect import: registers each game's room config for the shared lobby.
+import '../../games/quiz/room';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -50,19 +51,20 @@ export function RootNavigator() {
           component={StatsScreen}
           options={{headerShown: false}}
         />
+        {/* Shared room screens, used by every game. */}
         <Stack.Screen
-          name="QuizCreate"
-          component={CreateGameScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="QuizJoin"
+          name="Join"
           component={JoinScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="QuizLobby"
+          name="Lobby"
           component={LobbyScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="QuizCreate"
+          component={CreateGameScreen}
           options={{headerShown: false}}
         />
         {/* In-game screens: no native header, and no swipe-back so a game

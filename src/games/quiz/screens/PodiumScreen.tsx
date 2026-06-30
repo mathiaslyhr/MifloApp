@@ -21,7 +21,7 @@ import {
   subscribeRoom,
 } from '../../../core/rooms/roomService';
 import {StandingRow} from '../components/StandingRow';
-import {formatPoints, type Player} from '../mockData';
+import {formatPoints, type Player, type Question} from '../mockData';
 import {buildQuestions, usedFootballers} from '../questions';
 import {QUESTION_DURATION_MS, rankContestants, type Standing} from '../scoring';
 import {contestantsFromPlayers, useQuizStore} from '../store';
@@ -71,7 +71,11 @@ export function PodiumScreen({navigation, route}: Props) {
       }
       navigatedRef.current = true;
       const roster = await fetchPlayers(roomId).catch(() => []);
-      hydrate(room.questions, contestantsFromPlayers(roster, myUserId.current));
+      // Room decks are game-agnostic (unknown[]); this is the quiz podium.
+      hydrate(
+        room.questions as Question[],
+        contestantsFromPlayers(roster, myUserId.current),
+      );
       navigation.replace('QuizQuestion', {roomId, code, isHost: false});
     });
   }, [isHost, roomId, code, navigation, hydrate]);

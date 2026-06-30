@@ -8,17 +8,19 @@ import {
   Button,
   TextField,
   StickyFooter,
-} from '../../../core/ui';
+} from '../../ui';
 import {spacing} from '../../../theme';
-import type {RootStackParamList} from '../../../core/navigation/types';
-import {getNickname, setNickname} from '../../../core/identity/deviceId';
-import {joinRoom} from '../../../core/rooms/roomService';
+import type {RootStackParamList} from '../../navigation/types';
+import {getNickname, setNickname} from '../../identity/deviceId';
+import {joinRoom} from '../roomService';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'QuizJoin'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
 
 /**
- * Guest entry: type the host's game code and a display name, then join the real
- * room. An unknown/closed code surfaces inline without navigating.
+ * Shared guest entry for every game: type the host's game code and a display
+ * name, then join the real room. The room carries its own game type, so the
+ * lobby (and from there the right game) is discovered, not chosen here. An
+ * unknown/closed code surfaces inline without navigating.
  */
 export function JoinScreen({navigation}: Props) {
   const [code, setCode] = useState('');
@@ -45,11 +47,12 @@ export function JoinScreen({navigation}: Props) {
     try {
       await setNickname(trimmedName);
       const room = await joinRoom(trimmedCode, trimmedName);
-      navigation.navigate('QuizLobby', {
+      navigation.navigate('Lobby', {
         roomId: room.id,
         code: room.code,
         isHost: false,
         name: trimmedName,
+        gameType: room.gameType,
       });
     } catch (e) {
       setError(
