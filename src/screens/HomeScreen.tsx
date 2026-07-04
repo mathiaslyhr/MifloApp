@@ -6,6 +6,7 @@ import {
   IslandTabBar,
   QrCard,
   Screen,
+  TabId,
   Text,
 } from '../core/ui';
 import {APP_STORE_URL} from '../core/config';
@@ -21,7 +22,12 @@ import {spacing} from '../theme';
  * their destinations (Create/Join screens, the "How it works" sheet) are wired
  * in later passes.
  */
-export function HomeScreen() {
+type Props = {
+  /** Switch tabs (the nav island). */
+  onTabSelect?: (id: TabId) => void;
+};
+
+export function HomeScreen({onTabSelect}: Props) {
   return (
     <Screen canvas>
       <View style={styles.content}>
@@ -51,7 +57,7 @@ export function HomeScreen() {
           <QrCard value={APP_STORE_URL} />
         </View>
 
-        <IslandTabBar active="home" />
+        <IslandTabBar active="home" onSelect={onTabSelect} />
       </View>
     </Screen>
   );

@@ -8,6 +8,7 @@ export {Text} from './Text';
 export {Button} from './Button';
 export type {ButtonVariant} from './Button';
 export {CircleButton} from './CircleButton';
+export {GameTile} from './GameTile';
 export {Avatar} from './Avatar';
 export {IslandTabBar} from './IslandTabBar';
 export type {TabId} from './IslandTabBar';
