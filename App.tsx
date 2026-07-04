@@ -12,18 +12,15 @@ import {StatusBar, StyleSheet, View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {HomeScreen} from './src/screens/HomeScreen';
 import {GamesScreen} from './src/screens/GamesScreen';
+import {MenuScreen} from './src/screens/MenuScreen';
 import type {TabId} from './src/core/ui';
 import {ensureSession} from './src/core/supabase/client';
 
 function App(): React.JSX.Element {
-  // Minimal tab shell: the nav island switches between Home and Games. The Menu
-  // tab has no screen yet (screen #4) so selecting it is a no-op for now.
+  // Minimal tab shell: the nav island switches between Home, Games and Menu.
+  // The Menu's detail screens (Profile/Settings/… — screen #12) aren't built
+  // yet, so tapping a menu row is a no-op for now.
   const [tab, setTab] = useState<TabId>('home');
-  const onTabSelect = (id: TabId) => {
-    if (id === 'home' || id === 'games') {
-      setTab(id);
-    }
-  };
 
   // Sign in anonymously up front so rooms feel instant; non-fatal and a no-op
   // when the backend isn't configured.
@@ -41,12 +38,17 @@ function App(): React.JSX.Element {
         <View
           style={[styles.page, tab !== 'home' && styles.hidden]}
           pointerEvents={tab === 'home' ? 'auto' : 'none'}>
-          <HomeScreen onTabSelect={onTabSelect} />
+          <HomeScreen onTabSelect={setTab} />
         </View>
         <View
           style={[styles.page, tab !== 'games' && styles.hidden]}
           pointerEvents={tab === 'games' ? 'auto' : 'none'}>
-          <GamesScreen onTabSelect={onTabSelect} />
+          <GamesScreen onTabSelect={setTab} />
+        </View>
+        <View
+          style={[styles.page, tab !== 'menu' && styles.hidden]}
+          pointerEvents={tab === 'menu' ? 'auto' : 'none'}>
+          <MenuScreen onTabSelect={setTab} />
         </View>
       </View>
     </SafeAreaProvider>
