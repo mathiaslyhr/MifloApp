@@ -22,6 +22,8 @@ export const CLUBS: readonly Club[] = [
   {id: 'leeds', name: 'Leeds United', country: 'England', league: 'premier-league'},
   {id: 'wolves', name: 'Wolverhampton Wanderers', country: 'England', league: 'premier-league'},
   {id: 'southampton', name: 'Southampton', country: 'England', league: 'premier-league'},
+  {id: 'qpr', name: 'Queens Park Rangers', country: 'England', league: 'premier-league'},
+  {id: 'fulham', name: 'Fulham', country: 'England', league: 'premier-league'},
 
   // La Liga
   {id: 'real-madrid', name: 'Real Madrid', country: 'Spain', league: 'la-liga'},
@@ -63,6 +65,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'paris-fc', name: 'Paris FC', country: 'France', league: 'ligue-1'},
 
   // Other (used by career history but not a primary quiz league)
+  {id: 'barnsley', name: 'Barnsley', country: 'England', league: 'championship'},
   {id: 'inter-miami', name: 'Inter Miami', country: 'USA', league: 'mls'},
   {id: 'lafc', name: 'Los Angeles FC', country: 'USA', league: 'mls'},
   {id: 'la-galaxy', name: 'LA Galaxy', country: 'USA', league: 'mls'},
@@ -77,6 +80,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'porto', name: 'FC Porto', country: 'Portugal', league: 'primeira-liga'},
   {id: 'ajax', name: 'Ajax', country: 'Netherlands', league: 'eredivisie'},
   {id: 'santos', name: 'Santos', country: 'Brazil', league: 'brasileirao'},
+  {id: 'fluminense', name: 'Fluminense', country: 'Brazil', league: 'brasileirao'},
   {id: 'flamengo', name: 'Flamengo', country: 'Brazil', league: 'brasileirao'},
   {id: 'palmeiras', name: 'Palmeiras', country: 'Brazil', league: 'brasileirao'},
   {id: 'boca-juniors', name: 'Boca Juniors', country: 'Argentina', league: 'liga-argentina'},
@@ -85,6 +89,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'monterrey', name: 'Monterrey', country: 'Mexico', league: 'liga-mx'},
   {id: 'galatasaray', name: 'Galatasaray', country: 'Turkey', league: 'super-lig'},
   {id: 'besiktas', name: 'Beşiktaş', country: 'Turkey', league: 'super-lig'},
+  {id: 'fenerbahce', name: 'Fenerbahçe', country: 'Turkey', league: 'super-lig'},
   {id: 'celtic', name: 'Celtic', country: 'Scotland', league: 'scottish-premiership'},
 ];
 

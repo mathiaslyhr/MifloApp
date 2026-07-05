@@ -9,9 +9,19 @@ import {
   countMatchingQuestions,
   usedFootballers,
 } from '../../../games/quiz/questions';
-import {getClub} from '../clubs';
+import {CLUBS, getClub} from '../clubs';
 import {all, byCategory} from '../repository';
 import type {Rng} from '../repository';
+import {FLAG_IMAGES} from '../../../games/tic-tac-toe/assets/flags.generated';
+import {LOGO_IMAGES} from '../../../games/tic-tac-toe/assets/logos.generated';
+
+/** Leagues the data is allowed to use — a typo like "seria-a" must fail here. */
+const KNOWN_LEAGUES = new Set([
+  'premier-league', 'la-liga', 'serie-a', 'bundesliga', 'ligue-1', 'mls',
+  'saudi-pro-league', 'primeira-liga', 'eredivisie', 'brasileirao',
+  'liga-argentina', 'liga-mx', 'super-lig', 'scottish-premiership',
+  'championship',
+]);
 
 /** Deterministic RNG (mulberry32) so freshness/sampling is reproducible. */
 function seededRng(seed: number): Rng {
@@ -69,6 +79,48 @@ describe('referential integrity', () => {
           }
         }
       }
+    }
+  });
+});
+
+describe('club + shape integrity', () => {
+  it('every club id is unique', () => {
+    const ids = CLUBS.map(c => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('every club league is a known league', () => {
+    for (const c of CLUBS) {
+      expect(KNOWN_LEAGUES.has(c.league)).toBe(true);
+    }
+  });
+
+  it('every footballer has a nationality, position and club', () => {
+    for (const f of all()) {
+      expect(f.nationality.length).toBeGreaterThanOrEqual(1);
+      expect(f.positions.length).toBeGreaterThanOrEqual(1);
+      expect(f.clubs.length).toBeGreaterThanOrEqual(1);
+    }
+  });
+});
+
+describe('every criterion has a real image asset', () => {
+  // Guarantees a new nation/club added in a dataset batch can't ship without
+  // its flag/crest — regenerate with `npm run assets:flags && assets:logos`.
+  it('every nationality + club country has a bundled flag', () => {
+    const countries = new Set<string>();
+    for (const f of all()) for (const n of f.nationality) countries.add(n);
+    for (const c of CLUBS) countries.add(c.country);
+    for (const country of countries) {
+      expect(FLAG_IMAGES[country]).toBeDefined();
+    }
+  });
+
+  it('every club a footballer played for has a bundled crest', () => {
+    const usedClubIds = new Set<string>();
+    for (const f of all()) for (const s of f.clubs) usedClubIds.add(s.clubId);
+    for (const clubId of usedClubIds) {
+      expect(LOGO_IMAGES[clubId]).toBeDefined();
     }
   });
 });

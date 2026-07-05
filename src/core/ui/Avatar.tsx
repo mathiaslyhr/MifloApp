@@ -14,12 +14,18 @@ type Props = {
   initials: string;
   tone?: Tone;
   size?: number;
+  /** Draw the accent "host" ring around the avatar (the Lobby host marker). */
+  host?: boolean;
 };
 
+/** Gap + stroke width of the host ring. */
+const RING_GAP = 3;
+const RING_STROKE = 2;
+
 /** Round initials avatar (design.md — the app-mock Avatar atom). */
-export function Avatar({initials, tone = 'accent', size = 28}: Props) {
+export function Avatar({initials, tone = 'accent', size = 28, host = false}: Props) {
   const {bg, fg} = TONES[tone];
-  return (
+  const disc = (
     <View
       style={[
         styles.root,
@@ -34,6 +40,28 @@ export function Avatar({initials, tone = 'accent', size = 28}: Props) {
         }}>
         {initials}
       </Text>
+    </View>
+  );
+
+  if (!host) {
+    return disc;
+  }
+
+  // Accent hairline ring with a small gap around the disc.
+  const ring = size + (RING_GAP + RING_STROKE) * 2;
+  return (
+    <View
+      style={[
+        styles.root,
+        {
+          width: ring,
+          height: ring,
+          borderRadius: ring / 2,
+          borderWidth: RING_STROKE,
+          borderColor: colors.primary,
+        },
+      ]}>
+      {disc}
     </View>
   );
 }

@@ -26,7 +26,7 @@ type Props = {
  * The pill button — three variants, all fully round (design.md §3), all sharing
  * the springy press-scale:
  *  - `primary`   solid black ink, white hairline rim + soft lift (marketing SolidButton)
- *  - `secondary` frosted white glass, ink text (the "Join a room" pill)
+ *  - `secondary` frosted white glass, ink text (the "Join a party" pill)
  *  - `outline`   ink-hairline border on light glass (tertiary CTA)
  */
 export function Button({

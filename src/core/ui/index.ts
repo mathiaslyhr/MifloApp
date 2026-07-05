@@ -3,6 +3,7 @@
  * `import {Screen, Button, Text} from '../core/ui';`
  */
 export {Screen} from './Screen';
+export {ErrorBoundary} from './ErrorBoundary';
 export {MeshBackground} from './MeshBackground';
 export {Text} from './Text';
 export {Button} from './Button';
@@ -13,6 +14,8 @@ export {MenuRow} from './MenuRow';
 export type {MenuRowKind} from './MenuRow';
 export {MenuGroup} from './MenuGroup';
 export {Avatar} from './Avatar';
+export {TextField} from './TextField';
+export {NameSheet} from './NameSheet';
 export {IslandTabBar} from './IslandTabBar';
 export type {TabId} from './IslandTabBar';
 export {QrCard} from './QrCard';

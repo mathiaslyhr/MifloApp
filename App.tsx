@@ -1,64 +1,55 @@
 /**
  * Miflo — social party games for friends in the same room.
  *
- * The frontend was reset to a blank slate; this shell just mounts the single
- * Home page. The game engine, football data and Supabase backend live on under
- * `src/` and will be wired into the new frontend as it's built.
+ * The app shell: a native-stack root (see `src/core/navigation`) whose home
+ * route is the Home/Games/Menu tab shell. The game engine, football data and
+ * Supabase backend live under `src/` and are wired into screens as they're built.
  *
  * @format
  */
-import React, {useEffect, useState} from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {Alert, StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {HomeScreen} from './src/screens/HomeScreen';
-import {GamesScreen} from './src/screens/GamesScreen';
-import {MenuScreen} from './src/screens/MenuScreen';
-import type {TabId} from './src/core/ui';
+import {NavigationContainer} from '@react-navigation/native';
+import {RootNavigator} from './src/core/navigation';
+import {ErrorBoundary} from './src/core/ui';
 import {ensureSession} from './src/core/supabase/client';
 
 function App(): React.JSX.Element {
-  // Minimal tab shell: the nav island switches between Home, Games and Menu.
-  // The Menu's detail screens (Profile/Settings/… — screen #12) aren't built
-  // yet, so tapping a menu row is a no-op for now.
-  const [tab, setTab] = useState<TabId>('home');
-
   // Sign in anonymously up front so rooms feel instant; non-fatal and a no-op
   // when the backend isn't configured.
   useEffect(() => {
     ensureSession().catch(() => {});
   }, []);
 
-  // Both chrome screens stay mounted; we toggle visibility instead of swapping.
-  // Re-mounting a screen would re-rasterize its rainbow mesh SVG on every tab
-  // change (a visible flash) — keeping them alive makes switching instant.
+  // DIAGNOSTIC: surface uncaught JS errors (event handlers, effects, async) that
+  // an error boundary can't catch — Alert the message instead of silently
+  // closing the Release app. Suppress the default fatal handler so the alert
+  // stays on screen to read.
+  useEffect(() => {
+    const util = (globalThis as {ErrorUtils?: any}).ErrorUtils;
+    if (!util?.setGlobalHandler) {
+      return;
+    }
+    util.setGlobalHandler((error: any, isFatal?: boolean) => {
+      const top = String(error?.stack ?? '').split('\n').slice(0, 8).join('\n');
+      Alert.alert(
+        `JS error${isFatal ? ' (fatal)' : ''}`,
+        `${String(error?.message ?? error)}\n\n${top}`,
+      );
+    });
+  }, []);
+
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.root}>
-        <View
-          style={[styles.page, tab !== 'home' && styles.hidden]}
-          pointerEvents={tab === 'home' ? 'auto' : 'none'}>
-          <HomeScreen onTabSelect={setTab} />
-        </View>
-        <View
-          style={[styles.page, tab !== 'games' && styles.hidden]}
-          pointerEvents={tab === 'games' ? 'auto' : 'none'}>
-          <GamesScreen onTabSelect={setTab} />
-        </View>
-        <View
-          style={[styles.page, tab !== 'menu' && styles.hidden]}
-          pointerEvents={tab === 'menu' ? 'auto' : 'none'}>
-          <MenuScreen onTabSelect={setTab} />
-        </View>
-      </View>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <StatusBar barStyle="dark-content" />
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {flex: 1},
-  page: {position: 'absolute', top: 0, left: 0, right: 0, bottom: 0},
-  hidden: {display: 'none'},
-});
 
 export default App;

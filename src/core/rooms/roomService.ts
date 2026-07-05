@@ -18,6 +18,12 @@ export class BackendUnavailableError extends Error {
   }
 }
 
+// Unique per subscription so two live channels for the same room never collide
+// in supabase-js's topic-keyed registry (which returns the existing channel on
+// a duplicate topic and would reject a second postgres_changes listener —
+// crashing when both the Lobby and the game screen subscribe at once).
+let channelSeq = 0;
+
 /** Narrow the nullable client to a non-null one, after ensuring a session. */
 async function requireClient() {
   if (!supabase) {
@@ -38,6 +44,7 @@ function mapRoom(row: any): Room {
     topicIds: row.topic_ids ?? [],
     questionCount: row.question_count,
     questions: row.questions ?? null,
+    gameState: row.game_state ?? null,
     currentIndex: row.current_index ?? 0,
     phase: row.phase ?? null,
     phaseDeadline: row.phase_deadline ?? null,
@@ -94,6 +101,96 @@ export async function joinRoom(code: string, name: string): Promise<Room> {
   return mapRoom(row);
 }
 
+/** A player renames their own row — room-scoped, for the round only. */
+export async function renamePlayer(roomId: string, name: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('rename_player', {
+    p_room_id: roomId,
+    p_name: name,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host only — remove another player from the lobby (they're ejected client-side). */
+export async function kickPlayer(roomId: string, userId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('kick_player', {
+    p_room_id: roomId,
+    p_user_id: userId,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host starts a turn-based board game from the lobby with its initial state. */
+export async function startBoardGame(
+  roomId: string,
+  gameType: string,
+  state: unknown,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('start_board_game', {
+    p_room_id: roomId,
+    p_game_type: gameType,
+    p_state: state,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Play a move — the server only accepts it if it's the caller's turn. */
+export async function playMove(roomId: string, state: unknown): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('play_move', {
+    p_room_id: roomId,
+    p_state: state,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host restarts the board game in place with fresh state (Play again). */
+export async function restartBoardGame(
+  roomId: string,
+  state: unknown,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('restart_board_game', {
+    p_room_id: roomId,
+    p_state: state,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host returns the party to the lobby (Back to lobby). */
+export async function returnToLobby(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('return_to_lobby', {p_room_id: roomId});
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Leave a party. Idempotent: a guest drops their own row; the host closes the
+ * whole party (the room is deleted and players cascade). Safe to call when
+ * already removed.
+ */
+export async function leaveRoom(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('leave_room', {p_room_id: roomId});
+  if (error) {
+    throw error;
+  }
+}
+
 export async function fetchRoom(roomId: string): Promise<Room | null> {
   const client = await requireClient();
   const {data, error} = await client
@@ -135,7 +232,7 @@ export function subscribePlayers(
     fetchPlayers(roomId).then(cb).catch(() => {});
   };
   const channel = supabase
-    .channel(`players:${roomId}`)
+    .channel(`players:${roomId}:${++channelSeq}`)
     .on(
       'postgres_changes',
       {event: '*', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}`},
@@ -159,7 +256,7 @@ export function subscribeRoom(roomId: string, cb: (room: Room) => void): () => v
     return () => {};
   }
   const channel = supabase
-    .channel(`room:${roomId}`)
+    .channel(`room:${roomId}:${++channelSeq}`)
     .on(
       'postgres_changes',
       {event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},

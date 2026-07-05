@@ -24,6 +24,11 @@ export type Room = {
   questionCount: number;
   /** The shared deck — null until the host starts the game. */
   questions: Deck | null;
+  /**
+   * Board-game state (e.g. Tic-Tac-Toe grid + board + turn), opaque to the room
+   * layer; the game casts it to its own type. Null unless a board game is live.
+   */
+  gameState: unknown | null;
   // Phase fields exist on the row for M4's synced loop; unused in M3.
   currentIndex: number;
   phase: string | null;

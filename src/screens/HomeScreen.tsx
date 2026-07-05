@@ -1,5 +1,5 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {Alert, StyleSheet, View} from 'react-native';
 import {
   Button,
   CircleButton,
@@ -11,6 +11,12 @@ import {
 } from '../core/ui';
 import {APP_STORE_URL} from '../core/config';
 import {spacing} from '../theme';
+import {useAppNavigation} from '../core/navigation';
+import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
+import {randomFootballName} from '../core/identity/funnyName';
+
+/** Placeholder game type: a room is created game-less; the host picks in the lobby. */
+const NO_GAME_YET = 'unset';
 
 /**
  * Home — the clean launch hub on the rainbow canvas. A centered Miflo wordmark
@@ -18,9 +24,10 @@ import {spacing} from '../theme';
  * sit in the upper area; a real QR to the App Store anchors the bottom, with the
  * floating nav island (Home active) below it.
  *
- * The Create/Join buttons and the help button carry the shared press-feel now;
- * their destinations (Create/Join screens, the "How it works" sheet) are wired
- * in later passes.
+ * "Create a room" mints a room instantly with a random funny football name (no
+ * prompt — you rename yourself in the lobby by tapping your avatar) with no game
+ * chosen yet, and pushes the Lobby where the host later picks the game. "Join a
+ * room" and the help sheet are wired in later passes.
  */
 type Props = {
   /** Switch tabs (the nav island). */
@@ -28,6 +35,29 @@ type Props = {
 };
 
 export function HomeScreen({onTabSelect}: Props) {
+  const navigation = useAppNavigation();
+  const [busy, setBusy] = useState(false);
+
+  // Create a room under a random football name, then hand off to the Lobby.
+  async function handleCreate() {
+    if (busy) {
+      return;
+    }
+    setBusy(true);
+    try {
+      const room = await createRoom(NO_GAME_YET, [], 0, randomFootballName());
+      navigation.navigate('Lobby', {roomId: room.id});
+    } catch (err) {
+      const message =
+        err instanceof BackendUnavailableError
+          ? "Parties aren't available right now."
+          : "Couldn't create a party. Please try again.";
+      Alert.alert('Miflo', message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <Screen canvas>
       <View style={styles.content}>
@@ -47,8 +77,17 @@ export function HomeScreen({onTabSelect}: Props) {
         <View style={styles.topSpacer} />
 
         <View style={styles.actions}>
-          <Button label="Create a room" variant="primary" />
-          <Button label="Join a room" variant="secondary" />
+          <Button
+            label={busy ? 'Creating…' : 'Create a party'}
+            variant="primary"
+            onPress={handleCreate}
+            disabled={busy}
+          />
+          <Button
+            label="Join a party"
+            variant="secondary"
+            onPress={() => navigation.navigate('Join')}
+          />
         </View>
 
         <View style={styles.bottomSpacer} />
