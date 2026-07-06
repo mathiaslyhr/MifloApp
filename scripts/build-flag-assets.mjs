@@ -34,7 +34,7 @@ const COUNTRY_ISO = {
   Georgia: 'ge', Germany: 'de', Ghana: 'gh', Greece: 'gr', Guinea: 'gn',
   Honduras: 'hn', Hungary: 'hu', Iceland: 'is', 'Ivory Coast': 'ci', Iran: 'ir',
   Iraq: 'iq', Ireland: 'ie', Israel: 'il', Italy: 'it', Jamaica: 'jm',
-  Japan: 'jp', Kosovo: 'xk', Liberia: 'lr', Mali: 'ml', Mexico: 'mx',
+  Japan: 'jp', Jordan: 'jo', Kosovo: 'xk', Liberia: 'lr', Mali: 'ml', Mexico: 'mx',
   Montenegro: 'me', Morocco: 'ma', Netherlands: 'nl', 'New Zealand': 'nz',
   Nigeria: 'ng', 'North Macedonia': 'mk', 'Northern Ireland': 'gb-nir',
   Norway: 'no', Panama: 'pa', Paraguay: 'py', Peru: 'pe', Poland: 'pl',

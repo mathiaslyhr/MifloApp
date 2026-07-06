@@ -20,6 +20,7 @@ export type HonourType =
   | 'domestic-cup'
   | 'ballon-dor'
   | 'golden-boot'
+  | 'copa-america'
   | 'player-of-the-season';
 
 /** Human-readable labels for honours, used when generating quiz copy. */
@@ -32,6 +33,7 @@ export const HONOUR_LABELS: Record<HonourType, string> = {
   'domestic-cup': 'domestic cup',
   'ballon-dor': 'Ballon d\'Or',
   'golden-boot': 'Golden Boot',
+  'copa-america': 'Copa América',
   'player-of-the-season': 'Player of the Season',
 };
 
@@ -45,6 +47,7 @@ export const HONOUR_COUNT_LABELS: Record<HonourType, string> = {
   'domestic-cup': 'domestic cups',
   'ballon-dor': 'Ballon d\'Or awards',
   'golden-boot': 'Golden Boots',
+  'copa-america': 'Copa América titles',
   'player-of-the-season': 'Player of the Season awards',
 };
 
@@ -126,4 +129,6 @@ export type Criterion =
   | {kind: 'nationality'; country: string}
   | {kind: 'position'; position: Position}
   | {kind: 'honour'; honour: HonourType}
-  | {kind: 'tag'; tag: string};
+  | {kind: 'tag'; tag: string}
+  | {kind: 'shirtNumber'; number: number}
+  | {kind: 'teammate'; playerId: string};

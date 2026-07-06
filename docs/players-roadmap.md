@@ -5,7 +5,11 @@ player count** — the dataset, tooling and tests all scale linearly, so 500+ is
 fully supported (see [Scaling past 500](#scaling-past-500)). ~300–350 is the
 sweet spot for grid *fairness*; beyond that is about breadth + teammate density.
 
-Current: **270 players, 73 clubs.**
+Current: **619 players, 148 clubs.** (WC-2026 batch: added all 48 finalists'
+core squads — ~16 most-used each — across every confederation, plus the new
+clubs/leagues/nations they play in. Marquee-axis depth and cross-club
+intersections were audited before/after: dead top-club pairs dropped 26→15,
+grids now solve at ≥2-per-cell with zero fallbacks.)
 
 ## The add-a-batch recipe (repeatable)
 

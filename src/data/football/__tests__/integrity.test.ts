@@ -20,7 +20,10 @@ const KNOWN_LEAGUES = new Set([
   'premier-league', 'la-liga', 'serie-a', 'bundesliga', 'ligue-1', 'mls',
   'saudi-pro-league', 'primeira-liga', 'eredivisie', 'brasileirao',
   'liga-argentina', 'liga-mx', 'super-lig', 'scottish-premiership',
-  'championship',
+  'championship', 'belgian-pro-league', 'qatar-stars-league',
+  'egyptian-premier-league', 'south-african-league', 'swiss-super-league',
+  'austrian-bundesliga', 'croatian-hnl', 'danish-superliga', 'ukrainian-league',
+  'hungarian-league', 'greek-super-league',
 ]);
 
 /** Deterministic RNG (mulberry32) so freshness/sampling is reproducible. */

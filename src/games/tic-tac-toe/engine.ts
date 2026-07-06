@@ -151,9 +151,8 @@ export function applyMove(
   }
   const board = state.board.slice();
   board[cellIndex] = {sideId: side.id, footballerId};
-  // A dead-even board is broken in favour of whoever started the game.
-  const raw = computeWinner(board);
-  const winner = raw === 'tie' ? state.order[0] : raw;
+  // A full board with no line and level cell counts stays a genuine 'tie'.
+  const winner = computeWinner(board);
   return {
     ...state,
     board,

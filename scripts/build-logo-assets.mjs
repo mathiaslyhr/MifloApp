@@ -52,6 +52,38 @@ const CLUB_SLUG = {
   'rosario-central': 'rosario-central', monterrey: 'monterrey',
   galatasaray: 'galatasaray', besiktas: 'besiktas', celtic: 'celtic',
   fenerbahce: 'fenerbahce',
+  // WC 2026 batch: CONCACAF / hosts / OFC
+  'nottingham-forest': 'nottingham-forest', 'crystal-palace': 'crystal-palace',
+  bournemouth: 'afc-bournemouth', burnley: 'burnley', brentford: 'brentford',
+  'werder-bremen': 'werder-bremen', psv: 'psv-eindhoven', feyenoord: 'feyenoord',
+  genoa: 'genoa', nice: 'ogc-nice', 'club-brugge': 'club-brugge',
+  'club-america': 'club-america', guadalajara: 'cd-guadalajara',
+  tigres: 'tigres-uanl', 'cruz-azul': 'cruz-azul', pumas: 'pumas-unam',
+  pachuca: 'pachuca', toluca: 'toluca', 'real-mallorca': 'rcd-mallorca',
+  brighton: 'brighton-and-hove-albion', anderlecht: 'rsc-anderlecht', twente: 'fc-twente',
+  girona: 'girona-fc',
+  // WC 2026 batch: AFC
+  'eintracht-frankfurt': 'eintracht-frankfurt', 'vfb-stuttgart': 'vfb-stuttgart',
+  freiburg: 'sc-freiburg', parma: 'parma', genk: 'krc-genk', lens: 'rc-lens',
+  montpellier: 'montpellier', 'al-sadd': 'al-sadd-sc', 'al-duhail': 'al-duhail-sc',
+  reims: 'stade-de-reims',
+  // WC 2026 batch: CAF
+  'athletic-bilbao': 'athletic-club-bilbao', torino: 'torino', nantes: 'fc-nantes',
+  'al-ahly': 'al-ahly-sc', 'mamelodi-sundowns': 'mamelodi-sundowns',
+  toulouse: 'toulouse-fc', metz: 'fc-metz', lorient: 'fc-lorient', empoli: 'empoli-fc',
+  udinese: 'udinese', trabzonspor: 'trabzonspor', sunderland: 'sunderland',
+  'bristol-city': 'bristol-city', 'union-sg': 'union-saint-gilloise', basel: 'fc-basel',
+  // WC 2026 batch: CONMEBOL
+  getafe: 'getafe-cf', como: 'como-1907', internacional: 'sc-internacional', botafogo: 'botafogo',
+  watford: 'watford', cagliari: 'cagliari', 'hertha-berlin': 'hertha-bsc', 'west-brom': 'west-bromwich-albion',
+  // WC 2026 batch: UEFA
+  hoffenheim: 'tsg-hoffenheim', 'union-berlin': 'union-berlin', mainz: 'mainz-05',
+  'az-alkmaar': 'az-alkmaar', lecce: 'lecce', sampdoria: 'uc-sampdoria',
+  'sheffield-united': 'sheffield-united', salzburg: 'red-bull-salzburg',
+  'dinamo-zagreb': 'gnk-dinamo-zagreb', midtjylland: 'fc-midtjylland', copenhagen: 'fc-copenhagen',
+  shakhtar: 'shakhtar-donetsk', 'dynamo-kyiv': 'dynamo-kyiv', ferencvaros: 'ferencvaros-tc',
+  olympiacos: 'olympiacos', augsburg: 'fc-augsburg', spezia: 'spezia',
+  norwich: 'norwich-city', 'al-shabab': 'al-shabab',
 };
 
 const slugify = s =>
@@ -87,7 +119,7 @@ async function main() {
       const svg = await fetchLogo(slug);
       // Fit the crest inside a transparent square so every badge occupies the
       // same box regardless of its native aspect ratio.
-      const png = await sharp(svg, {density: 300})
+      const png = await sharp(svg, {density: 300, limitInputPixels: false})
         .resize(LOGO_SIZE, LOGO_SIZE, {
           fit: 'contain',
           background: {r: 0, g: 0, b: 0, alpha: 0},

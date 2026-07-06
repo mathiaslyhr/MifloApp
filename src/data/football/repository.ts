@@ -10,7 +10,34 @@
 import {CLUBS, getClub} from './clubs';
 import {getCategory} from './categories';
 import {FOOTBALLERS} from './footballers';
-import type {Criterion, Footballer} from './types';
+import type {ClubSpell, Criterion, Footballer} from './types';
+
+/** Year used as the open end of a still-active club spell (`to` undefined). */
+const CURRENT_YEAR = new Date().getFullYear();
+
+/** Do two club spells (same club) overlap in time? Open ends are handled. */
+function spellsOverlap(a: ClubSpell, b: ClubSpell): boolean {
+  const aFrom = a.from ?? -Infinity;
+  const aTo = a.to ?? CURRENT_YEAR;
+  const bFrom = b.from ?? -Infinity;
+  const bTo = b.to ?? CURRENT_YEAR;
+  return Math.max(aFrom, bFrom) <= Math.min(aTo, bTo);
+}
+
+/** Were two footballers at the same club during overlapping years? */
+function wereTeammates(a: Footballer, b: Footballer): boolean {
+  if (a.id === b.id) {
+    return false;
+  }
+  for (const sa of a.clubs) {
+    for (const sb of b.clubs) {
+      if (sa.clubId === sb.clubId && spellsOverlap(sa, sb)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 export function all(): readonly Footballer[] {
   return FOOTBALLERS;
@@ -51,6 +78,12 @@ export function matches(footballer: Footballer, criterion: Criterion): boolean {
       return footballer.honours.some(h => h.type === criterion.honour);
     case 'tag':
       return (footballer.tags ?? []).includes(criterion.tag);
+    case 'shirtNumber':
+      return (footballer.shirtNumbers ?? []).includes(criterion.number);
+    case 'teammate': {
+      const target = getById(criterion.playerId);
+      return target ? wereTeammates(footballer, target) : false;
+    }
   }
 }
 

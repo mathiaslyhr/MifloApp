@@ -28,6 +28,10 @@ export const COUNTRY_FLAGS: Record<string, string> = {
   Netherlands: '🇳🇱',
   Uruguay: '🇺🇾',
   Norway: '🇳🇴',
+  Denmark: '🇩🇰',
+  Ghana: '🇬🇭',
+  Senegal: '🇸🇳',
+  Japan: '🇯🇵',
   'Ivory Coast': '🇨🇮',
   Ukraine: '🇺🇦',
   Sweden: '🇸🇪',
@@ -98,6 +102,7 @@ const HONOUR_ICONS: Record<string, string> = {
   'european-championship': '🌍',
   'ballon-dor': '🏅',
   'golden-boot': '👟',
+  'copa-america': '🌎',
   'player-of-the-season': '⭐',
 };
 
@@ -119,6 +124,10 @@ export function criterionIcon(c: Criterion): string | null {
       return c.tag === 'current-stars' ? '🔥' : '⭐';
     case 'position':
       return POSITION_ICONS[c.position] ?? null;
+    case 'shirtNumber':
+      return '👕';
+    case 'teammate':
+      return '🤝';
     case 'club':
     case 'league':
       return null;

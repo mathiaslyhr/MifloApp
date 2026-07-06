@@ -190,10 +190,16 @@ export function TicTacToeScreen({route, navigation}: Props) {
     }
   }
 
+  // Result is coloured by the winner's side; a tie shows in the viewer's own
+  // colour. No blocking pop-up — the finished grid stays fully visible.
+  const winnerColor =
+    state.winner === 'tie'
+      ? state.sides.find(s => s.id === myUserId)?.color ?? colors.ink
+      : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
   const winnerText = state.winner
     ? state.winner === 'tie'
       ? "It's a tie!"
-      : `${state.sides.find(s => s.id === state.winner)?.name ?? 'Someone'} wins!`
+      : `${state.sides.find(s => s.id === state.winner)?.name ?? 'Someone'} won`
     : '';
 
   return (
@@ -211,7 +217,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
               {myTurn ? 'Your turn' : `${turnSide?.name ?? ''}'s turn`}
             </Text>
           ) : (
-            <Text variant="section" align="center">
+            <Text variant="section" align="center" style={{color: winnerColor}}>
               {winnerText}
             </Text>
           )}
@@ -300,7 +306,26 @@ export function TicTacToeScreen({route, navigation}: Props) {
           </View>
         </View>
 
-        {state.winner ? null : (
+        {state.winner ? (
+          isHost ? (
+            <View style={styles.resultActions}>
+              <Button label="Play again" variant="primary" onPress={playAgain} />
+              <Button
+                label="Back to lobby"
+                variant="secondary"
+                onPress={() => returnToLobby(roomId).catch(() => {})}
+              />
+            </View>
+          ) : (
+            <Text
+              variant="secondary"
+              color="secondary"
+              align="center"
+              style={styles.waiting}>
+              Waiting for the host…
+            </Text>
+          )
+        ) : (
           <TurnTimer deadline={state.turnDeadline} nowTs={nowTs} />
         )}
       </View>
@@ -360,31 +385,6 @@ export function TicTacToeScreen({route, navigation}: Props) {
           </Pressable>
         </Pressable>
       </Modal>
-
-      {/* Result overlay */}
-      {state.winner ? (
-        <View style={styles.overlay} pointerEvents="box-none">
-          <View style={styles.resultCard}>
-            <Text variant="title" align="center">
-              {winnerText}
-            </Text>
-            {isHost ? (
-              <>
-                <Button label="Play again" variant="primary" onPress={playAgain} />
-                <Button
-                  label="Back to lobby"
-                  variant="secondary"
-                  onPress={() => returnToLobby(roomId).catch(() => {})}
-                />
-              </>
-            ) : (
-              <Text variant="secondary" color="secondary" align="center">
-                Waiting for the host…
-              </Text>
-            )}
-          </View>
-        </View>
-      ) : null}
     </Screen>
   );
 }
@@ -586,23 +586,10 @@ const styles = StyleSheet.create({
   },
   resultFlag: {width: 22, height: 16, borderRadius: 2},
   hint: {paddingVertical: spacing.lg},
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(13,13,22,0.45)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
-  },
-  resultCard: {
+  resultActions: {
     alignSelf: 'stretch',
-    maxWidth: 380,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.xl,
     gap: spacing.md,
+    marginTop: spacing.xl,
   },
+  waiting: {marginTop: spacing.xl},
 });
