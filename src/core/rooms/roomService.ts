@@ -194,6 +194,97 @@ export async function restartBoardGame(
   }
 }
 
+// ── Footballer Imposter ─────────────────────────────────────────────────────
+// Roles are assigned + the vote is tallied SERVER-SIDE (secrets never touch the
+// broadcast state); see supabase/migrations/0015_footballer_imposter.sql.
+
+/** The caller's private role — imposter (no footballer) or a detective with one. */
+export type ImposterRoleResult =
+  | {role: 'imposter'; footballerId: null}
+  | {role: 'detective'; footballerId: string};
+
+/**
+ * Host starts a hand: the server privately picks the imposter + secret
+ * footballer. `pool` is a batch of candidate footballer ids (the server picks
+ * one, so the host never learns which). The asking phase then reuses `playMove`.
+ */
+export async function startImposterGame(
+  roomId: string,
+  pool: string[],
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('start_imposter_game', {
+    p_room_id: roomId,
+    p_pool: pool,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host plays another hand (Play again) — new roles, running scores preserved. */
+export async function restartImposterGame(
+  roomId: string,
+  pool: string[],
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('restart_imposter_game', {
+    p_room_id: roomId,
+    p_pool: pool,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Fetch ONLY the caller's own role. Null if the role isn't assigned yet. */
+export async function getMyImposterRole(
+  roomId: string,
+): Promise<ImposterRoleResult | null> {
+  const client = await requireClient();
+  const {data, error} = await client.rpc('get_my_imposter_role', {
+    p_room_id: roomId,
+  });
+  if (error) {
+    throw error;
+  }
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) {
+    return null;
+  }
+  return {role: row.role, footballerId: row.footballer_id} as ImposterRoleResult;
+}
+
+/** Cast (or change) the caller's vote for the suspected imposter. */
+export async function castImposterVote(
+  roomId: string,
+  targetUserId: string,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('cast_imposter_vote', {
+    p_room_id: roomId,
+    p_target: targetUserId,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** A caught imposter's redemption guess at the secret footballer. */
+export async function imposterGuess(
+  roomId: string,
+  footballerId: string,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('imposter_guess', {
+    p_room_id: roomId,
+    p_footballer: footballerId,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
 /** Host returns the party to the lobby (Back to lobby). */
 export async function returnToLobby(roomId: string): Promise<void> {
   const client = await requireClient();

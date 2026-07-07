@@ -50,7 +50,8 @@
     "kicked": "You were removed from the party.",
     "errorRemove": "Couldn't remove {{name}}.",
     "errorRename": "Couldn't change your name.",
-    "errorStart": "Couldn't start the game. Please try again."
+    "errorStart": "Couldn't start the game. Please try again.",
+    "needPlayers": "This game needs at least {{count}} players."
   },
   "tabs": {
     "home": "Home",
@@ -61,6 +62,8 @@
     "title": "Games",
     "comingSoon": "Coming soon",
     "ttt": {"title": "Tic Tac Toe", "tagline": "Football trivia × tic tac toe"},
+    "imposter": {"title": "Footballer Imposter", "tagline": "One of you is bluffing. Sniff them out."},
+    "mystery": {"title": "Mystery Footballer", "tagline": "Guess today's player in six tries"},
     "tenball": {"title": "Tenball", "tagline": "Find the top 10 answers"},
     "heatmap": {"title": "Heatmap", "tagline": "Build heat across the grid"}
   },
@@ -111,6 +114,99 @@
     "searchHint": "Start typing to search a footballer",
     "noPlayers": "No players found",
     "timeLeft": "Time left"
+  },
+  "imposter": {
+    "title": "Imposter",
+    "loading": "Loading…",
+    "help": {
+      "title": "How to play",
+      "rule": "Everyone but the imposter is given the same footballer. Over two rounds, take turns asking one another a question, then vote on who the imposter is. Get caught as the imposter? Guess the footballer to steal it back."
+    },
+    "role": {
+      "detectiveIntro": "Everyone got this player",
+      "imposterTitle": "You're the imposter",
+      "imposterBody": "You weren't given a player. Blend in, bluff your answers, and don't get caught.",
+      "gotIt": "Got it",
+      "loading": "Dealing roles…"
+    },
+    "round": "Round {{round}} of {{total}}",
+    "yourTurnPick": "Your turn to question someone",
+    "yourTurnAsk": "Ask {{name}} your question, then tap Done",
+    "done": "Done",
+    "askerChoosing": "{{name}} is choosing who to question",
+    "askerAsking": "{{asker}} is questioning {{target}}",
+    "youAre": "You: {{player}}",
+    "youAreImposter": "You: the imposter",
+    "vote": {
+      "title": "Who's the imposter?",
+      "hint": "Tap the player you think was bluffing.",
+      "waiting": "Waiting for votes ({{count}}/{{total}})",
+      "voted": "Vote cast. Waiting for the others…"
+    },
+    "reveal": {
+      "imposterWas": "{{name}} was the imposter",
+      "caught": "Caught! The group found the imposter.",
+      "escaped": "The imposter slipped away.",
+      "secret": "The player was",
+      "votesTitle": "Votes",
+      "votedFor": "{{voter}} → {{target}}",
+      "pointsTitle": "Points this round",
+      "scoreboard": "Scoreboard"
+    },
+    "redeem": {
+      "prompt": "You were caught. Guess the footballer to steal it back.",
+      "button": "Guess the footballer",
+      "correct": "Nailed it! {{name}} named the player. +2",
+      "wrong": "Not it. {{name}} guessed {{guess}}."
+    },
+    "playAgain": "Play again",
+    "backToLobby": "Back to lobby",
+    "waitingHost": "Waiting for the host…",
+    "reportBug": "Report a bug",
+    "searchPlaceholder": "Search a footballer",
+    "searchHint": "Start typing to search a footballer",
+    "noPlayers": "No players found",
+    "errorVote": "Couldn't cast your vote. Try again.",
+    "errorGuess": "Couldn't submit your guess. Try again.",
+    "newGameError": "Couldn't start a new round."
+  },
+  "mystery": {
+    "title": "Mystery Footballer",
+    "back": "Back",
+    "loading": "Loading…",
+    "instruction": "Guess today's mystery footballer",
+    "guessCount": "Guess {{current}} of {{max}}",
+    "searchPlaceholder": "Search a footballer",
+    "searchHint": "Start typing to guess a footballer",
+    "noPlayers": "No players found",
+    "alreadyGuessed": "You already guessed that player",
+    "won": "Got it in {{count}}!",
+    "lost": "Out of guesses",
+    "answerWas": "Today's footballer was {{name}}",
+    "streakCurrent": "Current streak",
+    "streakBest": "Best streak",
+    "share": "Share result",
+    "shareCaption": "Play Mystery Footballer on Miflo",
+    "lockedUntilTomorrow": "Come back tomorrow for a new footballer",
+    "columns": {
+      "nationality": "Nation",
+      "position": "Position",
+      "club": "Club",
+      "league": "League",
+      "shirtNumber": "Shirt",
+      "era": "Debut"
+    },
+    "help": {
+      "title": "How to play",
+      "rule": "Guess the mystery footballer in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
+      "arrows": "Arrows on Shirt and Debut point toward the secret player's value.",
+      "daily": "A new footballer drops every day, the same for everyone."
+    },
+    "history": {
+      "title": "Past puzzles",
+      "notPlayed": "Not played",
+      "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    }
   },
   "legend": {
     "title": "How the grid works",

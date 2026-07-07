@@ -11,6 +11,8 @@ export type RootStackParamList = {
   Join: undefined;
   Lobby: {roomId: string};
   TicTacToe: {roomId: string};
+  FootballerImposter: {roomId: string};
+  MysteryFootballer: undefined;
   Profile: undefined;
   Settings: undefined;
   HowToPlay: undefined;

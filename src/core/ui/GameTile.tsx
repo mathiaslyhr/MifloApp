@@ -50,26 +50,30 @@ export function GameTile({
   badgeVariant = 'pill',
   surface = 'glass',
 }: Props) {
-  // Trailing slot: a status badge for disabled tiles, otherwise the chevron.
-  let trailing: React.ReactNode = null;
-  if (badge) {
-    trailing =
-      badgeVariant === 'pill' ? (
-        <View style={styles.pill}>
-          <Text variant="caption" color="accent" style={styles.pillText}>
-            {badge}
-          </Text>
-        </View>
-      ) : (
-        <Text
-          variant="caption"
-          color="secondary"
-          numberOfLines={1}
-          style={styles.textBadge}>
+  // `'pill'` badge sits on the top edge (like the lobby host badge) so it never
+  // steals row width from the name/tagline.
+  const topPill =
+    badge && badgeVariant === 'pill' ? (
+      <View style={styles.topPill}>
+        <Text variant="caption" color="accent" style={styles.pillText}>
           {badge}
         </Text>
-      );
-  } else if (!disabled) {
+      </View>
+    ) : null;
+
+  // Trailing slot: the `'text'` badge, otherwise the chevron on a tappable tile.
+  let trailing: React.ReactNode = null;
+  if (badge && badgeVariant === 'text') {
+    trailing = (
+      <Text
+        variant="caption"
+        color="secondary"
+        numberOfLines={1}
+        style={styles.textBadge}>
+        {badge}
+      </Text>
+    );
+  } else if (!disabled && !badge) {
     trailing = (
       <ChevronRight size={22} color={colors.textTertiary} strokeWidth={2} />
     );
@@ -87,6 +91,7 @@ export function GameTile({
         surface === 'floating' && styles.cardFloating,
         disabled && styles.cardDisabled,
       ]}>
+      {topPill}
       <View style={styles.badge}>
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
@@ -135,12 +140,25 @@ const styles = StyleSheet.create({
   cardDisabled: {opacity: 0.5},
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
   trailing: {flexShrink: 0},
-  // Off-white pill with purple text — mirrors the left icon badge.
-  pill: {
+  // Off-white pill with purple text, straddling the tile's top edge (like the
+  // lobby host badge). Left-anchored to line up with the title text below it:
+  // card padding + icon badge (44) + gap.
+  topPill: {
+    position: 'absolute',
+    top: -9,
+    left: spacing.lg + 44 + spacing.md,
+    zIndex: 2,
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
     borderRadius: radii.pill,
     backgroundColor: colors.surface2,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    shadowColor: '#140F32',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 3},
+    shadowRadius: 6,
+    elevation: 3,
   },
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   // Plain muted label (picker popup) — no background to clash with glass tiles.

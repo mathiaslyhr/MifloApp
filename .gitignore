@@ -78,3 +78,6 @@ tools/art/preview/
 
 
 ios/build-sim/
+
+# Supabase CLI local cache (project link, cli version)
+supabase/.temp/

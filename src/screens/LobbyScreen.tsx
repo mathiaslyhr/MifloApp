@@ -29,12 +29,15 @@ import {
   leaveRoom,
   renamePlayer,
   startBoardGame,
+  startImposterGame,
   subscribePlayers,
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
 import {generateGrid, gridSignature} from '../games/tic-tac-toe/grid';
 import {createIndividualState} from '../games/tic-tac-toe/engine';
+import {buildFootballerPool} from '../games/footballer-imposter/engine';
+import {MIN_PLAYERS as IMPOSTER_MIN} from '../games/footballer-imposter/types';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
@@ -111,6 +114,11 @@ export function LobbyScreen({route, navigation}: Props) {
       if (!inGameRef.current) {
         inGameRef.current = true;
         navigation.navigate('TicTacToe', {roomId});
+      }
+    } else if (room.status === 'in_progress' && room.gameType === 'footballer-imposter') {
+      if (!inGameRef.current) {
+        inGameRef.current = true;
+        navigation.navigate('FootballerImposter', {roomId});
       }
     } else if (room.status === 'lobby') {
       inGameRef.current = false;
@@ -211,6 +219,21 @@ export function LobbyScreen({route, navigation}: Props) {
             ...recentGridsRef.current,
           ].slice(0, 5);
           await startBoardGame(roomId, 'tic-tac-toe', state);
+          break;
+        }
+        case 'footballer-imposter': {
+          // Needs more players than Tic-Tac-Toe (1 imposter + ≥2 detectives to
+          // make voting meaningful). Roles are assigned server-side; the host
+          // only ships the candidate footballer pool.
+          if (players.length < IMPOSTER_MIN) {
+            setStarting(false);
+            Alert.alert(
+              t('common.miflo'),
+              t('lobby.needPlayers', {count: IMPOSTER_MIN}),
+            );
+            return;
+          }
+          await startImposterGame(roomId, buildFootballerPool());
           break;
         }
         default:

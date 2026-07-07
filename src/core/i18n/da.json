@@ -50,7 +50,8 @@
     "kicked": "Du blev fjernet fra rummet.",
     "errorRemove": "Kunne ikke fjerne {{name}}.",
     "errorRename": "Kunne ikke skifte dit navn.",
-    "errorStart": "Kunne ikke starte spillet. Prøv igen."
+    "errorStart": "Kunne ikke starte spillet. Prøv igen.",
+    "needPlayers": "Dette spil kræver mindst {{count}} spillere."
   },
   "tabs": {
     "home": "Hjem",
@@ -61,6 +62,8 @@
     "title": "Spil",
     "comingSoon": "Kommer snart",
     "ttt": {"title": "Tre på stribe", "tagline": "Fodboldquiz × tre på stribe"},
+    "imposter": {"title": "Fodbold-bedrageren", "tagline": "Én af jer bluffer. Find bedrageren."},
+    "mystery": {"title": "Gæt spilleren", "tagline": "Gæt dagens spiller på seks forsøg"},
     "tenball": {"title": "Tenball", "tagline": "Find de 10 bedste svar"},
     "heatmap": {"title": "Heatmap", "tagline": "Byg varme på tværs af gitteret"}
   },
@@ -111,6 +114,99 @@
     "searchHint": "Begynd at skrive for at søge efter en spiller",
     "noPlayers": "Ingen spillere fundet",
     "timeLeft": "Tid tilbage"
+  },
+  "imposter": {
+    "title": "Bedrager",
+    "loading": "Indlæser…",
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Alle undtagen bedrageren får den samme fodboldspiller. Over to runder stiller I på skift hinanden et spørgsmål og stemmer derefter om, hvem bedrageren er. Bliver du afsløret som bedrager? Gæt spilleren for at vinde det tilbage."
+    },
+    "role": {
+      "detectiveIntro": "Alle fik denne spiller",
+      "imposterTitle": "Du er bedrageren",
+      "imposterBody": "Du fik ingen spiller. Smelt ind, bluf dine svar, og bliv ikke afsløret.",
+      "gotIt": "Forstået",
+      "loading": "Uddeler roller…"
+    },
+    "round": "Runde {{round}} af {{total}}",
+    "yourTurnPick": "Din tur til at spørge en anden",
+    "yourTurnAsk": "Stil {{name}} dit spørgsmål, og tryk så på Færdig",
+    "done": "Færdig",
+    "askerChoosing": "{{name}} vælger, hvem der skal spørges",
+    "askerAsking": "{{asker}} spørger {{target}}",
+    "youAre": "Dig: {{player}}",
+    "youAreImposter": "Dig: bedrageren",
+    "vote": {
+      "title": "Hvem er bedrageren?",
+      "hint": "Tryk på den spiller, du tror bluffede.",
+      "waiting": "Venter på stemmer ({{count}}/{{total}})",
+      "voted": "Stemme afgivet. Venter på de andre…"
+    },
+    "reveal": {
+      "imposterWas": "{{name}} var bedrageren",
+      "caught": "Afsløret! Gruppen fandt bedrageren.",
+      "escaped": "Bedrageren slap væk.",
+      "secret": "Spilleren var",
+      "votesTitle": "Stemmer",
+      "votedFor": "{{voter}} → {{target}}",
+      "pointsTitle": "Point denne runde",
+      "scoreboard": "Stilling"
+    },
+    "redeem": {
+      "prompt": "Du blev afsløret. Gæt spilleren for at vinde det tilbage.",
+      "button": "Gæt spilleren",
+      "correct": "Flot! {{name}} gættede spilleren. +2",
+      "wrong": "Forkert. {{name}} gættede {{guess}}."
+    },
+    "playAgain": "Spil igen",
+    "backToLobby": "Tilbage til rummet",
+    "waitingHost": "Venter på værten…",
+    "reportBug": "Rapportér en fejl",
+    "searchPlaceholder": "Søg efter en fodboldspiller",
+    "searchHint": "Begynd at skrive for at søge efter en spiller",
+    "noPlayers": "Ingen spillere fundet",
+    "errorVote": "Kunne ikke afgive din stemme. Prøv igen.",
+    "errorGuess": "Kunne ikke sende dit gæt. Prøv igen.",
+    "newGameError": "Kunne ikke starte en ny runde."
+  },
+  "mystery": {
+    "title": "Gæt spilleren",
+    "back": "Tilbage",
+    "loading": "Indlæser…",
+    "instruction": "Gæt dagens mystiske fodboldspiller",
+    "guessCount": "Gæt {{current}} af {{max}}",
+    "searchPlaceholder": "Søg efter en fodboldspiller",
+    "searchHint": "Begynd at skrive for at gætte en spiller",
+    "noPlayers": "Ingen spillere fundet",
+    "alreadyGuessed": "Du har allerede gættet den spiller",
+    "won": "Klaret på {{count}}!",
+    "lost": "Ikke flere gæt",
+    "answerWas": "Dagens spiller var {{name}}",
+    "streakCurrent": "Nuværende stime",
+    "streakBest": "Bedste stime",
+    "share": "Del resultat",
+    "shareCaption": "Spil Gæt spilleren på Miflo",
+    "lockedUntilTomorrow": "Kom tilbage i morgen for en ny spiller",
+    "columns": {
+      "nationality": "Nation",
+      "position": "Position",
+      "club": "Klub",
+      "league": "Liga",
+      "shirtNumber": "Nummer",
+      "era": "Debut"
+    },
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Gæt den mystiske spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
+      "arrows": "Pile på Nummer og Debut peger mod den hemmelige spillers værdi.",
+      "daily": "En ny spiller kommer hver dag, den samme for alle."
+    },
+    "history": {
+      "title": "Tidligere spil",
+      "notPlayed": "Ikke spillet",
+      "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
+    }
   },
   "legend": {
     "title": "Sådan fungerer gitteret",

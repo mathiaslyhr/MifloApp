@@ -26,9 +26,16 @@ export function GamesScreen({onTabSelect}: Props) {
   const navigation = useAppNavigation();
   const [busy, setBusy] = useState(false);
 
-  // Create a room locked to the tapped game, then hand off to the Lobby.
+  // Single-player games open straight to their screen; multiplayer games mint a
+  // party locked to that game and hand off to the Lobby.
   async function handleSelect(gameType: GameType) {
     if (busy) {
+      return;
+    }
+    if (GAMES.find(g => g.gameType === gameType)?.single) {
+      if (gameType === 'mystery-footballer') {
+        navigation.navigate('MysteryFootballer');
+      }
       return;
     }
     setBusy(true);

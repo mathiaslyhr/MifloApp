@@ -1,4 +1,11 @@
-import {Grid3x3, Hexagon, ListOrdered, type LucideIcon} from 'lucide-react-native';
+import {
+  Grid3x3,
+  Hexagon,
+  ListOrdered,
+  UserSearch,
+  VenetianMask,
+  type LucideIcon,
+} from 'lucide-react-native';
 
 /**
  * Presentation catalog for the Games hub — the user-facing display metadata
@@ -9,7 +16,12 @@ import {Grid3x3, Hexagon, ListOrdered, type LucideIcon} from 'lucide-react-nativ
  * (`quiz` / `missing-xi` / `odd-one-out`) still live in `src/games/` but are no
  * longer listed here.
  */
-export type GameType = 'tic-tac-toe' | 'tenball' | 'heatmap';
+export type GameType =
+  | 'tic-tac-toe'
+  | 'footballer-imposter'
+  | 'mystery-footballer'
+  | 'tenball'
+  | 'heatmap';
 
 export type GameEntry = {
   gameType: GameType;
@@ -18,10 +30,28 @@ export type GameEntry = {
   Icon: LucideIcon;
   /** Whether the game has a real engine and can actually be started. */
   available: boolean;
+  /**
+   * A local single-player game: it opens straight to its screen instead of
+   * minting a party/room, and never appears in the Lobby's multiplayer picker.
+   */
+  single?: boolean;
 };
 
 export const GAMES: GameEntry[] = [
   {gameType: 'tic-tac-toe', i18nKey: 'ttt', Icon: Grid3x3, available: true},
+  {
+    gameType: 'footballer-imposter',
+    i18nKey: 'imposter',
+    Icon: VenetianMask,
+    available: true,
+  },
+  {
+    gameType: 'mystery-footballer',
+    i18nKey: 'mystery',
+    Icon: UserSearch,
+    available: true,
+    single: true,
+  },
   {gameType: 'tenball', i18nKey: 'tenball', Icon: ListOrdered, available: false},
   {gameType: 'heatmap', i18nKey: 'heatmap', Icon: Hexagon, available: false},
 ];
