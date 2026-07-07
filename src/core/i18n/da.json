@@ -95,7 +95,7 @@
     "skip": "Spring over",
     "turnSkipped": "Tur sprunget over",
     "proposeTie": "Foreslå uafgjort",
-    "skipShort": "Spring",
+    "skipShort": "Skip",
     "tieShort": "Uafgjort",
     "proposeError": "Kunne ikke foreslå uafgjort.",
     "tieWaiting": "Uafgjort foreslået. Venter på alle ({{accepted}}/{{total}})",

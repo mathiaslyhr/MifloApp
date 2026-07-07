@@ -23,6 +23,13 @@ type Props = {
    *   would clash with the glass tiles.
    */
   badgeVariant?: 'pill' | 'text';
+  /**
+   * Surface treatment:
+   * - `'glass'` (default): clear frosted fill for the rainbow canvas.
+   * - `'floating'`: near-solid frosted white for a tile floating on a dimmed
+   *   (dark) scrim — e.g. the game-picker popup, which has no card behind it.
+   */
+  surface?: 'glass' | 'floating';
 };
 
 /**
@@ -41,6 +48,7 @@ export function GameTile({
   disabled = false,
   badge,
   badgeVariant = 'pill',
+  surface = 'glass',
 }: Props) {
   // Trailing slot: a status badge for disabled tiles, otherwise the chevron.
   let trailing: React.ReactNode = null;
@@ -53,7 +61,11 @@ export function GameTile({
           </Text>
         </View>
       ) : (
-        <Text variant="caption" color="secondary" style={styles.textBadge}>
+        <Text
+          variant="caption"
+          color="secondary"
+          numberOfLines={1}
+          style={styles.textBadge}>
           {badge}
         </Text>
       );
@@ -70,14 +82,20 @@ export function GameTile({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityState={disabled ? {disabled: true} : undefined}
-      style={[styles.card, disabled && styles.cardDisabled]}>
+      style={[
+        styles.card,
+        surface === 'floating' && styles.cardFloating,
+        disabled && styles.cardDisabled,
+      ]}>
       <View style={styles.badge}>
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
       <View style={styles.body}>
-        <Text variant="section">{title}</Text>
+        <Text variant="section" numberOfLines={1}>
+          {title}
+        </Text>
         {tagline ? (
-          <Text variant="secondary" color="secondary">
+          <Text variant="secondary" color="secondary" numberOfLines={1}>
             {tagline}
           </Text>
         ) : null}
@@ -104,6 +122,15 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 8},
     shadowRadius: 16,
     elevation: 4,
+  },
+  // Floating on a dimmed scrim (picker popup): near-solid white + a deeper lift
+  // so the tile reads as its own card with no container behind it.
+  cardFloating: {
+    backgroundColor: colors.glassStrong,
+    shadowOpacity: 0.22,
+    shadowRadius: 24,
+    shadowOffset: {width: 0, height: 12},
+    elevation: 8,
   },
   cardDisabled: {opacity: 0.5},
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.

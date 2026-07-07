@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, radii, spacing} from '../../theme';
+import {spacing} from '../../theme';
 import {GAMES, GameType} from '../../screens/gamesCatalog';
 import {GameTile} from './GameTile';
 import {Text} from './Text';
@@ -15,8 +15,10 @@ type Props = {
 
 /**
  * The host's game picker in the Lobby's free mode (party created without a game).
- * A dimmed scrim over a card listing the games catalog: built games are tappable
- * and start the round; unbuilt ones render dimmed with a "Coming soon" pill.
+ * No card: a dimmed scrim with the game tiles floating directly on it (each tile
+ * carries its own near-solid white fill so it reads against the dark scrim).
+ * Built games are tappable and start the round; unbuilt ones are dimmed with a
+ * muted "Coming soon" label.
  */
 export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
   const {t} = useTranslation();
@@ -27,8 +29,9 @@ export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
       animationType="fade"
       onRequestClose={onCancel}>
       <Pressable style={styles.scrim} onPress={onCancel}>
-        <Pressable style={styles.card} onPress={() => {}}>
-          <Text variant="label" align="center">
+        {/* Transparent content column — taps here don't dismiss (only the scrim). */}
+        <Pressable style={styles.content} onPress={() => {}}>
+          <Text variant="label" align="center" color="onInk">
             {title}
           </Text>
           <View style={styles.list}>
@@ -38,6 +41,7 @@ export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
                 title={t(`games.${game.i18nKey}.title`)}
                 tagline={t(`games.${game.i18nKey}.tagline`)}
                 Icon={game.Icon}
+                surface="floating"
                 disabled={!game.available}
                 badge={game.available ? undefined : t('games.comingSoon')}
                 badgeVariant="text"
@@ -54,26 +58,15 @@ export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.35)',
+    backgroundColor: 'rgba(13,13,22,0.45)',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
   },
-  card: {
+  content: {
     alignSelf: 'center',
     width: '100%',
     maxWidth: 380,
-    // Soft lavender (not pure white) so the glass tiles' translucent fill and
-    // white rim have a backdrop to read against instead of vanishing.
-    backgroundColor: colors.background,
-    borderRadius: radii.card,
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    gap: spacing.md,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.24,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 32,
-    elevation: 12,
+    gap: spacing.lg,
   },
   list: {gap: spacing.md},
 });

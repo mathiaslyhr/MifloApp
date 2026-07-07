@@ -727,8 +727,8 @@ const styles = StyleSheet.create({
   cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
   cornerText: {
     fontFamily: fonts.regular,
-    fontSize: 13,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 15,
     color: colors.ink,
     textAlign: 'center',
   },

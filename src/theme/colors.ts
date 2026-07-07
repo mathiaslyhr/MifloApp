@@ -37,6 +37,8 @@ export const colors = {
   glass: 'rgba(255,255,255,0.55)',
   glassLight: 'rgba(255,255,255,0.40)',
   glassRim: 'rgba(255,255,255,0.65)',
+  /** Near-solid frosted white — for cards floating on a dimmed (dark) scrim. */
+  glassStrong: 'rgba(255,255,255,0.92)',
   /** Hairline white rim on the solid (primary) button. */
   solidRim: 'rgba(255,255,255,0.25)',
 
