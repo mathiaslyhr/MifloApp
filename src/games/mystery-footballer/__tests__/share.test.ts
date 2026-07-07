@@ -14,17 +14,17 @@ describe('buildShareGrid', () => {
       maxGuesses: 6,
       status: 'won',
       guesses: [
-        row('miss', 'miss', 'partial', 'miss', 'miss', 'miss'),
-        row('hit', 'miss', 'partial', 'partial', 'miss', 'miss'),
-        row('hit', 'hit', 'hit', 'hit', 'hit', 'hit'),
+        row('miss', 'miss', 'partial', 'miss', 'miss'),
+        row('hit', 'miss', 'partial', 'partial', 'miss'),
+        row('hit', 'hit', 'hit', 'hit', 'hit'),
       ],
     };
     expect(buildShareGrid(state)).toBe(
       [
         'Mystery Footballer 2026-07-07 3/6',
-        '⬛⬛🟨⬛⬛⬛',
-        '🟩⬛🟨🟨⬛⬛',
-        '🟩🟩🟩🟩🟩🟩',
+        '⬛⬛🟨⬛⬛',
+        '🟩⬛🟨🟨⬛',
+        '🟩🟩🟩🟩🟩',
       ].join('\n'),
     );
   });
@@ -35,7 +35,7 @@ describe('buildShareGrid', () => {
       secretId: 's',
       maxGuesses: 6,
       status: 'lost',
-      guesses: [row('miss', 'miss', 'miss', 'miss', 'miss', 'miss')],
+      guesses: [row('miss', 'miss', 'miss', 'miss', 'miss')],
     };
     expect(buildShareGrid(state).split('\n')[0]).toBe('Mystery Footballer 2026-07-07 X/6');
   });

@@ -5,6 +5,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Text} from '../../core/ui';
 import {colors, radii, spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
+import {GAMES} from '../gamesCatalog';
 import {MenuDetailScreen} from './MenuDetailScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HowToPlay'>;
@@ -13,10 +14,21 @@ type Props = NativeStackScreenProps<RootStackParamList, 'HowToPlay'>;
 export function HowToPlayScreen({navigation}: Props) {
   const {t} = useTranslation();
 
-  const steps = [1, 2, 3, 4].map(n => ({
+  // Getting-started steps (the party flow); per-game rules follow below.
+  const steps = [1, 2].map(n => ({
     n,
     title: t(`howToPlay.step${n}Title`),
     desc: t(`howToPlay.step${n}Desc`),
+  }));
+
+  // One rules section per built game, driven off the games catalog.
+  const games = GAMES.filter(g => g.available).map(g => ({
+    key: g.gameType,
+    Icon: g.Icon,
+    title: t(`games.${g.i18nKey}.title`),
+    rules: t(`games.${g.i18nKey}.howToPlay.rules`, {
+      returnObjects: true,
+    }) as string[],
   }));
 
   return (
@@ -28,6 +40,7 @@ export function HowToPlayScreen({navigation}: Props) {
       <Text variant="body" color="secondary">
         {t('howToPlay.intro')}
       </Text>
+
       {steps.map(s => (
         <View key={s.n} style={styles.step}>
           <View style={styles.badge}>
@@ -43,6 +56,28 @@ export function HowToPlayScreen({navigation}: Props) {
           </View>
         </View>
       ))}
+
+      <Text variant="label" color="secondary">
+        {t('howToPlay.gamesHeading')}
+      </Text>
+
+      {games.map(g => (
+        <View key={g.key} style={styles.game}>
+          <View style={styles.gameHeader}>
+            <View style={styles.badge}>
+              <g.Icon size={18} color={colors.ink} strokeWidth={1.75} />
+            </View>
+            <Text variant="section">{g.title}</Text>
+          </View>
+          <View style={styles.rules}>
+            {g.rules.map((rule, i) => (
+              <Text key={i} variant="secondary" color="secondary">
+                {rule}
+              </Text>
+            ))}
+          </View>
+        </View>
+      ))}
     </MenuDetailScreen>
   );
 }
@@ -50,8 +85,8 @@ export function HowToPlayScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   body: {gap: spacing.xl},
   step: {flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start'},
-  // Frosted "liquid glass" number chip — same language as CircleButton / the
-  // nav island, not a solid purple fill.
+  // Frosted "liquid glass" chip — same language as CircleButton / the nav
+  // island, not a solid purple fill. Holds either a step number or a game icon.
   badge: {
     width: 30,
     height: 30,
@@ -72,4 +107,7 @@ const styles = StyleSheet.create({
   },
   badgeText: {lineHeight: 20, color: colors.ink},
   stepText: {flex: 1, gap: spacing.xs},
+  game: {gap: spacing.md},
+  gameHeader: {flexDirection: 'row', gap: spacing.md, alignItems: 'center'},
+  rules: {gap: spacing.xs, paddingLeft: 30 + spacing.md},
 });

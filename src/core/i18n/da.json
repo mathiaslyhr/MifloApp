@@ -61,9 +61,44 @@
   "games": {
     "title": "Spil",
     "comingSoon": "Kommer snart",
-    "ttt": {"title": "Tre på stribe", "tagline": "Fodboldquiz × tre på stribe"},
-    "imposter": {"title": "Fodbold-bedrageren", "tagline": "Én af jer bluffer. Find bedrageren."},
-    "mystery": {"title": "Gæt spilleren", "tagline": "Gæt dagens spiller på seks forsøg"},
+    "categories": {
+      "solo": "Anbefalet til solo",
+      "duel": "Anbefalet til 1 mod 1",
+      "party": "Anbefalet til 3+"
+    },
+    "ttt": {
+      "title": "Tre på stribe",
+      "tagline": "Fodboldquiz × tre på stribe",
+      "howToPlay": {
+        "rules": [
+          "På din tur nævner du en fodboldspiller, der passer til både rækken og kolonnen i en celle.",
+          "Få tre celler på stribe for at vinde.",
+          "Gået i stå? Spring din tur over, eller foreslå uafgjort, som alle er enige om."
+        ]
+      }
+    },
+    "imposter": {
+      "title": "Fodbold-bedrageren",
+      "tagline": "Én af jer bluffer. Find bedrageren.",
+      "howToPlay": {
+        "rules": [
+          "Alle undtagen bedrageren får den samme fodboldspiller.",
+          "Over to runder stiller I på skift spørgsmål til hinanden og stemmer så om, hvem bedrageren er.",
+          "Afsløret som bedrager? Nævn fodboldspilleren for at stjæle sejren tilbage."
+        ]
+      }
+    },
+    "mystery": {
+      "title": "Gæt spilleren",
+      "tagline": "Gæt dagens spiller på seks forsøg",
+      "howToPlay": {
+        "rules": [
+          "Gæt dagens fodboldspiller på seks forsøg.",
+          "Efter hvert gæt bliver hver kolonne grøn ved match, gul hvis den er tæt på, og grå hvis den er forkert.",
+          "En ny fodboldspiller kommer hver dag, den samme for alle."
+        ]
+      }
+    },
     "tenball": {"title": "Tenball", "tagline": "Find de 10 bedste svar"},
     "heatmap": {"title": "Heatmap", "tagline": "Byg varme på tværs af gitteret"}
   },
@@ -193,17 +228,17 @@
       "position": "Position",
       "club": "Klub",
       "league": "Liga",
-      "shirtNumber": "Nummer",
-      "era": "Debut"
+      "shirtNumber": "Nummer"
     },
     "help": {
       "title": "Sådan spiller du",
       "rule": "Gæt den mystiske spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
-      "arrows": "Pile på Nummer og Debut peger mod den hemmelige spillers værdi.",
+      "arrows": "Pilen på Nummer peger mod den hemmelige spillers nummer.",
       "daily": "En ny spiller kommer hver dag, den samme for alle."
     },
     "history": {
       "title": "Tidligere spil",
+      "played": "Spillet",
       "notPlayed": "Ikke spillet",
       "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
     }
@@ -259,14 +294,11 @@
   },
   "howToPlay": {
     "title": "Sådan spiller du",
-    "intro": "Miflo spilles sammen i samme rum. Én telefon starter et rum, og alle andre deltager med koden.",
+    "intro": "De fleste Miflo-spil spilles sammen i samme rum: én telefon starter et rum, og alle andre deltager med koden. Gæt spilleren er en daglig solo-opgave, du kan spille på egen hånd.",
     "step1Title": "Opret eller deltag i et rum",
     "step1Desc": "Tryk på Opret et rum for at få en kode, eller Deltag i et rum og indtast en vens kode.",
     "step2Title": "Vælg et spil",
     "step2Desc": "Værten vælger et spil, når mindst to spillere er med.",
-    "step3Title": "Fodboldgitter",
-    "step3Desc": "På din tur nævner du en fodboldspiller, der passer til både rækken og kolonnen i en celle. Få tre på stribe for at vinde.",
-    "step4Title": "Spring over eller uafgjort",
-    "step4Desc": "Gået i stå? Spring din tur over, eller foreslå uafgjort. Alle skal være enige for at ende spillet uafgjort."
+    "gamesHeading": "Spillene"
   }
 }

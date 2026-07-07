@@ -21,7 +21,7 @@ describe('applyGuess', () => {
     const s = applyGuess(createInitialState('2026-07-07', SECRET), OTHER);
     expect(s.guesses).toHaveLength(1);
     expect(s.guesses[0].footballerId).toBe(OTHER);
-    expect(s.guesses[0].cells).toHaveLength(6);
+    expect(s.guesses[0].cells).toHaveLength(5);
     expect(s.status).toBe('playing');
   });
 

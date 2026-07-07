@@ -25,7 +25,7 @@ const dir = (row: ReturnType<typeof compareAttributes>, key: ColumnKey) =>
   row.find(c => c.key === key)!.direction;
 
 describe('deriveAttributes', () => {
-  it('picks the open-ended spell as the active club and min(from) as era', () => {
+  it('picks the open-ended spell as the active club and its league', () => {
     const d = deriveAttributes(
       footballer({
         clubs: [
@@ -36,10 +36,9 @@ describe('deriveAttributes', () => {
     );
     expect(d.activeClubId).toBe('chelsea');
     expect(d.league).toBe('premier-league');
-    expect(d.careerStartYear).toBe(2015);
   });
 
-  it('handles no active club, missing shirt, and undefined from', () => {
+  it('handles no active club and missing shirt', () => {
     const d = deriveAttributes(
       footballer({
         clubs: [{clubId: 'chelsea', to: 2020}],
@@ -49,7 +48,6 @@ describe('deriveAttributes', () => {
     expect(d.activeClubId).toBeUndefined();
     expect(d.league).toBeUndefined();
     expect(d.shirtNumber).toBeUndefined();
-    expect(d.careerStartYear).toBeUndefined();
   });
 });
 
@@ -124,16 +122,6 @@ describe('compareAttributes', () => {
     expect(dir(lower, 'shirtNumber')).toBe('up'); // secret 10 > guess 7
     const higher = compareAttributes(deriveAttributes(footballer({shirtNumbers: [23]})), secret);
     expect(dir(higher, 'shirtNumber')).toBe('down');
-  });
-
-  it('era: hit on equal debut year, arrow otherwise', () => {
-    const secret = deriveAttributes(footballer({clubs: [{clubId: 'chelsea', from: 2010}]}));
-    const later = compareAttributes(
-      deriveAttributes(footballer({clubs: [{clubId: 'chelsea', from: 2015}]})),
-      secret,
-    );
-    expect(status(later, 'era')).toBe('miss');
-    expect(dir(later, 'era')).toBe('down'); // secret 2010 < guess 2015
   });
 
   it('numeric columns miss without direction when a value is missing', () => {

@@ -13,8 +13,7 @@ export type ColumnKey =
   | 'position'
   | 'club'
   | 'league'
-  | 'shirtNumber'
-  | 'era';
+  | 'shirtNumber';
 
 /** How a single guessed attribute compares to the secret. */
 export type CellStatus = 'hit' | 'partial' | 'miss';

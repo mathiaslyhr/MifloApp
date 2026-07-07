@@ -1,18 +1,19 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   Image,
+  Modal,
   Pressable,
   ScrollView,
   Share,
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, History} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle, History, Search} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, spacing} from '../theme';
+import {colors, fonts, radii, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, type Footballer} from '../data/football';
 import {flagImage, logoImage} from '../games/tic-tac-toe/criterionIcon';
@@ -95,6 +96,7 @@ export function MysteryFootballerScreen({navigation}: Props) {
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
   const [history, setHistory] = useState<HistoryLog>({});
   const [query, setQuery] = useState('');
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -134,6 +136,16 @@ export function MysteryFootballerScreen({navigation}: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, state]);
 
+  function openPicker() {
+    setQuery('');
+    setPickerOpen(true);
+  }
+
+  function closePicker() {
+    setPickerOpen(false);
+    setQuery('');
+  }
+
   function submitGuess(footballerId: string) {
     if (!state || isFinished(state)) {
       return;
@@ -145,6 +157,7 @@ export function MysteryFootballerScreen({navigation}: Props) {
     const next = applyGuess(state, footballerId);
     setState(next);
     setQuery('');
+    setPickerOpen(false);
     saveDailyProgress({dateKey, guessedIds: next.guesses.map(g => g.footballerId)});
 
     if (isFinished(next)) {
@@ -216,34 +229,41 @@ export function MysteryFootballerScreen({navigation}: Props) {
           </Text>
         ) : null}
 
-        {/* Column headers, aligned with the cells below. */}
+        {/* Column headers, aligned with the cells below, split by dividers. */}
         <View style={styles.columnHeader}>
-          {COLUMNS.map(key => (
-            <Text key={key} style={styles.columnLabel} numberOfLines={1} adjustsFontSizeToFit>
-              {t(`mystery.columns.${key}`)}
-            </Text>
+          {COLUMNS.map((key, i) => (
+            <View key={key} style={[styles.columnCell, i > 0 && styles.columnDivider]}>
+              <Text style={styles.columnLabel} numberOfLines={1} adjustsFontSizeToFit>
+                {t(`mystery.columns.${key}`)}
+              </Text>
+            </View>
           ))}
         </View>
+        <View style={styles.headerRule} />
 
         <ScrollView
           style={styles.board}
           contentContainerStyle={styles.boardContent}
           showsVerticalScrollIndicator={false}>
-          {state.guesses.map((g, i) => {
-            const player = getById(g.footballerId);
-            return (
-              <View key={`${g.footballerId}-${i}`} style={styles.guess}>
-                <Text variant="body" numberOfLines={1} style={styles.guessName}>
-                  {player?.name ?? g.footballerId}
-                </Text>
-                <View style={styles.cellRow}>
-                  {g.cells.map(cell => (
-                    <Cell key={cell.key} cell={cell} player={player} />
-                  ))}
+          {/* Newest guess first. */}
+          {state.guesses
+            .slice()
+            .reverse()
+            .map(g => {
+              const player = getById(g.footballerId);
+              return (
+                <View key={g.footballerId} style={styles.guess}>
+                  <Text variant="body" numberOfLines={1} style={styles.guessName}>
+                    {player?.name ?? g.footballerId}
+                  </Text>
+                  <View style={styles.cellRow}>
+                    {g.cells.map(cell => (
+                      <Cell key={cell.key} cell={cell} player={player} />
+                    ))}
+                  </View>
                 </View>
-              </View>
-            );
-          })}
+              );
+            })}
           {state.guesses.length === 0 ? (
             <Text variant="secondary" color="secondary" align="center" style={styles.emptyHint}>
               {t('mystery.searchHint')}
@@ -266,44 +286,67 @@ export function MysteryFootballerScreen({navigation}: Props) {
             </Text>
           </View>
         ) : (
-          <View style={styles.inputPanel}>
-            {query.trim() !== '' ? (
-              <ScrollView
-                style={styles.results}
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={false}>
-                {results.length === 0 ? (
-                  <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                    {t('mystery.noPlayers')}
-                  </Text>
-                ) : (
-                  results.map(f => {
-                    const flag = flagImage(f.nationality[0]);
-                    return (
-                      <Pressable
-                        key={f.id}
-                        style={styles.resultRow}
-                        onPress={() => submitGuess(f.id)}>
-                        {flag != null ? (
-                          <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
-                        ) : null}
-                        <Text variant="body">{f.name}</Text>
-                      </Pressable>
-                    );
-                  })
-                )}
-              </ScrollView>
-            ) : null}
+          // A field-styled trigger; the real search is a top overlay (below) so
+          // results always clear the keyboard.
+          <Pressable
+            style={styles.trigger}
+            onPress={openPicker}
+            accessibilityRole="button"
+            accessibilityLabel={t('mystery.searchPlaceholder')}>
+            <Search size={18} color={colors.textTertiary} strokeWidth={2} />
+            <Text style={styles.triggerText}>{t('mystery.searchPlaceholder')}</Text>
+          </Pressable>
+        )}
+      </View>
+
+      {/* Top-anchored search overlay: card near the top, keyboard at the bottom. */}
+      <Modal
+        visible={pickerOpen}
+        transparent
+        animationType="none"
+        onRequestClose={closePicker}>
+        <Pressable style={styles.scrim} onPress={closePicker}>
+          <Pressable style={styles.pickCard} onPress={() => {}}>
             <TextField
               value={query}
               onChangeText={setQuery}
               placeholder={t('mystery.searchPlaceholder')}
+              autoFocus
               autoCapitalize="words"
               accessibilityLabel={t('mystery.searchPlaceholder')}
             />
-          </View>
-        )}
-      </View>
+            <ScrollView
+              style={styles.results}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}>
+              {query.trim() === '' ? (
+                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
+                  {t('mystery.searchHint')}
+                </Text>
+              ) : results.length === 0 ? (
+                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
+                  {t('mystery.noPlayers')}
+                </Text>
+              ) : (
+                results.map(f => {
+                  const flag = flagImage(f.nationality[0]);
+                  return (
+                    <Pressable
+                      key={f.id}
+                      style={styles.resultRow}
+                      onPress={() => submitGuess(f.id)}>
+                      {flag != null ? (
+                        <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
+                      ) : null}
+                      <Text variant="body">{f.name}</Text>
+                    </Pressable>
+                  );
+                })
+              )}
+            </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
 
       <MysteryHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
       <MysteryHistoryModal
@@ -355,8 +398,6 @@ function cellValue(key: ColumnKey, attrs: ReturnType<typeof deriveAttributes> | 
       return leagueShort(attrs.league);
     case 'shirtNumber':
       return attrs.shirtNumber !== undefined ? `${attrs.shirtNumber}` : '—';
-    case 'era':
-      return attrs.careerStartYear !== undefined ? `${attrs.careerStartYear}` : '—';
     default:
       return '—';
   }
@@ -435,17 +476,30 @@ const styles = StyleSheet.create({
   instruction: {marginBottom: spacing.xs},
   columnHeader: {
     flexDirection: 'row',
-    gap: CELL_GAP,
     marginTop: spacing.lg,
-    paddingHorizontal: 2,
+  },
+  columnCell: {
+    flex: 1,
+    paddingVertical: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  columnDivider: {
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderLeftColor: colors.divider,
   },
   columnLabel: {
-    flex: 1,
     fontFamily: fonts.medium,
     fontSize: 10,
     lineHeight: 13,
     color: colors.muted,
     textAlign: 'center',
+  },
+  // Divider separating the header row from the guesses.
+  headerRule: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: colors.divider,
+    marginTop: spacing.xs,
   },
   board: {flex: 1, marginTop: spacing.xs},
   boardContent: {gap: spacing.md, paddingVertical: spacing.sm},
@@ -474,8 +528,39 @@ const styles = StyleSheet.create({
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
   statValue: {fontFamily: fonts.medium, fontSize: 28, color: colors.ink},
-  inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-  results: {maxHeight: 220},
+  // Bottom trigger that opens the search overlay (styled like a text field).
+  trigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    minHeight: 48,
+    paddingHorizontal: spacing.lg - 1,
+    borderRadius: radii.button,
+    backgroundColor: colors.surface2,
+    borderWidth: 2,
+    borderColor: colors.divider,
+    marginBottom: spacing.sm,
+  },
+  triggerText: {fontFamily: fonts.regular, fontSize: 16, color: colors.textTertiary},
+  // Search overlay anchored near the top so the results clear the keyboard.
+  scrim: {
+    flex: 1,
+    backgroundColor: 'rgba(13,13,22,0.15)',
+    justifyContent: 'flex-start',
+    paddingTop: 72,
+    paddingHorizontal: spacing.xl,
+  },
+  pickCard: {
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 380,
+    maxHeight: '70%',
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    padding: spacing.lg,
+    gap: spacing.md,
+  },
+  results: {maxHeight: 300},
   resultRow: {
     flexDirection: 'row',
     alignItems: 'center',

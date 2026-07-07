@@ -1,16 +1,14 @@
 /**
  * MysteryHistoryModal — the "past puzzles" archive behind the history button.
- * Past answers are free (re-derived from the daily seed for each earlier date);
- * the user's own result per day comes from the persisted [[HistoryLog]]. Shows a
- * rolling window of recent days, most recent first.
+ * Deliberately shows only the date and whether the user played that day (no
+ * answer, no score), so it never spoils a past secret. Most recent day first.
  */
 import React, {useMemo} from 'react';
-import {Image, Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from '../../core/ui';
 import {colors, fonts, radii, spacing} from '../../theme';
-import {flagImage} from '../tic-tac-toe/criterionIcon';
-import {dailyPool, pastDateKeys, secretFor} from './dailySeed';
+import {pastDateKeys} from './dailySeed';
 import type {HistoryLog} from './types';
 
 /** How many past days the archive shows. */
@@ -26,7 +24,6 @@ type Props = {
 export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props) {
   const {t} = useTranslation();
   const months = t('mystery.history.months', {returnObjects: true}) as string[];
-  const pool = useMemo(() => dailyPool(), []);
   const days = useMemo(() => pastDateKeys(todayKey, WINDOW), [todayKey]);
 
   function formatDay(dateKey: string): string {
@@ -43,31 +40,13 @@ export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props
           </Text>
           <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
             {days.map(dateKey => {
-              const secret = secretFor(dateKey, pool);
-              const result = history[dateKey];
-              const flag = flagImage(secret.nationality[0]);
+              const played = history[dateKey] !== undefined;
               return (
                 <View key={dateKey} style={styles.row}>
                   <Text style={styles.date}>{formatDay(dateKey)}</Text>
-                  {flag != null ? (
-                    <Image source={flag} resizeMode="contain" style={styles.flag} />
-                  ) : null}
-                  <Text variant="body" numberOfLines={1} style={styles.name}>
-                    {secret.name}
+                  <Text style={[styles.status, played ? styles.played : styles.notPlayed]}>
+                    {played ? t('mystery.history.played') : t('mystery.history.notPlayed')}
                   </Text>
-                  {result ? (
-                    <Text
-                      style={[
-                        styles.result,
-                        {color: result.status === 'won' ? colors.success : colors.error},
-                      ]}>
-                      {result.status === 'won' ? `${result.guessCount}/6` : 'X/6'}
-                    </Text>
-                  ) : (
-                    <Text style={[styles.result, styles.notPlayed]}>
-                      {t('mystery.history.notPlayed')}
-                    </Text>
-                  )}
                 </View>
               );
             })}
@@ -100,23 +79,20 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
+    justifyContent: 'space-between',
     paddingVertical: spacing.md,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: colors.divider,
   },
   date: {
     fontFamily: fonts.medium,
-    fontSize: 12,
-    color: colors.muted,
-    width: 48,
+    fontSize: 14,
+    color: colors.ink,
   },
-  flag: {width: 20, height: 14, borderRadius: 2},
-  name: {flex: 1},
-  result: {
+  status: {
     fontFamily: fonts.medium,
     fontSize: 13,
-    fontVariant: ['tabular-nums'],
   },
+  played: {color: colors.ink},
   notPlayed: {color: colors.textTertiary},
 });

@@ -125,27 +125,6 @@ function teammateName(playerId: string): string {
   return getById(playerId)?.name ?? playerId;
 }
 
-/**
- * Disambiguated short labels for teammate chips where a bare surname would be
- * ambiguous (e.g. two famous Ronaldos). Keyed by footballer id.
- */
-const TEAMMATE_SHORT: Record<string, string> = {
-  'Ronaldo, Cristiano': 'Cristiano',
-  Ronaldo: 'R. Nazário', // Ronaldo Nazário, if ever added as a hub
-  'Di María, Ángel': 'Di María', // bare "María" loses the compound surname
-  'De Bruyne, Kevin': 'De Bruyne', // bare "Bruyne" loses the compound surname
-};
-
-/** Short teammate chip label — surname, disambiguated where needed. */
-function teammateSurname(playerId: string): string {
-  const override = TEAMMATE_SHORT[playerId];
-  if (override) {
-    return override;
-  }
-  const name = teammateName(playerId);
-  return name.split(' ').pop() ?? name;
-}
-
 /** Full human label for an axis chip — used by the picker/search. */
 export function criterionLabel(c: Criterion): string {
   switch (c.kind) {
@@ -217,7 +196,9 @@ export function criterionShortLabel(c: Criterion): string {
     case 'shirtNumber':
       return `#${c.number}`;
     case 'teammate':
-      return teammateSurname(c.playerId);
+      // The portrait already identifies the player; the box just needs the axis
+      // kind. "Teammate" is shorter than "Played with", so it always fits.
+      return 'Teammate';
     case 'topLeagues':
       return `${c.count}+ Top5`;
   }

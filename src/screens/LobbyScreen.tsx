@@ -239,9 +239,18 @@ export function LobbyScreen({route, navigation}: Props) {
         default:
           throw new Error(`Unsupported game: ${gameType}`);
       }
-    } catch {
+    } catch (err) {
       setStarting(false);
-      Alert.alert(t('common.miflo'), t('lobby.errorStart'));
+      // TEMP DEBUG: surface the real Supabase/PostgREST error while diagnosing
+      // the imposter start failure. Revert to the friendly message before commit.
+      const e = err as {message?: string; code?: string; details?: string; hint?: string};
+      console.warn('startGame failed', e);
+      Alert.alert(
+        'Start error (debug)',
+        [e?.code && `code: ${e.code}`, e?.message, e?.details, e?.hint]
+          .filter(Boolean)
+          .join('\n\n') || String(err),
+      );
     }
   }
 

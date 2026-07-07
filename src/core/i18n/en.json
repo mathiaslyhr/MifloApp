@@ -61,9 +61,44 @@
   "games": {
     "title": "Games",
     "comingSoon": "Coming soon",
-    "ttt": {"title": "Tic Tac Toe", "tagline": "Football trivia × tic tac toe"},
-    "imposter": {"title": "Footballer Imposter", "tagline": "One of you is bluffing. Sniff them out."},
-    "mystery": {"title": "Mystery Footballer", "tagline": "Guess today's player in six tries"},
+    "categories": {
+      "solo": "Recommended for solo",
+      "duel": "Recommended for 1v1",
+      "party": "Recommended for 3+"
+    },
+    "ttt": {
+      "title": "Tic Tac Toe",
+      "tagline": "Football trivia × tic tac toe",
+      "howToPlay": {
+        "rules": [
+          "On your turn, name a footballer who fits both the row and the column of a cell.",
+          "Claim three cells in a row to win.",
+          "Stuck? Skip your turn or propose a tie that everyone agrees to."
+        ]
+      }
+    },
+    "imposter": {
+      "title": "Footballer Imposter",
+      "tagline": "One of you is bluffing. Sniff them out.",
+      "howToPlay": {
+        "rules": [
+          "Everyone but the imposter is given the same footballer.",
+          "Over two rounds, take turns questioning each other, then vote on who the imposter is.",
+          "Caught as the imposter? Name the footballer to steal the win back."
+        ]
+      }
+    },
+    "mystery": {
+      "title": "Mystery Footballer",
+      "tagline": "Guess today's player in six tries",
+      "howToPlay": {
+        "rules": [
+          "Guess the daily footballer in six tries.",
+          "After each guess, every column turns green for a match, yellow if close, and grey if wrong.",
+          "A new footballer drops every day, the same for everyone."
+        ]
+      }
+    },
     "tenball": {"title": "Tenball", "tagline": "Find the top 10 answers"},
     "heatmap": {"title": "Heatmap", "tagline": "Build heat across the grid"}
   },
@@ -193,17 +228,17 @@
       "position": "Position",
       "club": "Club",
       "league": "League",
-      "shirtNumber": "Shirt",
-      "era": "Debut"
+      "shirtNumber": "Shirt"
     },
     "help": {
       "title": "How to play",
       "rule": "Guess the mystery footballer in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
-      "arrows": "Arrows on Shirt and Debut point toward the secret player's value.",
+      "arrows": "The arrow on Shirt points toward the secret player's number.",
       "daily": "A new footballer drops every day, the same for everyone."
     },
     "history": {
       "title": "Past puzzles",
+      "played": "Played",
       "notPlayed": "Not played",
       "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     }
@@ -259,14 +294,11 @@
   },
   "howToPlay": {
     "title": "How to play",
-    "intro": "Miflo is played together in the same room. One phone starts a party and everyone else joins with the code.",
+    "intro": "Most Miflo games are played together in the same room: one phone starts a party and everyone else joins with the code. Mystery Footballer is a solo daily puzzle you can play on your own.",
     "step1Title": "Create or join a party",
     "step1Desc": "Tap Create a party to get a code, or Join a party and type a friend's code.",
     "step2Title": "Pick a game",
     "step2Desc": "The host picks a game once at least two players have joined.",
-    "step3Title": "Football Grid",
-    "step3Desc": "On your turn, name a footballer who matches both the row and the column of a cell. Get three in a row to win.",
-    "step4Title": "Skip or tie",
-    "step4Desc": "Stuck? Skip your turn, or propose a tie. Everyone has to agree to end the game in a draw."
+    "gamesHeading": "The games"
   }
 }

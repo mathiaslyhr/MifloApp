@@ -4,21 +4,19 @@
  * the read-only `getClub`/`getById` helpers, so it is fully unit-testable with
  * fixture footballers.
  *
- * The dataset has no age / market value / height / detailed position, so two of
- * the six columns are derived: `league` (from the current club) and `era` (the
- * earliest year across all club spells — the substitute for an age axis).
+ * The dataset has no age / market value / height / detailed position, so the
+ * `league` column is derived from the current club.
  */
 import {getById, getClub, type Footballer} from '../../data/football';
 import type {CellResult, ColumnKey, GuessRow} from './types';
 
-/** The six columns compared, in display order. */
+/** The five columns compared, in display order. */
 export const COLUMNS: readonly ColumnKey[] = [
   'nationality',
   'position',
   'club',
   'league',
   'shirtNumber',
-  'era',
 ];
 
 /** A footballer flattened to the scalars/sets the columns actually compare. */
@@ -31,8 +29,6 @@ export type DerivedAttributes = {
   league: string | undefined;
   /** Primary shirt number. */
   shirtNumber: number | undefined;
-  /** Earliest year across all club spells — the "era"/debut proxy. */
-  careerStartYear: number | undefined;
 };
 
 /** Flatten a footballer to the values the feedback columns compare. */
@@ -40,16 +36,12 @@ export function deriveAttributes(f: Footballer): DerivedAttributes {
   const active = f.clubs.find(s => s.to === undefined);
   const activeClubId = active?.clubId;
   const league = activeClubId ? getClub(activeClubId)?.league : undefined;
-  const froms = f.clubs
-    .map(s => s.from)
-    .filter((y): y is number => typeof y === 'number');
   return {
     nationality: f.nationality,
     position: f.positions[0],
     activeClubId,
     league,
     shirtNumber: f.shirtNumbers?.[0],
-    careerStartYear: froms.length ? Math.min(...froms) : undefined,
   };
 }
 
@@ -118,8 +110,6 @@ export function compareCell(
       };
     case 'shirtNumber':
       return numeric(key, guess.shirtNumber, secret.shirtNumber);
-    case 'era':
-      return numeric(key, guess.careerStartYear, secret.careerStartYear);
   }
 }
 
