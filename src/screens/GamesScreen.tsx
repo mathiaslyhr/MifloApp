@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {GameTile, IslandTabBar, Screen, Text, TabId} from '../core/ui';
 import {spacing} from '../theme';
 import {GAMES, GameType} from './gamesCatalog';
@@ -19,12 +20,13 @@ type Props = {
  * `onSelectGame` is a no-op stub.
  */
 export function GamesScreen({onTabSelect, onSelectGame}: Props) {
+  const {t} = useTranslation();
   return (
     <Screen canvas>
       <View style={styles.content}>
         <View style={styles.header}>
           <Text variant="wordmark" align="center">
-            Games
+            {t('games.title')}
           </Text>
         </View>
 
@@ -34,8 +36,8 @@ export function GamesScreen({onTabSelect, onSelectGame}: Props) {
           {GAMES.map(game => (
             <GameTile
               key={game.gameType}
-              title={game.title}
-              tagline={game.tagline}
+              title={t(`games.${game.i18nKey}.title`)}
+              tagline={t(`games.${game.i18nKey}.tagline`)}
               Icon={game.Icon}
               onPress={() => onSelectGame?.(game.gameType)}
             />

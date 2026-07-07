@@ -106,6 +106,8 @@ export type Footballer = {
   id: string;
   name: string;
   fullName?: string;
+  /** Well-known nicknames/aliases used to boost player search (e.g. 'R9'). */
+  nicknames?: string[];
   /** Can hold dual nationality. */
   nationality: string[];
   positions: Position[];
@@ -131,4 +133,6 @@ export type Criterion =
   | {kind: 'honour'; honour: HonourType}
   | {kind: 'tag'; tag: string}
   | {kind: 'shirtNumber'; number: number}
-  | {kind: 'teammate'; playerId: string};
+  | {kind: 'teammate'; playerId: string}
+  /** Played in at least `count` of the top-5 European leagues. */
+  | {kind: 'topLeagues'; count: number};

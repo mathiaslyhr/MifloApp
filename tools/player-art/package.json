@@ -1,0 +1,18 @@
+{
+  "name": "player-art",
+  "private": true,
+  "type": "module",
+  "description": "One-off pipeline: generate flat-vector player portraits for the teammate axis chips via Vercel AI Gateway (Nano Banana Pro), then post-process into app assets.",
+  "scripts": {
+    "prep": "node prep-refs.mjs",
+    "photos": "node fetch-photos.mjs",
+    "generate": "node generate.mjs",
+    "post": "node postprocess.mjs"
+  },
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.89",
+    "ai": "^6.0.0",
+    "dotenv": "^17.0.0",
+    "sharp": "^0.34.0"
+  }
+}

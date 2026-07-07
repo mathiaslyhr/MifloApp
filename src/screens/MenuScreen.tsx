@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -9,6 +9,7 @@ import {
   Shield,
   User,
 } from 'lucide-react-native';
+import {useTranslation} from 'react-i18next';
 import {
   IslandTabBar,
   MenuGroup,
@@ -17,7 +18,6 @@ import {
   TabId,
   Text,
 } from '../core/ui';
-import {getNickname} from '../core/identity/deviceId';
 import {APP_VERSION, FAQ_URL, PRIVACY_POLICY_URL} from '../core/config';
 import {spacing} from '../theme';
 
@@ -42,22 +42,7 @@ const TAB_CLEARANCE = 96;
 
 export function MenuScreen({onTabSelect, onSelectItem}: Props) {
   const insets = useSafeAreaInsets();
-  const [nickname, setNickname] = useState<string | null>(null);
-
-  // Read-only peek at the saved nickname so the Profile row feels personal.
-  useEffect(() => {
-    let mounted = true;
-    getNickname()
-      .then(name => {
-        if (mounted) {
-          setNickname(name);
-        }
-      })
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const {t} = useTranslation();
 
   return (
     // Drop the bottom safe-area edge so the scroll region runs to the physical
@@ -66,7 +51,7 @@ export function MenuScreen({onTabSelect, onSelectItem}: Props) {
     <Screen canvas edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <Text variant="wordmark" align="center">
-          Menu
+          {t('menu.title')}
         </Text>
       </View>
 
@@ -77,42 +62,41 @@ export function MenuScreen({onTabSelect, onSelectItem}: Props) {
           {paddingBottom: insets.bottom + TAB_CLEARANCE},
         ]}
         showsVerticalScrollIndicator={false}>
-        <MenuGroup label="Account">
+        <MenuGroup label={t('menu.account')}>
           <MenuRow
-            label="Profile"
-            subtitle={nickname ?? 'Set your nickname'}
+            label={t('menu.profile')}
             Icon={User}
             onPress={() => onSelectItem?.('profile')}
           />
         </MenuGroup>
 
-        <MenuGroup label="App">
+        <MenuGroup label={t('menu.app')}>
           <MenuRow
-            label="How to play"
+            label={t('menu.howToPlay')}
             Icon={HelpCircle}
             onPress={() => onSelectItem?.('howToPlay')}
           />
           <MenuRow
-            label="Settings"
+            label={t('menu.settings')}
             Icon={Settings}
             onPress={() => onSelectItem?.('settings')}
           />
         </MenuGroup>
 
-        <MenuGroup label="About">
+        <MenuGroup label={t('menu.about')}>
           <MenuRow
-            label="About Miflo"
+            label={t('menu.aboutMiflo')}
             Icon={Info}
             onPress={() => onSelectItem?.('about')}
           />
           <MenuRow
-            label="FAQ"
+            label={t('menu.faq')}
             Icon={BookOpen}
             kind="link"
             onPress={() => Linking.openURL(FAQ_URL).catch(() => {})}
           />
           <MenuRow
-            label="Privacy Policy"
+            label={t('menu.privacy')}
             Icon={Shield}
             kind="link"
             onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
@@ -120,7 +104,7 @@ export function MenuScreen({onTabSelect, onSelectItem}: Props) {
         </MenuGroup>
 
         <Text variant="caption" color="muted" align="center" style={styles.footer}>
-          Miflo · v{APP_VERSION}
+          {t('menu.version', {version: APP_VERSION})}
         </Text>
       </ScrollView>
 

@@ -43,12 +43,12 @@ const TAG_LABELS: Record<string, string> = {
 const CLUB_SHORT: Record<string, string> = {
   'man-city': 'Man C', 'man-utd': 'Man U', arsenal: 'Arsenal', chelsea: 'Chelsea',
   liverpool: "L'pool", tottenham: 'Spurs', 'aston-villa': 'Villa', everton: 'Everton',
-  newcastle: 'Newc.', 'west-ham': 'Hammers', leicester: 'Leic.', leeds: 'Leeds',
-  wolves: 'Wolves', southampton: 'Saints', qpr: 'QPR', fulham: 'Fulham', barnsley: 'Barns.',
+  newcastle: 'Newc.', 'west-ham': 'W. Ham', leicester: 'Leic.', leeds: 'Leeds',
+  wolves: 'Wolves', southampton: 'Soton', qpr: 'QPR', fulham: 'Fulham', barnsley: 'Barns.',
   'real-madrid': 'Real', barcelona: 'Barça', 'atletico-madrid': 'Atléti', sevilla: 'Sevilla',
   valencia: 'Valen.', villarreal: 'Villar.', 'real-sociedad': 'R. Soc', 'real-betis': 'Betis',
   juventus: 'Juve', inter: 'Inter', 'ac-milan': 'Milan', napoli: 'Napoli', roma: 'Roma',
-  lazio: 'Lazio', fiorentina: 'Viola', atalanta: 'Atal.', bologna: 'Bologna',
+  lazio: 'Lazio', fiorentina: 'Fiore.', atalanta: 'Atal.', bologna: 'Bologna',
   bayern: 'Bayern', dortmund: 'BVB', leverkusen: 'Lever.', schalke: 'Schalke',
   'rb-leipzig': 'Leipzig', wolfsburg: 'Wolfs.', monchengladbach: 'Gladb.',
   psg: 'PSG', monaco: 'Monaco', marseille: 'OM', lyon: 'Lyon', lille: 'Lille',
@@ -124,8 +124,21 @@ function teammateName(playerId: string): string {
   return getById(playerId)?.name ?? playerId;
 }
 
-/** Surname only (last token of the display name), for the tiny grid chips. */
+/**
+ * Disambiguated short labels for teammate chips where a bare surname would be
+ * ambiguous (e.g. two famous Ronaldos). Keyed by footballer id.
+ */
+const TEAMMATE_SHORT: Record<string, string> = {
+  'Ronaldo, Cristiano': 'Cristiano',
+  Ronaldo: 'R. Nazário', // Ronaldo Nazário, if ever added as a hub
+};
+
+/** Short teammate chip label — surname, disambiguated where needed. */
 function teammateSurname(playerId: string): string {
+  const override = TEAMMATE_SHORT[playerId];
+  if (override) {
+    return override;
+  }
   const name = teammateName(playerId);
   return name.split(' ').pop() ?? name;
 }
@@ -149,6 +162,8 @@ export function criterionLabel(c: Criterion): string {
       return `No. ${c.number}`;
     case 'teammate':
       return `Played with ${teammateName(c.playerId)}`;
+    case 'topLeagues':
+      return `Played in ${c.count}+ top-5 leagues`;
   }
 }
 
@@ -171,6 +186,8 @@ export function criterionShortLabel(c: Criterion): string {
       return `#${c.number}`;
     case 'teammate':
       return teammateSurname(c.playerId);
+    case 'topLeagues':
+      return `${c.count}+ Top5`;
   }
 }
 
@@ -195,6 +212,12 @@ const AXIS_TEAMMATES = [
   'Neymar', 'Suárez, Luis', 'Ibrahimović, Zlatan', 'Lampard, Frank',
   'Gerrard, Steven', 'De Bruyne, Kevin', 'Kroos, Toni', 'Müller, Thomas',
   'Buffon, Gianluigi', 'Totti, Francesco', 'Pirlo, Andrea', 'Maldini, Paolo',
+  // High-connectivity modern hubs (many in-dataset teammates → varied grids).
+  'Lewandowski, Robert', 'Cancelo, João', 'Lukaku, Romelu', 'Kovačić, Mateo',
+  'Sterling, Raheem', 'Di María, Ángel', 'Félix, João', 'Gündoğan, İlkay',
+  'Aubameyang, Pierre-Emerick', 'Courtois, Thibaut', 'Sánchez, Alexis',
+  'Silva, Thiago', 'Fàbregas, Cesc', 'Pogba, Paul', 'Hakimi, Achraf',
+  'Rüdiger, Antonio', 'Walker, Kyle',
 ] as const;
 
 type Candidate = {c: Criterion; ids: Set<string>};
@@ -212,11 +235,12 @@ function buildCandidates(): Candidate[] {
     f.nationality.forEach(n => nations.add(n));
   }
   nations.forEach(country => criteria.push({kind: 'nationality', country}));
-  // Honours for spice.
+  // Honours for spice — trophies plus domestic titles (league / cup winners).
   (
     [
       'champions-league', 'world-cup', 'ballon-dor', 'golden-boot',
       'european-championship', 'copa-america', 'europa-league',
+      'league-title', 'domestic-cup',
     ] as const
   ).forEach(honour => criteria.push({kind: 'honour', honour}));
   // Iconic shirt numbers.
@@ -227,6 +251,8 @@ function buildCandidates(): Candidate[] {
   AXIS_TEAMMATES.filter(id => getById(id)).forEach(playerId =>
     criteria.push({kind: 'teammate', playerId}),
   );
+  // Journeymen across Europe's big leagues.
+  criteria.push({kind: 'topLeagues', count: 3});
 
   return criteria
     .map(c => ({
@@ -250,6 +276,46 @@ function intersectionSize(a: Set<string>, b: Set<string>): number {
 export type Grid = {rows: Criterion[]; cols: Criterion[]};
 
 /**
+ * Order-independent fingerprint of a grid's axes (rows/cols swap and any
+ * within-axis reorder produce the same signature, since they yield the same
+ * puzzle). Used to avoid repeating a recent grid.
+ */
+export function gridSignature(g: Grid): string {
+  const rows = g.rows.map(c => JSON.stringify(c)).sort().join('|');
+  const cols = g.cols.map(c => JSON.stringify(c)).sort().join('|');
+  return rows < cols ? `${rows}//${cols}` : `${cols}//${rows}`;
+}
+
+/**
+ * Max cells a single footballer may be a valid answer for, across the 9-cell
+ * grid. Stops "every box fits Zlatan" boards where one superstar solves most of
+ * the grid — those feel repetitive and trivial.
+ */
+const MAX_SUPERSTAR_CELLS = 4;
+
+/** Largest number of cells any single player satisfies on a candidate grid. */
+function peakPlayerCoverage(rows: Candidate[], cols: Candidate[]): number {
+  const perPlayer = new Map<string, number>();
+  let peak = 0;
+  for (const r of rows) {
+    for (const c of cols) {
+      // Players valid for this cell = row.ids ∩ col.ids.
+      const [small, big] = r.ids.size < c.ids.size ? [r.ids, c.ids] : [c.ids, r.ids];
+      small.forEach(id => {
+        if (big.has(id)) {
+          const n = (perPlayer.get(id) ?? 0) + 1;
+          perPlayer.set(id, n);
+          if (n > peak) {
+            peak = n;
+          }
+        }
+      });
+    }
+  }
+  return peak;
+}
+
+/**
  * Max axes of each "special" kind allowed on a whole 6-axis grid. The fat
  * teammate/number axes otherwise dominate (they intersect everything), so a
  * whole side could come up all "Played with X". Clubs & nations are uncapped —
@@ -260,12 +326,20 @@ const KIND_CAP: Partial<Record<Criterion['kind'], number>> = {
   teammate: 1,
   shirtNumber: 1,
   honour: 2,
+  topLeagues: 1,
 };
 
-export function generateGrid(rng: Rng = Math.random): Grid {
+export function generateGrid(
+  rng: Rng = Math.random,
+  opts: {avoid?: readonly string[]} = {},
+): Grid {
   const pool = buildCandidates();
+  const avoid = new Set(opts.avoid ?? []);
 
   const attempt = (minPer: number): Grid | null => {
+    // Remember the first solvable grid so we never fail even if none clears the
+    // superstar-coverage guard / recent-grid avoidance within the budget.
+    let fallback: Grid | null = null;
     for (let i = 0; i < 600; i++) {
       const shuffled = shuffle(pool, rng);
       const used: Partial<Record<Criterion['kind'], number>> = {};
@@ -314,10 +388,18 @@ export function generateGrid(rng: Rng = Math.random): Grid {
         }
       }
       if (cols.length === 3) {
-        return {rows: rows.map(r => r.c), cols: cols.map(c => c.c)};
+        const candidate = {rows: rows.map(r => r.c), cols: cols.map(c => c.c)};
+        const fresh = !avoid.has(gridSignature(candidate));
+        if (fresh && peakPlayerCoverage(rows, cols) <= MAX_SUPERSTAR_CELLS) {
+          return candidate;
+        }
+        // Prefer a fresh (non-repeated) grid as the fallback when possible.
+        if (!fallback || fresh) {
+          fallback = candidate;
+        }
       }
     }
-    return null;
+    return fallback;
   };
 
   const grid = attempt(2) ?? attempt(1);

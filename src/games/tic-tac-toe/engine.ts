@@ -4,7 +4,7 @@
  * via `play_move`; the server only checks it's their turn).
  */
 import {getById, matches} from '../../data/football';
-import type {Grid} from './grid';
+import {gridSignature, type Grid} from './grid';
 import type {Cell, GridState, Side} from './types';
 
 /** Distinct side colours (individual mode uses one per player). */
@@ -47,9 +47,19 @@ const LINES: readonly number[][] = [
 type RosterEntry = {userId: string; name: string};
 
 /** Build the initial state for Individual mode from the grid + roster. */
-export function createIndividualState(grid: Grid, roster: RosterEntry[]): GridState {
-  // Randomise the turn order so the starter isn't always the host.
+export function createIndividualState(
+  grid: Grid,
+  roster: RosterEntry[],
+  opts: {avoidStarter?: string} = {},
+): GridState {
+  // Randomise the turn order so the starter isn't always the host. If the same
+  // player would start again (avoidStarter), swap them out of the lead so the
+  // opener rotates round-to-round.
   const order = shuffled(roster.map(p => p.userId));
+  if (opts.avoidStarter && order.length > 1 && order[0] === opts.avoidStarter) {
+    const swapWith = 1 + Math.floor(Math.random() * (order.length - 1));
+    [order[0], order[swapWith]] = [order[swapWith], order[0]];
+  }
   const sides: Side[] = roster.map((p, i) => ({
     id: p.userId,
     color: PALETTE[i % PALETTE.length],
@@ -68,6 +78,7 @@ export function createIndividualState(grid: Grid, roster: RosterEntry[]): GridSt
     turnDeadline: Date.now() + TURN_MS,
     usedFootballerIds: [],
     winner: null,
+    signature: gridSignature(grid),
   };
 }
 
@@ -114,26 +125,9 @@ function computeWinner(board: Cell[], _sidesUnused?: Side[]): string | 'tie' | n
     }
   }
   if (board.every(cell => cell !== null)) {
-    // Board full, no three-in-a-row → most cells wins (tie if level).
-    const counts = new Map<string, number>();
-    for (const cell of board) {
-      if (cell) {
-        counts.set(cell.sideId, (counts.get(cell.sideId) ?? 0) + 1);
-      }
-    }
-    let best: string | null = null;
-    let bestN = -1;
-    let tie = false;
-    counts.forEach((n, sid) => {
-      if (n > bestN) {
-        best = sid;
-        bestN = n;
-        tie = false;
-      } else if (n === bestN) {
-        tie = true;
-      }
-    });
-    return tie || best === null ? 'tie' : best;
+    // Board full with no three-in-a-row: nobody connected a line, so it's a tie.
+    // (Cell counts are irrelevant — winning requires an actual line.)
+    return 'tie';
   }
   return null;
 }
@@ -151,7 +145,7 @@ export function applyMove(
   }
   const board = state.board.slice();
   board[cellIndex] = {sideId: side.id, footballerId};
-  // A full board with no line and level cell counts stays a genuine 'tie'.
+  // A full board with no three-in-a-row is a genuine 'tie'.
   const winner = computeWinner(board);
   return {
     ...state,
@@ -173,4 +167,56 @@ export function passTurn(state: GridState, userId: string): GridState {
     turnUserId: nextTurn(state.order, userId),
     turnDeadline: Date.now() + TURN_MS,
   };
+}
+
+/**
+ * Propose ending the game in a mutual tie (used when nobody knows another
+ * answer). The proposer implicitly accepts; a fresh proposal replaces any
+ * pending one. Any player may propose, not just the turn-holder. No-op once the
+ * game is decided.
+ */
+export function proposeTie(state: GridState, userId: string): GridState {
+  if (state.winner) {
+    return state;
+  }
+  const side = sideOfUser(state, userId);
+  if (!side) {
+    return state;
+  }
+  return finalizeTie(state, {by: side.id, accepted: [side.id]});
+}
+
+/**
+ * Respond to a pending tie offer. Accepting adds the side to the tally and — once
+ * every side has accepted — ends the game as `winner: 'tie'`. Declining clears
+ * the offer so play resumes. No-op if there's no offer or the game is decided.
+ */
+export function respondTie(
+  state: GridState,
+  userId: string,
+  accept: boolean,
+): GridState {
+  if (state.winner || !state.tieOffer) {
+    return state;
+  }
+  const side = sideOfUser(state, userId);
+  if (!side) {
+    return state;
+  }
+  if (!accept) {
+    return {...state, tieOffer: null};
+  }
+  const accepted = state.tieOffer.accepted.includes(side.id)
+    ? state.tieOffer.accepted
+    : [...state.tieOffer.accepted, side.id];
+  return finalizeTie(state, {...state.tieOffer, accepted});
+}
+
+/** Apply a tie offer, collapsing to `winner: 'tie'` once all sides have accepted. */
+function finalizeTie(state: GridState, offer: NonNullable<GridState['tieOffer']>): GridState {
+  const everyoneAccepted = state.sides.every(s => offer.accepted.includes(s.id));
+  if (everyoneAccepted) {
+    return {...state, winner: 'tie', tieOffer: null};
+  }
+  return {...state, tieOffer: offer};
 }

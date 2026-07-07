@@ -13,6 +13,8 @@ type Props = {
   /** Fires on the keyboard return key (e.g. confirm the prompt). */
   onSubmitEditing?: () => void;
   returnKeyType?: 'done' | 'go' | 'next';
+  /** Grow to a multi-line box (e.g. a feedback message). */
+  multiline?: boolean;
   accessibilityLabel?: string;
   style?: StyleProp<TextStyle>;
 };
@@ -32,6 +34,7 @@ export function TextField({
   autoCapitalize = 'sentences',
   onSubmitEditing,
   returnKeyType = 'done',
+  multiline = false,
   accessibilityLabel,
   style,
 }: Props) {
@@ -46,12 +49,18 @@ export function TextField({
       maxLength={maxLength}
       autoCapitalize={autoCapitalize}
       autoCorrect={false}
+      multiline={multiline}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       onSubmitEditing={onSubmitEditing}
       returnKeyType={returnKeyType}
       accessibilityLabel={accessibilityLabel}
-      style={[styles.field, focused && styles.fieldFocused, style]}
+      style={[
+        styles.field,
+        multiline && styles.fieldMultiline,
+        focused && styles.fieldFocused,
+        style,
+      ]}
     />
   );
 }
@@ -73,6 +82,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
     fontSize: 16,
     textAlignVertical: 'center',
+  },
+  fieldMultiline: {
+    minHeight: 112,
+    // Multi-line boxes anchor text to the top and need room for descenders.
+    textAlignVertical: 'top',
+    paddingTop: 12,
   },
   fieldFocused: {
     borderColor: colors.primary,

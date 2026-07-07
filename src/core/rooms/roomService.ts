@@ -154,6 +154,31 @@ export async function playMove(roomId: string, state: unknown): Promise<void> {
   }
 }
 
+/**
+ * Any player proposes ending the game in a mutual tie. Unlike `playMove`, this
+ * is allowed off-turn — the tie handshake in `0014_tie_offer.sql` handles the
+ * side/offer bookkeeping server-side.
+ */
+export async function proposeTie(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('propose_tie', {p_room_id: roomId});
+  if (error) {
+    throw error;
+  }
+}
+
+/** Accept or decline a pending tie offer. All sides accepting ends the game. */
+export async function respondTie(roomId: string, accept: boolean): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('respond_tie', {
+    p_room_id: roomId,
+    p_accept: accept,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
 /** Host restarts the board game in place with fresh state (Play again). */
 export async function restartBoardGame(
   roomId: string,

@@ -7,6 +7,8 @@
 import type {Criterion} from '../../data/football';
 import {FLAG_IMAGES} from './assets/flags.generated';
 import {LOGO_IMAGES} from './assets/logos.generated';
+import {TROPHY_IMAGES} from './assets/trophies.generated';
+import {PLAYER_AVATARS} from './assets/playerAvatars';
 
 /**
  * Full English country name → flag emoji. Keyed to the exact strings used in
@@ -81,13 +83,19 @@ export function logoImage(clubId: string | undefined): number | null {
   return clubId ? LOGO_IMAGES[clubId] ?? null : null;
 }
 
-/** Real bundled image for an axis criterion (flag or crest), or null. */
+/** Real bundled image for an axis criterion, or null (emoji fallback then applies). */
 export function criterionImage(c: Criterion): number | null {
   switch (c.kind) {
     case 'nationality':
       return flagImage(c.country);
     case 'club':
       return logoImage(c.clubId);
+    case 'honour':
+      // Custom vector trophy illustration (assets/trophies).
+      return TROPHY_IMAGES[c.honour] ?? null;
+    case 'teammate':
+      // Player illustration, once supplied (assets/players + playerAvatars.ts).
+      return PLAYER_AVATARS[c.playerId] ?? null;
     default:
       return null;
   }
@@ -128,6 +136,8 @@ export function criterionIcon(c: Criterion): string | null {
       return '👕';
     case 'teammate':
       return '🤝';
+    case 'topLeagues':
+      return '🌐';
     case 'club':
     case 'league':
       return null;

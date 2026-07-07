@@ -1,0 +1,81 @@
+/**
+ * Internationalization. Miflo ships English + Danish; every user-facing string
+ * lives in `en.json` / `da.json` and is read through `t('…')` (react-i18next).
+ *
+ * Language resolution on boot: a saved override (Settings) → the device locale
+ * (react-native-localize) → English. i18next initializes synchronously with the
+ * device language so the first render is already localized; `loadStoredLanguage`
+ * then applies any saved override. Changing the language re-renders live.
+ */
+import i18n from 'i18next';
+import {initReactI18next} from 'react-i18next';
+import {findBestLanguageTag} from 'react-native-localize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import en from './en.json';
+import da from './da.json';
+
+export const SUPPORTED_LANGUAGES = ['en', 'da'] as const;
+export type Language = (typeof SUPPORTED_LANGUAGES)[number];
+
+/** What the user picked in Settings — a concrete language or "follow system". */
+export type LanguagePreference = 'system' | Language;
+
+const STORAGE_KEY = 'app.language';
+
+const resources = {
+  en: {translation: en},
+  da: {translation: da},
+};
+
+/** The device's best match among our supported languages (defaults to English). */
+function deviceLanguage(): Language {
+  const best = findBestLanguageTag([...SUPPORTED_LANGUAGES]);
+  const tag = best?.languageTag?.toLowerCase() ?? 'en';
+  return tag.startsWith('da') ? 'da' : 'en';
+}
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: deviceLanguage(),
+  fallbackLng: 'en',
+  // v3 plural/format rules avoid depending on Intl.PluralRules at runtime; we
+  // interpolate counts manually so this is purely a safety choice.
+  compatibilityJSON: 'v3',
+  interpolation: {escapeValue: false},
+  returnNull: false,
+});
+
+/** Read the saved preference ('system' when nothing is stored). */
+export async function getLanguagePreference(): Promise<LanguagePreference> {
+  try {
+    const saved = await AsyncStorage.getItem(STORAGE_KEY);
+    if (saved === 'en' || saved === 'da' || saved === 'system') {
+      return saved;
+    }
+  } catch {
+    // Ignore storage errors — fall back to system.
+  }
+  return 'system';
+}
+
+/** Apply any saved override on boot (device language already applied at init). */
+export async function loadStoredLanguage(): Promise<void> {
+  const pref = await getLanguagePreference();
+  const effective = pref === 'system' ? deviceLanguage() : pref;
+  if (i18n.language !== effective) {
+    await i18n.changeLanguage(effective);
+  }
+}
+
+/** Persist + apply a language preference (from the Settings picker). */
+export async function setLanguagePreference(pref: LanguagePreference): Promise<void> {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEY, pref);
+  } catch {
+    // Non-fatal — the change still applies for this session.
+  }
+  const effective = pref === 'system' ? deviceLanguage() : pref;
+  await i18n.changeLanguage(effective);
+}
+
+export default i18n;

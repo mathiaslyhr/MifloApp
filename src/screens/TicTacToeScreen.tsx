@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
-  Alert,
   Image,
   Modal,
   Pressable,
@@ -9,18 +8,24 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {ChevronLeft} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle, Bug} from 'lucide-react-native';
+import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, CircleButton, Screen, Text, TextField} from '../core/ui';
+import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
+import {haptics} from '../core/haptics';
+import {ReportBugModal} from '../core/feedback/ReportBugModal';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   playMove,
+  proposeTie,
+  respondTie,
   restartBoardGame,
   returnToLobby,
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
+import {LegendModal} from '../games/tic-tac-toe/LegendModal';
 import {FOOTBALLERS, getById} from '../data/football';
 import {
   criterionLabel,
@@ -32,6 +37,7 @@ import {
   criterionImage,
   flagImage,
 } from '../games/tic-tac-toe/criterionIcon';
+import {searchPlayers} from '../games/tic-tac-toe/playerSearch';
 import {
   applyMove,
   cellCriteria,
@@ -54,11 +60,14 @@ const DIVIDER_COLOR = colors.glassRim;
 
 export function TicTacToeScreen({route, navigation}: Props) {
   const {roomId} = route.params;
+  const {t} = useTranslation();
   const [state, setState] = useState<GridState | null>(null);
   const [hostId, setHostId] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [pickCell, setPickCell] = useState<number | null>(null);
   const [query, setQuery] = useState('');
+  const [showLegend, setShowLegend] = useState(false);
+  const [showBug, setShowBug] = useState(false);
   const leftRef = useRef(false);
 
   // One board sized from the screen so every cell is identical. Layout is
@@ -109,6 +118,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
     const mine = state.turnUserId === myUserId;
     if (expired && mine && timedOutFor.current !== state.turnDeadline) {
       timedOutFor.current = state.turnDeadline;
+      // Dismiss the player picker if it's still open — the turn is gone.
+      setPickCell(null);
+      setQuery('');
       playMove(roomId, passTurn(state, myUserId)).catch(() => {});
     }
   }, [nowTs, state, myUserId, roomId]);
@@ -119,15 +131,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
     if (!state) {
       return [];
     }
-    const q = query.trim().toLowerCase();
-    if (!q) {
-      return [];
-    }
-    return FOOTBALLERS.filter(
-      f =>
-        !state.usedFootballerIds.includes(f.id) &&
-        f.name.toLowerCase().includes(q),
-    ).slice(0, 40);
+    return searchPlayers(FOOTBALLERS, query, state.usedFootballerIds);
   }, [query, state]);
 
   // Back: a guest just leaves to their (still-mounted) lobby and can rejoin; the
@@ -144,10 +148,11 @@ export function TicTacToeScreen({route, navigation}: Props) {
   if (!state) {
     return (
       <Screen canvas>
-        <Header onBack={handleBack} />
+        <Header onBack={handleBack} onLegend={() => setShowLegend(true)} />
+        <LegendModal visible={showLegend} onClose={() => setShowLegend(false)} />
         <View style={styles.loading}>
           <Text variant="body" color="secondary">
-            Loading…
+            {t('game.loading')}
           </Text>
         </View>
       </Screen>
@@ -155,6 +160,15 @@ export function TicTacToeScreen({route, navigation}: Props) {
   }
 
   const turnSide = sideOfUser(state, state.turnUserId);
+
+  // Pending "agree to a tie" offer (server-synced). Any player can propose;
+  // everyone must accept before the game ends in a tie.
+  const mySideId = (myUserId && sideOfUser(state, myUserId)?.id) || null;
+  const tieOffer = state.tieOffer ?? null;
+  const iRespondedToTie = !!tieOffer && !!mySideId && tieOffer.accepted.includes(mySideId);
+  const tieProposerName = tieOffer
+    ? state.sides.find(s => s.id === tieOffer.by)?.name ?? 'Someone'
+    : '';
 
   function openPicker(index: number) {
     setQuery('');
@@ -168,11 +182,40 @@ export function TicTacToeScreen({route, navigation}: Props) {
       return;
     }
     if (validatePick(state, cell, footballerId)) {
+      haptics.success();
       playMove(roomId, applyMove(state, cell, footballerId, myUserId)).catch(() => {});
     } else {
-      Alert.alert('Not a match', "That player doesn't fit — your turn passes.");
+      haptics.error();
+      toast.error(t('game.notMatch'));
       playMove(roomId, passTurn(state, myUserId)).catch(() => {});
     }
+  }
+
+  // Skip the current turn (nobody knows an answer): pass without claiming a cell.
+  function handleSkip() {
+    if (!myTurn || !myUserId || !state) {
+      return;
+    }
+    haptics.tap();
+    toast.neutral(t('game.turnSkipped'));
+    playMove(roomId, passTurn(state, myUserId)).catch(() => {});
+  }
+
+  // Offer to end the game in a mutual tie (allowed off-turn). Everyone must agree.
+  function handleProposeTie() {
+    haptics.press();
+    proposeTie(roomId).catch(() => {
+      toast.error(t('game.proposeError'));
+    });
+  }
+
+  function handleRespondTie(accept: boolean) {
+    if (accept) {
+      haptics.success();
+    } else {
+      haptics.tap();
+    }
+    respondTie(roomId, accept).catch(() => {});
   }
 
   async function playAgain() {
@@ -184,9 +227,16 @@ export function TicTacToeScreen({route, navigation}: Props) {
       name: s.name,
     }));
     try {
-      await restartBoardGame(roomId, createIndividualState(generateGrid(), roster));
+      // Avoid repeating this exact grid or letting the same player start again.
+      const grid = generateGrid(Math.random, {
+        avoid: state.signature ? [state.signature] : [],
+      });
+      const next = createIndividualState(grid, roster, {
+        avoidStarter: state.order[0],
+      });
+      await restartBoardGame(roomId, next);
     } catch {
-      Alert.alert('Miflo', "Couldn't start a new game.");
+      toast.error(t('game.newGameError'));
     }
   }
 
@@ -198,13 +248,15 @@ export function TicTacToeScreen({route, navigation}: Props) {
       : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
   const winnerText = state.winner
     ? state.winner === 'tie'
-      ? "It's a tie!"
-      : `${state.sides.find(s => s.id === state.winner)?.name ?? 'Someone'} won`
+      ? t('game.tie')
+      : t('game.won', {
+          name: state.sides.find(s => s.id === state.winner)?.name ?? 'Someone',
+        })
     : '';
 
   return (
     <Screen canvas>
-      <Header onBack={handleBack} />
+      <Header onBack={handleBack} onLegend={() => setShowLegend(true)} />
 
       <View style={styles.center}>
         {/* Turn indicator */}
@@ -214,7 +266,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
               variant="section"
               align="center"
               style={{color: turnSide?.color ?? colors.ink}}>
-              {myTurn ? 'Your turn' : `${turnSide?.name ?? ''}'s turn`}
+              {myTurn
+                ? t('game.yourTurn')
+                : t('game.othersTurn', {name: turnSide?.name ?? ''})}
             </Text>
           ) : (
             <Text variant="section" align="center" style={{color: winnerColor}}>
@@ -309,9 +363,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
         {state.winner ? (
           isHost ? (
             <View style={styles.resultActions}>
-              <Button label="Play again" variant="primary" onPress={playAgain} />
+              <Button label={t('game.playAgain')} variant="primary" onPress={playAgain} />
               <Button
-                label="Back to lobby"
+                label={t('game.backToLobby')}
                 variant="secondary"
                 onPress={() => returnToLobby(roomId).catch(() => {})}
               />
@@ -322,12 +376,85 @@ export function TicTacToeScreen({route, navigation}: Props) {
               color="secondary"
               align="center"
               style={styles.waiting}>
-              Waiting for the host…
+              {t('game.waitingHost')}
             </Text>
           )
         ) : (
-          <TurnTimer deadline={state.turnDeadline} nowTs={nowTs} />
+          <View style={styles.liveControls}>
+            <TurnTimer deadline={state.turnDeadline} nowTs={nowTs} />
+
+            {tieOffer ? (
+              <View style={styles.tieBanner}>
+                {iRespondedToTie ? (
+                  <>
+                    <Text variant="secondary" align="center">
+                      {t('game.tieWaiting', {
+                        accepted: tieOffer.accepted.length,
+                        total: state.sides.length,
+                      })}
+                    </Text>
+                    <Button
+                      label={t('common.cancel')}
+                      variant="outline"
+                      fullWidth={false}
+                      onPress={() => handleRespondTie(false)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Text variant="secondary" align="center">
+                      {t('game.tiePrompt', {name: tieProposerName})}
+                    </Text>
+                    <View style={styles.row2}>
+                      <View style={styles.flex1}>
+                        <Button
+                          label={t('game.acceptTie')}
+                          variant="primary"
+                          onPress={() => handleRespondTie(true)}
+                        />
+                      </View>
+                      <View style={styles.flex1}>
+                        <Button
+                          label={t('game.decline')}
+                          variant="secondary"
+                          onPress={() => handleRespondTie(false)}
+                        />
+                      </View>
+                    </View>
+                  </>
+                )}
+              </View>
+            ) : (
+              <View style={styles.row2}>
+                {myTurn ? (
+                  <View style={styles.flex1}>
+                    <Button label={t('game.skip')} variant="outline" onPress={handleSkip} />
+                  </View>
+                ) : null}
+                <View style={styles.flex1}>
+                  <Button
+                    label={t('game.proposeTie')}
+                    variant="outline"
+                    onPress={handleProposeTie}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
         )}
+
+        {/* Always reachable — report a problem without leaving the game. */}
+        <Pressable
+          onPress={() => setShowBug(true)}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={t('game.reportBug')}
+          style={styles.bugLink}>
+          <Bug size={14} color={colors.muted} strokeWidth={2} />
+          <Text variant="caption" color="muted">
+            {t('game.reportBug')}
+          </Text>
+        </Pressable>
       </View>
 
       {/* Footballer picker — light scrim so the selected (purple) cell stays visible */}
@@ -348,10 +475,10 @@ export function TicTacToeScreen({route, navigation}: Props) {
             <TextField
               value={query}
               onChangeText={setQuery}
-              placeholder="Search a footballer"
+              placeholder={t('game.searchPlaceholder')}
               autoFocus
               autoCapitalize="words"
-              accessibilityLabel="Search a footballer"
+              accessibilityLabel={t('game.searchPlaceholder')}
             />
             <ScrollView
               style={styles.results}
@@ -359,11 +486,11 @@ export function TicTacToeScreen({route, navigation}: Props) {
               showsVerticalScrollIndicator={false}>
               {query.trim() === '' ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  Start typing to search a footballer
+                  {t('game.searchHint')}
                 </Text>
               ) : results.length === 0 ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  No players found
+                  {t('game.noPlayers')}
                 </Text>
               ) : (
                 results.map(f => {
@@ -385,22 +512,32 @@ export function TicTacToeScreen({route, navigation}: Props) {
           </Pressable>
         </Pressable>
       </Modal>
+
+      <LegendModal visible={showLegend} onClose={() => setShowLegend(false)} />
+      <ReportBugModal visible={showBug} onClose={() => setShowBug(false)} />
     </Screen>
   );
 }
 
-/** Top bar: back button (left) + centered title. The right spacer matches the
- * back button width so the title stays optically centred. */
-function Header({onBack}: {onBack: () => void}) {
+/** Top bar: back button (left) + centered title + a legend (?) action (right,
+ * matching the back button width so the title stays optically centred). */
+function Header({onBack, onLegend}: {onBack: () => void; onLegend?: () => void}) {
+  const {t} = useTranslation();
   return (
     <View style={styles.header}>
-      <CircleButton size={36} accessibilityLabel="Back to lobby" onPress={onBack}>
+      <CircleButton size={36} accessibilityLabel={t('game.back')} onPress={onBack}>
         <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
       </CircleButton>
       <Text variant="wordmark" align="center" numberOfLines={1} style={styles.title}>
-        Football Grid
+        {t('game.title')}
       </Text>
-      <View style={{width: 36}} />
+      {onLegend ? (
+        <CircleButton size={36} accessibilityLabel={t('game.legendButton')} onPress={onLegend}>
+          <HelpCircle size={18} color={colors.ink} strokeWidth={2} />
+        </CircleButton>
+      ) : (
+        <View style={{width: 36}} />
+      )}
     </View>
   );
 }
@@ -437,7 +574,7 @@ function AxisCell({
         <Image
           source={image}
           resizeMode="contain"
-          style={criterion.kind === 'club' ? styles.axisLogo : styles.axisFlag}
+          style={criterion.kind === 'nationality' ? styles.axisFlag : styles.axisLogo}
         />
       ) : emoji ? (
         <Text style={styles.axisIcon}>{emoji}</Text>
@@ -459,6 +596,7 @@ function AxisCell({
  * drains and shifts colour (green → yellow → orange → red) as time runs out.
  */
 function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
+  const {t} = useTranslation();
   const remainingMs = Math.max(0, deadline - nowTs);
   const remainingSec = Math.ceil(remainingMs / 1000);
   const fraction = Math.max(0, Math.min(1, remainingMs / (TURN_SECONDS * 1000)));
@@ -476,7 +614,7 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
   return (
     <View style={styles.timerBar}>
       <View style={styles.timerLabelRow}>
-        <Text style={styles.timerLabel}>Time left</Text>
+        <Text style={styles.timerLabel}>{t('game.timeLeft')}</Text>
         <Text style={[styles.timerTime, fraction <= 0.1 && {color}]}>{mmss}</Text>
       </View>
       <View style={styles.timerTrack}>
@@ -592,4 +730,24 @@ const styles = StyleSheet.create({
     marginTop: spacing.xl,
   },
   waiting: {marginTop: spacing.xl},
+  // In-progress controls under the board: timer + skip/tie (or the tie prompt).
+  liveControls: {alignSelf: 'stretch', gap: spacing.md},
+  row2: {flexDirection: 'row', gap: spacing.sm, alignSelf: 'stretch'},
+  flex1: {flex: 1},
+  tieBanner: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.md,
+    backgroundColor: colors.glass,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    borderRadius: radii.card,
+  },
+  bugLink: {
+    flexDirection: 'row',
+    gap: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.md,
+  },
 });

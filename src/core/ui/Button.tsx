@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {colors, radii, type as typeScale} from '../../theme';
+import {haptics} from '../haptics';
 import {usePressScale} from './usePressScale';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline';
@@ -41,9 +42,17 @@ export function Button({
   const press = usePressScale();
   const isPrimary = variant === 'primary';
 
+  // A light tap confirms the press landed (no-op when haptics are off/absent).
+  const handlePress = onPress
+    ? () => {
+        haptics.tap();
+        onPress();
+      }
+    : undefined;
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={press.onPressIn}
       onPressOut={press.onPressOut}
       disabled={disabled}

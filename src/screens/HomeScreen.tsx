@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {
   Button,
   CircleButton,
@@ -8,6 +9,7 @@ import {
   Screen,
   TabId,
   Text,
+  toast,
 } from '../core/ui';
 import {APP_STORE_URL} from '../core/config';
 import {spacing} from '../theme';
@@ -36,6 +38,7 @@ type Props = {
 
 export function HomeScreen({onTabSelect}: Props) {
   const navigation = useAppNavigation();
+  const {t} = useTranslation();
   const [busy, setBusy] = useState(false);
 
   // Create a room under a random football name, then hand off to the Lobby.
@@ -48,11 +51,11 @@ export function HomeScreen({onTabSelect}: Props) {
       const room = await createRoom(NO_GAME_YET, [], 0, randomFootballName());
       navigation.navigate('Lobby', {roomId: room.id});
     } catch (err) {
-      const message =
+      toast.error(
         err instanceof BackendUnavailableError
-          ? "Parties aren't available right now."
-          : "Couldn't create a party. Please try again.";
-      Alert.alert('Miflo', message);
+          ? t('home.errorUnavailable')
+          : t('home.errorCreate'),
+      );
     } finally {
       setBusy(false);
     }
@@ -66,7 +69,10 @@ export function HomeScreen({onTabSelect}: Props) {
             Miflo
           </Text>
           <View style={styles.headerRight}>
-            <CircleButton size={30} accessibilityLabel="How it works">
+            <CircleButton
+              size={30}
+              accessibilityLabel={t('home.help')}
+              onPress={() => navigation.navigate('HowToPlay')}>
               <Text variant="secondary" color="secondary">
                 ?
               </Text>
@@ -78,13 +84,13 @@ export function HomeScreen({onTabSelect}: Props) {
 
         <View style={styles.actions}>
           <Button
-            label={busy ? 'Creating…' : 'Create a party'}
+            label={busy ? t('home.creating') : t('home.createParty')}
             variant="primary"
             onPress={handleCreate}
             disabled={busy}
           />
           <Button
-            label="Join a party"
+            label={t('home.joinParty')}
             variant="secondary"
             onPress={() => navigation.navigate('Join')}
           />

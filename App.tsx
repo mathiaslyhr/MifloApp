@@ -12,14 +12,22 @@ import {Alert, StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {RootNavigator} from './src/core/navigation';
-import {ErrorBoundary} from './src/core/ui';
+import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
+// Side-effect: initialize i18next (device language) before any screen renders.
+import {loadStoredLanguage} from './src/core/i18n';
+import {loadHapticsPreference} from './src/core/settings/preferences';
 
 function App(): React.JSX.Element {
   // Sign in anonymously up front so rooms feel instant; non-fatal and a no-op
   // when the backend isn't configured.
   useEffect(() => {
     ensureSession().catch(() => {});
+    // Apply saved language override + haptics preference (device language and
+    // haptics-on are the synchronous defaults until these resolve).
+    loadStoredLanguage().catch(() => {});
+    loadHapticsPreference().catch(() => {});
   }, []);
 
   // DIAGNOSTIC: surface uncaught JS errors (event handlers, effects, async) that
@@ -44,9 +52,13 @@ function App(): React.JSX.Element {
     <ErrorBoundary>
       <SafeAreaProvider>
         <StatusBar barStyle="dark-content" />
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
+        <UpdateGate>
+          <NavigationContainer>
+            <RootNavigator />
+            {/* App-wide transient messaging — sits above all screens. */}
+            <ToastHost />
+          </NavigationContainer>
+        </UpdateGate>
       </SafeAreaProvider>
     </ErrorBoundary>
   );

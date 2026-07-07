@@ -8,16 +8,18 @@ import {
   View,
 } from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
+import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Button,
   CircleButton,
+  FloatingBar,
   NameSheet,
   PressableScale,
   Screen,
   Text,
 } from '../core/ui';
-import {colors, radii, spacing} from '../theme';
+import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   fetchPlayers,
@@ -29,7 +31,7 @@ import {
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
-import {generateGrid} from '../games/tic-tac-toe/grid';
+import {generateGrid, gridSignature} from '../games/tic-tac-toe/grid';
 import {createIndividualState} from '../games/tic-tac-toe/engine';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
@@ -43,17 +45,26 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
  */
 export function LobbyScreen({route, navigation}: Props) {
   const {roomId} = route.params;
+  const {t} = useTranslation();
   const [room, setRoom] = useState<Room | null>(null);
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [starting, setStarting] = useState(false);
+  // Measured heights of the floating top/bottom chrome, so scroll content can
+  // reserve matching clearance and glide behind them (no clipping "box").
+  const [topH, setTopH] = useState(0);
+  const [botH, setBotH] = useState(0);
 
   // Track membership so we can detect being kicked (present → gone).
   const wasPresentRef = useRef(false);
   const kickedRef = useRef(false);
   // Guards the one-shot navigation into the game when it starts.
   const inGameRef = useRef(false);
+  // Party-session memory (host device): who opened the last game and the last
+  // few grids, so consecutive rounds don't repeat the starter or the board.
+  const lastStarterRef = useRef<string | null>(null);
+  const recentGridsRef = useRef<string[]>([]);
 
   useEffect(() => {
     ensureSession()
@@ -112,16 +123,16 @@ export function LobbyScreen({route, navigation}: Props) {
     if (wasPresentRef.current && !kickedRef.current) {
       kickedRef.current = true;
       navigation.goBack();
-      Alert.alert('Miflo', 'You were removed from the party.');
+      Alert.alert(t('common.miflo'), t('lobby.kicked'));
     }
-  }, [players, myUserId, navigation]);
+  }, [players, myUserId, navigation, t]);
 
   async function shareCode() {
     if (!room?.code) {
       return;
     }
     try {
-      await Share.share({message: `Join my Miflo party — code ${room.code}`});
+      await Share.share({message: t('lobby.shareMessage', {code: room.code})});
     } catch {
       // User dismissed the share sheet; nothing to do.
     }
@@ -131,14 +142,14 @@ export function LobbyScreen({route, navigation}: Props) {
     if (p.userId === myUserId) {
       setRenameOpen(true);
     } else if (isHost) {
-      Alert.alert('Remove player', `Remove ${p.name} from the party?`, [
-        {text: 'Cancel', style: 'cancel'},
+      Alert.alert(t('lobby.removeTitle'), t('lobby.removeConfirm', {name: p.name}), [
+        {text: t('common.cancel'), style: 'cancel'},
         {
-          text: 'Remove',
+          text: t('common.remove'),
           style: 'destructive',
           onPress: () => {
             kickPlayer(roomId, p.userId).catch(() =>
-              Alert.alert('Miflo', `Couldn't remove ${p.name}.`),
+              Alert.alert(t('common.miflo'), t('lobby.errorRemove', {name: p.name})),
             );
           },
         },
@@ -151,7 +162,7 @@ export function LobbyScreen({route, navigation}: Props) {
     try {
       await renamePlayer(roomId, name);
     } catch {
-      Alert.alert('Miflo', "Couldn't change your name.");
+      Alert.alert(t('common.miflo'), t('lobby.errorRename'));
     }
   }
 
@@ -163,42 +174,40 @@ export function LobbyScreen({route, navigation}: Props) {
     }
     setStarting(true);
     try {
-      const grid = generateGrid();
+      const grid = generateGrid(Math.random, {avoid: recentGridsRef.current});
       const roster = players.map(p => ({userId: p.userId, name: p.name}));
-      await startBoardGame(roomId, 'tic-tac-toe', createIndividualState(grid, roster));
+      const state = createIndividualState(grid, roster, {
+        avoidStarter: lastStarterRef.current ?? undefined,
+      });
+      // Remember for next round (keep the last 5 grids).
+      lastStarterRef.current = state.turnUserId;
+      recentGridsRef.current = [gridSignature(grid), ...recentGridsRef.current].slice(0, 5);
+      await startBoardGame(roomId, 'tic-tac-toe', state);
     } catch {
       setStarting(false);
-      Alert.alert('Miflo', "Couldn't start the game. Please try again.");
+      Alert.alert(t('common.miflo'), t('lobby.errorStart'));
     }
   }
 
   return (
-    <Screen canvas>
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <CircleButton
-            size={36}
-            accessibilityLabel="Leave party"
-            onPress={() => navigation.goBack()}>
-            <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
-          </CircleButton>
-        </View>
-        <Text variant="wordmark" align="center">
-          Party
-        </Text>
-      </View>
-
+    // Drop top/bottom safe-area edges — the floating bars own those insets so
+    // the roster scrolls the full height, behind the chrome, with no clip line.
+    <Screen canvas edges={['left', 'right']}>
       <ScrollView
-        contentContainerStyle={styles.body}
+        style={styles.scroll}
+        contentContainerStyle={[
+          styles.body,
+          {paddingTop: topH + spacing.xl, paddingBottom: botH + spacing.xl},
+        ]}
         showsVerticalScrollIndicator={false}>
         {/* Party code — tapping it still opens the share sheet, quietly. */}
         <Pressable
           style={styles.codeCard}
           onPress={shareCode}
           accessibilityRole="button"
-          accessibilityLabel="Share party code">
+          accessibilityLabel={t('lobby.shareCode')}>
           <Text variant="caption" color="muted" align="center" style={styles.codeLabel}>
-            PARTY CODE
+            {t('lobby.code')}
           </Text>
           <Text variant="hero" align="center" style={styles.code}>
             {room?.code ?? '· · · ·'}
@@ -207,8 +216,8 @@ export function LobbyScreen({route, navigation}: Props) {
 
         <Text variant="secondary" color="secondary" align="center">
           {players.length <= 1
-            ? 'Waiting for friends to join…'
-            : `${players.length} in the party`}
+            ? t('lobby.waitingFriends')
+            : t('lobby.inParty', {count: players.length})}
         </Text>
 
         {/* Live name list (Kahoot-style). Tap your own name to rename; the host
@@ -226,10 +235,10 @@ export function LobbyScreen({route, navigation}: Props) {
                 accessibilityRole={actionable ? 'button' : undefined}
                 accessibilityLabel={
                   (isMe
-                    ? 'Change your name'
+                    ? t('lobby.changeName')
                     : isHost
-                    ? `Remove ${p.name}`
-                    : p.name) + (p.isHost ? ', host' : '')
+                    ? t('lobby.removeName', {name: p.name})
+                    : p.name) + (p.isHost ? `, ${t('lobby.host')}` : '')
                 }>
                 <Text variant="section" style={styles.nameText}>
                   {p.name}
@@ -237,7 +246,7 @@ export function LobbyScreen({route, navigation}: Props) {
                 {p.isHost ? (
                   <View style={styles.hostBadge}>
                     <Text variant="caption" color="onInk" style={styles.hostBadgeText}>
-                      HOST
+                      {t('lobby.hostBadge')}
                     </Text>
                   </View>
                 ) : null}
@@ -247,28 +256,47 @@ export function LobbyScreen({route, navigation}: Props) {
         </View>
       </ScrollView>
 
-      {/* Host picks the game; guests wait. Selection is stubbed until games ship. */}
-      <View style={styles.footer}>
+      {/* Floating header — back button + wordmark, no background; the roster
+          scrolls behind it. */}
+      <FloatingBar edge="top" onHeight={setTopH} style={styles.topBar}>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <CircleButton
+              size={36}
+              accessibilityLabel={t('lobby.leave')}
+              onPress={() => navigation.goBack()}>
+              <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
+            </CircleButton>
+          </View>
+          <Text variant="wordmark" align="center">
+            {t('lobby.title')}
+          </Text>
+        </View>
+      </FloatingBar>
+
+      {/* Floating footer — the host's game button (or guest hint) floats over
+          the roster. Host picks the game; guests wait. */}
+      <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
         {isHost ? (
           <Button
-            label={starting ? 'Starting…' : 'Pick a game'}
+            label={starting ? t('lobby.starting') : t('lobby.pickGame')}
             variant="primary"
             disabled={players.length < 2 || starting}
             onPress={handlePickGame}
           />
         ) : (
           <Text variant="secondary" color="secondary" align="center">
-            Waiting for the host to pick a game…
+            {t('lobby.waitingHostPick')}
           </Text>
         )}
-      </View>
+      </FloatingBar>
 
       <NameSheet
         visible={renameOpen}
-        title="Change your username"
+        title={t('lobby.renameTitle')}
         initialValue={me?.name ?? ''}
-        placeholder="Your name"
-        confirmLabel="Save"
+        placeholder={t('lobby.namePlaceholder')}
+        confirmLabel={t('common.save')}
         onConfirm={submitRename}
         onCancel={() => setRenameOpen(false)}
       />
@@ -290,20 +318,25 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
   },
+  scroll: {flex: 1},
   body: {
-    paddingTop: spacing.xxl,
-    gap: spacing.xxl,
-    paddingBottom: spacing.xl,
+    gap: spacing.xl,
   },
+  // Party code on a frosted "liquid glass" pill that lifts off the rainbow canvas.
   codeCard: {
     alignSelf: 'center',
-    paddingVertical: spacing.lg,
+    paddingVertical: spacing.md,
     paddingHorizontal: spacing.xxl,
-    borderRadius: radii.card,
+    gap: spacing.xs,
     backgroundColor: colors.glass,
     borderWidth: 1,
     borderColor: colors.glassRim,
-    gap: spacing.xs,
+    borderRadius: radii.pill,
+    shadowColor: '#140F32',
+    shadowOpacity: 0.18,
+    shadowOffset: {width: 0, height: 16},
+    shadowRadius: 24,
+    elevation: 8,
   },
   codeLabel: {letterSpacing: 1},
   code: {letterSpacing: 6},
@@ -311,14 +344,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   nameTag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xs,
-    paddingVertical: spacing.sm + 2,
-    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs + 2,
+    paddingHorizontal: spacing.md,
     borderRadius: radii.pill,
     backgroundColor: colors.glass,
     // 2px border always reserved so the "me" accent doesn't resize the tag.
@@ -327,7 +360,8 @@ const styles = StyleSheet.create({
   },
   // Your own tag: brand-purple outline (paired with the "you" marker).
   nameTagMe: {borderColor: colors.primary},
-  nameText: {color: colors.ink},
+  // Smaller than the 20pt "section" default so more players fit per row.
+  nameText: {color: colors.ink, fontSize: 15, lineHeight: 19},
   // Small accent pill marking the host — straddles the tag's top border,
   // centered then nudged a bit left.
   hostBadge: {
@@ -341,8 +375,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   hostBadgeText: {fontSize: 10, lineHeight: 13, letterSpacing: 0.5},
+  // FloatingBar spans edge-to-edge; pad it horizontally so the chrome (back
+  // button, game button) lines up with the 16px-inset scrolled content.
+  topBar: {
+    paddingHorizontal: screenPadding,
+  },
+  // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area
+  // inset. Horizontal padding matches the scrolled content + the top bar.
   footer: {
     paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
+    paddingHorizontal: screenPadding,
   },
 });

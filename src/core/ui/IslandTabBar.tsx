@@ -1,15 +1,16 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Gamepad2, Home, Menu, type LucideIcon} from 'lucide-react-native';
+import {useTranslation} from 'react-i18next';
 import {colors, fonts, radii} from '../../theme';
 import {usePressScale} from './usePressScale';
 
 export type TabId = 'home' | 'games' | 'menu';
 
-const ITEMS: {id: TabId; label: string; Icon: LucideIcon}[] = [
-  {id: 'home', label: 'Home', Icon: Home},
-  {id: 'games', label: 'Games', Icon: Gamepad2},
-  {id: 'menu', label: 'Menu', Icon: Menu},
+const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
+  {id: 'home', labelKey: 'tabs.home', Icon: Home},
+  {id: 'games', labelKey: 'tabs.games', Icon: Gamepad2},
+  {id: 'menu', labelKey: 'tabs.menu', Icon: Menu},
 ];
 
 type Props = {
@@ -29,12 +30,14 @@ type Props = {
  */
 export function IslandTabBar({active, onSelect}: Props) {
   const press = usePressScale();
+  const {t} = useTranslation();
   return (
     <View style={styles.wrap} pointerEvents="box-none">
       <Animated.View style={[styles.island, press.animatedStyle]}>
-        {ITEMS.map(({id, label, Icon}) => {
+        {ITEMS.map(({id, labelKey, Icon}) => {
           const on = id === active;
           const color = on ? colors.primary : colors.muted;
+          const label = t(labelKey);
           return (
             <Pressable
               key={id}

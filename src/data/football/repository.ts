@@ -15,6 +15,15 @@ import type {ClubSpell, Criterion, Footballer} from './types';
 /** Year used as the open end of a still-active club spell (`to` undefined). */
 const CURRENT_YEAR = new Date().getFullYear();
 
+/** The "top-5" European leagues (by club league id). */
+const TOP5_LEAGUES = new Set([
+  'premier-league',
+  'la-liga',
+  'serie-a',
+  'bundesliga',
+  'ligue-1',
+]);
+
 /** Do two club spells (same club) overlap in time? Open ends are handled. */
 function spellsOverlap(a: ClubSpell, b: ClubSpell): boolean {
   const aFrom = a.from ?? -Infinity;
@@ -83,6 +92,10 @@ export function matches(footballer: Footballer, criterion: Criterion): boolean {
     case 'teammate': {
       const target = getById(criterion.playerId);
       return target ? wereTeammates(footballer, target) : false;
+    }
+    case 'topLeagues': {
+      const count = leaguesOf(footballer).filter(l => TOP5_LEAGUES.has(l)).length;
+      return count >= criterion.count;
     }
   }
 }

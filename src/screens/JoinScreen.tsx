@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
+import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, CircleButton, Screen, Text, TextField} from '../core/ui';
 import {colors, spacing} from '../theme';
@@ -18,6 +19,7 @@ const CODE_LENGTH = 4;
  * On success we `replace` this screen with the Lobby so Back goes Home.
  */
 export function JoinScreen({navigation}: Props) {
+  const {t} = useTranslation();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,8 +39,8 @@ export function JoinScreen({navigation}: Props) {
     } catch (err) {
       setError(
         err instanceof BackendUnavailableError
-          ? "Parties aren't available right now."
-          : "That code didn't work. Check it and try again.",
+          ? t('join.errorUnavailable')
+          : t('join.errorBadCode'),
       );
       setBusy(false);
     }
@@ -50,33 +52,33 @@ export function JoinScreen({navigation}: Props) {
         <View style={styles.headerLeft}>
           <CircleButton
             size={36}
-            accessibilityLabel="Back"
+            accessibilityLabel={t('common.back')}
             onPress={() => navigation.goBack()}>
             <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
           </CircleButton>
         </View>
         <Text variant="wordmark" align="center">
-          Join a party
+          {t('join.title')}
         </Text>
       </View>
 
       <View style={styles.body}>
         <Text variant="section" align="center">
-          Enter the party code
+          {t('join.prompt')}
         </Text>
         <TextField
           value={code}
-          onChangeText={t => {
-            setCode(t.toUpperCase());
+          onChangeText={text => {
+            setCode(text.toUpperCase());
             setError(null);
           }}
-          placeholder="CODE"
+          placeholder={t('join.codePlaceholder')}
           autoFocus
           autoCapitalize="characters"
           maxLength={CODE_LENGTH}
           returnKeyType="go"
           onSubmitEditing={handleJoin}
-          accessibilityLabel="Party code"
+          accessibilityLabel={t('join.codeLabel')}
           style={styles.codeField}
         />
         {error ? (
@@ -85,7 +87,7 @@ export function JoinScreen({navigation}: Props) {
           </Text>
         ) : null}
         <Button
-          label={busy ? 'Joining…' : 'Join'}
+          label={busy ? t('join.joining') : t('join.join')}
           variant="primary"
           onPress={handleJoin}
           disabled={!canJoin}

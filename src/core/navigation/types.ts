@@ -11,6 +11,10 @@ export type RootStackParamList = {
   Join: undefined;
   Lobby: {roomId: string};
   TicTacToe: {roomId: string};
+  Profile: undefined;
+  Settings: undefined;
+  HowToPlay: undefined;
+  About: undefined;
 };
 
 /** Typed navigation prop for screens that push/pop the root stack. */

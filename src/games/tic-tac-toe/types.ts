@@ -42,4 +42,21 @@ export type GridState = {
   usedFootballerIds: string[];
   /** Winning sideId, 'tie', or null while in progress. */
   winner: string | 'tie' | null;
+  /**
+   * A pending "agree to a tie" offer. Any player may propose (e.g. when nobody
+   * knows another answer); the proposer pre-accepts. When every side has
+   * accepted, the game ends as `winner: 'tie'`. A decline clears the offer.
+   * Absent/null when no offer is on the table.
+   */
+  tieOffer?: TieOffer | null;
+  /** Order-independent fingerprint of the grid's axes (repeat-avoidance). */
+  signature?: string;
+};
+
+/** A live proposal to end the game in a mutual tie. */
+export type TieOffer = {
+  /** sideId that proposed. */
+  by: string;
+  /** sideIds that have accepted (includes the proposer). */
+  accepted: string[];
 };

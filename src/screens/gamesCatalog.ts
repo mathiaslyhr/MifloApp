@@ -13,28 +13,13 @@ export type GameType = 'tic-tac-toe' | 'tenball' | 'heatmap';
 
 export type GameEntry = {
   gameType: GameType;
-  title: string;
-  tagline: string;
+  /** i18n key prefix under `games.*` (title/tagline resolved at render). */
+  i18nKey: string;
   Icon: LucideIcon;
 };
 
 export const GAMES: GameEntry[] = [
-  {
-    gameType: 'tic-tac-toe',
-    title: 'Tic Tac Toe',
-    tagline: 'Football trivia × tic tac toe',
-    Icon: Grid3x3,
-  },
-  {
-    gameType: 'tenball',
-    title: 'Tenball',
-    tagline: 'Find the top 10 answers',
-    Icon: ListOrdered,
-  },
-  {
-    gameType: 'heatmap',
-    title: 'Heatmap',
-    tagline: 'Build heat across the grid',
-    Icon: Hexagon,
-  },
+  {gameType: 'tic-tac-toe', i18nKey: 'ttt', Icon: Grid3x3},
+  {gameType: 'tenball', i18nKey: 'tenball', Icon: ListOrdered},
+  {gameType: 'heatmap', i18nKey: 'heatmap', Icon: Hexagon},
 ];

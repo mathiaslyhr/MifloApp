@@ -1,9 +1,22 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeScreen} from './HomeScreen';
 import {GamesScreen} from './GamesScreen';
-import {MenuScreen} from './MenuScreen';
+import {MenuScreen, type MenuItem} from './MenuScreen';
 import type {TabId} from '../core/ui';
+import type {RootStackParamList} from '../core/navigation';
+
+/** Menu row → the detail route it opens (all param-less). */
+type DetailRoute = 'Profile' | 'Settings' | 'HowToPlay' | 'About';
+const MENU_ROUTES: Record<MenuItem, DetailRoute> = {
+  profile: 'Profile',
+  settings: 'Settings',
+  howToPlay: 'HowToPlay',
+  about: 'About',
+};
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
 
 /**
  * The tab shell — the stack's home route. A minimal, hand-rolled toggle between
@@ -11,10 +24,10 @@ import type {TabId} from '../core/ui';
  * mounted; we flip visibility instead of swapping, so switching tabs never
  * re-rasterizes a screen's rainbow mesh SVG (a visible flash otherwise).
  *
- * The Menu's detail screens (#12) aren't built yet, so tapping a menu row is a
- * no-op for now. Home's Create button pushes the Lobby via the root stack.
+ * Menu rows push their detail screen on the root stack; Home's Create button
+ * pushes the Lobby.
  */
-export function TabsScreen() {
+export function TabsScreen({navigation}: Props) {
   const [tab, setTab] = useState<TabId>('home');
 
   return (
@@ -32,7 +45,10 @@ export function TabsScreen() {
       <View
         style={[styles.page, tab !== 'menu' && styles.hidden]}
         pointerEvents={tab === 'menu' ? 'auto' : 'none'}>
-        <MenuScreen onTabSelect={setTab} />
+        <MenuScreen
+          onTabSelect={setTab}
+          onSelectItem={item => navigation.navigate(MENU_ROUTES[item])}
+        />
       </View>
     </View>
   );
