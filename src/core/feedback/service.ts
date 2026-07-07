@@ -26,13 +26,29 @@ export async function submitFeedback(
     throw new BackendUnavailableError();
   }
   await ensureSession();
+  const trimmed = message.trim();
   const {error} = await supabase.rpc('submit_feedback', {
     p_category: category,
-    p_message: message.trim(),
+    p_message: trimmed,
     p_app_version: APP_VERSION,
     p_source: 'app',
   });
   if (error) {
     throw error;
+  }
+
+  // Best-effort: also forward to the support inbox. The row above is the
+  // durable record, so a failed email must never fail the submission.
+  try {
+    await supabase.functions.invoke('feedback-email', {
+      body: {
+        category,
+        message: trimmed,
+        appVersion: APP_VERSION,
+        source: 'app',
+      },
+    });
+  } catch {
+    // Swallow — the feedback is already saved.
   }
 }
