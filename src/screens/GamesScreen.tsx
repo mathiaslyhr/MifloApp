@@ -130,10 +130,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // FloatingBar spans edge-to-edge; pad it so the wordmark lines up with the
-  // 16px-inset scrolled content.
+  // FloatingBar spans edge-to-edge and owns the top safe-area inset (don't set
+  // paddingTop here or it overrides that inset and tucks under the status bar);
+  // just pad horizontally so the wordmark lines up with the 16px-inset content.
   topBar: {
-    paddingTop: spacing.sm,
     paddingHorizontal: screenPadding,
   },
   scroll: {flex: 1},
