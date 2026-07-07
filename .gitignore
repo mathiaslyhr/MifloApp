@@ -76,3 +76,5 @@ yarn-error.log
 tools/art/node_modules/
 tools/art/preview/
 
+
+ios/build-sim/

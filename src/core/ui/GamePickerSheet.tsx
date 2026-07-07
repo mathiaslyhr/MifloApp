@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {spacing} from '../../theme';
+import {colors, radii, spacing} from '../../theme';
 import {GAMES, GameType} from '../../screens/gamesCatalog';
 import {GameTile} from './GameTile';
 import {Text} from './Text';
@@ -31,9 +31,12 @@ export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
       <Pressable style={styles.scrim} onPress={onCancel}>
         {/* Transparent content column — taps here don't dismiss (only the scrim). */}
         <Pressable style={styles.content} onPress={() => {}}>
-          <Text variant="label" align="center" color="onInk">
-            {title}
-          </Text>
+          {/* Title on its own frosted-glass pill, matching the corner buttons. */}
+          <View style={styles.titlePill}>
+            <Text variant="label" align="center">
+              {title}
+            </Text>
+          </View>
           <View style={styles.list}>
             {GAMES.map(game => (
               <GameTile
@@ -67,6 +70,21 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 380,
     gap: spacing.lg,
+  },
+  // Frosted-glass pill hugging the title, matching the corner CircleButtons.
+  titlePill: {
+    alignSelf: 'center',
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.xl,
+    borderRadius: radii.pill,
+    backgroundColor: colors.glassLight,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    shadowColor: '#140F32',
+    shadowOpacity: 0.12,
+    shadowOffset: {width: 0, height: 8},
+    shadowRadius: 16,
+    elevation: 4,
   },
   list: {gap: spacing.md},
 });
