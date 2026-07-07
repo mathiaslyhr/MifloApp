@@ -319,7 +319,7 @@ export function LobbyScreen({route, navigation}: Props) {
                 ? t('lobby.startGame', {game: gameTitle(room.gameType)})
                 : t('lobby.pickGame')
             }
-            variant="primary"
+            variant="secondary"
             disabled={players.length < 2 || starting}
             onPress={() =>
               locked && room ? startGame(room.gameType) : setPickerOpen(true)

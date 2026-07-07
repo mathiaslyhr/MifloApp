@@ -66,6 +66,7 @@ export function Button({
           styles.base,
           VARIANT_STYLES[variant],
           isPrimary && styles.primaryLift,
+          variant === 'secondary' && styles.glassLift,
           disabled && styles.disabled,
           press.animatedStyle,
           style,
@@ -116,6 +117,14 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 12},
     shadowRadius: 20,
     elevation: 8,
+  },
+  // Soft frosted-glass lift — matches CircleButton / the nav island.
+  glassLift: {
+    shadowColor: '#140F32',
+    shadowOpacity: 0.12,
+    shadowOffset: {width: 0, height: 8},
+    shadowRadius: 16,
+    elevation: 4,
   },
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
