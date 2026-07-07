@@ -17,6 +17,7 @@ export {PageHeader} from './PageHeader';
 export {Avatar} from './Avatar';
 export {TextField} from './TextField';
 export {NameSheet} from './NameSheet';
+export {GamePickerSheet} from './GamePickerSheet';
 export {IslandTabBar} from './IslandTabBar';
 export type {TabId} from './IslandTabBar';
 export {FloatingBar} from './FloatingBar';

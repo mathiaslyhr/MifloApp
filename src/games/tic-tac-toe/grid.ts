@@ -21,6 +21,7 @@ import {
   type Criterion,
   type Rng,
 } from '../../data/football';
+import {PLAYER_AVATARS} from './assets/playerAvatars';
 
 const LEAGUE_LABELS: Record<string, string> = {
   'premier-league': 'Premier League',
@@ -107,8 +108,8 @@ const NATION_SHORT: Record<string, string> = {
 
 const HONOUR_SHORT: Record<string, string> = {
   'champions-league': 'UCL', 'europa-league': 'UEL', 'world-cup': 'WC',
-  'european-championship': 'Euros', 'league-title': 'League', 'domestic-cup': 'Cup',
-  'ballon-dor': 'Ballon', 'golden-boot': 'Boot', 'copa-america': 'Copa',
+  'european-championship': 'Euros', 'league-title': 'League title', 'domestic-cup': 'Domestic cup',
+  'ballon-dor': 'Ballon', 'golden-boot': 'Golden Boot', 'copa-america': 'Copa',
   'player-of-the-season': 'POTS',
 };
 
@@ -131,6 +132,8 @@ function teammateName(playerId: string): string {
 const TEAMMATE_SHORT: Record<string, string> = {
   'Ronaldo, Cristiano': 'Cristiano',
   Ronaldo: 'R. Nazário', // Ronaldo Nazário, if ever added as a hub
+  'Di María, Ángel': 'Di María', // bare "María" loses the compound surname
+  'De Bruyne, Kevin': 'De Bruyne', // bare "Bruyne" loses the compound surname
 };
 
 /** Short teammate chip label — surname, disambiguated where needed. */
@@ -164,6 +167,35 @@ export function criterionLabel(c: Criterion): string {
       return `Played with ${teammateName(c.playerId)}`;
     case 'topLeagues':
       return `Played in ${c.count}+ top-5 leagues`;
+  }
+}
+
+/**
+ * The bare value noun for a criterion — the blank in "Has played for ___" /
+ * "Has won the ___". Used by the in-game legend to explain each cell of the
+ * current grid in plain language (see `legend.meaning.*`). Positions are
+ * lowercased so they read naturally mid-sentence ("plays as a defender").
+ */
+export function criterionValue(c: Criterion): string {
+  switch (c.kind) {
+    case 'nationality':
+      return c.country;
+    case 'club':
+      return getClub(c.clubId)?.name ?? c.clubId;
+    case 'honour':
+      return HONOUR_LABELS[c.honour];
+    case 'teammate':
+      return teammateName(c.playerId);
+    case 'league':
+      return LEAGUE_LABELS[c.league] ?? c.league;
+    case 'position':
+      return POSITION_LABELS[c.position].toLowerCase();
+    case 'shirtNumber':
+      return String(c.number);
+    case 'topLeagues':
+      return String(c.count);
+    case 'tag':
+      return TAG_LABELS[c.tag] ?? c.tag;
   }
 }
 
@@ -247,10 +279,11 @@ function buildCandidates(): Candidate[] {
   AXIS_SHIRT_NUMBERS.forEach(number =>
     criteria.push({kind: 'shirtNumber', number}),
   );
-  // "Played with X" — only for hub players that actually exist in the dataset.
-  AXIS_TEAMMATES.filter(id => getById(id)).forEach(playerId =>
-    criteria.push({kind: 'teammate', playerId}),
-  );
+  // "Played with X" — only for hub players that exist in the dataset AND have
+  // a portrait illustration; hubs without art wait until their sheet lands.
+  AXIS_TEAMMATES.filter(
+    id => getById(id) && PLAYER_AVATARS[id] != null,
+  ).forEach(playerId => criteria.push({kind: 'teammate', playerId}));
   // Journeymen across Europe's big leagues.
   criteria.push({kind: 'topLeagues', count: 3});
 

@@ -21,6 +21,8 @@ const GEN = resolve(root, 'src/games/tic-tac-toe/assets/trophies.generated.ts');
 // Palette — shared so the set reads as one family.
 const GOLD_L = '#F4D77A', GOLD = '#E3B23C', GOLD_D = '#B07E23';
 const SILV_L = '#E9EDF2', SILV = '#C3CAD4', SILV_D = '#8A93A0';
+// Bronze — keeps the domestic cup distinct from the silver Champions League cup.
+const BRZ_L = '#E7B98F', BRZ = '#C87F45', BRZ_D = '#8A5220';
 const BASE = '#2E2A24';
 
 // A stepped dark plinth most trophies stand on.
@@ -101,12 +103,12 @@ const TROPHIES = {
   // Domestic cup (FA-Cup style) — silver lidded cup with tall handles.
   'domestic-cup': wrap(
     plinth(52) +
-    `<path d="M26 24 h12 v9 a6 7 0 0 1 -12 0 Z" fill="${SILV_L}" stroke="${SILV_D}" stroke-width="1.2"/>` +
-    `<path d="M26 26 C19 26 19 34 27 35" fill="none" stroke="${SILV}" stroke-width="2.4"/>` +
-    `<path d="M38 26 C45 26 45 34 37 35" fill="none" stroke="${SILV}" stroke-width="2.4"/>` +
-    `<path d="M24 24 h16 l-2 -4 h-12 Z" fill="${SILV}"/>` +
-    `<circle cx="32" cy="17" r="2.4" fill="${SILV_L}" stroke="${SILV_D}" stroke-width="1"/>` +
-    `<rect x="30" y="40" width="4" height="12" fill="${SILV}"/>`,
+    `<path d="M26 24 h12 v9 a6 7 0 0 1 -12 0 Z" fill="${BRZ_L}" stroke="${BRZ_D}" stroke-width="1.2"/>` +
+    `<path d="M26 26 C19 26 19 34 27 35" fill="none" stroke="${BRZ}" stroke-width="2.4"/>` +
+    `<path d="M38 26 C45 26 45 34 37 35" fill="none" stroke="${BRZ}" stroke-width="2.4"/>` +
+    `<path d="M24 24 h16 l-2 -4 h-12 Z" fill="${BRZ}"/>` +
+    `<circle cx="32" cy="17" r="2.4" fill="${BRZ_L}" stroke="${BRZ_D}" stroke-width="1"/>` +
+    `<rect x="30" y="40" width="4" height="12" fill="${BRZ}"/>`,
   ),
   // Player of the season — gold star medal.
   'player-of-the-season': wrap(

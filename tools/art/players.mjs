@@ -25,7 +25,7 @@ export const PLAYERS = [
   {id: 'Pogba, Paul', file: 'pogba', wiki: 'Paul Pogba', jersey: 'navy blue jersey'},
   {id: 'Hakimi, Achraf', file: 'hakimi', wiki: 'Achraf Hakimi', jersey: 'red jersey with green trim'},
   {id: 'Rüdiger, Antonio', file: 'rudiger', wiki: 'Antonio Rüdiger', jersey: 'plain white jersey'},
-  {id: 'Walker, Kyle', file: 'walker', wiki: 'Kyle Walker (footballer, born 1990)', jersey: 'sky blue jersey'},
+  {id: 'Walker, Kyle', file: 'walker', wiki: 'Kyle Walker', jersey: 'sky blue jersey'},
   // ── Classic hubs ───────────────────────────────────────────────────────
   {id: 'Ibrahimović, Zlatan', file: 'zlatan', wiki: 'Zlatan Ibrahimović', jersey: 'yellow Sweden-style jersey with blue collar'},
   {id: 'Ramos, Sergio', file: 'ramos', wiki: 'Sergio Ramos', jersey: 'plain white jersey'},
@@ -33,7 +33,7 @@ export const PLAYERS = [
   {id: 'Modrić, Luka', file: 'modric', wiki: 'Luka Modrić', jersey: 'red and white checkered Croatia-style jersey'},
   {id: 'Benzema, Karim', file: 'benzema', wiki: 'Karim Benzema', jersey: 'plain white jersey'},
   {id: 'Busquets, Sergio', file: 'busquets', wiki: 'Sergio Busquets', jersey: 'blue and dark red vertically striped jersey'},
-  {id: 'Xavi', file: 'xavi', wiki: 'Xavi', jersey: 'blue and dark red vertically striped jersey'},
+  {id: 'Xavi', file: 'xavi', wiki: 'Xavi Hernández', jersey: 'blue and dark red vertically striped jersey'},
   {id: 'Iniesta, Andrés', file: 'iniesta', wiki: 'Andrés Iniesta', jersey: 'blue and dark red vertically striped jersey'},
   {id: 'Lampard, Frank', file: 'lampard', wiki: 'Frank Lampard', jersey: 'royal blue jersey'},
   {id: 'Gerrard, Steven', file: 'gerrard', wiki: 'Steven Gerrard', jersey: 'red jersey'},

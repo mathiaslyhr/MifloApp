@@ -275,8 +275,15 @@ export function subscribePlayers(
  * Live room row — used by guests to detect status → 'in_progress' and by every
  * device to follow the host's phase clock (M4). Primes with the current row so
  * subscribers get today's state, not just future changes.
+ *
+ * `onClosed` fires when the room row is deleted — i.e. the host left and the
+ * party is over ("no host, no party"). Guests use it to return to the menu.
  */
-export function subscribeRoom(roomId: string, cb: (room: Room) => void): () => void {
+export function subscribeRoom(
+  roomId: string,
+  cb: (room: Room) => void,
+  onClosed?: () => void,
+): () => void {
   if (!supabase) {
     return () => {};
   }
@@ -286,6 +293,13 @@ export function subscribeRoom(roomId: string, cb: (room: Room) => void): () => v
       'postgres_changes',
       {event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
       payload => cb(mapRoom(payload.new)),
+    )
+    .on(
+      'postgres_changes',
+      // DELETE carries only the primary key by default — that's all we need to
+      // know the party closed. Filtering on `id` is valid because it's the PK.
+      {event: 'DELETE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
+      () => onClosed?.(),
     )
     .subscribe();
   // Deliver the current row immediately (postgres_changes only fires on change).

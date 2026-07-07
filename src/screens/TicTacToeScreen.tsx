@@ -11,7 +11,15 @@ import {
 import {ChevronLeft, HelpCircle, Bug} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
+import {
+  Button,
+  CircleButton,
+  PressableScale,
+  Screen,
+  Text,
+  TextField,
+  toast,
+} from '../core/ui';
 import {haptics} from '../core/haptics';
 import {ReportBugModal} from '../core/feedback/ReportBugModal';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
@@ -25,7 +33,8 @@ import {
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
-import {LegendModal} from '../games/tic-tac-toe/LegendModal';
+import {AxisInfoModal} from '../games/tic-tac-toe/AxisInfoModal';
+import {HelpModal} from '../games/tic-tac-toe/HelpModal';
 import {FOOTBALLERS, getById} from '../data/football';
 import {
   criterionLabel,
@@ -55,7 +64,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TicTacToe'>;
 const ROW_LABEL_W = 58;
 const LABEL_GAP = 8;
 // White hairline dividers on the glass board — same language as the menu cards.
-const DIVIDER = 1.5;
+const DIVIDER = 1;
 const DIVIDER_COLOR = colors.glassRim;
 
 export function TicTacToeScreen({route, navigation}: Props) {
@@ -66,7 +75,8 @@ export function TicTacToeScreen({route, navigation}: Props) {
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [pickCell, setPickCell] = useState<number | null>(null);
   const [query, setQuery] = useState('');
-  const [showLegend, setShowLegend] = useState(false);
+  const [explain, setExplain] = useState<Criterion | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const leftRef = useRef(false);
 
@@ -82,18 +92,29 @@ export function TicTacToeScreen({route, navigation}: Props) {
 
   useEffect(() => {
     ensureSession().then(setMyUserId).catch(() => {});
-    const unsub = subscribeRoom(roomId, room => {
-      setHostId(room.hostId);
-      // Host ended the game / returned to lobby → follow back.
-      if (room.status !== 'in_progress' || !room.gameState) {
+    const unsub = subscribeRoom(
+      roomId,
+      room => {
+        setHostId(room.hostId);
+        // Host ended the game / returned to lobby → follow back.
+        if (room.status !== 'in_progress' || !room.gameState) {
+          if (!leftRef.current) {
+            leftRef.current = true;
+            navigation.goBack();
+          }
+          return;
+        }
+        setState(room.gameState as GridState);
+      },
+      // Host left the party entirely (no host, no party) → back to the menu,
+      // popping straight past the now-dead lobby.
+      () => {
         if (!leftRef.current) {
           leftRef.current = true;
-          navigation.goBack();
+          navigation.popToTop();
         }
-        return;
-      }
-      setState(room.gameState as GridState);
-    });
+      },
+    );
     return unsub;
   }, [roomId, navigation]);
 
@@ -148,8 +169,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
   if (!state) {
     return (
       <Screen canvas>
-        <Header onBack={handleBack} onLegend={() => setShowLegend(true)} />
-        <LegendModal visible={showLegend} onClose={() => setShowLegend(false)} />
+        <Header onBack={handleBack} />
         <View style={styles.loading}>
           <Text variant="body" color="secondary">
             {t('game.loading')}
@@ -169,6 +189,8 @@ export function TicTacToeScreen({route, navigation}: Props) {
   const tieProposerName = tieOffer
     ? state.sides.find(s => s.id === tieOffer.by)?.name ?? 'Someone'
     : '';
+  // Corner shows Skip (my turn) and/or Tie (no active offer); blank otherwise.
+  const cornerEmpty = !!state.winner || (!myTurn && !!tieOffer);
 
   function openPicker(index: number) {
     setQuery('');
@@ -256,7 +278,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
 
   return (
     <Screen canvas>
-      <Header onBack={handleBack} onLegend={() => setShowLegend(true)} />
+      <Header onBack={handleBack} onHelp={() => setShowHelp(true)} />
 
       <View style={styles.center}>
         {/* Turn indicator */}
@@ -277,9 +299,49 @@ export function TicTacToeScreen({route, navigation}: Props) {
           )}
         </View>
 
-        {/* Column headers: empty corner + a glass bar split into 3 */}
+        {/* Column headers: corner actions (skip/tie) + a glass bar split into 3 */}
         <View style={styles.topRow}>
-          <View style={{width: ROW_LABEL_W, height: headerH, marginRight: LABEL_GAP}} />
+          <View
+            style={[
+              styles.card,
+              styles.corner,
+              {width: ROW_LABEL_W, height: headerH, marginRight: LABEL_GAP},
+              // Only draw the glass card when it actually holds an action;
+              // otherwise stay an invisible spacer to keep board alignment.
+              cornerEmpty && styles.cornerBlank,
+            ]}>
+            {!state.winner && myTurn ? (
+              <PressableScale
+                style={styles.cornerBtn}
+                onPress={handleSkip}
+                accessibilityRole="button"
+                accessibilityLabel={t('game.skip')}>
+                <Text
+                  style={styles.cornerText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit>
+                  {t('game.skipShort')}
+                </Text>
+              </PressableScale>
+            ) : null}
+            {!state.winner && myTurn && !tieOffer ? (
+              <View style={styles.cornerDiv} />
+            ) : null}
+            {!state.winner && !tieOffer ? (
+              <PressableScale
+                style={styles.cornerBtn}
+                onPress={handleProposeTie}
+                accessibilityRole="button"
+                accessibilityLabel={t('game.proposeTie')}>
+                <Text
+                  style={styles.cornerText}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit>
+                  {t('game.tieShort')}
+                </Text>
+              </PressableScale>
+            ) : null}
+          </View>
           <View style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
             {state.cols.map((c, i) => (
               <AxisCell
@@ -288,6 +350,10 @@ export function TicTacToeScreen({route, navigation}: Props) {
                 w={cellSize}
                 h={headerH}
                 divider={i > 0 ? 'left' : null}
+                onPress={() => {
+                  haptics.tap();
+                  setExplain(c);
+                }}
               />
             ))}
           </View>
@@ -303,6 +369,10 @@ export function TicTacToeScreen({route, navigation}: Props) {
                 w={ROW_LABEL_W}
                 h={cellSize}
                 divider={i > 0 ? 'top' : null}
+                onPress={() => {
+                  haptics.tap();
+                  setExplain(c);
+                }}
               />
             ))}
           </View>
@@ -332,7 +402,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
                         ]}>
                         <Text
                           align="center"
-                          numberOfLines={3}
+                          numberOfLines={2}
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.8}
                           style={[styles.cellName, {color: side?.color ?? colors.ink}]}>
                           {f?.name ?? '?'}
                         </Text>
@@ -424,22 +496,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
                   </>
                 )}
               </View>
-            ) : (
-              <View style={styles.row2}>
-                {myTurn ? (
-                  <View style={styles.flex1}>
-                    <Button label={t('game.skip')} variant="outline" onPress={handleSkip} />
-                  </View>
-                ) : null}
-                <View style={styles.flex1}>
-                  <Button
-                    label={t('game.proposeTie')}
-                    variant="outline"
-                    onPress={handleProposeTie}
-                  />
-                </View>
-              </View>
-            )}
+            ) : null}
           </View>
         )}
 
@@ -513,15 +570,16 @@ export function TicTacToeScreen({route, navigation}: Props) {
         </Pressable>
       </Modal>
 
-      <LegendModal visible={showLegend} onClose={() => setShowLegend(false)} />
+      <AxisInfoModal criterion={explain} onClose={() => setExplain(null)} />
+      <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
       <ReportBugModal visible={showBug} onClose={() => setShowBug(false)} />
     </Screen>
   );
 }
 
-/** Top bar: back button (left) + centered title + a legend (?) action (right,
+/** Top bar: back button (left) + centered title + a help (?) action (right,
  * matching the back button width so the title stays optically centred). */
-function Header({onBack, onLegend}: {onBack: () => void; onLegend?: () => void}) {
+function Header({onBack, onHelp}: {onBack: () => void; onHelp?: () => void}) {
   const {t} = useTranslation();
   return (
     <View style={styles.header}>
@@ -531,8 +589,8 @@ function Header({onBack, onLegend}: {onBack: () => void; onLegend?: () => void})
       <Text variant="wordmark" align="center" numberOfLines={1} style={styles.title}>
         {t('game.title')}
       </Text>
-      {onLegend ? (
-        <CircleButton size={36} accessibilityLabel={t('game.legendButton')} onPress={onLegend}>
+      {onHelp ? (
+        <CircleButton size={36} accessibilityLabel={t('game.legendButton')} onPress={onHelp}>
           <HelpCircle size={18} color={colors.ink} strokeWidth={2} />
         </CircleButton>
       ) : (
@@ -552,23 +610,28 @@ function AxisCell({
   w,
   h,
   divider,
+  onPress,
 }: {
   criterion: Criterion;
   w: number;
   h: number;
   divider: 'left' | 'top' | null;
+  onPress?: () => void;
 }) {
   const image = criterionImage(criterion);
   const emoji = image == null ? criterionIcon(criterion) : null;
   const hasVisual = image != null || emoji != null;
   const label = criterionShortLabel(criterion);
   return (
-    <View
-      style={[
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={({pressed}) => [
         styles.axis,
         {width: w, height: h},
         divider === 'left' && styles.divLeft,
         divider === 'top' && styles.divTop,
+        pressed && styles.axisPressed,
       ]}>
       {image != null ? (
         <Image
@@ -581,13 +644,13 @@ function AxisCell({
       ) : null}
       <Text
         align="center"
-        numberOfLines={1}
+        numberOfLines={2}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
         style={[styles.axisText, !hasVisual && styles.axisTextOnly]}>
         {label}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -651,6 +714,18 @@ const styles = StyleSheet.create({
   // White dividers that split a card into a grid.
   divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: DIVIDER_COLOR},
   divTop: {borderTopWidth: DIVIDER, borderTopColor: DIVIDER_COLOR},
+  // Top-left corner: Skip / Tie stacked as compact glass actions.
+  corner: {flexDirection: 'column'},
+  cornerBlank: {backgroundColor: 'transparent', borderWidth: 0},
+  cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
+  cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
+  cornerText: {
+    fontFamily: fonts.regular,
+    fontSize: 13,
+    lineHeight: 16,
+    color: colors.ink,
+    textAlign: 'center',
+  },
   axis: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -658,6 +733,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     gap: 2,
   },
+  axisPressed: {opacity: 0.55},
   axisIcon: {fontSize: 17, lineHeight: 22, textAlign: 'center'},
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
@@ -682,7 +758,7 @@ const styles = StyleSheet.create({
   timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
-  cellName: {fontFamily: fonts.medium, fontSize: 12, lineHeight: 15},
+  cellName: {fontFamily: fonts.medium, fontSize: 10, lineHeight: 12},
   plus: {fontFamily: fonts.regular, fontSize: 26, color: colors.primary, opacity: 0.3},
   plusOn: {opacity: 1},
   // Purple ring marking the cell you're currently filling.

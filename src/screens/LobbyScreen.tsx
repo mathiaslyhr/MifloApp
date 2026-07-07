@@ -14,11 +14,13 @@ import {
   Button,
   CircleButton,
   FloatingBar,
+  GamePickerSheet,
   NameSheet,
   PressableScale,
   Screen,
   Text,
 } from '../core/ui';
+import {GAMES, isBuiltGame} from './gamesCatalog';
 import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -50,6 +52,7 @@ export function LobbyScreen({route, navigation}: Props) {
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [starting, setStarting] = useState(false);
   // Measured heights of the floating top/bottom chrome, so scroll content can
   // reserve matching clearance and glide behind them (no clipping "box").
@@ -59,6 +62,8 @@ export function LobbyScreen({route, navigation}: Props) {
   // Track membership so we can detect being kicked (present → gone).
   const wasPresentRef = useRef(false);
   const kickedRef = useRef(false);
+  // Guards the one-shot exit to the menu when the party closes (host left).
+  const closedRef = useRef(false);
   // Guards the one-shot navigation into the game when it starts.
   const inGameRef = useRef(false);
   // Party-session memory (host device): who opened the last game and the last
@@ -71,14 +76,20 @@ export function LobbyScreen({route, navigation}: Props) {
       .then(setMyUserId)
       .catch(() => {});
     const unsubPlayers = subscribePlayers(roomId, setPlayers);
-    const unsubRoom = subscribeRoom(roomId, setRoom);
+    // Host left → the room is deleted; no host, no party. Return to the menu.
+    const unsubRoom = subscribeRoom(roomId, setRoom, () => {
+      if (!closedRef.current) {
+        closedRef.current = true;
+        navigation.popToTop();
+      }
+    });
     // Prime the roster once in case the realtime channel is slow to attach.
     fetchPlayers(roomId).then(setPlayers).catch(() => {});
     return () => {
       unsubPlayers();
       unsubRoom();
     };
-  }, [roomId]);
+  }, [roomId, navigation]);
 
   // Leave the party whenever this screen is popped (back button, swipe, or the
   // kicked auto-goBack). Fire-and-forget; the RPC is idempotent, so the already
@@ -166,23 +177,45 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }
 
-  // Host starts Tic-Tac-Toe (Individual): build a solvable grid + initial state
-  // from the roster, then hand every device into the game via the room.
-  async function handlePickGame() {
+  // Whether this party is locked to a pre-chosen game (came from the Games tab)
+  // or free to pick (came from Home, where the room is created as `'unset'`).
+  const locked = room ? isBuiltGame(room.gameType) : false;
+
+  // Human title for a game type, via the presentation catalog.
+  function gameTitle(gameType: string): string {
+    const entry = GAMES.find(g => g.gameType === gameType);
+    return entry ? t(`games.${entry.i18nKey}.title`) : gameType;
+  }
+
+  // Host starts a specific game: build its initial state from the roster, then
+  // hand every device into the game via the room. Only tic-tac-toe has an engine
+  // today; the picker/lock never offers an unbuilt game, so that's the one case.
+  async function startGame(gameType: string) {
     if (players.length < 2 || starting) {
       return;
     }
+    setPickerOpen(false);
     setStarting(true);
     try {
-      const grid = generateGrid(Math.random, {avoid: recentGridsRef.current});
-      const roster = players.map(p => ({userId: p.userId, name: p.name}));
-      const state = createIndividualState(grid, roster, {
-        avoidStarter: lastStarterRef.current ?? undefined,
-      });
-      // Remember for next round (keep the last 5 grids).
-      lastStarterRef.current = state.turnUserId;
-      recentGridsRef.current = [gridSignature(grid), ...recentGridsRef.current].slice(0, 5);
-      await startBoardGame(roomId, 'tic-tac-toe', state);
+      switch (gameType) {
+        case 'tic-tac-toe': {
+          const grid = generateGrid(Math.random, {avoid: recentGridsRef.current});
+          const roster = players.map(p => ({userId: p.userId, name: p.name}));
+          const state = createIndividualState(grid, roster, {
+            avoidStarter: lastStarterRef.current ?? undefined,
+          });
+          // Remember for next round (keep the last 5 grids).
+          lastStarterRef.current = state.turnUserId;
+          recentGridsRef.current = [
+            gridSignature(grid),
+            ...recentGridsRef.current,
+          ].slice(0, 5);
+          await startBoardGame(roomId, 'tic-tac-toe', state);
+          break;
+        }
+        default:
+          throw new Error(`Unsupported game: ${gameType}`);
+      }
     } catch {
       setStarting(false);
       Alert.alert(t('common.miflo'), t('lobby.errorStart'));
@@ -279,14 +312,22 @@ export function LobbyScreen({route, navigation}: Props) {
       <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
         {isHost ? (
           <Button
-            label={starting ? t('lobby.starting') : t('lobby.pickGame')}
+            label={
+              starting
+                ? t('lobby.starting')
+                : locked && room
+                ? t('lobby.startGame', {game: gameTitle(room.gameType)})
+                : t('lobby.pickGame')
+            }
             variant="primary"
             disabled={players.length < 2 || starting}
-            onPress={handlePickGame}
+            onPress={() =>
+              locked && room ? startGame(room.gameType) : setPickerOpen(true)
+            }
           />
         ) : (
           <Text variant="secondary" color="secondary" align="center">
-            {t('lobby.waitingHostPick')}
+            {locked ? t('lobby.waitingHostStart') : t('lobby.waitingHostPick')}
           </Text>
         )}
       </FloatingBar>
@@ -299,6 +340,13 @@ export function LobbyScreen({route, navigation}: Props) {
         confirmLabel={t('common.save')}
         onConfirm={submitRename}
         onCancel={() => setRenameOpen(false)}
+      />
+
+      <GamePickerSheet
+        visible={pickerOpen}
+        title={t('lobby.pickTitle')}
+        onSelect={startGame}
+        onCancel={() => setPickerOpen(false)}
       />
     </Screen>
   );

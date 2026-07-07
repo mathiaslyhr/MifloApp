@@ -1,0 +1,12 @@
+{
+  "name": "art",
+  "private": true,
+  "type": "module",
+  "description": "Slice ChatGPT-generated illustration sheets (players, trophies, ...) into transparent app assets. Style refs live in refs/, sheet layouts in slice-sheet.mjs.",
+  "scripts": {
+    "slice": "node slice-sheet.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.34.0"
+  }
+}

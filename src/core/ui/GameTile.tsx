@@ -11,6 +11,10 @@ type Props = {
   Icon: LucideIcon;
   onPress?: () => void;
   accessibilityLabel?: string;
+  /** Dim the tile and ignore taps (e.g. a game that isn't built yet). */
+  disabled?: boolean;
+  /** Small pill next to the title, e.g. "Coming soon". */
+  badge?: string;
 };
 
 /**
@@ -20,25 +24,46 @@ type Props = {
  * CircleButton / IslandTabBar, and the shared springy press-scale via
  * PressableScale.
  */
-export function GameTile({title, tagline, Icon, onPress, accessibilityLabel}: Props) {
+export function GameTile({
+  title,
+  tagline,
+  Icon,
+  onPress,
+  accessibilityLabel,
+  disabled = false,
+  badge,
+}: Props) {
   return (
     <PressableScale
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
+      disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
-      style={styles.card}>
+      accessibilityState={disabled ? {disabled: true} : undefined}
+      style={[styles.card, disabled && styles.cardDisabled]}>
       <View style={styles.badge}>
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
       <View style={styles.body}>
-        <Text variant="section">{title}</Text>
+        <View style={styles.titleRow}>
+          <Text variant="section">{title}</Text>
+          {badge ? (
+            <View style={styles.pill}>
+              <Text variant="caption" color="secondary" style={styles.pillText}>
+                {badge}
+              </Text>
+            </View>
+          ) : null}
+        </View>
         {tagline ? (
           <Text variant="secondary" color="secondary">
             {tagline}
           </Text>
         ) : null}
       </View>
-      <ChevronRight size={22} color={colors.textTertiary} strokeWidth={2} />
+      {!disabled ? (
+        <ChevronRight size={22} color={colors.textTertiary} strokeWidth={2} />
+      ) : null}
     </PressableScale>
   );
 }
@@ -61,6 +86,15 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 4,
   },
+  cardDisabled: {opacity: 0.5},
+  titleRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  pill: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface2,
+  },
+  pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   badge: {
     width: 44,
     height: 44,

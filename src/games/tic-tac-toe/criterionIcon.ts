@@ -8,6 +8,7 @@ import type {Criterion} from '../../data/football';
 import {FLAG_IMAGES} from './assets/flags.generated';
 import {LOGO_IMAGES} from './assets/logos.generated';
 import {TROPHY_IMAGES} from './assets/trophies.generated';
+import {CRITERION_IMAGES} from './assets/criteria.generated';
 import {PLAYER_AVATARS} from './assets/playerAvatars';
 
 /**
@@ -83,7 +84,11 @@ export function logoImage(clubId: string | undefined): number | null {
   return clubId ? LOGO_IMAGES[clubId] ?? null : null;
 }
 
-/** Real bundled image for an axis criterion, or null (emoji fallback then applies). */
+/**
+ * Real bundled image for an axis criterion, or null. Every criterion kind now
+ * resolves to a custom vector (flags/crests/trophies plus the criteria set), so
+ * a chip is never an emoji — the only fallback is a country without a flag PNG.
+ */
 export function criterionImage(c: Criterion): number | null {
   switch (c.kind) {
     case 'nationality':
@@ -94,52 +99,26 @@ export function criterionImage(c: Criterion): number | null {
       // Custom vector trophy illustration (assets/trophies).
       return TROPHY_IMAGES[c.honour] ?? null;
     case 'teammate':
-      // Player illustration, once supplied (assets/players + playerAvatars.ts).
-      return PLAYER_AVATARS[c.playerId] ?? null;
+      // Player illustration when supplied, else the generic teammate vector.
+      return PLAYER_AVATARS[c.playerId] ?? CRITERION_IMAGES.teammate ?? null;
+    case 'tag':
+      return CRITERION_IMAGES[c.tag === 'current-stars' ? 'tag-current-stars' : 'tag-notable'] ?? null;
+    case 'position':
+      return CRITERION_IMAGES[`position-${c.position.toLowerCase()}`] ?? null;
+    case 'shirtNumber':
+      return CRITERION_IMAGES['shirt-number'] ?? null;
+    case 'topLeagues':
+      return CRITERION_IMAGES['top-leagues'] ?? null;
     default:
       return null;
   }
 }
 
-const HONOUR_ICONS: Record<string, string> = {
-  'champions-league': '🏆',
-  'europa-league': '🏆',
-  'league-title': '🏆',
-  'domestic-cup': '🏆',
-  'world-cup': '🌍',
-  'european-championship': '🌍',
-  'ballon-dor': '🏅',
-  'golden-boot': '👟',
-  'copa-america': '🌎',
-  'player-of-the-season': '⭐',
-};
-
-const POSITION_ICONS: Record<string, string> = {
-  GK: '🧤',
-  DF: '🛡️',
-  MF: '🎯',
-  FW: '⚽',
-};
-
-/** Emoji for an axis chip, or null for text-only chips (club / league). */
+/**
+ * Text fallback for a chip when no image is bundled. Only the nationality flag
+ * emoji remains, as a fallback for a country without a flag PNG; every other
+ * criterion renders a vector via `criterionImage`.
+ */
 export function criterionIcon(c: Criterion): string | null {
-  switch (c.kind) {
-    case 'nationality':
-      return flagOf(c.country);
-    case 'honour':
-      return HONOUR_ICONS[c.honour] ?? '🏆';
-    case 'tag':
-      return c.tag === 'current-stars' ? '🔥' : '⭐';
-    case 'position':
-      return POSITION_ICONS[c.position] ?? null;
-    case 'shirtNumber':
-      return '👕';
-    case 'teammate':
-      return '🤝';
-    case 'topLeagues':
-      return '🌐';
-    case 'club':
-    case 'league':
-      return null;
-  }
+  return c.kind === 'nationality' ? flagOf(c.country) : null;
 }

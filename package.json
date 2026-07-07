@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "assets:criteria": "node scripts/build-criteria-assets.mjs",
     "assets:flags": "node scripts/build-flag-assets.mjs",
     "assets:logos": "node scripts/build-logo-assets.mjs",
-    "assets:trophies": "node scripts/build-trophy-assets.mjs",
     "data:build": "node scripts/build-football-json.mjs",
     "icons": "node scripts/generate-app-icon.mjs",
     "ios": "react-native run-ios",

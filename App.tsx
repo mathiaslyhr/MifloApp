@@ -12,7 +12,7 @@ import {Alert, StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {RootNavigator} from './src/core/navigation';
-import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {ErrorBoundary} from './src/core/ui';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
 // Side-effect: initialize i18next (device language) before any screen renders.
@@ -55,8 +55,6 @@ function App(): React.JSX.Element {
         <UpdateGate>
           <NavigationContainer>
             <RootNavigator />
-            {/* App-wide transient messaging — sits above all screens. */}
-            <ToastHost />
           </NavigationContainer>
         </UpdateGate>
       </SafeAreaProvider>
