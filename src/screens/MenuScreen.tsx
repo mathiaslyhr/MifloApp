@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   BookOpen,
   HelpCircle,
@@ -11,6 +10,7 @@ import {
 } from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {
+  FloatingBar,
   IslandTabBar,
   MenuGroup,
   MenuRow,
@@ -19,7 +19,7 @@ import {
   Text,
 } from '../core/ui';
 import {APP_VERSION, FAQ_URL, PRIVACY_POLICY_URL} from '../core/config';
-import {spacing} from '../theme';
+import {screenPadding, spacing} from '../theme';
 
 /** In-app destinations reachable from the Menu (detail screens land later, #12). */
 export type MenuItem = 'profile' | 'settings' | 'howToPlay' | 'about';
@@ -32,34 +32,28 @@ type Props = {
 };
 
 /**
- * Menu — the hub on the rainbow canvas. A centered "Menu" wordmark over grouped,
- * iOS-style glass cards: Account, App and About. Nav rows open in-app detail
- * screens (stubbed for now via `onSelectItem`); the FAQ and Privacy rows open
- * the marketing site. A muted version footer sits above the nav island.
+ * Menu — the hub on the rainbow canvas. A centered "Menu" wordmark floats at the
+ * top and the nav island floats at the bottom; grouped iOS-style glass cards
+ * (Account, App, About) scroll the full height behind both. Nav rows open in-app
+ * detail screens (stubbed for now via `onSelectItem`); the FAQ and Privacy rows
+ * open the marketing site. A muted version footer sits above the nav island.
  */
-/** Space the list reserves at its foot so the last row clears the floating island. */
-const TAB_CLEARANCE = 96;
-
 export function MenuScreen({onTabSelect, onSelectItem}: Props) {
-  const insets = useSafeAreaInsets();
   const {t} = useTranslation();
+  // Floating-bar heights, measured at layout, so the scroll content can reserve
+  // matching top/bottom clearance and glide behind the chrome.
+  const [topH, setTopH] = useState(0);
+  const [botH, setBotH] = useState(0);
 
   return (
-    // Drop the bottom safe-area edge so the scroll region runs to the physical
-    // bottom — content glides all the way behind the floating island (below), no
-    // hard clip line. The island manages the bottom inset itself.
-    <Screen canvas edges={['top', 'left', 'right']}>
-      <View style={styles.header}>
-        <Text variant="wordmark" align="center">
-          {t('menu.title')}
-        </Text>
-      </View>
-
+    // Drop top/bottom safe-area edges — the floating bars own those insets so the
+    // menu scrolls the full height, behind the chrome, with no clip line.
+    <Screen canvas edges={['left', 'right']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.list,
-          {paddingBottom: insets.bottom + TAB_CLEARANCE},
+          {paddingTop: topH + spacing.xl, paddingBottom: botH + spacing.xl},
         ]}
         showsVerticalScrollIndicator={false}>
         <MenuGroup label={t('menu.account')}>
@@ -108,35 +102,39 @@ export function MenuScreen({onTabSelect, onSelectItem}: Props) {
         </Text>
       </ScrollView>
 
-      {/* Floating overlay — pinned above the content, translucent so the list
-          scrolls under it. `box-none` lets scroll gestures pass through the
-          empty areas beside the pill. */}
-      <View
-        style={[styles.tabOverlay, {paddingBottom: insets.bottom}]}
-        pointerEvents="box-none">
+      {/* Floating header — the wordmark, no background; the cards scroll behind
+          it. */}
+      <FloatingBar edge="top" onHeight={setTopH} style={styles.topBar}>
+        <View style={styles.header}>
+          <Text variant="wordmark" align="center">
+            {t('menu.title')}
+          </Text>
+        </View>
+      </FloatingBar>
+
+      {/* Floating nav island (Menu active), pinned to the bottom. */}
+      <FloatingBar edge="bottom" onHeight={setBotH}>
         <IslandTabBar active="menu" onSelect={onTabSelect} />
-      </View>
+      </FloatingBar>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: spacing.sm,
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // FloatingBar spans edge-to-edge; pad it so the wordmark lines up with the
+  // 16px-inset scrolled content.
+  topBar: {
+    paddingTop: spacing.sm,
+    paddingHorizontal: screenPadding,
+  },
   scroll: {flex: 1},
   list: {
-    paddingTop: spacing.xl,
     gap: spacing.xl,
   },
   footer: {marginTop: spacing.sm},
-  tabOverlay: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
 });
