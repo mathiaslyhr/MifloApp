@@ -13,8 +13,16 @@ type Props = {
   accessibilityLabel?: string;
   /** Dim the tile and ignore taps (e.g. a game that isn't built yet). */
   disabled?: boolean;
-  /** Small pill next to the title, e.g. "Coming soon". */
+  /** Trailing status label, e.g. "Coming soon". Shown in place of the chevron. */
   badge?: string;
+  /**
+   * How the trailing `badge` renders:
+   * - `'pill'` (default): off-white pill with purple text, matching the left
+   *   icon badge — for the glassy Games hub on the rainbow canvas.
+   * - `'text'`: plain muted label — for the picker popup, where a filled pill
+   *   would clash with the glass tiles.
+   */
+  badgeVariant?: 'pill' | 'text';
 };
 
 /**
@@ -32,7 +40,29 @@ export function GameTile({
   accessibilityLabel,
   disabled = false,
   badge,
+  badgeVariant = 'pill',
 }: Props) {
+  // Trailing slot: a status badge for disabled tiles, otherwise the chevron.
+  let trailing: React.ReactNode = null;
+  if (badge) {
+    trailing =
+      badgeVariant === 'pill' ? (
+        <View style={styles.pill}>
+          <Text variant="caption" color="accent" style={styles.pillText}>
+            {badge}
+          </Text>
+        </View>
+      ) : (
+        <Text variant="caption" color="secondary" style={styles.textBadge}>
+          {badge}
+        </Text>
+      );
+  } else if (!disabled) {
+    trailing = (
+      <ChevronRight size={22} color={colors.textTertiary} strokeWidth={2} />
+    );
+  }
+
   return (
     <PressableScale
       onPress={disabled ? undefined : onPress}
@@ -45,25 +75,14 @@ export function GameTile({
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
       <View style={styles.body}>
-        <View style={styles.titleRow}>
-          <Text variant="section">{title}</Text>
-          {badge ? (
-            <View style={styles.pill}>
-              <Text variant="caption" color="secondary" style={styles.pillText}>
-                {badge}
-              </Text>
-            </View>
-          ) : null}
-        </View>
+        <Text variant="section">{title}</Text>
         {tagline ? (
           <Text variant="secondary" color="secondary">
             {tagline}
           </Text>
         ) : null}
       </View>
-      {!disabled ? (
-        <ChevronRight size={22} color={colors.textTertiary} strokeWidth={2} />
-      ) : null}
+      {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
     </PressableScale>
   );
 }
@@ -87,7 +106,9 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardDisabled: {opacity: 0.5},
-  titleRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
+  trailing: {flexShrink: 0},
+  // Off-white pill with purple text — mirrors the left icon badge.
   pill: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
@@ -95,6 +116,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface2,
   },
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
+  // Plain muted label (picker popup) — no background to clash with glass tiles.
+  textBadge: {fontSize: 12, lineHeight: 15},
   badge: {
     width: 44,
     height: 44,

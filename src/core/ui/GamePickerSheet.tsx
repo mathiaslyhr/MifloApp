@@ -40,6 +40,7 @@ export function GamePickerSheet({visible, title, onSelect, onCancel}: Props) {
                 Icon={game.Icon}
                 disabled={!game.available}
                 badge={game.available ? undefined : t('games.comingSoon')}
+                badgeVariant="text"
                 onPress={() => onSelect(game.gameType)}
               />
             ))}
@@ -61,7 +62,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 380,
-    backgroundColor: colors.surface,
+    // Soft lavender (not pure white) so the glass tiles' translucent fill and
+    // white rim have a backdrop to read against instead of vanishing.
+    backgroundColor: colors.background,
     borderRadius: radii.card,
     paddingVertical: spacing.lg,
     paddingHorizontal: spacing.lg,

@@ -14,7 +14,6 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   Button,
   CircleButton,
-  PressableScale,
   Screen,
   Text,
   TextField,
@@ -311,8 +310,11 @@ export function TicTacToeScreen({route, navigation}: Props) {
               cornerEmpty && styles.cornerBlank,
             ]}>
             {!state.winner && myTurn ? (
-              <PressableScale
-                style={styles.cornerBtn}
+              <Pressable
+                style={({pressed}) => [
+                  styles.cornerBtn,
+                  pressed && styles.cornerBtnPressed,
+                ]}
                 onPress={handleSkip}
                 accessibilityRole="button"
                 accessibilityLabel={t('game.skip')}>
@@ -322,14 +324,17 @@ export function TicTacToeScreen({route, navigation}: Props) {
                   adjustsFontSizeToFit>
                   {t('game.skipShort')}
                 </Text>
-              </PressableScale>
+              </Pressable>
             ) : null}
             {!state.winner && myTurn && !tieOffer ? (
               <View style={styles.cornerDiv} />
             ) : null}
             {!state.winner && !tieOffer ? (
-              <PressableScale
-                style={styles.cornerBtn}
+              <Pressable
+                style={({pressed}) => [
+                  styles.cornerBtn,
+                  pressed && styles.cornerBtnPressed,
+                ]}
                 onPress={handleProposeTie}
                 accessibilityRole="button"
                 accessibilityLabel={t('game.proposeTie')}>
@@ -339,7 +344,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
                   adjustsFontSizeToFit>
                   {t('game.tieShort')}
                 </Text>
-              </PressableScale>
+              </Pressable>
             ) : null}
           </View>
           <View style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
@@ -718,6 +723,7 @@ const styles = StyleSheet.create({
   corner: {flexDirection: 'column'},
   cornerBlank: {backgroundColor: 'transparent', borderWidth: 0},
   cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
+  cornerBtnPressed: {opacity: 0.55},
   cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
   cornerText: {
     fontFamily: fonts.regular,
