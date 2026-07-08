@@ -19,6 +19,13 @@ const HISTORY_KEY = 'mystery.history';
 export type DailyProgress = {
   dateKey: string;
   guessedIds: string[];
+  /**
+   * The secret drawn when the day was first opened. Pins the puzzle: a data
+   * update mid-day reshuffles `secretFor`'s pool, and without the pin the
+   * secret would silently change under an in-progress puzzle. Optional only
+   * for progress saved by older builds.
+   */
+  secretId?: string;
 };
 
 /** Today's saved progress, or null if none / it belongs to a different day. */

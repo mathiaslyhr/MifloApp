@@ -87,7 +87,6 @@ export function ScoutScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
-  const secret = useMemo(() => secretFor(dateKey, dailyPool()), [dateKey]);
 
   const [state, setState] = useState<MysteryState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
@@ -104,11 +103,23 @@ export function ScoutScreen({navigation}: Props) {
         loadDailyProgress(dateKey),
         loadStreak(),
       ]);
+      // Prefer the secret pinned when the day was first opened — a dataset
+      // update reshuffles secretFor's pool, and the day's player must never
+      // change once the puzzle has been seen on this device.
+      const pinned = progress?.secretId ? getById(progress.secretId) : undefined;
+      const secret = pinned ?? secretFor(dateKey, dailyPool());
       let s = createInitialState(dateKey, secret.id);
       if (progress) {
         for (const id of progress.guessedIds) {
           s = applyGuess(s, id);
         }
+      }
+      if (!pinned) {
+        saveDailyProgress({
+          dateKey,
+          guessedIds: progress?.guessedIds ?? [],
+          secretId: secret.id,
+        });
       }
       if (alive) {
         setState(s);
@@ -118,7 +129,7 @@ export function ScoutScreen({navigation}: Props) {
     return () => {
       alive = false;
     };
-  }, [dateKey, secret]);
+  }, [dateKey]);
 
   const guessedIds = state ? state.guesses.map(g => g.footballerId) : [];
   const results = useMemo(() => {
@@ -151,7 +162,11 @@ export function ScoutScreen({navigation}: Props) {
     setState(next);
     setQuery('');
     setPickerOpen(false);
-    saveDailyProgress({dateKey, guessedIds: next.guesses.map(g => g.footballerId)});
+    saveDailyProgress({
+      dateKey,
+      guessedIds: next.guesses.map(g => g.footballerId),
+      secretId: next.secretId,
+    });
 
     if (isFinished(next)) {
       const won = next.status === 'won';
