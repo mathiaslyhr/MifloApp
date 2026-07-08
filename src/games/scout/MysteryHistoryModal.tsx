@@ -23,7 +23,7 @@ type Props = {
 
 export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props) {
   const {t} = useTranslation();
-  const months = t('mystery.history.months', {returnObjects: true}) as string[];
+  const months = t('scout.history.months', {returnObjects: true}) as string[];
   const days = useMemo(() => pastDateKeys(todayKey, WINDOW), [todayKey]);
 
   function formatDay(dateKey: string): string {
@@ -36,7 +36,7 @@ export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props
       <Pressable style={styles.scrim} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
           <Text variant="label" align="center">
-            {t('mystery.history.title')}
+            {t('scout.history.title')}
           </Text>
           <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
             {days.map(dateKey => {
@@ -45,7 +45,7 @@ export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props
                 <View key={dateKey} style={styles.row}>
                   <Text style={styles.date}>{formatDay(dateKey)}</Text>
                   <Text style={[styles.status, played ? styles.played : styles.notPlayed]}>
-                    {played ? t('mystery.history.played') : t('mystery.history.notPlayed')}
+                    {played ? t('scout.history.played') : t('scout.history.notPlayed')}
                   </Text>
                 </View>
               );
@@ -60,7 +60,7 @@ export function MysteryHistoryModal({visible, onClose, todayKey, history}: Props
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.2)',
+    backgroundColor: colors.scrimLight,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   status: {
     fontFamily: fonts.medium,
-    fontSize: 13,
+    fontSize: 14,
   },
   played: {color: colors.ink},
   notPlayed: {color: colors.textTertiary},

@@ -30,7 +30,7 @@ export const type = {
   /** Screen header — the standard 32px title. Thin. */
   title: {fontFamily: fonts.regular, fontSize: 32, lineHeight: 38, letterSpacing: -0.5},
   /** Section headings. Thin. */
-  section: {fontFamily: fonts.regular, fontSize: 20, lineHeight: 26, letterSpacing: -0.2},
+  section: {fontFamily: fonts.regular, fontSize: 17, lineHeight: 22, letterSpacing: -0.2},
   /** The "Miflo" top-bar wordmark. */
   wordmark: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, letterSpacing: -0.3},
   /** Body copy — 16px. */

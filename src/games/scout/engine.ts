@@ -1,5 +1,5 @@
 /**
- * Mystery Footballer game logic — pure state transitions over `MysteryState`,
+ * Scout game logic — pure state transitions over `MysteryState`,
  * plus the streak tally. No React, no persistence; the screen holds the state
  * and calls these to compute the next one.
  */

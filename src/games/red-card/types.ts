@@ -1,5 +1,5 @@
 /**
- * Footballer Imposter — shared types + rules. The public part of the game state
+ * Red Card — shared types + rules. The public part of the game state
  * lives on the room (`rooms.game_state`) and is broadcast to every device. The
  * two secrets (who is the imposter, which footballer) are NEVER in here — they
  * live in a private server table and are assigned + revealed server-side (see
@@ -27,7 +27,7 @@ export type ImposterReveal = {
 };
 
 export type ImposterState = {
-  gameType: 'footballer-imposter';
+  gameType: 'red-card';
   phase: ImposterPhase;
   /** 1..ROUNDS — each player asks once per round. */
   round: number;

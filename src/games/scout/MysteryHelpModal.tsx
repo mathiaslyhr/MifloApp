@@ -1,6 +1,6 @@
 /**
  * MysteryHelpModal — the "how to play" popover behind the ? button in the
- * Mystery Footballer header. Three short lines: the colour rule, what the arrows
+ * Scout header. Three short lines: the colour rule, what the arrows
  * mean, and the once-a-day cadence. Deliberately tiny, mirrors [[HelpModal]].
  */
 import React from 'react';
@@ -21,17 +21,17 @@ export function MysteryHelpModal({visible, onClose}: Props) {
       <Pressable style={styles.scrim} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
           <Text variant="label" align="center">
-            {t('mystery.help.title')}
+            {t('scout.help.title')}
           </Text>
           <Text variant="body" color="secondary" align="center">
-            {t('mystery.help.rule')}
+            {t('scout.help.rule')}
           </Text>
           <View style={styles.divider} />
           <Text variant="body" color="secondary" align="center">
-            {t('mystery.help.arrows')}
+            {t('scout.help.arrows')}
           </Text>
           <Text variant="body" align="center">
-            {t('mystery.help.daily')}
+            {t('scout.help.daily')}
           </Text>
         </Pressable>
       </Pressable>
@@ -42,7 +42,7 @@ export function MysteryHelpModal({visible, onClose}: Props) {
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.2)',
+    backgroundColor: colors.scrimLight,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,

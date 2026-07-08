@@ -45,6 +45,15 @@ export const colors = {
   /** Ambient lift shadow color (used with elevation/offsets per component). */
   shadow: 'rgba(20,15,50,0.18)',
 
+  /** Modal scrims — dark dim for reveal overlays, light dim for picker/help sheets. */
+  scrim: 'rgba(13,13,22,0.45)',
+  scrimLight: 'rgba(13,13,22,0.15)',
+
+  /** Scout guess-tile fills — bold Wordle tones carrying white `onInk` text. */
+  guessHit: '#4FB477',
+  guessNear: '#E0A94A',
+  guessMiss: '#9AA0A8',
+
   /** Functional status (gameplay). */
   success: '#32C36C',
   error: '#F0544A',

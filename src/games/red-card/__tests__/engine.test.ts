@@ -12,7 +12,7 @@ import type {ImposterState} from '../types';
 
 function state(overrides: Partial<ImposterState> = {}): ImposterState {
   return {
-    gameType: 'footballer-imposter',
+    gameType: 'red-card',
     phase: 'asking',
     round: 1,
     order: ['a', 'b', 'c'],

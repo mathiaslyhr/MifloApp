@@ -7,7 +7,7 @@
 -- Because `game_state` is broadcast to every device via Realtime, and because
 -- the host must not learn the imposter (they could be the imposter), roles are
 -- assigned SERVER-SIDE and kept in a private table that no client can read
--- directly — each device fetches only its own role through get_my_imposter_role.
+-- directly — each device fetches only its own role through get_my_red_card_role.
 --
 -- The public game_state only carries coordination data (phase, round, turn
 -- order, current asker's target, a vote COUNT, running scores). The secret
@@ -20,28 +20,28 @@
 -- ── Private tables (RLS on, NO select policy → unreadable by clients; only the
 --    SECURITY DEFINER RPCs below, owned by the table owner, can read them) ─────
 
-create table if not exists public.imposter_secrets (
+create table if not exists public.red_card_secrets (
   room_id          uuid primary key references public.rooms (id) on delete cascade,
   imposter_user_id uuid not null references auth.users (id) on delete cascade,
   footballer_id    text not null,
   created_at       timestamptz not null default now()
 );
 
-create table if not exists public.imposter_votes (
+create table if not exists public.red_card_votes (
   room_id        uuid not null references public.rooms (id) on delete cascade,
   voter_user_id  uuid not null references auth.users (id) on delete cascade,
   target_user_id uuid not null references auth.users (id) on delete cascade,
   primary key (room_id, voter_user_id)
 );
 
-alter table public.imposter_secrets enable row level security;
-alter table public.imposter_votes enable row level security;
+alter table public.red_card_secrets enable row level security;
+alter table public.red_card_votes enable row level security;
 -- Deliberately no policies: clients cannot select/insert directly, and these
 -- tables are NOT added to the realtime publication, so secrets never broadcast.
 
 -- ── Host starts a hand: assign roles server-side and open the asking phase ────
 
-create or replace function public.start_imposter_game(
+create or replace function public.start_red_card_game(
   p_room_id uuid,
   p_pool    text[]
 )
@@ -95,17 +95,17 @@ begin
 
   v_footballer := p_pool[1 + floor(random() * array_length(p_pool, 1))::int];
 
-  insert into public.imposter_secrets (room_id, imposter_user_id, footballer_id)
+  insert into public.red_card_secrets (room_id, imposter_user_id, footballer_id)
   values (p_room_id, v_imposter, v_footballer)
   on conflict (room_id) do update
     set imposter_user_id = excluded.imposter_user_id,
         footballer_id = excluded.footballer_id,
         created_at = now();
 
-  delete from public.imposter_votes where room_id = p_room_id;
+  delete from public.red_card_votes where room_id = p_room_id;
 
   v_state := jsonb_build_object(
-    'gameType', 'footballer-imposter',
+    'gameType', 'red-card',
     'phase', 'asking',
     'round', 1,
     'order', v_order,
@@ -118,7 +118,7 @@ begin
 
   update public.rooms
   set status = 'in_progress',
-      game_type = 'footballer-imposter',
+      game_type = 'red-card',
       game_state = v_state
   where id = p_room_id;
 end;
@@ -126,7 +126,7 @@ $$;
 
 -- ── Host plays another hand (Play again): new roles, scores carried forward ───
 
-create or replace function public.restart_imposter_game(
+create or replace function public.restart_red_card_game(
   p_room_id uuid,
   p_pool    text[]
 )
@@ -180,17 +180,17 @@ begin
 
   v_footballer := p_pool[1 + floor(random() * array_length(p_pool, 1))::int];
 
-  insert into public.imposter_secrets (room_id, imposter_user_id, footballer_id)
+  insert into public.red_card_secrets (room_id, imposter_user_id, footballer_id)
   values (p_room_id, v_imposter, v_footballer)
   on conflict (room_id) do update
     set imposter_user_id = excluded.imposter_user_id,
         footballer_id = excluded.footballer_id,
         created_at = now();
 
-  delete from public.imposter_votes where room_id = p_room_id;
+  delete from public.red_card_votes where room_id = p_room_id;
 
   v_state := jsonb_build_object(
-    'gameType', 'footballer-imposter',
+    'gameType', 'red-card',
     'phase', 'asking',
     'round', 1,
     'order', v_order,
@@ -207,7 +207,7 @@ $$;
 
 -- ── Each device fetches ONLY its own role (the sole way a client learns it) ───
 
-create or replace function public.get_my_imposter_role(p_room_id uuid)
+create or replace function public.get_my_red_card_role(p_room_id uuid)
 returns table (role text, footballer_id text)
 language plpgsql
 security definer
@@ -227,14 +227,14 @@ begin
   select
     case when s.imposter_user_id = v_uid then 'imposter' else 'detective' end,
     case when s.imposter_user_id = v_uid then null else s.footballer_id end
-  from public.imposter_secrets s
+  from public.red_card_secrets s
   where s.room_id = p_room_id;
 end;
 $$;
 
 -- ── Voting (off-turn): each player votes once; the last vote resolves the hand ─
 
-create or replace function public.cast_imposter_vote(
+create or replace function public.cast_red_card_vote(
   p_room_id uuid,
   p_target  uuid
 )
@@ -271,34 +271,34 @@ begin
     raise exception 'Not in the voting phase';
   end if;
 
-  insert into public.imposter_votes (room_id, voter_user_id, target_user_id)
+  insert into public.red_card_votes (room_id, voter_user_id, target_user_id)
   values (p_room_id, v_uid, p_target)
   on conflict (room_id, voter_user_id)
   do update set target_user_id = excluded.target_user_id;
 
-  select count(*) into v_nvotes from public.imposter_votes where room_id = p_room_id;
+  select count(*) into v_nvotes from public.red_card_votes where room_id = p_room_id;
   select count(*) into v_nplayers from public.players where room_id = p_room_id;
   v_state := jsonb_set(v_state, '{votedCount}', to_jsonb(v_nvotes));
 
   if v_nvotes >= v_nplayers then
     select imposter_user_id, footballer_id into v_imposter, v_footballer
-    from public.imposter_secrets where room_id = p_room_id;
+    from public.red_card_secrets where room_id = p_room_id;
 
     -- Most-voted count, and how many the imposter got.
     select coalesce(max(cnt), 0) into v_maxcnt
     from (
-      select count(*) cnt from public.imposter_votes
+      select count(*) cnt from public.red_card_votes
       where room_id = p_room_id group by target_user_id
     ) t;
     select count(*) into v_impcnt
-    from public.imposter_votes
+    from public.red_card_votes
     where room_id = p_room_id and target_user_id = v_imposter;
     v_caught := (v_impcnt = v_maxcnt and v_maxcnt > 0);
 
     -- Full voter -> target map, revealed now the game is over.
     select jsonb_object_agg(voter_user_id::text, target_user_id::text)
     into v_votes
-    from public.imposter_votes where room_id = p_room_id;
+    from public.red_card_votes where room_id = p_room_id;
 
     -- Per-player points this hand: detectives +1 for fingering the imposter;
     -- the imposter +3 if they escaped the majority, else 0 (redemption is a
@@ -309,7 +309,7 @@ begin
         when p.user_id = v_imposter then (case when v_caught then 0 else 3 end)
         else (
           case when exists (
-            select 1 from public.imposter_votes v
+            select 1 from public.red_card_votes v
             where v.room_id = p_room_id
               and v.voter_user_id = p.user_id
               and v.target_user_id = v_imposter
@@ -347,7 +347,7 @@ $$;
 
 -- ── Redemption: a caught imposter guesses the footballer to steal points ──────
 
-create or replace function public.imposter_guess(
+create or replace function public.red_card_guess(
   p_room_id   uuid,
   p_footballer text
 )
@@ -364,7 +364,7 @@ declare
   v_correct    boolean;
 begin
   select imposter_user_id, footballer_id into v_imposter, v_footballer
-  from public.imposter_secrets where room_id = p_room_id;
+  from public.red_card_secrets where room_id = p_room_id;
 
   if v_imposter is null or v_imposter <> v_uid then
     raise exception 'Only the imposter can guess';
@@ -405,8 +405,8 @@ begin
 end;
 $$;
 
-grant execute on function public.start_imposter_game(uuid, text[]) to authenticated;
-grant execute on function public.restart_imposter_game(uuid, text[]) to authenticated;
-grant execute on function public.get_my_imposter_role(uuid) to authenticated;
-grant execute on function public.cast_imposter_vote(uuid, uuid) to authenticated;
-grant execute on function public.imposter_guess(uuid, text) to authenticated;
+grant execute on function public.start_red_card_game(uuid, text[]) to authenticated;
+grant execute on function public.restart_red_card_game(uuid, text[]) to authenticated;
+grant execute on function public.get_my_red_card_role(uuid) to authenticated;
+grant execute on function public.cast_red_card_vote(uuid, uuid) to authenticated;
+grant execute on function public.red_card_guess(uuid, text) to authenticated;

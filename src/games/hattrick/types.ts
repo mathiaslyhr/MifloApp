@@ -25,7 +25,7 @@ export type Side = {
 export type Cell = {sideId: string; footballerId: string} | null;
 
 export type GridState = {
-  gameType: 'tic-tac-toe';
+  gameType: 'hattrick';
   mode: Mode;
   /** 3 row criteria and 3 column criteria; a cell = row ∩ col. */
   rows: Criterion[];

@@ -8,8 +8,8 @@
 //   npm run assets:criteria
 //
 // Outputs:
-//   src/games/tic-tac-toe/assets/criteria/<key>.png
-//   src/games/tic-tac-toe/assets/criteria.generated.ts
+//   src/games/hattrick/assets/criteria/<key>.png
+//   src/games/hattrick/assets/criteria.generated.ts
 //     export const CRITERION_IMAGES: Record<string, number>
 import {mkdirSync, writeFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -17,8 +17,8 @@ import sharp from 'sharp';
 import {root} from './_load-football.mjs';
 
 const SIZE = 96; // matches the trophy chips; crisp on device.
-const OUT_DIR = resolve(root, 'src/games/tic-tac-toe/assets/criteria');
-const GEN = resolve(root, 'src/games/tic-tac-toe/assets/criteria.generated.ts');
+const OUT_DIR = resolve(root, 'src/games/hattrick/assets/criteria');
+const GEN = resolve(root, 'src/games/hattrick/assets/criteria.generated.ts');
 
 // Palette — same values as the trophies so the set reads as one family.
 const GOLD_L = '#F4D77A', GOLD = '#E3B23C', GOLD_D = '#B07E23';

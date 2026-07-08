@@ -8,9 +8,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {TabsScreen} from '../../screens/TabsScreen';
 import {JoinScreen} from '../../screens/JoinScreen';
 import {LobbyScreen} from '../../screens/LobbyScreen';
-import {TicTacToeScreen} from '../../screens/TicTacToeScreen';
-import {FootballerImposterScreen} from '../../screens/FootballerImposterScreen';
-import {MysteryFootballerScreen} from '../../screens/MysteryFootballerScreen';
+import {HattrickScreen} from '../../screens/HattrickScreen';
+import {RedCardScreen} from '../../screens/RedCardScreen';
+import {ScoutScreen} from '../../screens/ScoutScreen';
 import {ProfileScreen} from '../../screens/menu/ProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
@@ -27,20 +27,20 @@ export function RootNavigator() {
       <Stack.Screen name="Lobby" component={LobbyScreen} />
       {/* No swipe-back out of a live game; you leave via the result screen. */}
       <Stack.Screen
-        name="TicTacToe"
-        component={TicTacToeScreen}
+        name="Hattrick"
+        component={HattrickScreen}
         options={{gestureEnabled: false}}
       />
       {/* No swipe-back out of a live game; you leave via the result screen. */}
       <Stack.Screen
-        name="FootballerImposter"
-        component={FootballerImposterScreen}
+        name="RedCard"
+        component={RedCardScreen}
         options={{gestureEnabled: false}}
       />
       {/* Single-player daily puzzle; leave via the header back button. */}
       <Stack.Screen
-        name="MysteryFootballer"
-        component={MysteryFootballerScreen}
+        name="Scout"
+        component={ScoutScreen}
         options={{gestureEnabled: false}}
       />
       <Stack.Screen name="Profile" component={ProfileScreen} />

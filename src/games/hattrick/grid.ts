@@ -1,5 +1,5 @@
 /**
- * Grid generation for the football tic-tac-toe. Picks 3 row + 3 col criteria
+ * Grid generation for the football hattrick. Picks 3 row + 3 col criteria
  * such that EVERY one of the 9 cells (row ∩ col) has at least one valid
  * footballer — otherwise the grid isn't solvable.
  *
@@ -418,7 +418,7 @@ export function generateGrid(
 
   const grid = attempt(2) ?? attempt(1);
   if (!grid) {
-    throw new Error('Could not generate a solvable tic-tac-toe grid');
+    throw new Error('Could not generate a solvable hattrick grid');
   }
   return grid;
 }

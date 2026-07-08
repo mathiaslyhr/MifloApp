@@ -7,10 +7,10 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {colors, spacing} from '../../theme';
 import {getById, POSITION_LABELS} from '../../data/football';
-import {flagImage, logoImage} from '../tic-tac-toe/criterionIcon';
-import {PLAYER_AVATARS} from '../tic-tac-toe/assets/playerAvatars';
+import {flagImage, logoImage} from '../hattrick/criterionIcon';
+import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
 
 export function FootballerCard({footballerId}: {footballerId: string}) {
   const f = getById(footballerId);
@@ -25,7 +25,9 @@ export function FootballerCard({footballerId}: {footballerId: string}) {
   const position = f.positions.map(p => POSITION_LABELS[p]).join(' · ');
 
   return (
-    <View style={styles.card}>
+    // Chromeless: just the stacked content — the caller supplies any framing
+    // (a frosted card, a green/red reveal frame, etc.).
+    <View style={styles.content}>
       {portrait != null ? (
         <Image source={portrait} resizeMode="contain" style={styles.portrait} />
       ) : null}
@@ -48,15 +50,9 @@ export function FootballerCard({footballerId}: {footballerId: string}) {
 }
 
 const styles = StyleSheet.create({
-  card: {
+  content: {
     alignItems: 'center',
     gap: spacing.sm,
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
     alignSelf: 'stretch',
   },
   portrait: {width: 132, height: 132},
@@ -66,6 +62,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  flag: {width: 24, height: 17, borderRadius: 2},
+  flag: {width: 24, height: 18, borderRadius: 2},
   crest: {width: 22, height: 22},
 });

@@ -6,8 +6,8 @@
 //   npm run assets:flags
 //
 // Outputs:
-//   src/games/tic-tac-toe/assets/flags/<iso>.png        (bundled images)
-//   src/games/tic-tac-toe/assets/flags.generated.ts     (require map)
+//   src/games/hattrick/assets/flags/<iso>.png        (bundled images)
+//   src/games/hattrick/assets/flags.generated.ts     (require map)
 //     export const FLAG_IMAGES: Record<countryName, number>
 //
 // Keyed by the exact country strings used in the dataset (footballer
@@ -70,7 +70,7 @@ async function fetchSvg(iso) {
 }
 
 async function main() {
-  const dir = resolve(root, 'src/games/tic-tac-toe/assets');
+  const dir = resolve(root, 'src/games/hattrick/assets');
   const imgDir = resolve(dir, 'flags');
   rmSync(imgDir, {recursive: true, force: true});
   mkdirSync(imgDir, {recursive: true});

@@ -66,9 +66,9 @@
       "duel": "Recommended for 1v1",
       "party": "Recommended for 3+"
     },
-    "ttt": {
-      "title": "Tic Tac Toe",
-      "tagline": "Football trivia × tic tac toe",
+    "hattrick": {
+      "title": "Hattrick",
+      "tagline": "Football trivia × three in a row",
       "howToPlay": {
         "rules": [
           "On your turn, name a footballer who fits both the row and the column of a cell.",
@@ -77,19 +77,19 @@
         ]
       }
     },
-    "imposter": {
-      "title": "Footballer Imposter",
-      "tagline": "One of you is bluffing. Sniff them out.",
+    "redCard": {
+      "title": "Red Card",
+      "tagline": "One of you is faking it. Send them off.",
       "howToPlay": {
         "rules": [
-          "Everyone but the imposter is given the same footballer.",
-          "Over two rounds, take turns questioning each other, then vote on who the imposter is.",
-          "Caught as the imposter? Name the footballer to steal the win back."
+          "Everyone but the faker is given the same footballer.",
+          "Over two rounds, take turns questioning each other, then vote on who to send off.",
+          "Sent off as the faker? Name the footballer to steal the win back."
         ]
       }
     },
-    "mystery": {
-      "title": "Mystery Footballer",
+    "scout": {
+      "title": "Scout",
       "tagline": "Guess today's player in six tries",
       "howToPlay": {
         "rules": [
@@ -115,8 +115,8 @@
     "privacy": "Privacy Policy",
     "version": "Miflo v{{version}}"
   },
-  "game": {
-    "title": "Football Grid",
+  "hattrick": {
+    "title": "Hattrick",
     "loading": "Loading…",
     "back": "Back to lobby",
     "legendButton": "How to play",
@@ -148,40 +148,51 @@
     "searchPlaceholder": "Search a footballer",
     "searchHint": "Start typing to search a footballer",
     "noPlayers": "No players found",
-    "timeLeft": "Time left"
+    "timeLeft": "Time left",
+    "someone": "Someone",
+    "claimCell": "Claim cell"
   },
-  "imposter": {
-    "title": "Imposter",
+  "redCard": {
+    "title": "Red Card",
     "loading": "Loading…",
     "help": {
       "title": "How to play",
-      "rule": "Everyone but the imposter is given the same footballer. Over two rounds, take turns asking one another a question, then vote on who the imposter is. Get caught as the imposter? Guess the footballer to steal it back."
+      "rule": "Everyone but the faker is given the same footballer. Over two rounds, take turns asking one another a question, then vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
     },
     "role": {
       "detectiveIntro": "Everyone got this player",
-      "imposterTitle": "You're the imposter",
-      "imposterBody": "You weren't given a player. Blend in, bluff your answers, and don't get caught.",
+      "imposterTitle": "You're faking it",
+      "imposterBody": "You weren't given a player. Blend in, bluff your answers, and avoid the red card.",
       "gotIt": "Got it",
       "loading": "Dealing roles…"
     },
     "round": "Round {{round}} of {{total}}",
+    "yourTurn": "Your turn",
+    "askOutLoud": "Ask anyone a question out loud.",
+    "next": "Next",
+    "finish": "Finish",
+    "askerTurn": "{{name}} is asking a question…",
     "yourTurnPick": "Your turn to question someone",
     "yourTurnAsk": "Ask {{name}} your question, then tap Done",
     "done": "Done",
     "askerChoosing": "{{name}} is choosing who to question",
     "askerAsking": "{{asker}} is questioning {{target}}",
     "youAre": "You: {{player}}",
-    "youAreImposter": "You: the imposter",
+    "youAreImposter": "You: the faker",
     "vote": {
-      "title": "Who's the imposter?",
+      "title": "Who should be sent off?",
+      "pill": "Final vote",
+      "ready": "Everyone has asked",
+      "readySub": "Ready to decide who to send off?",
+      "start": "Start voting",
       "hint": "Tap the player you think was bluffing.",
       "waiting": "Waiting for votes ({{count}}/{{total}})",
       "voted": "Vote cast. Waiting for the others…"
     },
     "reveal": {
-      "imposterWas": "{{name}} was the imposter",
-      "caught": "Caught! The group found the imposter.",
-      "escaped": "The imposter slipped away.",
+      "imposterWas": "{{name}} gets the red card",
+      "caught": "Sent off! The group found the faker.",
+      "escaped": "The faker stayed on the pitch.",
       "secret": "The player was",
       "votesTitle": "Votes",
       "votedFor": "{{voter}} → {{target}}",
@@ -189,8 +200,9 @@
       "scoreboard": "Scoreboard"
     },
     "redeem": {
-      "prompt": "You were caught. Guess the footballer to steal it back.",
+      "prompt": "You were sent off. Guess the footballer to steal it back.",
       "button": "Guess the footballer",
+      "waiting": "Waiting for {{name}} to guess the footballer…",
       "correct": "Nailed it! {{name}} named the player. +2",
       "wrong": "Not it. {{name}} guessed {{guess}}."
     },
@@ -205,11 +217,11 @@
     "errorGuess": "Couldn't submit your guess. Try again.",
     "newGameError": "Couldn't start a new round."
   },
-  "mystery": {
-    "title": "Mystery Footballer",
+  "scout": {
+    "title": "Scout",
     "back": "Back",
     "loading": "Loading…",
-    "instruction": "Guess today's mystery footballer",
+    "instruction": "Guess today's player",
     "guessCount": "Guess {{current}} of {{max}}",
     "searchPlaceholder": "Search a footballer",
     "searchHint": "Start typing to guess a footballer",
@@ -218,11 +230,13 @@
     "won": "Got it in {{count}}!",
     "lost": "Out of guesses",
     "answerWas": "Today's footballer was {{name}}",
+    "answerLabel": "The answer",
     "streakCurrent": "Current streak",
     "streakBest": "Best streak",
     "share": "Share result",
-    "shareCaption": "Play Mystery Footballer on Miflo",
+    "shareCaption": "Play Scout on Miflo",
     "lockedUntilTomorrow": "Come back tomorrow for a new footballer",
+    "comeBackIn": "Come back in",
     "columns": {
       "nationality": "Nation",
       "position": "Position",
@@ -232,7 +246,7 @@
     },
     "help": {
       "title": "How to play",
-      "rule": "Guess the mystery footballer in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
+      "rule": "Guess the day's player in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
       "arrows": "The arrow on Shirt points toward the secret player's number.",
       "daily": "A new footballer drops every day, the same for everyone."
     },
@@ -294,7 +308,7 @@
   },
   "howToPlay": {
     "title": "How to play",
-    "intro": "Most Miflo games are played together in the same room: one phone starts a party and everyone else joins with the code. Mystery Footballer is a solo daily puzzle you can play on your own.",
+    "intro": "Most Miflo games are played together in the same room: one phone starts a party and everyone else joins with the code. Scout is a solo daily puzzle you can play on your own.",
     "step1Title": "Create or join a party",
     "step1Desc": "Tap Create a party to get a code, or Join a party and type a friend's code.",
     "step2Title": "Pick a game",

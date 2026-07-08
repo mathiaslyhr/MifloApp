@@ -4,10 +4,9 @@ import {useTranslation} from 'react-i18next';
 import {
   Button,
   CircleButton,
-  IslandTabBar,
+  NAV_HEIGHT,
   QrCard,
   Screen,
-  TabId,
   Text,
   toast,
 } from '../core/ui';
@@ -23,20 +22,15 @@ const NO_GAME_YET = 'unset';
 /**
  * Home — the clean launch hub on the rainbow canvas. A centered Miflo wordmark
  * with a "how it works" help button in the top-right corner; the two room CTAs
- * sit in the upper area; a real QR to the App Store anchors the bottom, with the
- * floating nav island (Home active) below it.
+ * sit in the upper area; a real QR to the App Store anchors the bottom, clearing
+ * the shared nav island (which the tab shell pins over the bottom).
  *
  * "Create a room" mints a room instantly with a random funny football name (no
  * prompt — you rename yourself in the lobby by tapping your avatar) with no game
  * chosen yet, and pushes the Lobby where the host later picks the game. "Join a
  * room" and the help sheet are wired in later passes.
  */
-type Props = {
-  /** Switch tabs (the nav island). */
-  onTabSelect?: (id: TabId) => void;
-};
-
-export function HomeScreen({onTabSelect}: Props) {
+export function HomeScreen() {
   const navigation = useAppNavigation();
   const {t} = useTranslation();
   const [busy, setBusy] = useState(false);
@@ -101,15 +95,14 @@ export function HomeScreen({onTabSelect}: Props) {
         <View style={styles.qr}>
           <QrCard value={APP_STORE_URL} />
         </View>
-
-        <IslandTabBar active="home" onSelect={onTabSelect} />
       </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {flex: 1},
+  // Reserve room at the bottom for the shell's floating nav island.
+  content: {flex: 1, paddingBottom: NAV_HEIGHT},
   header: {
     marginTop: spacing.sm,
     height: 44,

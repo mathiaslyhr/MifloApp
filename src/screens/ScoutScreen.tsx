@@ -1,24 +1,25 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {
-  Image,
-  Modal,
-  Pressable,
-  ScrollView,
-  Share,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {ChevronLeft, HelpCircle, History, Search} from 'lucide-react-native';
+import {Image, Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {ChevronLeft, HelpCircle, Search} from 'lucide-react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
+import {
+  CircleButton,
+  FloatingBar,
+  Screen,
+  Text,
+  TextField,
+  toast,
+  TopStatusFade,
+} from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, spacing} from '../theme';
+import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FOOTBALLERS, getById, type Footballer} from '../data/football';
-import {flagImage, logoImage} from '../games/tic-tac-toe/criterionIcon';
-import {searchPlayers} from '../games/tic-tac-toe/playerSearch';
-import {COLUMNS, deriveAttributes} from '../games/mystery-footballer/compare';
+import {FOOTBALLERS, getById, POSITION_LABELS, type Footballer} from '../data/football';
+import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
+import {searchPlayers} from '../games/hattrick/playerSearch';
+import {COLUMNS, deriveAttributes} from '../games/scout/compare';
 import {
   applyGuess,
   createInitialState,
@@ -26,39 +27,34 @@ import {
   historyEntryFor,
   isFinished,
   recordResult,
-  upsertHistory,
-} from '../games/mystery-footballer/engine';
+} from '../games/scout/engine';
 import {
   dailyPool,
   dateKeyFor,
   secretFor,
-} from '../games/mystery-footballer/dailySeed';
-import {buildShareGrid} from '../games/mystery-footballer/share';
+} from '../games/scout/dailySeed';
 import {
   loadDailyProgress,
-  loadHistory,
   loadStreak,
   recordHistory,
   saveDailyProgress,
   saveStreak,
-} from '../games/mystery-footballer/mysteryStorage';
-import {MysteryHelpModal} from '../games/mystery-footballer/MysteryHelpModal';
-import {MysteryHistoryModal} from '../games/mystery-footballer/MysteryHistoryModal';
+} from '../games/scout/mysteryStorage';
+import {MysteryHelpModal} from '../games/scout/MysteryHelpModal';
 import type {
   CellResult,
   ColumnKey,
-  HistoryLog,
   MysteryState,
   StreakState,
-} from '../games/mystery-footballer/types';
+} from '../games/scout/types';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'MysteryFootballer'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Scout'>;
 
 /** Solid fill per feedback status; white content reads on all three. */
 const STATUS_BG: Record<CellResult['status'], string> = {
-  hit: colors.success,
-  partial: '#E8A93C',
-  miss: '#9A9AA6',
+  hit: colors.guessHit,
+  partial: colors.guessNear,
+  miss: colors.guessMiss,
 };
 
 /** Compact league labels for the tiny grid cell (colour carries the signal). */
@@ -87,28 +83,26 @@ function leagueShort(league: string | undefined): string {
   return LEAGUE_SHORT[league] ?? league.split('-')[0].slice(0, 5);
 }
 
-export function MysteryFootballerScreen({navigation}: Props) {
+export function ScoutScreen({navigation}: Props) {
   const {t} = useTranslation();
+  const insets = useSafeAreaInsets();
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
   const secret = useMemo(() => secretFor(dateKey, dailyPool()), [dateKey]);
 
   const [state, setState] = useState<MysteryState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
-  const [history, setHistory] = useState<HistoryLog>({});
   const [query, setQuery] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
 
   // Rehydrate today's puzzle (replaying stored guesses through the engine) and
   // the streak. No re-recording here — recordResult only runs on a live finish.
   useEffect(() => {
     let alive = true;
     (async () => {
-      const [progress, savedStreak, savedHistory] = await Promise.all([
+      const [progress, savedStreak] = await Promise.all([
         loadDailyProgress(dateKey),
         loadStreak(),
-        loadHistory(),
       ]);
       let s = createInitialState(dateKey, secret.id);
       if (progress) {
@@ -119,7 +113,6 @@ export function MysteryFootballerScreen({navigation}: Props) {
       if (alive) {
         setState(s);
         setStreak(savedStreak);
-        setHistory(savedHistory);
       }
     })();
     return () => {
@@ -151,7 +144,7 @@ export function MysteryFootballerScreen({navigation}: Props) {
       return;
     }
     if (state.guesses.some(g => g.footballerId === footballerId)) {
-      toast.neutral(t('mystery.alreadyGuessed'));
+      toast.neutral(t('scout.alreadyGuessed'));
       return;
     }
     const next = applyGuess(state, footballerId);
@@ -170,71 +163,83 @@ export function MysteryFootballerScreen({navigation}: Props) {
       const updated = recordResult(streak, dateKey, won);
       setStreak(updated);
       saveStreak(updated);
-      const entry = historyEntryFor(next);
-      setHistory(upsertHistory(history, entry));
-      recordHistory(entry);
+      // History data is still recorded (the archive button is removed for now).
+      recordHistory(historyEntryFor(next));
     } else {
       haptics.tap();
     }
   }
 
-  function handleShare() {
-    if (!state) {
-      return;
-    }
-    haptics.tap();
-    Share.share({
-      message: `${buildShareGrid(state)}\n\n${t('mystery.shareCaption')}`,
-    }).catch(() => {});
-  }
-
   if (!state) {
     return (
-      <Screen canvas>
-        <Header onBack={() => navigation.goBack()} onHistory={() => setShowHistory(true)} />
+      <Screen canvas edges={['left', 'right', 'bottom']}>
         <View style={styles.loading}>
           <Text variant="body" color="secondary">
-            {t('mystery.loading')}
+            {t('scout.loading')}
           </Text>
         </View>
+        <FloatingBar edge="top" style={styles.chromeBar}>
+          <View style={styles.chromeRow}>
+            <CircleButton size={36} accessibilityLabel={t('scout.back')} onPress={() => navigation.goBack()}>
+              <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
+            </CircleButton>
+          </View>
+        </FloatingBar>
+        <TopStatusFade />
       </Screen>
     );
   }
 
   const finished = isFinished(state);
   const secretPlayer = getById(state.secretId);
+  // The answer reveal (shown once finished): flag + crest + position.
+  const secretAttrs = secretPlayer ? deriveAttributes(secretPlayer) : undefined;
+  const secretFlag = flagImage(secretPlayer?.nationality[0]);
+  const secretCrest = logoImage(secretAttrs?.activeClubId);
+  const secretPosition =
+    secretPlayer?.positions.map(p => POSITION_LABELS[p]).join(' · ') ?? '';
 
   return (
-    <Screen canvas>
-      <Header
-        onBack={() => navigation.goBack()}
-        onHistory={() => setShowHistory(true)}
-        onHelp={() => setShowHelp(true)}
-      />
+    <Screen canvas edges={['left', 'right', 'bottom']}>
+      <View style={[styles.body, {paddingTop: insets.top + spacing.sm}]}>
+        {/* Wordmark centred full-width; back/history/help float in the corners. */}
+        <View style={styles.titleHeader}>
+          <Text variant="wordmark" align="center">
+            {t('scout.title')}
+          </Text>
+        </View>
 
-      <View style={styles.body}>
-        <Text variant="section" align="center" style={styles.instruction}>
+        <Text
+          variant="section"
+          align="center"
+          style={[
+            styles.instruction,
+            finished && {
+              color: state.status === 'won' ? colors.success : colors.error,
+            },
+          ]}>
           {finished
             ? state.status === 'won'
-              ? t('mystery.won', {count: state.guesses.length})
-              : t('mystery.lost')
-            : t('mystery.instruction')}
+              ? t('scout.won', {count: state.guesses.length})
+              : t('scout.lost')
+            : t('scout.instruction')}
         </Text>
         {!finished ? (
           <Text variant="caption" color="muted" align="center">
-            {t('mystery.guessCount', {
+            {t('scout.guessCount', {
               current: state.guesses.length + 1,
               max: state.maxGuesses,
             })}
           </Text>
         ) : null}
 
-        {/* Column headers, aligned with the cells below, split by dividers. */}
+        {/* Column headers — same flex+gap as the cell rows so each label centres
+            over its column. */}
         <View style={styles.columnHeader}>
-          {COLUMNS.map((key, i) => (
-            <View key={key} style={[styles.columnCell, i > 0 && styles.columnDivider]}>
+          {COLUMNS.map(key => (
+            <View key={key} style={styles.columnCell}>
               <Text style={styles.columnLabel} numberOfLines={1} adjustsFontSizeToFit>
-                {t(`mystery.columns.${key}`)}
+                {t(`scout.columns.${key}`)}
               </Text>
             </View>
           ))}
@@ -266,24 +271,50 @@ export function MysteryFootballerScreen({navigation}: Props) {
             })}
           {state.guesses.length === 0 ? (
             <Text variant="secondary" color="secondary" align="center" style={styles.emptyHint}>
-              {t('mystery.searchHint')}
+              {t('scout.searchHint')}
             </Text>
           ) : null}
         </ScrollView>
 
         {finished ? (
           <View style={styles.finishPanel}>
-            <Text variant="body" align="center" color="secondary">
-              {t('mystery.answerWas', {name: secretPlayer?.name ?? '?'})}
-            </Text>
-            <View style={styles.streakRow}>
-              <Stat label={t('mystery.streakCurrent')} value={streak.current} />
-              <Stat label={t('mystery.streakBest')} value={streak.best} />
+            {/* Answer reveal — the payoff. */}
+            <View style={styles.answerReveal}>
+              <Text variant="caption" color="muted" align="center" style={styles.answerLabel}>
+                {t('scout.answerLabel')}
+              </Text>
+              <Text variant="section" align="center" numberOfLines={1} style={styles.answerName}>
+                {secretPlayer?.name ?? '?'}
+              </Text>
+              <View style={styles.answerMeta}>
+                {secretFlag != null ? (
+                  <Image source={secretFlag} resizeMode="contain" style={styles.answerFlag} />
+                ) : null}
+                {secretCrest != null ? (
+                  <Image source={secretCrest} resizeMode="contain" style={styles.answerCrest} />
+                ) : null}
+                {secretPosition ? (
+                  <Text variant="secondary" color="secondary">
+                    {secretPosition}
+                  </Text>
+                ) : null}
+                {secretAttrs?.shirtNumber !== undefined ? (
+                  <Text variant="secondary" color="secondary">
+                    {`#${secretAttrs.shirtNumber}`}
+                  </Text>
+                ) : null}
+              </View>
             </View>
-            <Button label={t('mystery.share')} variant="primary" onPress={handleShare} />
-            <Text variant="caption" color="muted" align="center">
-              {t('mystery.lockedUntilTomorrow')}
-            </Text>
+
+            <View style={styles.streakRow}>
+              <Stat
+                label={t('scout.streakCurrent')}
+                value={streak.current}
+                highlight={state.status === 'won'}
+              />
+              <Stat label={t('scout.streakBest')} value={streak.best} />
+            </View>
+            <Countdown />
           </View>
         ) : (
           // A field-styled trigger; the real search is a top overlay (below) so
@@ -292,28 +323,44 @@ export function MysteryFootballerScreen({navigation}: Props) {
             style={styles.trigger}
             onPress={openPicker}
             accessibilityRole="button"
-            accessibilityLabel={t('mystery.searchPlaceholder')}>
+            accessibilityLabel={t('scout.searchPlaceholder')}>
             <Search size={18} color={colors.textTertiary} strokeWidth={2} />
-            <Text style={styles.triggerText}>{t('mystery.searchPlaceholder')}</Text>
+            <Text variant="body" color="tertiary">
+              {t('scout.searchPlaceholder')}
+            </Text>
           </Pressable>
         )}
       </View>
+
+      {/* Pinned floating corner buttons (back left, history + help right). */}
+      <FloatingBar edge="top" style={styles.chromeBar}>
+        <View style={styles.chromeRow}>
+          <CircleButton size={36} accessibilityLabel={t('scout.back')} onPress={() => navigation.goBack()}>
+            <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
+          </CircleButton>
+          <View style={styles.chromeSpacer} />
+          <CircleButton size={36} accessibilityLabel={t('scout.help.title')} onPress={() => setShowHelp(true)}>
+            <HelpCircle size={18} color={colors.ink} strokeWidth={2} />
+          </CircleButton>
+        </View>
+      </FloatingBar>
+      <TopStatusFade />
 
       {/* Top-anchored search overlay: card near the top, keyboard at the bottom. */}
       <Modal
         visible={pickerOpen}
         transparent
-        animationType="none"
+        animationType="fade"
         onRequestClose={closePicker}>
         <Pressable style={styles.scrim} onPress={closePicker}>
           <Pressable style={styles.pickCard} onPress={() => {}}>
             <TextField
               value={query}
               onChangeText={setQuery}
-              placeholder={t('mystery.searchPlaceholder')}
+              placeholder={t('scout.searchPlaceholder')}
               autoFocus
               autoCapitalize="words"
-              accessibilityLabel={t('mystery.searchPlaceholder')}
+              accessibilityLabel={t('scout.searchPlaceholder')}
             />
             <ScrollView
               style={styles.results}
@@ -321,11 +368,11 @@ export function MysteryFootballerScreen({navigation}: Props) {
               showsVerticalScrollIndicator={false}>
               {query.trim() === '' ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('mystery.searchHint')}
+                  {t('scout.searchHint')}
                 </Text>
               ) : results.length === 0 ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('mystery.noPlayers')}
+                  {t('scout.noPlayers')}
                 </Text>
               ) : (
                 results.map(f => {
@@ -349,12 +396,6 @@ export function MysteryFootballerScreen({navigation}: Props) {
       </Modal>
 
       <MysteryHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
-      <MysteryHistoryModal
-        visible={showHistory}
-        onClose={() => setShowHistory(false)}
-        todayKey={dateKey}
-        history={history}
-      />
     </Screen>
   );
 }
@@ -363,7 +404,7 @@ export function MysteryFootballerScreen({navigation}: Props) {
 function Cell({cell, player}: {cell: CellResult; player: Footballer | undefined}) {
   const attrs = player ? deriveAttributes(player) : undefined;
   const bg = STATUS_BG[cell.status];
-  const arrow = cell.direction === 'up' ? '▲' : cell.direction === 'down' ? '▼' : '';
+  const arrow = cell.direction === 'up' ? '↑' : cell.direction === 'down' ? '↓' : '';
 
   let content: React.ReactNode = null;
   if (cell.key === 'nationality') {
@@ -411,10 +452,20 @@ function CellText({children}: {children: React.ReactNode}) {
   );
 }
 
-function Stat({label, value}: {label: string; value: number}) {
+function Stat({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: number;
+  highlight?: boolean;
+}) {
   return (
     <View style={styles.stat}>
-      <Text style={styles.statValue}>{value}</Text>
+      <Text style={[styles.statValue, highlight && styles.statValueHot]}>
+        {value}
+      </Text>
       <Text variant="caption" color="muted">
         {label}
       </Text>
@@ -422,39 +473,37 @@ function Stat({label, value}: {label: string; value: number}) {
   );
 }
 
-function Header({
-  onBack,
-  onHistory,
-  onHelp,
-}: {
-  onBack: () => void;
-  onHistory?: () => void;
-  onHelp?: () => void;
-}) {
+/** "Come back in" + a live HH:MM:SS to the next daily puzzle (next local midnight). */
+function Countdown() {
   const {t} = useTranslation();
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const d = new Date(now);
+  const nextMidnight = new Date(
+    d.getFullYear(),
+    d.getMonth(),
+    d.getDate() + 1,
+    0,
+    0,
+    0,
+    0,
+  ).getTime();
+  const total = Math.max(0, Math.floor((nextMidnight - now) / 1000));
+  const pad = (n: number) => `${n}`.padStart(2, '0');
+  const hhmmss = `${pad(Math.floor(total / 3600))}:${pad(
+    Math.floor((total % 3600) / 60),
+  )}:${pad(total % 60)}`;
   return (
-    <View style={styles.header}>
-      <CircleButton size={36} accessibilityLabel={t('mystery.back')} onPress={onBack}>
-        <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
-      </CircleButton>
-      <Text variant="wordmark" align="center" numberOfLines={1} style={styles.title}>
-        {t('mystery.title')}
+    <View style={styles.countdownWrap}>
+      <Text variant="caption" color="muted" align="center">
+        {t('scout.comeBackIn')}
       </Text>
-      <View style={styles.headerRight}>
-        {onHistory ? (
-          <CircleButton
-            size={36}
-            accessibilityLabel={t('mystery.history.title')}
-            onPress={onHistory}>
-            <History size={18} color={colors.ink} strokeWidth={2} />
-          </CircleButton>
-        ) : null}
-        {onHelp ? (
-          <CircleButton size={36} accessibilityLabel={t('mystery.help.title')} onPress={onHelp}>
-            <HelpCircle size={18} color={colors.ink} strokeWidth={2} />
-          </CircleButton>
-        ) : null}
-      </View>
+      <Text variant="caption" color="muted" align="center" style={styles.countdown}>
+        {hhmmss}
+      </Text>
     </View>
   );
 }
@@ -463,30 +512,28 @@ const CELL_GAP = 4;
 
 const styles = StyleSheet.create({
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-  header: {
+  // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
+  titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
+  chromeBar: {paddingHorizontal: screenPadding},
+  chromeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 44,
     marginTop: spacing.sm,
-    gap: spacing.sm,
   },
-  title: {flex: 1},
-  headerRight: {flexDirection: 'row', gap: spacing.xs},
-  body: {flex: 1, paddingTop: spacing.md},
+  chromeSpacer: {flex: 1},
+  body: {flex: 1},
   instruction: {marginBottom: spacing.xs},
   columnHeader: {
     flexDirection: 'row',
-    marginTop: spacing.lg,
+    gap: CELL_GAP,
+    marginTop: spacing.md,
   },
   columnCell: {
     flex: 1,
     paddingVertical: 4,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  columnDivider: {
-    borderLeftWidth: StyleSheet.hairlineWidth,
-    borderLeftColor: colors.divider,
   },
   columnLabel: {
     fontFamily: fonts.medium,
@@ -497,8 +544,8 @@ const styles = StyleSheet.create({
   },
   // Divider separating the header row from the guesses.
   headerRule: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.divider,
+    height: 1,
+    backgroundColor: colors.textTertiary,
     marginTop: spacing.xs,
   },
   board: {flex: 1, marginTop: spacing.xs},
@@ -515,7 +562,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   cellText: {
-    fontFamily: fonts.medium,
+    fontFamily: fonts.regular,
     fontSize: 12,
     lineHeight: 15,
     color: colors.onInk,
@@ -525,27 +572,44 @@ const styles = StyleSheet.create({
   cellLogo: {width: 22, height: 22},
   emptyHint: {paddingVertical: spacing.xl},
   finishPanel: {gap: spacing.md, paddingTop: spacing.md, paddingBottom: spacing.sm},
+  // Answer reveal (the payoff): eyebrow + name + flag · crest · position.
+  answerReveal: {alignItems: 'center', gap: spacing.xs},
+  answerLabel: {letterSpacing: 1},
+  answerName: {color: colors.ink},
+  answerMeta: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  answerFlag: {width: 24, height: 18, borderRadius: 2},
+  answerCrest: {width: 22, height: 22},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 28, color: colors.ink},
+  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: colors.ink},
+  statValueHot: {color: colors.primary},
+  countdownWrap: {alignItems: 'center', gap: 2},
+  countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
+  // Subtle lift so Share matches the cleaned-up buttons (global primary untouched).
+  cta: {
+    shadowColor: '#140F32',
+    shadowOpacity: 0.12,
+    shadowOffset: {width: 0, height: 4},
+    shadowRadius: 10,
+    elevation: 3,
+  },
   // Bottom trigger that opens the search overlay (styled like a text field).
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
     minHeight: 48,
-    paddingHorizontal: spacing.lg - 1,
-    borderRadius: radii.button,
-    backgroundColor: colors.surface2,
+    paddingHorizontal: spacing.lg,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.divider,
     marginBottom: spacing.sm,
   },
-  triggerText: {fontFamily: fonts.regular, fontSize: 16, color: colors.textTertiary},
   // Search overlay anchored near the top so the results clear the keyboard.
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.15)',
+    backgroundColor: colors.scrimLight,
     justifyContent: 'flex-start',
     paddingTop: 72,
     paddingHorizontal: spacing.xl,

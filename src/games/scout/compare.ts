@@ -33,7 +33,12 @@ export type DerivedAttributes = {
 
 /** Flatten a footballer to the values the feedback columns compare. */
 export function deriveAttributes(f: Footballer): DerivedAttributes {
-  const active = f.clubs.find(s => s.to === undefined);
+  // Current club = the open-ended spell, else the most recent (last) spell —
+  // matching FootballerCard. Many current players have their current spell
+  // end-dated (e.g. `to: 2025`), so relying only on `to === undefined` would
+  // leave them with no club/league (League/Club columns could never match).
+  const active =
+    f.clubs.find(s => s.to === undefined) ?? f.clubs[f.clubs.length - 1];
   const activeClubId = active?.clubId;
   const league = activeClubId ? getClub(activeClubId)?.league : undefined;
   return {
@@ -86,20 +91,17 @@ export function compareCell(
             ? 'hit'
             : 'miss',
       };
-    case 'club': {
-      if (guess.activeClubId && guess.activeClubId === secret.activeClubId) {
-        return {key, status: 'hit'};
-      }
-      if (
-        guess.league &&
-        secret.league &&
-        guess.league === secret.league
-      ) {
-        // Right league, wrong club.
-        return {key, status: 'partial'};
-      }
-      return {key, status: 'miss'};
-    }
+    case 'club':
+      // Exact club only — the separate League column carries the league, so a
+      // different club (even same league) is a plain miss.
+      return {
+        key,
+        status:
+          guess.activeClubId !== undefined &&
+          guess.activeClubId === secret.activeClubId
+            ? 'hit'
+            : 'miss',
+      };
     case 'league':
       return {
         key,

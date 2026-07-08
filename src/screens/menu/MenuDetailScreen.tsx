@@ -21,10 +21,9 @@ type Props = {
 /**
  * Shared layout for the menu detail pages (Profile, Settings, How to play,
  * About). The content sits in a full-height ScrollView on the rainbow canvas and
- * flows *behind* a transparent floating header — no background box, no hard clip
- * line at the top (the app-wide pattern from Menu/Lobby). The header reports its
- * height so the content reserves matching top clearance, then scrolls up behind
- * it and off the top edge.
+ * blurs *behind* a pinned frosted header (back button + title), which stays put
+ * so back is always reachable. The header reports its height so the content
+ * reserves matching top clearance and scrolls beneath it.
  */
 export function MenuDetailScreen({
   title,
@@ -53,9 +52,9 @@ export function MenuDetailScreen({
         {children}
       </ScrollView>
 
-      {/* Transparent floating header — the content scrolls behind it. Pad it
+      {/* Pinned frosted header — the content blurs behind it. Pad it
           horizontally so the back button lines up with the content (16px). */}
-      <FloatingBar edge="top" onHeight={setHeaderH} style={styles.bar}>
+      <FloatingBar edge="top" blur onHeight={setHeaderH} style={styles.bar}>
         <PageHeader title={title} onBack={onBack} backLabel={backLabel} />
       </FloatingBar>
     </Screen>

@@ -10,6 +10,7 @@ import {
 import {ChevronLeft} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   Button,
   CircleButton,
@@ -19,6 +20,7 @@ import {
   PressableScale,
   Screen,
   Text,
+  TopStatusFade,
 } from '../core/ui';
 import {GAMES, isBuiltGame} from './gamesCatalog';
 import {colors, radii, screenPadding, spacing} from '../theme';
@@ -29,15 +31,15 @@ import {
   leaveRoom,
   renamePlayer,
   startBoardGame,
-  startImposterGame,
+  startRedCardGame,
   subscribePlayers,
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
-import {generateGrid, gridSignature} from '../games/tic-tac-toe/grid';
-import {createIndividualState} from '../games/tic-tac-toe/engine';
-import {buildFootballerPool} from '../games/footballer-imposter/engine';
-import {MIN_PLAYERS as IMPOSTER_MIN} from '../games/footballer-imposter/types';
+import {generateGrid, gridSignature} from '../games/hattrick/grid';
+import {createIndividualState} from '../games/hattrick/engine';
+import {buildFootballerPool} from '../games/red-card/engine';
+import {MIN_PLAYERS as IMPOSTER_MIN} from '../games/red-card/types';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
@@ -57,9 +59,8 @@ export function LobbyScreen({route, navigation}: Props) {
   const [renameOpen, setRenameOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [starting, setStarting] = useState(false);
-  // Measured heights of the floating top/bottom chrome, so scroll content can
-  // reserve matching clearance and glide behind them (no clipping "box").
-  const [topH, setTopH] = useState(0);
+  const insets = useSafeAreaInsets();
+  // Measured height of the floating bottom bar, so scroll content clears it.
   const [botH, setBotH] = useState(0);
 
   // Track membership so we can detect being kicked (present → gone).
@@ -110,15 +111,15 @@ export function LobbyScreen({route, navigation}: Props) {
     if (!room) {
       return;
     }
-    if (room.status === 'in_progress' && room.gameType === 'tic-tac-toe') {
+    if (room.status === 'in_progress' && room.gameType === 'hattrick') {
       if (!inGameRef.current) {
         inGameRef.current = true;
-        navigation.navigate('TicTacToe', {roomId});
+        navigation.navigate('Hattrick', {roomId});
       }
-    } else if (room.status === 'in_progress' && room.gameType === 'footballer-imposter') {
+    } else if (room.status === 'in_progress' && room.gameType === 'red-card') {
       if (!inGameRef.current) {
         inGameRef.current = true;
-        navigation.navigate('FootballerImposter', {roomId});
+        navigation.navigate('RedCard', {roomId});
       }
     } else if (room.status === 'lobby') {
       inGameRef.current = false;
@@ -196,7 +197,7 @@ export function LobbyScreen({route, navigation}: Props) {
   }
 
   // Host starts a specific game: build its initial state from the roster, then
-  // hand every device into the game via the room. Only tic-tac-toe has an engine
+  // hand every device into the game via the room. Only hattrick has an engine
   // today; the picker/lock never offers an unbuilt game, so that's the one case.
   async function startGame(gameType: string) {
     if (players.length < 2 || starting) {
@@ -206,7 +207,7 @@ export function LobbyScreen({route, navigation}: Props) {
     setStarting(true);
     try {
       switch (gameType) {
-        case 'tic-tac-toe': {
+        case 'hattrick': {
           const grid = generateGrid(Math.random, {avoid: recentGridsRef.current});
           const roster = players.map(p => ({userId: p.userId, name: p.name}));
           const state = createIndividualState(grid, roster, {
@@ -218,10 +219,10 @@ export function LobbyScreen({route, navigation}: Props) {
             gridSignature(grid),
             ...recentGridsRef.current,
           ].slice(0, 5);
-          await startBoardGame(roomId, 'tic-tac-toe', state);
+          await startBoardGame(roomId, 'hattrick', state);
           break;
         }
-        case 'footballer-imposter': {
+        case 'red-card': {
           // Needs more players than Tic-Tac-Toe (1 imposter + ≥2 detectives to
           // make voting meaningful). Roles are assigned server-side; the host
           // only ships the candidate footballer pool.
@@ -233,7 +234,7 @@ export function LobbyScreen({route, navigation}: Props) {
             );
             return;
           }
-          await startImposterGame(roomId, buildFootballerPool());
+          await startRedCardGame(roomId, buildFootballerPool());
           break;
         }
         default:
@@ -255,16 +256,23 @@ export function LobbyScreen({route, navigation}: Props) {
   }
 
   return (
-    // Drop top/bottom safe-area edges — the floating bars own those insets so
-    // the roster scrolls the full height, behind the chrome, with no clip line.
+    // Drop top/bottom safe-area edges — the scroll content owns the top inset
+    // (the wordmark scrolls away) and the bottom bar owns the bottom inset.
     <Screen canvas edges={['left', 'right']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.body,
-          {paddingTop: topH + spacing.xl, paddingBottom: botH + spacing.xl},
+          {paddingTop: insets.top + spacing.sm, paddingBottom: botH + spacing.xl},
         ]}
         showsVerticalScrollIndicator={false}>
+        {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
+        <View style={styles.header}>
+          <Text variant="wordmark" align="center">
+            {t('lobby.title')}
+          </Text>
+        </View>
+
         {/* Party code — tapping it still opens the share sheet, quietly. */}
         <Pressable
           style={styles.codeCard}
@@ -321,26 +329,21 @@ export function LobbyScreen({route, navigation}: Props) {
         </View>
       </ScrollView>
 
-      {/* Floating header — back button + wordmark, no background; the roster
-          scrolls behind it. */}
-      <FloatingBar edge="top" onHeight={setTopH} style={styles.topBar}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <CircleButton
-              size={36}
-              accessibilityLabel={t('lobby.leave')}
-              onPress={() => navigation.goBack()}>
-              <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
-            </CircleButton>
-          </View>
-          <Text variant="wordmark" align="center">
-            {t('lobby.title')}
-          </Text>
+      {/* Pinned floating back button (top-left) — stays reachable while the
+          wordmark scrolls away, mirroring Home's floating corner button. */}
+      <FloatingBar edge="top" style={styles.backBar}>
+        <View style={styles.backRow}>
+          <CircleButton
+            size={36}
+            accessibilityLabel={t('lobby.leave')}
+            onPress={() => navigation.goBack()}>
+            <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
+          </CircleButton>
         </View>
       </FloatingBar>
 
       {/* Floating footer — the host's game button (or guest hint) floats over
-          the roster. Host picks the game; guests wait. */}
+          the roster with no box behind it. Host picks the game; guests wait. */}
       <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
         {isHost ? (
           <Button
@@ -364,6 +367,10 @@ export function LobbyScreen({route, navigation}: Props) {
         )}
       </FloatingBar>
 
+      {/* Seamless frosted fade behind the status bar — the wordmark dissolves
+          under it as it scrolls up. */}
+      <TopStatusFade />
+
       <NameSheet
         visible={renameOpen}
         title={t('lobby.renameTitle')}
@@ -386,17 +393,17 @@ export function LobbyScreen({route, navigation}: Props) {
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: spacing.sm,
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  headerLeft: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
+  // Pinned floating back button, aligned to the wordmark's row.
+  backBar: {paddingHorizontal: screenPadding},
+  backRow: {
+    height: 44,
+    marginTop: spacing.sm,
     justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   scroll: {flex: 1},
   body: {
@@ -455,13 +462,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
   },
   hostBadgeText: {fontSize: 10, lineHeight: 13, letterSpacing: 0.5},
-  // FloatingBar spans edge-to-edge; pad it horizontally so the chrome (back
-  // button, game button) lines up with the 16px-inset scrolled content.
-  topBar: {
-    paddingHorizontal: screenPadding,
-  },
   // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area
-  // inset. Horizontal padding matches the scrolled content + the top bar.
+  // inset. Horizontal padding matches the scrolled content.
   footer: {
     paddingTop: spacing.md,
     paddingHorizontal: screenPadding,

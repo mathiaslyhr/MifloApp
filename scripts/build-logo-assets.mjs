@@ -7,8 +7,8 @@
 //   npm run assets:logos
 //
 // Outputs:
-//   src/games/tic-tac-toe/assets/logos/<clubId>.png     (bundled images)
-//   src/games/tic-tac-toe/assets/logos.generated.ts     (require map)
+//   src/games/hattrick/assets/logos/<clubId>.png     (bundled images)
+//   src/games/hattrick/assets/logos.generated.ts     (require map)
 //     export const LOGO_IMAGES: Record<clubId, number>
 //
 // clubId → footylogos slug. When adding a club, add its slug here; the script
@@ -106,7 +106,7 @@ async function fetchLogo(slug) {
 }
 
 async function main() {
-  const dir = resolve(root, 'src/games/tic-tac-toe/assets');
+  const dir = resolve(root, 'src/games/hattrick/assets');
   const imgDir = resolve(dir, 'logos');
   rmSync(imgDir, {recursive: true, force: true});
   mkdirSync(imgDir, {recursive: true});

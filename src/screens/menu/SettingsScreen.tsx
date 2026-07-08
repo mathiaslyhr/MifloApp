@@ -8,6 +8,7 @@ import {colors, radii, spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
 import {
+  DANISH_ENABLED,
   getLanguagePreference,
   setLanguagePreference,
   type LanguagePreference,
@@ -19,7 +20,11 @@ import {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
-const LANGUAGES: LanguagePreference[] = ['system', 'en', 'da'];
+// While Danish is disabled we drop "System default" (it'd only resolve to
+// English anyway) and show Danish as a greyed-out "Coming soon" row.
+const LANGUAGES: LanguagePreference[] = DANISH_ENABLED
+  ? ['system', 'en', 'da']
+  : ['en', 'da'];
 
 /** Settings — language and haptics. Both persist and apply immediately. */
 export function SettingsScreen({navigation}: Props) {
@@ -56,19 +61,31 @@ export function SettingsScreen({navigation}: Props) {
       contentStyle={styles.body}>
       <MenuGroup label={t('settings.language')}>
           {LANGUAGES.map((pref, i) => {
-            const active = lang === pref;
+            // Danish is not selectable while disabled; English is always the
+            // active choice regardless of any previously stored preference.
+            const comingSoon = !DANISH_ENABLED && pref === 'da';
+            const active = DANISH_ENABLED ? lang === pref : pref === 'en';
             return (
               <PressableScale
                 key={pref}
-                onPress={() => pickLanguage(pref)}
-                style={[styles.row, i < LANGUAGES.length - 1 && styles.divider]}
+                disabled={comingSoon}
+                onPress={comingSoon ? undefined : () => pickLanguage(pref)}
+                style={[
+                  styles.row,
+                  i < LANGUAGES.length - 1 && styles.divider,
+                  comingSoon && styles.rowDisabled,
+                ]}
                 accessibilityRole="button"
-                accessibilityState={{selected: active}}
+                accessibilityState={{selected: active, disabled: comingSoon}}
                 accessibilityLabel={langLabel[pref]}>
                 <Text variant="body" style={styles.rowLabel}>
                   {langLabel[pref]}
                 </Text>
-                {active ? (
+                {comingSoon ? (
+                  <Text variant="caption" color="tertiary">
+                    {t('games.comingSoon')}
+                  </Text>
+                ) : active ? (
                   <Check size={20} color={colors.primary} strokeWidth={2.5} />
                 ) : null}
               </PressableScale>
@@ -112,6 +129,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
+  rowDisabled: {opacity: 0.5},
   rowLabel: {flex: 1},
   rowText: {flex: 1, gap: 2},
 });

@@ -1,5 +1,5 @@
 /**
- * Types for Mystery Footballer — a Wordle-style daily single-player game. One
+ * Types for Scout — a Wordle-style daily single-player game. One
  * secret footballer per calendar day; each guess returns a row of coloured
  * cells comparing the guess to the secret across a fixed set of columns.
  *

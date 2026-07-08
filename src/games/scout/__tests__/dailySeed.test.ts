@@ -75,4 +75,20 @@ describe('secretFor', () => {
     // Not all the same secret — the seed actually varies the pick.
     expect(new Set(days).size).toBeGreaterThan(5);
   });
+
+  // `EPOCH_KEY` day-0 in UTC, so day `i` maps to dayNumber === i inside secretFor.
+  const keyForDay = (i: number) => new Date(Date.UTC(2026, 0, 1 + i)).toISOString().slice(0, 10);
+
+  it('walks a full permutation before any repeat', () => {
+    const pool = dailyPool();
+    const cycle = Array.from({length: pool.length}, (_, i) => secretFor(keyForDay(i), pool).id);
+    // One full cycle visits every pool member exactly once — no early repeats.
+    expect(new Set(cycle).size).toBe(pool.length);
+  });
+
+  it('reshuffles at the cycle boundary without throwing', () => {
+    const pool = dailyPool();
+    const startOfCycle2 = secretFor(keyForDay(pool.length), pool);
+    expect(pool).toContain(startOfCycle2);
+  });
 });

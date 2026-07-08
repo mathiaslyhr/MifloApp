@@ -17,9 +17,9 @@ import {
  * longer listed here.
  */
 export type GameType =
-  | 'tic-tac-toe'
-  | 'footballer-imposter'
-  | 'mystery-footballer'
+  | 'hattrick'
+  | 'red-card'
+  | 'scout'
   | 'tenball'
   | 'heatmap';
 
@@ -50,8 +50,8 @@ export type GameEntry = {
 
 export const GAMES: GameEntry[] = [
   {
-    gameType: 'mystery-footballer',
-    i18nKey: 'mystery',
+    gameType: 'scout',
+    i18nKey: 'scout',
     Icon: UserSearch,
     category: 'solo',
     available: true,
@@ -65,8 +65,8 @@ export const GAMES: GameEntry[] = [
     available: false,
   },
   {
-    gameType: 'tic-tac-toe',
-    i18nKey: 'ttt',
+    gameType: 'hattrick',
+    i18nKey: 'hattrick',
     Icon: Grid3x3,
     category: 'duel',
     available: true,
@@ -79,8 +79,8 @@ export const GAMES: GameEntry[] = [
     available: false,
   },
   {
-    gameType: 'footballer-imposter',
-    i18nKey: 'imposter',
+    gameType: 'red-card',
+    i18nKey: 'redCard',
     Icon: VenetianMask,
     category: 'party',
     available: true,

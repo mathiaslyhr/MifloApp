@@ -5,7 +5,7 @@
  *
  * The `Criterion`-based API is deliberately game-agnostic:
  *   - quiz   → byCategory(topic) to pick a pool, then build a question
- *   - tic-tac-toe → intersection(rowCriterion, colCriterion)
+ *   - hattrick → intersection(rowCriterion, colCriterion)
  */
 import {CLUBS, getClub} from './clubs';
 import {getCategory} from './categories';
@@ -105,7 +105,7 @@ export function find(criteria: readonly Criterion[]): Footballer[] {
   return FOOTBALLERS.filter(f => criteria.every(c => matches(f, c)));
 }
 
-/** Footballers satisfying both criteria — a tic-tac-toe cell. */
+/** Footballers satisfying both criteria — a hattrick cell. */
 export function intersection(a: Criterion, b: Criterion): Footballer[] {
   return find([a, b]);
 }

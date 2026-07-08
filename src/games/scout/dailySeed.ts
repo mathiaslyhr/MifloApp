@@ -5,9 +5,12 @@
  * PRNG -> index into the fairness-filtered pool. All pure, so the same day
  * always yields the same secret and the tests can assert stability.
  */
-import {FOOTBALLERS, getClub, type Footballer, type Rng} from '../../data/football';
+import {FOOTBALLERS, getClub, shuffle, type Footballer, type Rng} from '../../data/football';
 
-/** The "top-5" European leagues, used to gate the daily pool for recognizability. */
+/** Epoch for the daily sequence: cycle 0, index 0 falls on this day. */
+const EPOCH_KEY = '2026-01-01';
+
+/** The "top-5" European leagues — gates the daily pool for recognizability. */
 const TOP5_LEAGUES = new Set([
   'premier-league',
   'la-liga',
@@ -69,32 +72,51 @@ export function seededRng(seed: number): Rng {
 }
 
 /**
- * The candidate players for the daily secret. Restricted to recognizable names
- * so the puzzle is guessable: a legend/current-star who has either won a real
- * honour or currently plays in a top-5 league. Pure and deterministic (dataset
- * order preserved), so the pool is stable across runs.
+ * The candidate players for the daily secret: **active + recognizable** only.
+ * Active = tagged `current-stars`, or a still-open club spell (catches active
+ * "legends" like Messi/Ronaldo); **retired** legends (last spell has an end
+ * year) are excluded. Recognizable = has an honour, currently plays a top-5
+ * league, or is hand-vetted (`wordle`). Everyone stays guessable — only the
+ * *answer* is gated. Pure and deterministic (dataset order preserved).
  */
 export function dailyPool(pool: readonly Footballer[] = FOOTBALLERS): Footballer[] {
   return pool.filter(f => {
     const tags = f.tags ?? [];
-    const tagged = tags.includes('legends') || tags.includes('current-stars');
-    if (!tagged) {
+    const last = f.clubs[f.clubs.length - 1];
+    const active = tags.includes('current-stars') || last?.to === undefined;
+    if (!active) {
       return false;
     }
-    if (f.honours.length > 0) {
+    if (f.honours.length > 0 || tags.includes('wordle')) {
       return true;
     }
-    const active = f.clubs.find(s => s.to === undefined);
-    const league = active ? getClub(active.clubId)?.league : undefined;
+    const current = f.clubs.find(s => s.to === undefined) ?? last;
+    const league = current ? getClub(current.clubId)?.league : undefined;
     return league ? TOP5_LEAGUES.has(league) : false;
   });
 }
 
-/** The secret footballer for a given day, drawn deterministically from `pool`. */
+/** Whole days from `EPOCH_KEY` to `dateKey` (UTC math avoids DST drift). */
+function dayNumber(dateKey: string): number {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  const [ey, em, ed] = EPOCH_KEY.split('-').map(Number);
+  return Math.floor((Date.UTC(y, m - 1, d) - Date.UTC(ey, em - 1, ed)) / 86400000);
+}
+
+/**
+ * The secret footballer for a given day. A deterministic shuffled *sequence*
+ * rather than an independent daily draw: each 447-day cycle is a fresh
+ * Fisher–Yates permutation of the whole pool, walked one player per day, so no
+ * footballer repeats until the entire pool is exhausted.
+ */
 export function secretFor(dateKey: string, pool: readonly Footballer[]): Footballer {
   if (pool.length === 0) {
     throw new Error('secretFor: empty pool');
   }
-  const rng = seededRng(hashDateKey(dateKey));
-  return pool[Math.floor(rng() * pool.length)];
+  const day = dayNumber(dateKey);
+  const cycle = Math.floor(day / pool.length);
+  // Euclidean modulo keeps the index in range for pre-epoch dates too.
+  const idx = ((day % pool.length) + pool.length) % pool.length;
+  const order = shuffle(pool, seededRng(hashDateKey(`${EPOCH_KEY}#${cycle}`)));
+  return order[idx];
 }

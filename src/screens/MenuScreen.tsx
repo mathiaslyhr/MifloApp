@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Linking, ScrollView, StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   BookOpen,
   HelpCircle,
@@ -10,52 +11,56 @@ import {
 } from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {
-  FloatingBar,
-  IslandTabBar,
   MenuGroup,
   MenuRow,
+  NAV_HEIGHT,
   Screen,
-  TabId,
   Text,
+  TopStatusFade,
 } from '../core/ui';
 import {APP_VERSION, FAQ_URL, PRIVACY_POLICY_URL} from '../core/config';
-import {screenPadding, spacing} from '../theme';
+import {spacing} from '../theme';
 
 /** In-app destinations reachable from the Menu (detail screens land later, #12). */
 export type MenuItem = 'profile' | 'settings' | 'howToPlay' | 'about';
 
 type Props = {
-  /** Switch tabs (the nav island). */
-  onTabSelect?: (id: TabId) => void;
   /** Open a menu destination — its detail screen. Stubbed until those exist. */
   onSelectItem?: (item: MenuItem) => void;
 };
 
 /**
- * Menu — the hub on the rainbow canvas. A centered "Menu" wordmark floats at the
- * top and the nav island floats at the bottom; grouped iOS-style glass cards
- * (Account, App, About) scroll the full height behind both. Nav rows open in-app
- * detail screens (stubbed for now via `onSelectItem`); the FAQ and Privacy rows
- * open the marketing site. A muted version footer sits above the nav island.
+ * Menu — the hub on the rainbow canvas. The "Menu" wordmark is the first item in
+ * the scroll content, so it scrolls off the top (Instagram-style); a faint
+ * blurred status strip stays pinned. Grouped iOS-style glass cards (Account, App,
+ * About) scroll beneath, blurring under the shared nav island. Nav rows open
+ * in-app detail screens; FAQ and Privacy open the marketing site.
  */
-export function MenuScreen({onTabSelect, onSelectItem}: Props) {
+export function MenuScreen({onSelectItem}: Props) {
   const {t} = useTranslation();
-  // Floating-bar heights, measured at layout, so the scroll content can reserve
-  // matching top/bottom clearance and glide behind the chrome.
-  const [topH, setTopH] = useState(0);
-  const [botH, setBotH] = useState(0);
+  const insets = useSafeAreaInsets();
 
   return (
-    // Drop top/bottom safe-area edges — the floating bars own those insets so the
-    // menu scrolls the full height, behind the chrome, with no clip line.
+    // Drop top/bottom safe-area edges — the scroll content owns the top inset
+    // (the header scrolls away) and the shell nav owns the bottom inset.
     <Screen canvas edges={['left', 'right']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.list,
-          {paddingTop: topH + spacing.xl, paddingBottom: botH + spacing.xl},
+          {
+            paddingTop: insets.top + spacing.sm,
+            paddingBottom: NAV_HEIGHT + insets.bottom + spacing.xl,
+          },
         ]}
         showsVerticalScrollIndicator={false}>
+        {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
+        <View style={styles.header}>
+          <Text variant="wordmark" align="center">
+            {t('menu.title')}
+          </Text>
+        </View>
+
         <MenuGroup label={t('menu.account')}>
           <MenuRow
             label={t('menu.profile')}
@@ -102,20 +107,9 @@ export function MenuScreen({onTabSelect, onSelectItem}: Props) {
         </Text>
       </ScrollView>
 
-      {/* Floating header — the wordmark, no background; the cards scroll behind
-          it. */}
-      <FloatingBar edge="top" onHeight={setTopH} style={styles.topBar}>
-        <View style={styles.header}>
-          <Text variant="wordmark" align="center">
-            {t('menu.title')}
-          </Text>
-        </View>
-      </FloatingBar>
-
-      {/* Floating nav island (Menu active), pinned to the bottom. */}
-      <FloatingBar edge="bottom" onHeight={setBotH}>
-        <IslandTabBar active="menu" onSelect={onTabSelect} />
-      </FloatingBar>
+      {/* Seamless frosted fade behind the status bar — content dissolves under
+          it (no hard edge) as it scrolls up. */}
+      <TopStatusFade />
     </Screen>
   );
 }
@@ -125,12 +119,6 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  // FloatingBar spans edge-to-edge and owns the top safe-area inset (don't set
-  // paddingTop here or it overrides that inset and tucks under the status bar);
-  // just pad horizontally so the wordmark lines up with the 16px-inset content.
-  topBar: {
-    paddingHorizontal: screenPadding,
   },
   scroll: {flex: 1},
   list: {

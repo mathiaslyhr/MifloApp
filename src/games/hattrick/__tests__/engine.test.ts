@@ -12,7 +12,7 @@ const TAG: (t: string) => Criterion = t => ({kind: 'tag', tag: t});
 
 function twoPlayerState(overrides: Partial<GridState> = {}): GridState {
   return {
-    gameType: 'tic-tac-toe',
+    gameType: 'hattrick',
     mode: 'individual',
     rows: [TAG('r0'), TAG('r1'), TAG('r2')],
     cols: [TAG('c0'), TAG('c1'), TAG('c2')],

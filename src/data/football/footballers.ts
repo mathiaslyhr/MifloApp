@@ -1159,7 +1159,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     seasonStats: [
       {season: '2023-24', clubId: 'real-madrid', competition: 'La Liga', goals: 19},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Bennacer, Ismaël',
@@ -3268,7 +3268,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 1, years: [2002]},
       {type: 'ballon-dor', count: 1, years: [2000]},
     ],
-    tags: ['legends'],
+    tags: ['legends', 'wordle'],
   },
   {
     id: 'Firmino, Roberto',
@@ -3314,7 +3314,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'al-nassr', from: 2023},
     ],
     honours: [],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Fofana, Wesley',
@@ -4058,7 +4058,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {season: '2022-23', clubId: 'man-city', competition: 'Premier League', appearances: 35, goals: 36, assists: 8},
       {season: '2024-25', clubId: 'man-city', competition: 'Premier League', goals: 22},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Hagi, Gheorghe',
@@ -4860,7 +4860,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     seasonStats: [
       {season: '2023-24', clubId: 'bayern', competition: 'Bundesliga', appearances: 32, goals: 36, assists: 8},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Kanno, Mohamed',
@@ -5925,7 +5925,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'real-madrid', from: 2025},
     ],
     honours: [],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Mata, Juan',
@@ -6030,7 +6030,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     seasonStats: [
       {season: '2024-25', clubId: 'real-madrid', competition: 'La Liga', goals: 31},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Mbemba, Chancel',
@@ -7033,7 +7033,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 2, years: [2024, 2025]},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Okocha, Jay-Jay',
@@ -7470,7 +7470,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2012]},
       {type: 'champions-league', count: 3, years: [2009, 2011, 2015]},
     ],
-    tags: ['legends'],
+    tags: ['legends', 'wordle'],
   },
   {
     id: 'Pelé',
@@ -8096,7 +8096,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'crystal-palace', from: 2022},
     ],
     honours: [],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Riquelme, Juan Román',
@@ -8225,7 +8225,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'ballon-dor', count: 1, years: [2024]},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Rodríguez, James',
@@ -8539,7 +8539,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Salah, Mohamed',
@@ -8563,7 +8563,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {season: '2017-18', clubId: 'liverpool', competition: 'Premier League', appearances: 36, goals: 32, assists: 10},
       {season: '2024-25', clubId: 'liverpool', competition: 'Premier League', goals: 29, assists: 18},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Saliba, William',
@@ -10183,7 +10183,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 1, years: [2013]},
       {type: 'golden-boot', count: 2, years: [2012, 2013]},
     ],
-    tags: ['legends'],
+    tags: ['legends', 'wordle'],
   },
   {
     id: 'Varane, Raphaël',
@@ -10432,7 +10432,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2022, 2024]},
       {type: 'league-title', count: 3, years: [2020, 2022, 2024]},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Vitinha',
@@ -10594,7 +10594,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
   {
     id: 'Williams, Iñaki',
     name: 'Iñaki Williams',
-    nationality: ['Ghana', 'Spain'],
+    nationality: ['Ghana'],
     positions: ['FW'],
     shirtNumbers: [9, 11],
     clubs: [
@@ -10761,7 +10761,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lamine Yamal',
     nationality: ['Spain'],
     positions: ['FW'],
-    shirtNumbers: [19, 10],
+    shirtNumbers: [10],
     clubs: [
       {clubId: 'barcelona', from: 2023},
     ],
@@ -10769,7 +10769,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'league-title', count: 2, years: [2023, 2025]},
     ],
-    tags: ['current-stars'],
+    tags: ['current-stars', 'wordle'],
   },
   {
     id: 'Yıldız, Kenan',

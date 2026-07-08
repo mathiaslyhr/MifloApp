@@ -20,6 +20,13 @@ export type Language = (typeof SUPPORTED_LANGUAGES)[number];
 /** What the user picked in Settings — a concrete language or "follow system". */
 export type LanguagePreference = 'system' | Language;
 
+/**
+ * Danish is temporarily disabled while it's still incomplete: the strings stay
+ * in the codebase (`da.json`) but the app renders English for everyone. Flip to
+ * `true` to restore Danish + the full three-option language picker.
+ */
+export const DANISH_ENABLED = false;
+
 const STORAGE_KEY = 'app.language';
 
 const resources = {
@@ -34,9 +41,19 @@ function deviceLanguage(): Language {
   return tag.startsWith('da') ? 'da' : 'en';
 }
 
+/**
+ * Resolve a preference to the language we actually apply. While Danish is
+ * disabled this always clamps to English, so a stored `'da'`/`'system'` value
+ * (or a Danish device) never renders Danish — but is preserved for later.
+ */
+function resolveLanguage(pref: LanguagePreference): Language {
+  const effective = pref === 'system' ? deviceLanguage() : pref;
+  return DANISH_ENABLED ? effective : 'en';
+}
+
 i18n.use(initReactI18next).init({
   resources,
-  lng: deviceLanguage(),
+  lng: DANISH_ENABLED ? deviceLanguage() : 'en',
   fallbackLng: 'en',
   // v3 plural/format rules avoid depending on Intl.PluralRules at runtime; we
   // interpolate counts manually so this is purely a safety choice.
@@ -61,7 +78,7 @@ export async function getLanguagePreference(): Promise<LanguagePreference> {
 /** Apply any saved override on boot (device language already applied at init). */
 export async function loadStoredLanguage(): Promise<void> {
   const pref = await getLanguagePreference();
-  const effective = pref === 'system' ? deviceLanguage() : pref;
+  const effective = resolveLanguage(pref);
   if (i18n.language !== effective) {
     await i18n.changeLanguage(effective);
   }
@@ -74,7 +91,7 @@ export async function setLanguagePreference(pref: LanguagePreference): Promise<v
   } catch {
     // Non-fatal — the change still applies for this session.
   }
-  const effective = pref === 'system' ? deviceLanguage() : pref;
+  const effective = resolveLanguage(pref);
   await i18n.changeLanguage(effective);
 }
 

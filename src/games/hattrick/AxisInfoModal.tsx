@@ -6,7 +6,7 @@
  * Shows the same vector illustration the board uses for that axis.
  */
 import React from 'react';
-import {Image, Modal, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Modal, Pressable, StyleSheet} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from '../../core/ui';
 import {colors, radii, spacing} from '../../theme';
@@ -37,7 +37,7 @@ export function AxisInfoModal({criterion, onClose}: Props) {
           ) : emoji != null ? (
             <Text style={styles.emoji}>{emoji}</Text>
           ) : null}
-          <Text variant="body" align="center" style={styles.meaning}>
+          <Text variant="body" align="center">
             {criterion != null
               ? t(`legend.meaning.${criterion.kind}`, {value: criterionValue(criterion)})
               : ''}
@@ -51,7 +51,7 @@ export function AxisInfoModal({criterion, onClose}: Props) {
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.2)',
+    backgroundColor: colors.scrimLight,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
@@ -68,5 +68,4 @@ const styles = StyleSheet.create({
   },
   icon: {width: 52, height: 52},
   emoji: {fontSize: 44, lineHeight: 52, textAlign: 'center'},
-  meaning: {},
 });

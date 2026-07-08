@@ -7,17 +7,25 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {AppBlur} from './Blur';
 
 type Props = {
   /** Which screen edge to pin to. */
   edge: 'top' | 'bottom';
-  children: React.ReactNode;
+  children?: React.ReactNode;
   /**
    * Reports the bar's full height (incl. safe-area inset) so the sibling
    * ScrollView can reserve matching clearance and content scrolls *behind* the
    * bar without ever being hidden.
    */
   onHeight?: (height: number) => void;
+  /**
+   * Frost the bar: render a real backdrop blur behind its content so scrolling
+   * content beneath it blurs through (Instagram-style). A blurred bar is a solid
+   * chrome surface, so it captures touches over its area; a plain (transparent)
+   * bar keeps `box-none` and lets scroll gestures pass through.
+   */
+  blur?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -31,7 +39,7 @@ type Props = {
  * `pointerEvents="box-none"` lets scroll gestures pass through the empty areas
  * beside the actual controls.
  */
-export function FloatingBar({edge, children, onHeight, style}: Props) {
+export function FloatingBar({edge, children, onHeight, blur, style}: Props) {
   const insets = useSafeAreaInsets();
   const inset = edge === 'top' ? insets.top : insets.bottom;
 
@@ -41,7 +49,7 @@ export function FloatingBar({edge, children, onHeight, style}: Props) {
 
   return (
     <View
-      pointerEvents="box-none"
+      pointerEvents={blur ? 'auto' : 'box-none'}
       onLayout={handleLayout}
       style={[
         styles.bar,
@@ -49,6 +57,7 @@ export function FloatingBar({edge, children, onHeight, style}: Props) {
         edge === 'top' ? {paddingTop: inset} : {paddingBottom: inset},
         style,
       ]}>
+      {blur ? <AppBlur /> : null}
       {children}
     </View>
   );

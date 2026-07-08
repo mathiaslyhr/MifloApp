@@ -19,7 +19,7 @@ function scoreLine(state: MysteryState): string {
 
 /** Build the shareable text block for a finished puzzle. */
 export function buildShareGrid(state: MysteryState): string {
-  const header = `Mystery Footballer ${state.dateKey} ${scoreLine(state)}`;
+  const header = `Scout ${state.dateKey} ${scoreLine(state)}`;
   const rows = state.guesses.map(g =>
     g.cells.map(c => SQUARE[c.status]).join(''),
   );

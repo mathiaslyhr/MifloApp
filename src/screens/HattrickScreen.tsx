@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
+  Animated,
   Image,
   Modal,
   Pressable,
@@ -8,7 +9,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, Bug} from 'lucide-react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ChevronLeft, HelpCircle, Bug, Plus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
@@ -32,20 +34,20 @@ import {
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {ensureSession} from '../core/supabase/client';
-import {AxisInfoModal} from '../games/tic-tac-toe/AxisInfoModal';
-import {HelpModal} from '../games/tic-tac-toe/HelpModal';
+import {AxisInfoModal} from '../games/hattrick/AxisInfoModal';
+import {HelpModal} from '../games/hattrick/HelpModal';
 import {FOOTBALLERS, getById} from '../data/football';
 import {
   criterionLabel,
   criterionShortLabel,
   generateGrid,
-} from '../games/tic-tac-toe/grid';
+} from '../games/hattrick/grid';
 import {
   criterionIcon,
   criterionImage,
   flagImage,
-} from '../games/tic-tac-toe/criterionIcon';
-import {searchPlayers} from '../games/tic-tac-toe/playerSearch';
+} from '../games/hattrick/criterionIcon';
+import {searchPlayers} from '../games/hattrick/playerSearch';
 import {
   applyMove,
   cellCriteria,
@@ -54,11 +56,11 @@ import {
   sideOfUser,
   TURN_SECONDS,
   validatePick,
-} from '../games/tic-tac-toe/engine';
+} from '../games/hattrick/engine';
 import type {Criterion} from '../data/football';
-import type {GridState} from '../games/tic-tac-toe/types';
+import type {GridState} from '../games/hattrick/types';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'TicTacToe'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'Hattrick'>;
 
 const ROW_LABEL_W = 58;
 const LABEL_GAP = 8;
@@ -66,7 +68,7 @@ const LABEL_GAP = 8;
 const DIVIDER = 1;
 const DIVIDER_COLOR = colors.glassRim;
 
-export function TicTacToeScreen({route, navigation}: Props) {
+export function HattrickScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
   const [state, setState] = useState<GridState | null>(null);
@@ -171,7 +173,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
         <Header onBack={handleBack} />
         <View style={styles.loading}>
           <Text variant="body" color="secondary">
-            {t('game.loading')}
+            {t('hattrick.loading')}
           </Text>
         </View>
       </Screen>
@@ -186,7 +188,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
   const tieOffer = state.tieOffer ?? null;
   const iRespondedToTie = !!tieOffer && !!mySideId && tieOffer.accepted.includes(mySideId);
   const tieProposerName = tieOffer
-    ? state.sides.find(s => s.id === tieOffer.by)?.name ?? 'Someone'
+    ? state.sides.find(s => s.id === tieOffer.by)?.name ?? t('hattrick.someone')
     : '';
   // Corner shows Skip (my turn) and/or Tie (no active offer); blank otherwise.
   const cornerEmpty = !!state.winner || (!myTurn && !!tieOffer);
@@ -207,7 +209,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
       playMove(roomId, applyMove(state, cell, footballerId, myUserId)).catch(() => {});
     } else {
       haptics.error();
-      toast.error(t('game.notMatch'));
+      toast.error(t('hattrick.notMatch'));
       playMove(roomId, passTurn(state, myUserId)).catch(() => {});
     }
   }
@@ -218,7 +220,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
       return;
     }
     haptics.tap();
-    toast.neutral(t('game.turnSkipped'));
+    toast.neutral(t('hattrick.turnSkipped'));
     playMove(roomId, passTurn(state, myUserId)).catch(() => {});
   }
 
@@ -226,7 +228,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
   function handleProposeTie() {
     haptics.press();
     proposeTie(roomId).catch(() => {
-      toast.error(t('game.proposeError'));
+      toast.error(t('hattrick.proposeError'));
     });
   }
 
@@ -257,7 +259,7 @@ export function TicTacToeScreen({route, navigation}: Props) {
       });
       await restartBoardGame(roomId, next);
     } catch {
-      toast.error(t('game.newGameError'));
+      toast.error(t('hattrick.newGameError'));
     }
   }
 
@@ -269,9 +271,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
       : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
   const winnerText = state.winner
     ? state.winner === 'tie'
-      ? t('game.tie')
-      : t('game.won', {
-          name: state.sides.find(s => s.id === state.winner)?.name ?? 'Someone',
+      ? t('hattrick.tie')
+      : t('hattrick.won', {
+          name: state.sides.find(s => s.id === state.winner)?.name ?? t('hattrick.someone'),
         })
     : '';
 
@@ -288,8 +290,8 @@ export function TicTacToeScreen({route, navigation}: Props) {
               align="center"
               style={{color: turnSide?.color ?? colors.ink}}>
               {myTurn
-                ? t('game.yourTurn')
-                : t('game.othersTurn', {name: turnSide?.name ?? ''})}
+                ? t('hattrick.yourTurn')
+                : t('hattrick.othersTurn', {name: turnSide?.name ?? ''})}
             </Text>
           ) : (
             <Text variant="section" align="center" style={{color: winnerColor}}>
@@ -317,12 +319,13 @@ export function TicTacToeScreen({route, navigation}: Props) {
                 ]}
                 onPress={handleSkip}
                 accessibilityRole="button"
-                accessibilityLabel={t('game.skip')}>
+                accessibilityLabel={t('hattrick.skip')}>
                 <Text
-                  style={styles.cornerText}
+                  variant="caption"
+                  align="center"
                   numberOfLines={1}
                   adjustsFontSizeToFit>
-                  {t('game.skipShort')}
+                  {t('hattrick.skipShort')}
                 </Text>
               </Pressable>
             ) : null}
@@ -337,12 +340,13 @@ export function TicTacToeScreen({route, navigation}: Props) {
                 ]}
                 onPress={handleProposeTie}
                 accessibilityRole="button"
-                accessibilityLabel={t('game.proposeTie')}>
+                accessibilityLabel={t('hattrick.proposeTie')}>
                 <Text
-                  style={styles.cornerText}
+                  variant="caption"
+                  align="center"
                   numberOfLines={1}
                   adjustsFontSizeToFit>
-                  {t('game.tieShort')}
+                  {t('hattrick.tieShort')}
                 </Text>
               </Pressable>
             ) : null}
@@ -422,9 +426,13 @@ export function TicTacToeScreen({route, navigation}: Props) {
                       style={cellStyle}
                       disabled={!myTurn}
                       onPress={() => openPicker(index)}
-                      accessibilityLabel="Claim cell">
+                      accessibilityLabel={t('hattrick.claimCell')}>
                       {myTurn ? (
-                        <Text style={[styles.plus, selected && styles.plusOn]}>+</Text>
+                        <Plus
+                          size={24}
+                          color={selected ? colors.primary : colors.muted}
+                          strokeWidth={2}
+                        />
                       ) : null}
                       {selected ? (
                         <View style={styles.cellSelected} pointerEvents="none" />
@@ -440,9 +448,9 @@ export function TicTacToeScreen({route, navigation}: Props) {
         {state.winner ? (
           isHost ? (
             <View style={styles.resultActions}>
-              <Button label={t('game.playAgain')} variant="primary" onPress={playAgain} />
+              <Button label={t('hattrick.playAgain')} variant="primary" onPress={playAgain} />
               <Button
-                label={t('game.backToLobby')}
+                label={t('hattrick.backToLobby')}
                 variant="secondary"
                 onPress={() => returnToLobby(roomId).catch(() => {})}
               />
@@ -453,55 +461,12 @@ export function TicTacToeScreen({route, navigation}: Props) {
               color="secondary"
               align="center"
               style={styles.waiting}>
-              {t('game.waitingHost')}
+              {t('hattrick.waitingHost')}
             </Text>
           )
         ) : (
           <View style={styles.liveControls}>
             <TurnTimer deadline={state.turnDeadline} nowTs={nowTs} />
-
-            {tieOffer ? (
-              <View style={styles.tieBanner}>
-                {iRespondedToTie ? (
-                  <>
-                    <Text variant="secondary" align="center">
-                      {t('game.tieWaiting', {
-                        accepted: tieOffer.accepted.length,
-                        total: state.sides.length,
-                      })}
-                    </Text>
-                    <Button
-                      label={t('common.cancel')}
-                      variant="outline"
-                      fullWidth={false}
-                      onPress={() => handleRespondTie(false)}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Text variant="secondary" align="center">
-                      {t('game.tiePrompt', {name: tieProposerName})}
-                    </Text>
-                    <View style={styles.row2}>
-                      <View style={styles.flex1}>
-                        <Button
-                          label={t('game.acceptTie')}
-                          variant="primary"
-                          onPress={() => handleRespondTie(true)}
-                        />
-                      </View>
-                      <View style={styles.flex1}>
-                        <Button
-                          label={t('game.decline')}
-                          variant="secondary"
-                          onPress={() => handleRespondTie(false)}
-                        />
-                      </View>
-                    </View>
-                  </>
-                )}
-              </View>
-            ) : null}
           </View>
         )}
 
@@ -510,11 +475,11 @@ export function TicTacToeScreen({route, navigation}: Props) {
           onPress={() => setShowBug(true)}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel={t('game.reportBug')}
+          accessibilityLabel={t('hattrick.reportBug')}
           style={styles.bugLink}>
           <Bug size={14} color={colors.muted} strokeWidth={2} />
           <Text variant="caption" color="muted">
-            {t('game.reportBug')}
+            {t('hattrick.reportBug')}
           </Text>
         </Pressable>
       </View>
@@ -537,10 +502,10 @@ export function TicTacToeScreen({route, navigation}: Props) {
             <TextField
               value={query}
               onChangeText={setQuery}
-              placeholder={t('game.searchPlaceholder')}
+              placeholder={t('hattrick.searchPlaceholder')}
               autoFocus
               autoCapitalize="words"
-              accessibilityLabel={t('game.searchPlaceholder')}
+              accessibilityLabel={t('hattrick.searchPlaceholder')}
             />
             <ScrollView
               style={styles.results}
@@ -548,11 +513,11 @@ export function TicTacToeScreen({route, navigation}: Props) {
               showsVerticalScrollIndicator={false}>
               {query.trim() === '' ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('game.searchHint')}
+                  {t('hattrick.searchHint')}
                 </Text>
               ) : results.length === 0 ? (
                 <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('game.noPlayers')}
+                  {t('hattrick.noPlayers')}
                 </Text>
               ) : (
                 results.map(f => {
@@ -575,6 +540,17 @@ export function TicTacToeScreen({route, navigation}: Props) {
         </Pressable>
       </Modal>
 
+      {/* Tie prompt floats above the board so it never reflows the grid. */}
+      {tieOffer ? (
+        <TieOverlay
+          waiting={iRespondedToTie}
+          accepted={tieOffer.accepted.length}
+          total={state.sides.length}
+          proposerName={tieProposerName}
+          onRespond={handleRespondTie}
+        />
+      ) : null}
+
       <AxisInfoModal criterion={explain} onClose={() => setExplain(null)} />
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
       <ReportBugModal visible={showBug} onClose={() => setShowBug(false)} />
@@ -588,14 +564,14 @@ function Header({onBack, onHelp}: {onBack: () => void; onHelp?: () => void}) {
   const {t} = useTranslation();
   return (
     <View style={styles.header}>
-      <CircleButton size={36} accessibilityLabel={t('game.back')} onPress={onBack}>
+      <CircleButton size={36} accessibilityLabel={t('hattrick.back')} onPress={onBack}>
         <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
       </CircleButton>
       <Text variant="wordmark" align="center" numberOfLines={1} style={styles.title}>
-        {t('game.title')}
+        {t('hattrick.title')}
       </Text>
       {onHelp ? (
-        <CircleButton size={36} accessibilityLabel={t('game.legendButton')} onPress={onHelp}>
+        <CircleButton size={36} accessibilityLabel={t('hattrick.legendButton')} onPress={onHelp}>
           <HelpCircle size={18} color={colors.ink} strokeWidth={2} />
         </CircleButton>
       ) : (
@@ -652,7 +628,12 @@ function AxisCell({
         numberOfLines={2}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
-        style={[styles.axisText, !hasVisual && styles.axisTextOnly]}>
+        style={[
+          styles.axisText,
+          criterion.kind === 'shirtNumber'
+            ? styles.axisNumber
+            : !hasVisual && styles.axisTextOnly,
+        ]}>
         {label}
       </Text>
     </Pressable>
@@ -668,22 +649,25 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
   const remainingMs = Math.max(0, deadline - nowTs);
   const remainingSec = Math.ceil(remainingMs / 1000);
   const fraction = Math.max(0, Math.min(1, remainingMs / (TURN_SECONDS * 1000)));
+  // 5-stop ramp: dark green → light green → yellow → orange → red.
   const color =
     fraction > 0.66
-      ? '#3FBF63' // dark green
+      ? colors.timer[0]
       : fraction > 0.4
-      ? '#8FD79E' // light green
+      ? colors.timer[1]
       : fraction > 0.22
-      ? '#E6C34E' // yellow
+      ? colors.timer[2]
       : fraction > 0.1
-      ? '#E1893E' // orange
-      : '#E15749'; // red
+      ? colors.timer[3]
+      : colors.timer[4];
   const mmss = `${Math.floor(remainingSec / 60)}:${String(remainingSec % 60).padStart(2, '0')}`;
   return (
     <View style={styles.timerBar}>
       <View style={styles.timerLabelRow}>
-        <Text style={styles.timerLabel}>{t('game.timeLeft')}</Text>
-        <Text style={[styles.timerTime, fraction <= 0.1 && {color}]}>{mmss}</Text>
+        <Text variant="label">{t('hattrick.timeLeft')}</Text>
+        <Text variant="label" style={[styles.timerTime, fraction <= 0.1 && {color}]}>
+          {mmss}
+        </Text>
       </View>
       <View style={styles.timerTrack}>
         <View
@@ -691,6 +675,82 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
         />
       </View>
     </View>
+  );
+}
+
+/** Tie prompt as a floating card pinned to the bottom. Rendered outside the
+ * centered game column so it never reflows the board (fades/slides in like a
+ * toast). Non-blocking: the grid stays interactive underneath. */
+function TieOverlay({
+  waiting,
+  accepted,
+  total,
+  proposerName,
+  onRespond,
+}: {
+  waiting: boolean;
+  accepted: number;
+  total: number;
+  proposerName: string;
+  onRespond: (accept: boolean) => void;
+}) {
+  const {t} = useTranslation();
+  const insets = useSafeAreaInsets();
+  const opacity = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(8)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(opacity, {toValue: 1, duration: 180, useNativeDriver: true}),
+      Animated.timing(translateY, {toValue: 0, duration: 180, useNativeDriver: true}),
+    ]).start();
+  }, [opacity, translateY]);
+
+  return (
+    <Animated.View
+      pointerEvents="box-none"
+      style={[
+        styles.tieOverlay,
+        {bottom: insets.bottom + spacing.xl, opacity, transform: [{translateY}]},
+      ]}>
+      <View style={styles.tieBanner}>
+        {waiting ? (
+          <>
+            <Text variant="secondary" align="center">
+              {t('hattrick.tieWaiting', {accepted, total})}
+            </Text>
+            <Button
+              label={t('common.cancel')}
+              variant="outline"
+              fullWidth={false}
+              onPress={() => onRespond(false)}
+            />
+          </>
+        ) : (
+          <>
+            <Text variant="secondary" align="center">
+              {t('hattrick.tiePrompt', {name: proposerName})}
+            </Text>
+            <View style={styles.row2}>
+              <View style={styles.flex1}>
+                <Button
+                  label={t('hattrick.acceptTie')}
+                  variant="primary"
+                  onPress={() => onRespond(true)}
+                />
+              </View>
+              <View style={styles.flex1}>
+                <Button
+                  label={t('hattrick.decline')}
+                  variant="secondary"
+                  onPress={() => onRespond(false)}
+                />
+              </View>
+            </View>
+          </>
+        )}
+      </View>
+    </Animated.View>
   );
 }
 
@@ -721,17 +781,10 @@ const styles = StyleSheet.create({
   divTop: {borderTopWidth: DIVIDER, borderTopColor: DIVIDER_COLOR},
   // Top-left corner: Skip / Tie stacked as compact glass actions.
   corner: {flexDirection: 'column'},
-  cornerBlank: {backgroundColor: 'transparent', borderWidth: 0},
+  cornerBlank: {backgroundColor: colors.transparent, borderWidth: 0},
   cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
   cornerBtnPressed: {opacity: 0.55},
   cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
-  cornerText: {
-    fontFamily: fonts.regular,
-    fontSize: 12,
-    lineHeight: 15,
-    color: colors.ink,
-    textAlign: 'center',
-  },
   axis: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -744,8 +797,10 @@ const styles = StyleSheet.create({
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
   axisLogo: {width: 24, height: 24},
-  axisText: {fontFamily: fonts.medium, fontSize: 11, lineHeight: 13, color: colors.ink},
-  axisTextOnly: {fontSize: 12.5, lineHeight: 15},
+  axisText: {fontFamily: fonts.medium, fontSize: 12, lineHeight: 14, color: colors.ink},
+  axisTextOnly: {fontSize: 12, lineHeight: 15},
+  // Shirt number renders as pure text, matching the Scout "#23" reveal.
+  axisNumber: {fontFamily: fonts.regular, fontSize: 14, lineHeight: 20, color: colors.textSecondary},
   // Turn countdown, pinned to the bottom of the board area.
   timerBar: {marginTop: 'auto', paddingTop: spacing.xl, paddingBottom: spacing.md},
   timerLabelRow: {
@@ -754,19 +809,11 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     marginBottom: spacing.xs,
   },
-  timerLabel: {fontFamily: fonts.medium, fontSize: 15, color: colors.ink},
-  timerTime: {
-    fontFamily: fonts.medium,
-    fontSize: 15,
-    color: colors.ink,
-    fontVariant: ['tabular-nums'],
-  },
+  timerTime: {fontVariant: ['tabular-nums']},
   timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
-  cellName: {fontFamily: fonts.medium, fontSize: 10, lineHeight: 12},
-  plus: {fontFamily: fonts.regular, fontSize: 26, color: colors.primary, opacity: 0.3},
-  plusOn: {opacity: 1},
+  cellName: {fontFamily: fonts.medium, fontSize: 12, lineHeight: 14},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',
@@ -780,7 +827,7 @@ const styles = StyleSheet.create({
   },
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.15)',
+    backgroundColor: colors.scrimLight,
     justifyContent: 'flex-start',
     paddingTop: 72,
     paddingHorizontal: spacing.xl,
@@ -816,14 +863,28 @@ const styles = StyleSheet.create({
   liveControls: {alignSelf: 'stretch', gap: spacing.md},
   row2: {flexDirection: 'row', gap: spacing.sm, alignSelf: 'stretch'},
   flex1: {flex: 1},
+  // Floating tie card, pinned bottom over the board — offset with the safe area
+  // inline so it clears the home indicator on every device.
+  tieOverlay: {
+    position: 'absolute',
+    left: spacing.xl,
+    right: spacing.xl,
+    alignItems: 'stretch',
+  },
   tieBanner: {
     alignItems: 'center',
     gap: spacing.sm,
     padding: spacing.md,
-    backgroundColor: colors.glass,
+    // Opaque surface (not glass) so it reads clearly above the glass board.
+    backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.glassRim,
     borderRadius: radii.card,
+    shadowColor: colors.shadow,
+    shadowOpacity: 1,
+    shadowRadius: 16,
+    shadowOffset: {width: 0, height: 6},
+    elevation: 6,
   },
   bugLink: {
     flexDirection: 'row',

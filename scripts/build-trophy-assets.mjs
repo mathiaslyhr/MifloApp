@@ -6,8 +6,8 @@
 //   npm run assets:trophies
 //
 // Outputs:
-//   src/games/tic-tac-toe/assets/trophies/<honour>.png
-//   src/games/tic-tac-toe/assets/trophies.generated.ts
+//   src/games/hattrick/assets/trophies/<honour>.png
+//   src/games/hattrick/assets/trophies.generated.ts
 //     export const TROPHY_IMAGES: Record<HonourType, number>
 import {mkdirSync, writeFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -15,8 +15,8 @@ import sharp from 'sharp';
 import {root} from './_load-football.mjs';
 
 const SIZE = 96; // ~3x the honour chip; crisp on device.
-const OUT_DIR = resolve(root, 'src/games/tic-tac-toe/assets/trophies');
-const GEN = resolve(root, 'src/games/tic-tac-toe/assets/trophies.generated.ts');
+const OUT_DIR = resolve(root, 'src/games/hattrick/assets/trophies');
+const GEN = resolve(root, 'src/games/hattrick/assets/trophies.generated.ts');
 
 // Palette — shared so the set reads as one family.
 const GOLD_L = '#F4D77A', GOLD = '#E3B23C', GOLD_D = '#B07E23';

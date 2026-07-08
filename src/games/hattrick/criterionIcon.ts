@@ -106,7 +106,8 @@ export function criterionImage(c: Criterion): number | null {
     case 'position':
       return CRITERION_IMAGES[`position-${c.position.toLowerCase()}`] ?? null;
     case 'shirtNumber':
-      return CRITERION_IMAGES['shirt-number'] ?? null;
+      // No icon — the number renders as text (Scout "#23" style).
+      return null;
     case 'topLeagues':
       return CRITERION_IMAGES['top-leagues'] ?? null;
     default:

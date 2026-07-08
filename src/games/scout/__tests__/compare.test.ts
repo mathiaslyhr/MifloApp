@@ -38,16 +38,27 @@ describe('deriveAttributes', () => {
     expect(d.league).toBe('premier-league');
   });
 
-  it('handles no active club and missing shirt', () => {
+  it('falls back to the most recent spell when none is open-ended', () => {
+    // Current players often have their current spell end-dated (e.g. to: 2025),
+    // so the last spell is treated as the current club.
     const d = deriveAttributes(
       footballer({
-        clubs: [{clubId: 'chelsea', to: 2020}],
+        clubs: [
+          {clubId: 'aston-villa', from: 2015, to: 2018},
+          {clubId: 'chelsea', from: 2018, to: 2025},
+        ],
         shirtNumbers: undefined,
       }),
     );
+    expect(d.activeClubId).toBe('chelsea');
+    expect(d.league).toBe('premier-league');
+    expect(d.shirtNumber).toBeUndefined();
+  });
+
+  it('has no active club only when there are no clubs at all', () => {
+    const d = deriveAttributes(footballer({clubs: []}));
     expect(d.activeClubId).toBeUndefined();
     expect(d.league).toBeUndefined();
-    expect(d.shirtNumber).toBeUndefined();
   });
 });
 
@@ -83,7 +94,7 @@ describe('compareAttributes', () => {
     ).toBe('miss');
   });
 
-  it('club: same club hit, same league partial, other league miss', () => {
+  it('club: exact club hit, any other club miss (even same league)', () => {
     const secret = deriveAttributes(footballer({clubs: [{clubId: 'chelsea', from: 2018}]}));
     expect(
       status(
@@ -94,6 +105,7 @@ describe('compareAttributes', () => {
         'club',
       ),
     ).toBe('hit');
+    // Same league (arsenal = premier-league) is still a miss — League carries that.
     expect(
       status(
         compareAttributes(
@@ -102,7 +114,7 @@ describe('compareAttributes', () => {
         ),
         'club',
       ),
-    ).toBe('partial');
+    ).toBe('miss');
     expect(
       status(
         compareAttributes(

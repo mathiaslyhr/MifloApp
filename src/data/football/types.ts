@@ -5,7 +5,7 @@
  * raw arrays, they go through the repository's `Criterion`-based query API
  * (see repository.ts). That keeps the data model rich enough to drive both
  * predefined quiz questions and intersection-style games (e.g. footy
- * tic-tac-toe: "played for BOTH X AND Y") without per-game forks.
+ * hattrick: "played for BOTH X AND Y") without per-game forks.
  */
 
 /** Coarse positions for now; can be refined (ST/CB/...) later without churn. */
@@ -122,7 +122,7 @@ export type Footballer = {
 
 /**
  * A single queryable fact. Games compose these: a quiz category is one
- * criterion, a tic-tac-toe cell is the AND of two. New game types add new
+ * criterion, a hattrick cell is the AND of two. New game types add new
  * `kind`s here and a matching branch in `matches()`.
  */
 export type Criterion =

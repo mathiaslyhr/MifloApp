@@ -22,14 +22,14 @@ export function HelpModal({visible, onClose}: Props) {
       <Pressable style={styles.scrim} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
           <Text variant="label" align="center">
-            {t('game.help.title')}
+            {t('hattrick.help.title')}
           </Text>
           <Text variant="body" color="secondary" align="center">
-            {t('game.help.rule')}
+            {t('hattrick.help.rule')}
           </Text>
           <View style={styles.divider} />
           <Text variant="body" align="center">
-            {t('game.help.tapHint')}
+            {t('hattrick.help.tapHint')}
           </Text>
         </Pressable>
       </Pressable>
@@ -40,7 +40,7 @@ export function HelpModal({visible, onClose}: Props) {
 const styles = StyleSheet.create({
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.2)',
+    backgroundColor: colors.scrimLight,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,

@@ -12,8 +12,8 @@ import {
 import {CLUBS, getClub} from '../clubs';
 import {all, byCategory} from '../repository';
 import type {Rng} from '../repository';
-import {FLAG_IMAGES} from '../../../games/tic-tac-toe/assets/flags.generated';
-import {LOGO_IMAGES} from '../../../games/tic-tac-toe/assets/logos.generated';
+import {FLAG_IMAGES} from '../../../games/hattrick/assets/flags.generated';
+import {LOGO_IMAGES} from '../../../games/hattrick/assets/logos.generated';
 
 /** Leagues the data is allowed to use — a typo like "seria-a" must fail here. */
 const KNOWN_LEAGUES = new Set([

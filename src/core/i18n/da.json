@@ -66,8 +66,8 @@
       "duel": "Anbefalet til 1 mod 1",
       "party": "Anbefalet til 3+"
     },
-    "ttt": {
-      "title": "Tre på stribe",
+    "hattrick": {
+      "title": "Hattrick",
       "tagline": "Fodboldquiz × tre på stribe",
       "howToPlay": {
         "rules": [
@@ -77,19 +77,19 @@
         ]
       }
     },
-    "imposter": {
-      "title": "Fodbold-bedrageren",
-      "tagline": "Én af jer bluffer. Find bedrageren.",
+    "redCard": {
+      "title": "Red Card",
+      "tagline": "Én af jer bluffer. Send ham af banen.",
       "howToPlay": {
         "rules": [
-          "Alle undtagen bedrageren får den samme fodboldspiller.",
-          "Over to runder stiller I på skift spørgsmål til hinanden og stemmer så om, hvem bedrageren er.",
-          "Afsløret som bedrager? Nævn fodboldspilleren for at stjæle sejren tilbage."
+          "Alle undtagen snyderen får den samme fodboldspiller.",
+          "Over to runder stiller I på skift spørgsmål til hinanden og stemmer så om, hvem der skal sendes af banen.",
+          "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage."
         ]
       }
     },
-    "mystery": {
-      "title": "Gæt spilleren",
+    "scout": {
+      "title": "Scout",
       "tagline": "Gæt dagens spiller på seks forsøg",
       "howToPlay": {
         "rules": [
@@ -115,8 +115,8 @@
     "privacy": "Privatlivspolitik",
     "version": "Miflo v{{version}}"
   },
-  "game": {
-    "title": "Fodboldgitter",
+  "hattrick": {
+    "title": "Hattrick",
     "loading": "Indlæser…",
     "back": "Tilbage til rummet",
     "legendButton": "Sådan spiller du",
@@ -148,40 +148,51 @@
     "searchPlaceholder": "Søg efter en fodboldspiller",
     "searchHint": "Begynd at skrive for at søge efter en spiller",
     "noPlayers": "Ingen spillere fundet",
-    "timeLeft": "Tid tilbage"
+    "timeLeft": "Tid tilbage",
+    "someone": "Nogen",
+    "claimCell": "Vælg felt"
   },
-  "imposter": {
-    "title": "Bedrager",
+  "redCard": {
+    "title": "Red Card",
     "loading": "Indlæser…",
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Alle undtagen bedrageren får den samme fodboldspiller. Over to runder stiller I på skift hinanden et spørgsmål og stemmer derefter om, hvem bedrageren er. Bliver du afsløret som bedrager? Gæt spilleren for at vinde det tilbage."
+      "rule": "Alle undtagen snyderen får den samme fodboldspiller. Over to runder stiller I på skift hinanden et spørgsmål og stemmer derefter om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
     },
     "role": {
       "detectiveIntro": "Alle fik denne spiller",
-      "imposterTitle": "Du er bedrageren",
-      "imposterBody": "Du fik ingen spiller. Smelt ind, bluf dine svar, og bliv ikke afsløret.",
+      "imposterTitle": "Du bluffer",
+      "imposterBody": "Du fik ingen spiller. Smelt ind, bluf dine svar, og undgå det røde kort.",
       "gotIt": "Forstået",
       "loading": "Uddeler roller…"
     },
     "round": "Runde {{round}} af {{total}}",
+    "yourTurn": "Din tur",
+    "askOutLoud": "Stil en spiller et spørgsmål højt.",
+    "next": "Næste",
+    "finish": "Afslut",
+    "askerTurn": "{{name}} stiller et spørgsmål…",
     "yourTurnPick": "Din tur til at spørge en anden",
     "yourTurnAsk": "Stil {{name}} dit spørgsmål, og tryk så på Færdig",
     "done": "Færdig",
     "askerChoosing": "{{name}} vælger, hvem der skal spørges",
     "askerAsking": "{{asker}} spørger {{target}}",
     "youAre": "Dig: {{player}}",
-    "youAreImposter": "Dig: bedrageren",
+    "youAreImposter": "Dig: snyderen",
     "vote": {
-      "title": "Hvem er bedrageren?",
+      "title": "Hvem skal sendes af banen?",
+      "pill": "Sidste afstemning",
+      "ready": "Alle har spurgt",
+      "readySub": "Klar til at afgøre, hvem der skal sendes af banen?",
+      "start": "Start afstemning",
       "hint": "Tryk på den spiller, du tror bluffede.",
       "waiting": "Venter på stemmer ({{count}}/{{total}})",
       "voted": "Stemme afgivet. Venter på de andre…"
     },
     "reveal": {
-      "imposterWas": "{{name}} var bedrageren",
-      "caught": "Afsløret! Gruppen fandt bedrageren.",
-      "escaped": "Bedrageren slap væk.",
+      "imposterWas": "{{name}} får det røde kort",
+      "caught": "Sendt af banen! Gruppen fandt snyderen.",
+      "escaped": "Snyderen blev på banen.",
       "secret": "Spilleren var",
       "votesTitle": "Stemmer",
       "votedFor": "{{voter}} → {{target}}",
@@ -189,8 +200,9 @@
       "scoreboard": "Stilling"
     },
     "redeem": {
-      "prompt": "Du blev afsløret. Gæt spilleren for at vinde det tilbage.",
+      "prompt": "Du blev sendt af banen. Gæt spilleren for at vinde det tilbage.",
       "button": "Gæt spilleren",
+      "waiting": "Venter på, at {{name}} gætter spilleren…",
       "correct": "Flot! {{name}} gættede spilleren. +2",
       "wrong": "Forkert. {{name}} gættede {{guess}}."
     },
@@ -205,11 +217,11 @@
     "errorGuess": "Kunne ikke sende dit gæt. Prøv igen.",
     "newGameError": "Kunne ikke starte en ny runde."
   },
-  "mystery": {
-    "title": "Gæt spilleren",
+  "scout": {
+    "title": "Scout",
     "back": "Tilbage",
     "loading": "Indlæser…",
-    "instruction": "Gæt dagens mystiske fodboldspiller",
+    "instruction": "Gæt dagens spiller",
     "guessCount": "Gæt {{current}} af {{max}}",
     "searchPlaceholder": "Søg efter en fodboldspiller",
     "searchHint": "Begynd at skrive for at gætte en spiller",
@@ -218,11 +230,13 @@
     "won": "Klaret på {{count}}!",
     "lost": "Ikke flere gæt",
     "answerWas": "Dagens spiller var {{name}}",
+    "answerLabel": "Svaret",
     "streakCurrent": "Nuværende stime",
     "streakBest": "Bedste stime",
     "share": "Del resultat",
-    "shareCaption": "Spil Gæt spilleren på Miflo",
+    "shareCaption": "Spil Scout på Miflo",
     "lockedUntilTomorrow": "Kom tilbage i morgen for en ny spiller",
+    "comeBackIn": "Kom tilbage om",
     "columns": {
       "nationality": "Nation",
       "position": "Position",
@@ -232,7 +246,7 @@
     },
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Gæt den mystiske spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
+      "rule": "Gæt dagens spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
       "arrows": "Pilen på Nummer peger mod den hemmelige spillers nummer.",
       "daily": "En ny spiller kommer hver dag, den samme for alle."
     },
@@ -294,7 +308,7 @@
   },
   "howToPlay": {
     "title": "Sådan spiller du",
-    "intro": "De fleste Miflo-spil spilles sammen i samme rum: én telefon starter et rum, og alle andre deltager med koden. Gæt spilleren er en daglig solo-opgave, du kan spille på egen hånd.",
+    "intro": "De fleste Miflo-spil spilles sammen i samme rum: én telefon starter et rum, og alle andre deltager med koden. Scout er en daglig solo-opgave, du kan spille på egen hånd.",
     "step1Title": "Opret eller deltag i et rum",
     "step1Desc": "Tryk på Opret et rum for at få en kode, eller Deltag i et rum og indtast en vens kode.",
     "step2Title": "Vælg et spil",

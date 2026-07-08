@@ -21,7 +21,7 @@ describe('buildShareGrid', () => {
     };
     expect(buildShareGrid(state)).toBe(
       [
-        'Mystery Footballer 2026-07-07 3/6',
+        'Scout 2026-07-07 3/6',
         '⬛⬛🟨⬛⬛',
         '🟩⬛🟨🟨⬛',
         '🟩🟩🟩🟩🟩',
@@ -37,6 +37,6 @@ describe('buildShareGrid', () => {
       status: 'lost',
       guesses: [row('miss', 'miss', 'miss', 'miss', 'miss')],
     };
-    expect(buildShareGrid(state).split('\n')[0]).toBe('Mystery Footballer 2026-07-07 X/6');
+    expect(buildShareGrid(state).split('\n')[0]).toBe('Scout 2026-07-07 X/6');
   });
 });

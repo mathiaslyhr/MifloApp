@@ -1,5 +1,5 @@
 /**
- * Footballer Imposter game logic — pure functions over `ImposterState`.
+ * Red Card game logic — pure functions over `ImposterState`.
  *
  * Authority split: role assignment, vote tallying and scoring are done
  * SERVER-SIDE (see the 0015 migration) because they touch secrets. The client
@@ -8,14 +8,14 @@
  * Tic-Tac-Toe — plus a `tally` mirror used for tests and the reveal display.
  */
 import {getById, shuffle, type Rng} from '../../data/football';
-import {PLAYER_AVATARS} from '../tic-tac-toe/assets/playerAvatars';
+import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
 import {ROUNDS, SCORE} from './types';
 import type {ImposterReveal, ImposterState} from './types';
 
 /**
  * Footballers eligible to be the secret: only those we have an illustration for,
  * so the reveal always shows a real portrait. This set grows automatically as
- * more avatars are enabled in `tic-tac-toe/assets/playerAvatars.ts`.
+ * more avatars are enabled in `hattrick/assets/playerAvatars.ts`.
  */
 export function eligibleFootballerIds(): string[] {
   return Object.keys(PLAYER_AVATARS).filter(id => getById(id) !== undefined);

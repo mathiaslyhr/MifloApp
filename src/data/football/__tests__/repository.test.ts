@@ -73,7 +73,7 @@ describe('find / intersection', () => {
     ).toBe(true);
   });
 
-  it('intersection powers a tic-tac-toe cell (Barcelona ∩ Argentina includes Messi)', () => {
+  it('intersection powers a hattrick cell (Barcelona ∩ Argentina includes Messi)', () => {
     const result = intersection(
       {kind: 'club', clubId: 'barcelona'},
       {kind: 'nationality', country: 'Argentina'},

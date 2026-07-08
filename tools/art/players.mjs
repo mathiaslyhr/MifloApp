@@ -1,4 +1,4 @@
-// All 37 teammate-axis hub players (see src/games/tic-tac-toe/assets/playerAvatars.ts).
+// All 37 teammate-axis hub players (see src/games/hattrick/assets/playerAvatars.ts).
 // file  = PNG basename expected by playerAvatars.ts
 // wiki  = English Wikipedia page title (photo source for likeness)
 // jersey = kit description injected into the generation prompt (no crests/logos)

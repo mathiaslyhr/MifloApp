@@ -105,7 +105,7 @@ const reversePlayedFor: Template = (f, rng) => {
   return built && {topic: 'Career', prompt: `Which of these players played for ${club.name}?`, ...built};
 };
 
-/** "Which player played for BOTH [A] and [B]?" — the tic-tac-toe flavour. */
+/** "Which player played for BOTH [A] and [B]?" — the hattrick flavour. */
 const bothClubs: Template = (f, rng) => {
   const clubIds = [...new Set(f.clubs.map(s => s.clubId))];
   if (clubIds.length < 2) {

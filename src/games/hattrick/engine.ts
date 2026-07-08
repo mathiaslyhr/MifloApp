@@ -67,7 +67,7 @@ export function createIndividualState(
     memberUserIds: [p.userId],
   }));
   return {
-    gameType: 'tic-tac-toe',
+    gameType: 'hattrick',
     mode: 'individual',
     rows: grid.rows,
     cols: grid.cols,

@@ -1,44 +1,36 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {
-  FloatingBar,
   GameTile,
-  IslandTabBar,
+  NAV_HEIGHT,
   Screen,
   Text,
-  TabId,
   toast,
+  TopStatusFade,
 } from '../core/ui';
-import {screenPadding, spacing} from '../theme';
+import {spacing} from '../theme';
 import {useAppNavigation} from '../core/navigation';
 import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
 import {randomFootballName} from '../core/identity/funnyName';
 import {GAMES, GAME_CATEGORIES, GameType} from './gamesCatalog';
 
-type Props = {
-  /** Switch tabs (the nav island). */
-  onTabSelect?: (id: TabId) => void;
-};
-
 /**
- * Games — the hub on the rainbow canvas. A centered wordmark floats at the top
- * and the nav island (Games active) floats at the bottom; the stack of glass
- * game tiles scrolls the full height *behind* both, with no fixed chrome or clip
- * line — the app-wide floating-bar layout, shared with Menu and Lobby.
+ * Games — the hub on the rainbow canvas. The wordmark header is the first item
+ * in the scroll content, so it slides up and off the top as you scroll
+ * (Instagram-style); only a faint blurred status strip stays pinned. The shared
+ * nav island (in the tab shell) blurs the catalog beneath it.
  *
  * Tapping a single-player game opens straight to its screen; a multiplayer game
  * mints a party locked to that game and pushes the Lobby (mirrors Home's
  * Create). Unbuilt games render dimmed with a "Coming soon" pill and are inert.
  */
-export function GamesScreen({onTabSelect}: Props) {
+export function GamesScreen() {
   const {t} = useTranslation();
   const navigation = useAppNavigation();
+  const insets = useSafeAreaInsets();
   const [busy, setBusy] = useState(false);
-  // Floating-bar heights, measured at layout, so the scroll content can reserve
-  // matching top/bottom clearance and glide behind the chrome.
-  const [topH, setTopH] = useState(0);
-  const [botH, setBotH] = useState(0);
 
   // Single-player games open straight to their screen; multiplayer games mint a
   // party locked to that game and hand off to the Lobby.
@@ -47,8 +39,8 @@ export function GamesScreen({onTabSelect}: Props) {
       return;
     }
     if (GAMES.find(g => g.gameType === gameType)?.single) {
-      if (gameType === 'mystery-footballer') {
-        navigation.navigate('MysteryFootballer');
+      if (gameType === 'scout') {
+        navigation.navigate('Scout');
       }
       return;
     }
@@ -68,16 +60,25 @@ export function GamesScreen({onTabSelect}: Props) {
   }
 
   return (
-    // Drop top/bottom safe-area edges — the floating bars own those insets so
-    // the catalog scrolls the full height, behind the chrome, with no clip line.
+    // Drop top/bottom safe-area edges — the scroll content owns the top inset
+    // (the header scrolls away) and the shell nav owns the bottom inset.
     <Screen canvas edges={['left', 'right']}>
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.list,
-          {paddingTop: topH + spacing.xl, paddingBottom: botH + spacing.xl},
+          {
+            paddingTop: insets.top + spacing.sm,
+            paddingBottom: NAV_HEIGHT + insets.bottom + spacing.xl,
+          },
         ]}
         showsVerticalScrollIndicator={false}>
+        {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
+        <View style={styles.header}>
+          <Text variant="wordmark" align="center">
+            {t('games.title')}
+          </Text>
+        </View>
         {GAME_CATEGORIES.map(({category, i18nKey}) => {
           const games = GAMES.filter(g => g.category === category);
           if (games.length === 0) {
@@ -106,20 +107,9 @@ export function GamesScreen({onTabSelect}: Props) {
         })}
       </ScrollView>
 
-      {/* Floating header — the wordmark, no background; the catalog scrolls
-          behind it. */}
-      <FloatingBar edge="top" onHeight={setTopH} style={styles.topBar}>
-        <View style={styles.header}>
-          <Text variant="wordmark" align="center">
-            {t('games.title')}
-          </Text>
-        </View>
-      </FloatingBar>
-
-      {/* Floating nav island (Games active), pinned to the bottom. */}
-      <FloatingBar edge="bottom" onHeight={setBotH}>
-        <IslandTabBar active="games" onSelect={onTabSelect} />
-      </FloatingBar>
+      {/* Seamless frosted fade behind the status bar — content dissolves under
+          it (no hard edge) as it scrolls up. */}
+      <TopStatusFade />
     </Screen>
   );
 }
@@ -129,12 +119,6 @@ const styles = StyleSheet.create({
     height: 44,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  // FloatingBar spans edge-to-edge and owns the top safe-area inset (don't set
-  // paddingTop here or it overrides that inset and tucks under the status bar);
-  // just pad horizontally so the wordmark lines up with the 16px-inset content.
-  topBar: {
-    paddingHorizontal: screenPadding,
   },
   scroll: {flex: 1},
   list: {

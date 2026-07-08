@@ -4,8 +4,16 @@ import {Gamepad2, Home, Menu, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {colors, fonts, radii} from '../../theme';
 import {usePressScale} from './usePressScale';
+import {AppBlur} from './Blur';
 
 export type TabId = 'home' | 'games' | 'menu';
+
+/**
+ * Vertical clearance the nav island reserves at the bottom of a screen — the pill
+ * height plus its top breathing room. Screens add this (+ safe-area inset) to
+ * their content's bottom padding so nothing hides behind the shell nav.
+ */
+export const NAV_HEIGHT = 76;
 
 const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
   {id: 'home', labelKey: 'tabs.home', Icon: Home},
@@ -33,26 +41,31 @@ export function IslandTabBar({active, onSelect}: Props) {
   const {t} = useTranslation();
   return (
     <View style={styles.wrap} pointerEvents="box-none">
+      {/* Outer layer carries the shadow (a clipped view clips its own shadow on
+          iOS); the inner pill clips the blur to the rounded shape. */}
       <Animated.View style={[styles.island, press.animatedStyle]}>
-        {ITEMS.map(({id, labelKey, Icon}) => {
-          const on = id === active;
-          const color = on ? colors.primary : colors.muted;
-          const label = t(labelKey);
-          return (
-            <Pressable
-              key={id}
-              onPress={() => onSelect?.(id)}
-              onPressIn={press.onPressIn}
-              onPressOut={press.onPressOut}
-              accessibilityRole="button"
-              accessibilityLabel={label}
-              accessibilityState={{selected: on}}
-              style={styles.item}>
-              <Icon size={22} color={color} strokeWidth={2} />
-              <Text style={[styles.label, {color}]}>{label}</Text>
-            </Pressable>
-          );
-        })}
+        <View style={styles.pill}>
+          <AppBlur amount={22} />
+          {ITEMS.map(({id, labelKey, Icon}) => {
+            const on = id === active;
+            const color = on ? colors.primary : colors.muted;
+            const label = t(labelKey);
+            return (
+              <Pressable
+                key={id}
+                onPress={() => onSelect?.(id)}
+                onPressIn={press.onPressIn}
+                onPressOut={press.onPressOut}
+                accessibilityRole="button"
+                accessibilityLabel={label}
+                accessibilityState={{selected: on}}
+                style={styles.item}>
+                <Icon size={22} color={color} strokeWidth={2} />
+                <Text style={[styles.label, {color}]}>{label}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </Animated.View>
     </View>
   );
@@ -60,21 +73,27 @@ export function IslandTabBar({active, onSelect}: Props) {
 
 const styles = StyleSheet.create({
   wrap: {alignItems: 'center', paddingTop: 12},
+  // Shadow-only layer (no clip, so the ambient lift isn't cut off).
   island: {
+    borderRadius: radii.pill,
+    shadowColor: '#140F32',
+    shadowOpacity: 0.18,
+    shadowOffset: {width: 0, height: 16},
+    shadowRadius: 24,
+    elevation: 8,
+  },
+  // Visible pill: clips the real backdrop blur to the rounded shape. A light
+  // tint over the blur keeps the "clear" frosted look; blur shows through.
+  pill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     padding: 6,
     borderRadius: radii.pill,
     borderWidth: 1,
-    // "Clear" frosted glass — matches the secondary (Join a room) button.
-    backgroundColor: colors.glassLight,
+    backgroundColor: 'rgba(255,255,255,0.22)',
     borderColor: colors.glassRim,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.18,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 24,
-    elevation: 8,
+    overflow: 'hidden',
   },
   item: {
     flexDirection: 'column',

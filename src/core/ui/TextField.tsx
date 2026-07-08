@@ -20,10 +20,10 @@ type Props = {
 };
 
 /**
- * A single-line text field. A legible soft-lavender fill with a hairline border
- * that lifts to the brand color on focus (visible on light cards, not just the
- * canvas). Used by the lobby rename sheet now; the Join room-code entry (#5)
- * reuses it next.
+ * A single-line text field. An opaque white fill with a hairline border, fully
+ * rounded (pill/capsule), so it reads identically on any background — the
+ * lavender canvas and white cards alike. The border lifts to the brand color on
+ * focus. Every input in the app routes through this component.
  */
 export function TextField({
   value,
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     // 2px border always reserved so the focus color doesn't shift height.
     paddingVertical: 12,
     paddingHorizontal: spacing.lg - 1,
-    borderRadius: radii.button,
-    backgroundColor: colors.surface2,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface,
     borderWidth: 2,
     borderColor: colors.divider,
     color: colors.ink,
@@ -85,6 +85,9 @@ const styles = StyleSheet.create({
   },
   fieldMultiline: {
     minHeight: 112,
+    // A tall box shouldn't become a stadium — soften to the card radius instead
+    // of the single-line pill.
+    borderRadius: radii.card,
     // Multi-line boxes anchor text to the top and need room for descenders.
     textAlignVertical: 'top',
     paddingTop: 12,

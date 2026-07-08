@@ -17,7 +17,7 @@ import {resolve} from 'node:path';
 import sharp from 'sharp';
 
 const HERE = import.meta.dirname;
-const ASSETS = resolve(HERE, '../../src/games/tic-tac-toe/assets');
+const ASSETS = resolve(HERE, '../../src/games/hattrick/assets');
 const PREVIEW = resolve(HERE, 'preview');
 
 // Layouts use REF_W×REF_H coordinates; crops scale to the actual sheet size.
