@@ -16,8 +16,9 @@ import {
   CircleButton,
   FloatingBar,
   GamePickerSheet,
+  GlassCard,
+  GlassTag,
   NameSheet,
-  PressableScale,
   Screen,
   Text,
   TopStatusFade,
@@ -275,16 +276,18 @@ export function LobbyScreen({route, navigation}: Props) {
 
         {/* Party code — tapping it still opens the share sheet, quietly. */}
         <Pressable
-          style={styles.codeCard}
+          style={styles.codeWrap}
           onPress={shareCode}
           accessibilityRole="button"
           accessibilityLabel={t('lobby.shareCode')}>
-          <Text variant="caption" color="muted" align="center" style={styles.codeLabel}>
-            {t('lobby.code')}
-          </Text>
-          <Text variant="hero" align="center" style={styles.code}>
-            {room?.code ?? '· · · ·'}
-          </Text>
+          <GlassCard radius="pill" shadow="floating" style={styles.codeCard}>
+            <Text variant="caption" color="muted" align="center" style={styles.codeLabel}>
+              {t('lobby.code')}
+            </Text>
+            <Text variant="hero" align="center" style={styles.code}>
+              {room?.code ?? '· · · ·'}
+            </Text>
+          </GlassCard>
         </Pressable>
 
         <Text variant="secondary" color="secondary" align="center">
@@ -300,9 +303,11 @@ export function LobbyScreen({route, navigation}: Props) {
             const isMe = p.userId === myUserId;
             const actionable = isMe || isHost;
             return (
-              <PressableScale
+              <GlassTag
                 key={p.id}
-                style={[styles.nameTag, isMe && styles.nameTagMe]}
+                size="sm"
+                borderWidth={2}
+                accent={isMe}
                 disabled={!actionable}
                 onPress={() => onPressPlayer(p)}
                 accessibilityRole={actionable ? 'button' : undefined}
@@ -323,7 +328,7 @@ export function LobbyScreen({route, navigation}: Props) {
                     </Text>
                   </View>
                 ) : null}
-              </PressableScale>
+              </GlassTag>
             );
           })}
         </View>
@@ -410,20 +415,11 @@ const styles = StyleSheet.create({
     gap: spacing.xl,
   },
   // Party code on a frosted "liquid glass" pill that lifts off the rainbow canvas.
+  codeWrap: {alignSelf: 'center'},
   codeCard: {
-    alignSelf: 'center',
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.xxl,
     gap: spacing.xs,
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.pill,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.18,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 24,
-    elevation: 8,
   },
   codeLabel: {letterSpacing: 1},
   code: {letterSpacing: 6},
@@ -433,20 +429,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.sm,
   },
-  nameTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.xs + 2,
-    paddingHorizontal: spacing.md,
-    borderRadius: radii.pill,
-    backgroundColor: colors.glass,
-    // 2px border always reserved so the "me" accent doesn't resize the tag.
-    borderWidth: 2,
-    borderColor: colors.glassRim,
-  },
-  // Your own tag: brand-purple outline (paired with the "you" marker).
-  nameTagMe: {borderColor: colors.primary},
   // Smaller than the 20pt "section" default so more players fit per row.
   nameText: {color: colors.ink, fontSize: 15, lineHeight: 19},
   // Small accent pill marking the host — straddles the tag's top border,
