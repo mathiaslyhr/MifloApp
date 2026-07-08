@@ -10,13 +10,13 @@ import {
   View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ChevronLeft, HelpCircle, Bug, Plus} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle, Plus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
-  AppBlur,
   Button,
   CircleButton,
+  GlassCard,
   PressableScale,
   Screen,
   Text,
@@ -25,6 +25,7 @@ import {
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {ReportBugModal} from '../core/feedback/ReportBugModal';
+import {BugReportLink} from '../core/feedback/BugReportLink';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -304,7 +305,7 @@ export function HattrickScreen({route, navigation}: Props) {
 
         {/* Column headers: corner actions (skip/tie) + a glass bar split into 3 */}
         <View style={styles.topRow}>
-          <View
+          <GlassCard
             style={[
               styles.card,
               styles.corner,
@@ -346,8 +347,8 @@ export function HattrickScreen({route, navigation}: Props) {
                 </Text>
               </PressableScale>
             ) : null}
-          </View>
-          <View style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
+          </GlassCard>
+          <GlassCard style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
             {state.cols.map((c, i) => (
               <AxisCell
                 key={`c${i}`}
@@ -361,12 +362,12 @@ export function HattrickScreen({route, navigation}: Props) {
                 }}
               />
             ))}
-          </View>
+          </GlassCard>
         </View>
 
         {/* Row headers (glass bar) + the board */}
         <View style={styles.bottomRow}>
-          <View style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
+          <GlassCard style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
             {state.rows.map((c, i) => (
               <AxisCell
                 key={`r${i}`}
@@ -380,9 +381,9 @@ export function HattrickScreen({route, navigation}: Props) {
                 }}
               />
             ))}
-          </View>
+          </GlassCard>
 
-          <View style={[styles.card, {width: boardSize, height: boardSize}]}>
+          <GlassCard style={[styles.card, {width: boardSize, height: boardSize}]}>
             {[0, 1, 2].map(r => (
               <View key={`row${r}`} style={{flexDirection: 'row'}}>
                 {[0, 1, 2].map(c => {
@@ -438,7 +439,7 @@ export function HattrickScreen({route, navigation}: Props) {
                 })}
               </View>
             ))}
-          </View>
+          </GlassCard>
         </View>
 
         {state.winner ? (
@@ -467,17 +468,10 @@ export function HattrickScreen({route, navigation}: Props) {
         )}
 
         {/* Always reachable — report a problem without leaving the game. */}
-        <Pressable
+        <BugReportLink
+          label={t('hattrick.reportBug')}
           onPress={() => setShowBug(true)}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={t('hattrick.reportBug')}
-          style={styles.bugLink}>
-          <Bug size={14} color={colors.muted} strokeWidth={2} />
-          <Text variant="caption" color="muted">
-            {t('hattrick.reportBug')}
-          </Text>
-        </Pressable>
+        />
       </View>
 
       {/* Footballer picker — light scrim so the selected (purple) cell stays visible */}
@@ -709,12 +703,7 @@ function TieOverlay({
         styles.tieOverlay,
         {bottom: insets.bottom + spacing.xl, opacity, transform: [{translateY}]},
       ]}>
-      <View style={styles.tieCard}>
-        {/* Frosted backdrop, clipped to the card radius. */}
-        <View style={styles.tieBlurClip} pointerEvents="none">
-          <AppBlur amount={24} />
-          <View style={styles.tieTint} />
-        </View>
+      <GlassCard blur={24} style={styles.tieCard}>
         <View style={styles.tieContent}>
           {waiting ? (
             <>
@@ -752,7 +741,7 @@ function TieOverlay({
             </>
           )}
         </View>
-      </View>
+      </GlassCard>
     </Animated.View>
   );
 }
@@ -771,14 +760,8 @@ const styles = StyleSheet.create({
   turnRow: {paddingVertical: spacing.lg, alignItems: 'center'},
   topRow: {flexDirection: 'row', alignSelf: 'center', marginBottom: LABEL_GAP},
   bottomRow: {flexDirection: 'row', alignSelf: 'center'},
-  // Glass card shared by both header bars and the board.
-  card: {
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
-    overflow: 'hidden',
-  },
+  // The header bars and board clip their internal grid dividers to the corners.
+  card: {overflow: 'hidden'},
   // White dividers that split a card into a grid.
   divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: DIVIDER_COLOR},
   divTop: {borderTopWidth: DIVIDER, borderTopColor: DIVIDER_COLOR},
@@ -873,47 +856,18 @@ const styles = StyleSheet.create({
     right: spacing.xl,
     alignItems: 'stretch',
   },
-  // Frosted glass tie card — real backdrop blur behind a translucent tint so the
-  // board reads through it (Liquid Glass), replacing the old opaque white surface.
+  // Frosted glass tie card (GlassCard blur) with a bespoke, tighter lift than
+  // the shared floating recipe — it hovers close over the board.
   tieCard: {
-    borderRadius: radii.card,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    shadowColor: '#140F32',
+    shadowColor: colors.shadowInk,
     shadowOpacity: 0.18,
     shadowRadius: 16,
     shadowOffset: {width: 0, height: 8},
     elevation: 6,
   },
-  // Inner clip: rounds + hides the absolute-fill blur/tint to the card corners.
-  // (Kept separate from tieCard so the card's own shadow isn't clipped.)
-  tieBlurClip: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    borderRadius: radii.card,
-    overflow: 'hidden',
-  },
-  tieTint: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: colors.glass, // legible frost over the busy glass board
-  },
   tieContent: {
     alignItems: 'center',
     gap: spacing.sm,
     padding: spacing.md,
-  },
-  bugLink: {
-    flexDirection: 'row',
-    gap: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.md,
   },
 });
