@@ -270,7 +270,9 @@
       "position": "Spiller som {{value}}",
       "shirtNumber": "Har båret trøje nummer {{value}}",
       "topLeagues": "Har spillet i {{value}}+ af de fem største ligaer",
-      "tag": "Er en {{value}}"
+      "tag": "Er en {{value}}",
+      "leagueTitle": "Har vundet {{value}}",
+      "treble": "Har vundet triplen (mesterskab, pokal og Champions League i samme sæson)"
     }
   },
   "update": {
@@ -295,6 +297,7 @@
   "aboutPage": {
     "title": "Om Miflo",
     "blurb": "Miflo er sociale spil for venner i samme rum. Saml alle, vælg et spil og spil sammen.",
+    "disclaimer": "Miflo er ikke tilknyttet, sponsoreret af eller godkendt af nogen fodboldliga, klub, spiller eller fodboldforbund. Spillernavne og karrierestatistik er faktuelle oplysninger, der bruges til quizformål. Al grafik er originale illustrationer.",
     "version": "Miflo v{{version}}"
   },
   "howToPlay": {

@@ -146,6 +146,10 @@ export function criterionLabel(c: Criterion): string {
       return `Played with ${teammateName(c.playerId)}`;
     case 'topLeagues':
       return `Played in ${c.count}+ top-5 leagues`;
+    case 'leagueTitle':
+      return `${LEAGUE_LABELS[c.league] ?? c.league} winner`;
+    case 'treble':
+      return 'Treble winner';
   }
 }
 
@@ -175,6 +179,10 @@ export function criterionValue(c: Criterion): string {
       return String(c.count);
     case 'tag':
       return TAG_LABELS[c.tag] ?? c.tag;
+    case 'leagueTitle':
+      return LEAGUE_LABELS[c.league] ?? c.league;
+    case 'treble':
+      return 'treble';
   }
 }
 
@@ -201,6 +209,10 @@ export function criterionShortLabel(c: Criterion): string {
       return 'Teammate';
     case 'topLeagues':
       return `${c.count}+ Top5`;
+    case 'leagueTitle':
+      return LEAGUE_SHORT[c.league] ?? LEAGUE_LABELS[c.league] ?? c.league;
+    case 'treble':
+      return 'Treble';
   }
 }
 
@@ -248,14 +260,20 @@ function buildCandidates(): Candidate[] {
     f.nationality.forEach(n => nations.add(n));
   }
   nations.forEach(country => criteria.push({kind: 'nationality', country}));
-  // Honours for spice — trophies plus domestic titles (league / cup winners).
+  // Honours for spice — trophies plus cup winners. The generic 'league-title'
+  // axis is replaced by the per-league winner axes below.
   (
     [
       'champions-league', 'world-cup', 'ballon-dor', 'golden-boot',
       'european-championship', 'copa-america', 'europa-league',
-      'league-title', 'domestic-cup',
+      'domestic-cup',
     ] as const
   ).forEach(honour => criteria.push({kind: 'honour', honour}));
+  // Per-league titles (only leagues with bundled trophy art) + the treble.
+  (['premier-league', 'la-liga', 'serie-a', 'bundesliga'] as const).forEach(
+    league => criteria.push({kind: 'leagueTitle', league}),
+  );
+  criteria.push({kind: 'treble'});
   // Iconic shirt numbers.
   AXIS_SHIRT_NUMBERS.forEach(number =>
     criteria.push({kind: 'shirtNumber', number}),
@@ -341,6 +359,8 @@ const KIND_CAP: Partial<Record<Criterion['kind'], number>> = {
   shirtNumber: 1,
   honour: 2,
   topLeagues: 1,
+  leagueTitle: 1,
+  treble: 1,
 };
 
 export function generateGrid(

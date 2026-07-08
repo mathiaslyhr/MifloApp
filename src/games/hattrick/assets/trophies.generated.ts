@@ -15,4 +15,13 @@ export const TROPHY_IMAGES: Record<string, number> = {
   'league-title': require('./trophies/league-title.png'),
   'domestic-cup': require('./trophies/domestic-cup.png'),
   'player-of-the-season': require('./trophies/player-of-the-season.png'),
+  treble: require('./trophies/treble.png'),
+};
+
+/** Per-league championship trophies for the "X winner" axes. */
+export const LEAGUE_TITLE_IMAGES: Record<string, number> = {
+  'premier-league': require('./trophies/league-premier-league.png'),
+  'la-liga': require('./trophies/league-la-liga.png'),
+  'serie-a': require('./trophies/league-serie-a.png'),
+  bundesliga: require('./trophies/league-bundesliga.png'),
 };

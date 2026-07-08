@@ -270,7 +270,9 @@
       "position": "Plays as a {{value}}",
       "shirtNumber": "Has worn the number {{value}} shirt",
       "topLeagues": "Has played in {{value}}+ of the top five leagues",
-      "tag": "Is a {{value}}"
+      "tag": "Is a {{value}}",
+      "leagueTitle": "Has won the {{value}}",
+      "treble": "Has won the treble (league, cup & Champions League in one season)"
     }
   },
   "update": {
@@ -295,6 +297,7 @@
   "aboutPage": {
     "title": "About Miflo",
     "blurb": "Miflo is social party games for friends in the same room. Gather everyone, pick a game and play together.",
+    "disclaimer": "Miflo is not affiliated with, sponsored by, or endorsed by any football league, club, player or governing body. Player names and career statistics are factual information used for trivia purposes. All artwork is original illustration.",
     "version": "Miflo v{{version}}"
   },
   "howToPlay": {

@@ -7,7 +7,7 @@
 import type {Criterion} from '../../data/football';
 import {FLAG_IMAGES} from './assets/flags.generated';
 import {LOGO_IMAGES} from './assets/logos.generated';
-import {TROPHY_IMAGES} from './assets/trophies.generated';
+import {TROPHY_IMAGES, LEAGUE_TITLE_IMAGES} from './assets/trophies.generated';
 import {CRITERION_IMAGES} from './assets/criteria.generated';
 import {PLAYER_AVATARS} from './assets/playerAvatars';
 
@@ -110,6 +110,10 @@ export function criterionImage(c: Criterion): number | null {
       return null;
     case 'topLeagues':
       return CRITERION_IMAGES['top-leagues'] ?? null;
+    case 'leagueTitle':
+      return LEAGUE_TITLE_IMAGES[c.league] ?? null;
+    case 'treble':
+      return TROPHY_IMAGES.treble ?? null;
     default:
       return null;
   }
