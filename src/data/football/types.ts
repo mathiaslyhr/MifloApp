@@ -121,6 +121,31 @@ export type Footballer = {
 };
 
 /**
+ * One managerial job. Exactly one of `clubId` / `country` is set: a club job
+ * references clubs.ts, a national-team job the country name as used in
+ * player nationalities. Open-ended (`to` omitted) = still in charge.
+ */
+export type ManagerSpell = {
+  clubId?: string;
+  country?: string;
+  from: number;
+  to?: number;
+};
+
+/**
+ * A manager/head coach — groundwork for a future "Managed by X" axis
+ * (match = player's club spell overlaps the manager's spell at that club).
+ * Same id convention as Footballer: "Surname, First", single-name ids for
+ * managers known by one name ('Luis Enrique').
+ */
+export type Manager = {
+  id: string;
+  name: string;
+  nationality: string[];
+  spells: ManagerSpell[];
+};
+
+/**
  * A single queryable fact. Games compose these: a quiz category is one
  * criterion, a hattrick cell is the AND of two. New game types add new
  * `kind`s here and a matching branch in `matches()`.
@@ -135,4 +160,11 @@ export type Criterion =
   | {kind: 'shirtNumber'; number: number}
   | {kind: 'teammate'; playerId: string}
   /** Played in at least `count` of the top-5 European leagues. */
-  | {kind: 'topLeagues'; count: number};
+  | {kind: 'topLeagues'; count: number}
+  /**
+   * Won the title of a SPECIFIC league — derived: a league-title honour year
+   * that overlaps a club spell in that league (no per-club title data needed).
+   */
+  | {kind: 'leagueTitle'; league: string}
+  /** Continental treble winner — curated squads in trebles.ts. */
+  | {kind: 'treble'};

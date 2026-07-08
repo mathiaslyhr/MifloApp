@@ -10,6 +10,7 @@
 import {CLUBS, getClub} from './clubs';
 import {getCategory} from './categories';
 import {FOOTBALLERS} from './footballers';
+import {TREBLE_WINNER_IDS} from './trebles';
 import type {ClubSpell, Criterion, Footballer} from './types';
 
 /** Year used as the open end of a still-active club spell (`to` undefined). */
@@ -97,6 +98,26 @@ export function matches(footballer: Footballer, criterion: Criterion): boolean {
       const count = leaguesOf(footballer).filter(l => TOP5_LEAGUES.has(l)).length;
       return count >= criterion.count;
     }
+    case 'leagueTitle': {
+      // Won THIS league: a league-title year that overlaps a spell at a club
+      // playing in it. Honours without years can't be attributed — no match.
+      const years = footballer.honours
+        .filter(h => h.type === 'league-title')
+        .flatMap(h => h.years ?? []);
+      return years.some(year =>
+        footballer.clubs.some(spell => {
+          if (spell.from != null && year < spell.from) {
+            return false;
+          }
+          if (spell.to != null && year > spell.to) {
+            return false;
+          }
+          return getClub(spell.clubId)?.league === criterion.league;
+        }),
+      );
+    }
+    case 'treble':
+      return TREBLE_WINNER_IDS.has(footballer.id);
   }
 }
 

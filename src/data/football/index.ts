@@ -6,6 +6,9 @@ export {CLUBS, getClub} from './clubs';
 export {CATEGORIES, getCategory} from './categories';
 export type {Category} from './categories';
 export {FOOTBALLERS} from './footballers';
+export {MANAGERS} from './managers';
+export {TREBLE_SQUADS, TREBLE_WINNER_IDS} from './trebles';
+export type {TrebleSquad} from './trebles';
 export {FAMOUS_LINEUPS} from './famousLineups';
 export type {FamousLineup, LineupPlayer} from './famousLineups';
 export {
