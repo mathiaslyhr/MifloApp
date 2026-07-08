@@ -8,6 +8,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {TabsScreen} from '../../screens/TabsScreen';
 import {JoinScreen} from '../../screens/JoinScreen';
 import {LobbyScreen} from '../../screens/LobbyScreen';
+import {GamePickerScreen} from '../../screens/GamePickerScreen';
 import {HattrickScreen} from '../../screens/HattrickScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
@@ -25,6 +26,7 @@ export function RootNavigator() {
       <Stack.Screen name="Tabs" component={TabsScreen} />
       <Stack.Screen name="Join" component={JoinScreen} />
       <Stack.Screen name="Lobby" component={LobbyScreen} />
+      <Stack.Screen name="GamePicker" component={GamePickerScreen} />
       {/* No swipe-back out of a live game; you leave via the result screen. */}
       <Stack.Screen
         name="Hattrick"

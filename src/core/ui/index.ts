@@ -20,7 +20,6 @@ export {TextField} from './TextField';
 export {NameSheet} from './NameSheet';
 export {HowToPlayModal} from './HowToPlayModal';
 export type {HelpLine} from './HowToPlayModal';
-export {GamePickerSheet} from './GamePickerSheet';
 export {IslandTabBar, NAV_HEIGHT} from './IslandTabBar';
 export type {TabId} from './IslandTabBar';
 export {FloatingBar} from './FloatingBar';

@@ -15,7 +15,6 @@ import {
   Button,
   CircleButton,
   FloatingBar,
-  GamePickerSheet,
   GlassCard,
   GlassTag,
   NameSheet,
@@ -58,7 +57,6 @@ export function LobbyScreen({route, navigation}: Props) {
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
-  const [pickerOpen, setPickerOpen] = useState(false);
   const [starting, setStarting] = useState(false);
   const insets = useSafeAreaInsets();
   // Measured height of the floating bottom bar, so scroll content clears it.
@@ -148,6 +146,17 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }, [players, myUserId, navigation, t]);
 
+  // A guest who backed out of a still-running game re-enters it manually. The
+  // auto-nav effect above won't do it (inGameRef stays true until the room
+  // returns to the lobby), but a direct navigate isn't blocked by that guard.
+  function rejoinGame() {
+    if (room?.gameType === 'hattrick') {
+      navigation.navigate('Hattrick', {roomId});
+    } else if (room?.gameType === 'red-card') {
+      navigation.navigate('RedCard', {roomId});
+    }
+  }
+
   async function shareCode() {
     if (!room?.code) {
       return;
@@ -204,7 +213,6 @@ export function LobbyScreen({route, navigation}: Props) {
     if (players.length < 2 || starting) {
       return;
     }
-    setPickerOpen(false);
     setStarting(true);
     try {
       switch (gameType) {
@@ -255,6 +263,18 @@ export function LobbyScreen({route, navigation}: Props) {
       );
     }
   }
+
+  // The game-picker page hands its choice back via a route param. Clear it first
+  // so a re-focus can't re-fire, then start the round on this (still-mounted) host.
+  const pickedGame = route.params?.pickedGame;
+  useEffect(() => {
+    if (pickedGame) {
+      navigation.setParams({pickedGame: undefined});
+      startGame(pickedGame);
+    }
+    // startGame reads the live roster/refs via closure; keyed on the returned pick.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pickedGame]);
 
   return (
     // Drop top/bottom safe-area edges — the scroll content owns the top inset
@@ -362,8 +382,16 @@ export function LobbyScreen({route, navigation}: Props) {
             variant="primary"
             disabled={players.length < 2 || starting}
             onPress={() =>
-              locked && room ? startGame(room.gameType) : setPickerOpen(true)
+              locked && room
+                ? startGame(room.gameType)
+                : navigation.navigate('GamePicker', {roomId})
             }
+          />
+        ) : room?.status === 'in_progress' ? (
+          <Button
+            label={t('lobby.rejoin')}
+            variant="primary"
+            onPress={rejoinGame}
           />
         ) : (
           <Text variant="secondary" color="secondary" align="center">
@@ -384,13 +412,6 @@ export function LobbyScreen({route, navigation}: Props) {
         confirmLabel={t('common.save')}
         onConfirm={submitRename}
         onCancel={() => setRenameOpen(false)}
-      />
-
-      <GamePickerSheet
-        visible={pickerOpen}
-        title={t('lobby.pickTitle')}
-        onSelect={startGame}
-        onCancel={() => setPickerOpen(false)}
       />
     </Screen>
   );

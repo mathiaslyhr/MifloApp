@@ -9,7 +9,8 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Tabs: undefined;
   Join: undefined;
-  Lobby: {roomId: string};
+  Lobby: {roomId: string; pickedGame?: string};
+  GamePicker: {roomId: string};
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
   Scout: undefined;
