@@ -18,6 +18,7 @@ import {ensureSession} from './src/core/supabase/client';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
+import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 function App(): React.JSX.Element {
   // Sign in anonymously up front so rooms feel instant; non-fatal and a no-op
@@ -30,21 +31,27 @@ function App(): React.JSX.Element {
     loadHapticsPreference().catch(() => {});
   }, []);
 
-  // DIAGNOSTIC: surface uncaught JS errors (event handlers, effects, async) that
-  // an error boundary can't catch — Alert the message instead of silently
-  // closing the Release app. Suppress the default fatal handler so the alert
-  // stays on screen to read.
+  // Surface uncaught JS errors (event handlers, effects, async) that an error
+  // boundary can't catch. In dev, Alert the stack so it's visible instead of the
+  // app silently closing; in Release, report to Sentry (when enabled) and stay
+  // out of the user's way.
   useEffect(() => {
     const util = (globalThis as {ErrorUtils?: any}).ErrorUtils;
     if (!util?.setGlobalHandler) {
       return;
     }
     util.setGlobalHandler((error: any, isFatal?: boolean) => {
-      const top = String(error?.stack ?? '').split('\n').slice(0, 8).join('\n');
-      Alert.alert(
-        `JS error${isFatal ? ' (fatal)' : ''}`,
-        `${String(error?.message ?? error)}\n\n${top}`,
-      );
+      if (__DEV__) {
+        const top = String(error?.stack ?? '').split('\n').slice(0, 8).join('\n');
+        Alert.alert(
+          `JS error${isFatal ? ' (fatal)' : ''}`,
+          `${String(error?.message ?? error)}\n\n${top}`,
+        );
+        return;
+      }
+      if (isSentryEnabled) {
+        Sentry.captureException(error, {level: isFatal ? 'fatal' : 'error'});
+      }
     });
   }, []);
 

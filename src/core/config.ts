@@ -42,6 +42,15 @@ export const FAQ_URL = 'https://miflo.dk/faq';
 export const FEEDBACK_URL = 'https://miflo.dk/feedback';
 
 /**
+ * Sentry crash-reporting DSN. Publishable value, safe to commit. Paste the DSN
+ * from your Sentry project here; leaving it empty disables Sentry entirely.
+ * Sentry only initializes in Release builds with a non-empty DSN (see
+ * `src/core/observability/sentry.ts`).
+ */
+export const SENTRY_DSN: string =
+  'https://8085245d0ea8de3dc4786188a01ccb3a@o4511699949584384.ingest.de.sentry.io/4511699955286096';
+
+/**
  * Supabase backend (rooms + realtime lobby). The anon key is the public client
  * key — it's protected by Row Level Security, so it's safe to commit. Paste your
  * project's values here; leaving them empty keeps the app in local/solo mode

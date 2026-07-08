@@ -123,12 +123,15 @@ function svg() {
 
 // ------------------------------------------------------------------- rasterize
 async function main() {
-  const master = await sharp(Buffer.from(svg())).png().toBuffer();
+  // iOS App Store icons must NOT have an alpha channel — Apple rejects any 1024
+  // icon with transparency. The art is fully opaque (the wash rect covers the
+  // whole canvas), so removeAlpha() is lossless; it just drops the empty channel.
+  const iosMaster = await sharp(Buffer.from(svg())).removeAlpha().png().toBuffer();
 
   const iosDir = resolve(root, 'ios/Miflo/Images.xcassets/AppIcon.appiconset');
-  writeFileSync(resolve(iosDir, 'icon-1024.png'), master);
-  writeFileSync(resolve(iosDir, 'icon-1024-dark.png'), master); // same art in both appearances
-  console.log('✓ iOS icon-1024.png + icon-1024-dark.png');
+  writeFileSync(resolve(iosDir, 'icon-1024.png'), iosMaster);
+  writeFileSync(resolve(iosDir, 'icon-1024-dark.png'), iosMaster); // same art in both appearances
+  console.log('✓ iOS icon-1024.png + icon-1024-dark.png (opaque RGB)');
 
   // Android launcher mipmaps (square + round mask).
   const androidDensities = [
@@ -153,6 +156,46 @@ async function main() {
     writeFileSync(resolve(dir, 'ic_launcher_round.png'), round);
   }
   console.log('✓ Android mipmaps (ic_launcher + ic_launcher_round)');
+
+  // iOS launch-screen logo: the same icon art with iOS-style rounded corners,
+  // shown centered on the brand wash in LaunchScreen.storyboard. 180pt base →
+  // @1x/@2x/@3x. Transparent outside the rounded rect so it sits on the flat
+  // launch background like the home-screen icon.
+  const launchDir = resolve(root, 'ios/Miflo/Images.xcassets/LaunchLogo.imageset');
+  mkdirSync(launchDir, { recursive: true });
+  const launchScales = [
+    ['launch-logo.png', 180],
+    ['launch-logo@2x.png', 360],
+    ['launch-logo@3x.png', 540],
+  ];
+  for (const [name, size] of launchScales) {
+    const r = Math.round(size * 0.2237); // iOS icon corner radius ratio
+    const roundedMask = Buffer.from(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><rect width="${size}" height="${size}" rx="${r}" ry="${r}" fill="#fff"/></svg>`,
+    );
+    const art = await sharp(Buffer.from(svg())).resize(size, size).png().toBuffer();
+    const rounded = await sharp(art)
+      .composite([{ input: roundedMask, blend: 'dest-in' }])
+      .png()
+      .toBuffer();
+    writeFileSync(resolve(launchDir, name), rounded);
+  }
+  writeFileSync(
+    resolve(launchDir, 'Contents.json'),
+    JSON.stringify(
+      {
+        images: [
+          { idiom: 'universal', filename: 'launch-logo.png', scale: '1x' },
+          { idiom: 'universal', filename: 'launch-logo@2x.png', scale: '2x' },
+          { idiom: 'universal', filename: 'launch-logo@3x.png', scale: '3x' },
+        ],
+        info: { author: 'xcode', version: 1 },
+      },
+      null,
+      2,
+    ) + '\n',
+  );
+  console.log('✓ iOS LaunchLogo.imageset (rounded, @1x/@2x/@3x)');
 }
 
 main().catch((err) => {
