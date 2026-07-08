@@ -6,8 +6,19 @@ import {BlurView} from '@react-native-community/blur';
 import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import {colors} from '../../theme';
 
-/** How far the blur fades below the status-bar inset before it's fully gone. */
+/** How far the blur fades below the solid region before it's fully gone. */
 const FADE_TAIL = 28;
+
+type Props = {
+  /**
+   * Height of the fully-frosted region before the fade begins. Defaults to the
+   * status-bar inset (scroll-away hubs). Pass a taller value to keep the frost
+   * solid through a pinned header (menu detail pages) before it dissolves.
+   */
+  solidHeight?: number;
+  /** How far the blur ramps to transparent below the solid region. */
+  tail?: number;
+};
 
 /**
  * The seamless top status backdrop for scroll-away pages. A real backdrop blur
@@ -19,11 +30,12 @@ const FADE_TAIL = 28;
  *
  * `pointerEvents="none"` so scroll gestures pass straight through to the list.
  */
-export function TopStatusFade() {
+export function TopStatusFade({solidHeight, tail = FADE_TAIL}: Props = {}) {
   const insets = useSafeAreaInsets();
-  const height = insets.top + FADE_TAIL;
-  // Hold full opacity through the status-bar inset, then ramp to transparent.
-  const solid = insets.top / height;
+  const solidH = solidHeight ?? insets.top;
+  const height = solidH + tail;
+  // Hold full opacity through the solid region, then ramp to transparent.
+  const solid = solidH / height;
 
   return (
     <View pointerEvents="none" style={[styles.container, {height}]}>

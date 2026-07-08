@@ -6,7 +6,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {FloatingBar, PageHeader, Screen} from '../../core/ui';
+import {FloatingBar, PageHeader, Screen, TopStatusFade} from '../../core/ui';
 import {screenPadding, spacing} from '../../theme';
 
 type Props = {
@@ -52,9 +52,13 @@ export function MenuDetailScreen({
         {children}
       </ScrollView>
 
-      {/* Pinned frosted header — the content blurs behind it. Pad it
-          horizontally so the back button lines up with the content (16px). */}
-      <FloatingBar edge="top" blur onHeight={setHeaderH} style={styles.bar}>
+      {/* Seamless frosted fade behind the pinned header — solid through the
+          whole header, then dissolving just below it (no hard seam). */}
+      <TopStatusFade solidHeight={headerH} />
+
+      {/* Pinned header — transparent now; the fade above provides the frost. Pad
+          it horizontally so the back button lines up with the content (16px). */}
+      <FloatingBar edge="top" onHeight={setHeaderH} style={styles.bar}>
         <PageHeader title={title} onBack={onBack} backLabel={backLabel} />
       </FloatingBar>
     </Screen>

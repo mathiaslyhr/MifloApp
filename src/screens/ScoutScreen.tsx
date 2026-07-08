@@ -538,7 +538,6 @@ const styles = StyleSheet.create({
   columnLabel: {
     fontFamily: fonts.medium,
     fontSize: 10,
-    lineHeight: 13,
     color: colors.muted,
     textAlign: 'center',
   },
@@ -564,7 +563,6 @@ const styles = StyleSheet.create({
   cellText: {
     fontFamily: fonts.regular,
     fontSize: 12,
-    lineHeight: 15,
     color: colors.onInk,
     textAlign: 'center',
   },

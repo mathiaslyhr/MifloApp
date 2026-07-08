@@ -81,6 +81,9 @@ const styles = StyleSheet.create({
     // (g/y/p) on a single-line TextInput.
     fontFamily: fonts.regular,
     fontSize: 16,
+    // Satoshi tracks loose by default; tighten to match the type scale
+    // (typography.ts) so placeholders don't read as widely spaced.
+    letterSpacing: -0.2,
     textAlignVertical: 'center',
   },
   fieldMultiline: {
