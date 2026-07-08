@@ -61,19 +61,19 @@ export function GameTile({
   // steals row width from the name/tagline.
   const topPill =
     badge && badgeVariant === 'pill' ? (
-      <View style={styles.topPill}>
+      <View style={styles.topPillBase}>
         <Text variant="caption" color="accent" style={styles.pillText}>
           {badge}
         </Text>
       </View>
     ) : null;
 
-  // The audience `meta` pill rides inline at the head of the title line
-  // (vertically centered against the title, left-anchored) rather than in the
-  // trailing slot — mirroring the lobby's host badge, which sits by the name.
+  // The audience `meta` pill straddles the tile's top edge (like the lobby host
+  // badge that sits on a player tag's top border), left-anchored over the title
+  // inset — rather than living inline in the title row or the trailing slot.
   const metaPill =
     meta && !badge ? (
-      <View style={styles.metaPill}>
+      <View style={styles.topPillBase}>
         <Text variant="caption" color="secondary" style={styles.metaText}>
           {meta}
         </Text>
@@ -111,16 +111,14 @@ export function GameTile({
         disabled && styles.cardDisabled,
       ]}>
       {topPill}
+      {metaPill}
       <View style={styles.badge}>
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
       <View style={styles.body}>
-        <View style={styles.titleRow}>
-          {metaPill}
-          <Text variant="section" numberOfLines={1} style={styles.titleText}>
-            {title}
-          </Text>
-        </View>
+        <Text variant="section" numberOfLines={1} style={styles.titleText}>
+          {title}
+        </Text>
         {tagline ? (
           <Text variant="secondary" color="secondary" numberOfLines={1}>
             {tagline}
@@ -160,10 +158,12 @@ const styles = StyleSheet.create({
   cardDisabled: {opacity: 0.5},
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
   trailing: {flexShrink: 0},
-  // Off-white pill with purple text, straddling the tile's top edge (like the
-  // lobby host badge). Left-anchored to line up with the title text below it:
-  // card padding + icon badge (44) + gap.
-  topPill: {
+  // Shared top-edge pill: an off-white chip straddling the tile's top border
+  // (like the lobby host badge). Left-anchored to line up with the title text
+  // below it: card padding + icon badge (44) + gap. Both the trailing-status
+  // `topPill` and the ambient `metaPill` ride here — they're mutually exclusive,
+  // so they share one slot and differ only in their text color.
+  topPillBase: {
     position: 'absolute',
     top: -9,
     left: spacing.lg + 44 + spacing.md,
@@ -181,16 +181,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
-  // Ambient audience chip in the trailing slot — off-white pill matching the
-  // icon badge tone, muted text (metadata, not a call-to-action).
-  metaPill: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-    borderRadius: radii.pill,
-    backgroundColor: colors.surface2,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-  },
   metaText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   // Plain muted label (picker popup) — no background to clash with glass tiles.
   textBadge: {fontSize: 12, lineHeight: 15},
@@ -202,9 +192,5 @@ const styles = StyleSheet.create({
     borderRadius: radii.card - 4,
   },
   body: {flex: 1, gap: 2},
-  // Title line: the audience pill sits inline before the title, vertically
-  // centered against it. The title flex-shrinks so a long name truncates
-  // instead of shoving the pill off-row.
-  titleRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
   titleText: {flexShrink: 1},
 });
