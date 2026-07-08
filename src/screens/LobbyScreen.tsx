@@ -44,6 +44,9 @@ import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
 
+/** The live-game screens the host jumps into once a round is built. */
+export type GameRoute = 'Hattrick' | 'RedCard';
+
 /**
  * Lobby — where players gather after a party is created. Shows the party code and
  * a live, Kahoot-style list of player names (no avatars). Tap your own name to
@@ -209,9 +212,9 @@ export function LobbyScreen({route, navigation}: Props) {
   // Host starts a specific game: build its initial state from the roster, then
   // hand every device into the game via the room. Only hattrick has an engine
   // today; the picker/lock never offers an unbuilt game, so that's the one case.
-  async function startGame(gameType: string) {
+  async function startGame(gameType: string): Promise<GameRoute | undefined> {
     if (players.length < 2 || starting) {
-      return;
+      return undefined;
     }
     setStarting(true);
     try {
@@ -229,7 +232,10 @@ export function LobbyScreen({route, navigation}: Props) {
             ...recentGridsRef.current,
           ].slice(0, 5);
           await startBoardGame(roomId, 'hattrick', state);
-          break;
+          // The host drives its own screen (the caller navigates); flag it so the
+          // auto-nav effect below stays a guests-only path and never re-enters.
+          inGameRef.current = true;
+          return 'Hattrick';
         }
         case 'red-card': {
           // Needs more players than Tic-Tac-Toe (1 imposter + ≥2 detectives to
@@ -241,10 +247,11 @@ export function LobbyScreen({route, navigation}: Props) {
               t('common.miflo'),
               t('lobby.needPlayers', {count: IMPOSTER_MIN}),
             );
-            return;
+            return undefined;
           }
           await startRedCardGame(roomId, buildFootballerPool());
-          break;
+          inGameRef.current = true;
+          return 'RedCard';
         }
         default:
           throw new Error(`Unsupported game: ${gameType}`);
@@ -261,6 +268,16 @@ export function LobbyScreen({route, navigation}: Props) {
           .filter(Boolean)
           .join('\n\n') || String(err),
       );
+    }
+  }
+
+  // Push the host into a freshly built game (narrowed so each route gets its
+  // own params). Guests get there via the auto-nav effect above instead.
+  function enterGame(target: GameRoute) {
+    if (target === 'Hattrick') {
+      navigation.navigate('Hattrick', {roomId});
+    } else {
+      navigation.navigate('RedCard', {roomId});
     }
   }
 
@@ -369,11 +386,16 @@ export function LobbyScreen({route, navigation}: Props) {
             }
             variant="primary"
             disabled={players.length < 2 || starting}
-            onPress={() =>
-              locked && room
-                ? startGame(room.gameType)
-                : navigation.navigate('GamePicker', {onPick: startGame})
-            }
+            onPress={async () => {
+              if (locked && room) {
+                const target = await startGame(room.gameType);
+                if (target) {
+                  enterGame(target);
+                }
+              } else {
+                navigation.navigate('GamePicker', {roomId, onPick: startGame});
+              }
+            }}
           />
         ) : room?.status === 'in_progress' ? (
           <Button

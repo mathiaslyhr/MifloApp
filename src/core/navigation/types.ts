@@ -11,8 +11,12 @@ export type RootStackParamList = {
   Join: undefined;
   Lobby: {roomId: string};
   // onPick is a function param (non-serializable, but this app never persists or
-  // deep-links nav state) so the host's startGame runs synchronously on select.
-  GamePicker: {onPick: (gameType: string) => void};
+  // deep-links nav state): the host's startGame runs on select and resolves to
+  // the game route to jump into (or undefined if the start was blocked/failed).
+  GamePicker: {
+    roomId: string;
+    onPick: (gameType: string) => Promise<'Hattrick' | 'RedCard' | undefined>;
+  };
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
   Scout: undefined;
