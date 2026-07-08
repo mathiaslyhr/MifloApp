@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   // so they share one slot and differ only in their text color.
   topPillBase: {
     position: 'absolute',
-    top: -9,
+    top: -13,
     left: spacing.lg + 44 + spacing.md,
     zIndex: 2,
     paddingHorizontal: spacing.sm,
