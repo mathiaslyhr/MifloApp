@@ -23,6 +23,9 @@ export function AboutScreen({navigation}: Props) {
         {t('aboutPage.blurb')}
       </Text>
       <Text variant="caption" color="muted">
+        {t('aboutPage.disclaimer')}
+      </Text>
+      <Text variant="caption" color="muted">
         {t('aboutPage.version', {version: APP_VERSION})}
       </Text>
     </MenuDetailScreen>
