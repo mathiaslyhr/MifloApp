@@ -84,6 +84,9 @@ const CLUB_SLUG = {
   shakhtar: 'shakhtar-donetsk', 'dynamo-kyiv': 'dynamo-kyiv', ferencvaros: 'ferencvaros-tc',
   olympiacos: 'olympiacos', augsburg: 'fc-augsburg', spezia: 'spezia',
   norwich: 'norwich-city', 'al-shabab': 'al-shabab',
+  // Curation batch 2026-07
+  gremio: 'gremio', hamburg: 'hamburger-sv', blackburn: 'blackburn-rovers',
+  'celta-vigo': 'celta-vigo', corinthians: 'corinthians',
 };
 
 const slugify = s =>

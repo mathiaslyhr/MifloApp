@@ -16,6 +16,7 @@ export const MANAGERS: readonly Manager[] = [
     name: 'Carlo Ancelotti',
     nationality: ['Italy'],
     spells: [
+      {clubId: 'parma', from: 1996, to: 1998},
       {clubId: 'juventus', from: 1999, to: 2001},
       {clubId: 'ac-milan', from: 2001, to: 2009},
       {clubId: 'chelsea', from: 2009, to: 2011},
@@ -41,6 +42,7 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'real-madrid', from: 2015, to: 2016},
       {clubId: 'newcastle', from: 2016, to: 2019},
       {clubId: 'everton', from: 2021, to: 2022},
+      {clubId: 'celta-vigo', from: 2023, to: 2024},
     ],
   },
   {
@@ -117,6 +119,7 @@ export const MANAGERS: readonly Manager[] = [
     nationality: ['Spain'],
     spells: [
       {clubId: 'roma', from: 2011, to: 2012},
+      {clubId: 'celta-vigo', from: 2013, to: 2014},
       {clubId: 'barcelona', from: 2014, to: 2017},
       {country: 'Spain', from: 2018, to: 2022},
       {clubId: 'psg', from: 2023},
@@ -167,6 +170,7 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'barcelona', from: 1997, to: 2000},
       {country: 'Netherlands', from: 2000, to: 2002},
       {clubId: 'barcelona', from: 2002, to: 2003},
+      {clubId: 'az-alkmaar', from: 2005, to: 2009},
       {clubId: 'bayern', from: 2009, to: 2011},
       {country: 'Netherlands', from: 2012, to: 2014},
       {clubId: 'man-utd', from: 2014, to: 2016},

@@ -20,7 +20,11 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
   {
     clubId: 'man-utd',
     season: '1998-99',
-    playerIds: ['Beckham, David', 'Scholes, Paul', 'Schmeichel, Peter', 'Neville, Gary'],
+    playerIds: [
+      'Beckham, David', 'Scholes, Paul', 'Schmeichel, Peter', 'Neville, Gary',
+      'Giggs, Ryan', 'Keane, Roy', 'Stam, Jaap', 'Yorke, Dwight', 'Cole, Andy',
+      'Solskjær, Ole Gunnar', 'Sheringham, Teddy',
+    ],
   },
   {
     clubId: 'barcelona',
@@ -28,7 +32,8 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
     playerIds: [
       'Messi, Lionel', 'Xavi', 'Iniesta, Andrés', 'Busquets, Sergio',
       'Piqué, Gerard', 'Puyol, Carles', 'Henry, Thierry', 'Alves, Dani',
-      'Touré, Yaya',
+      'Touré, Yaya', 'Cáceres, Martín', 'Eto\'o, Samuel', 'Abidal, Éric',
+      'Keita, Seydou',
     ],
   },
   {
@@ -36,7 +41,9 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
     season: '2009-10',
     playerIds: [
       'Sneijder, Wesley', 'Milito, Diego', 'Zanetti, Javier',
-      'Cambiasso, Esteban', 'Balotelli, Mario',
+      'Cambiasso, Esteban', 'Balotelli, Mario', 'Maicon', 'Eto\'o, Samuel',
+      'Motta, Thiago', 'Lúcio', 'Samuel, Walter', 'Chivu, Cristian',
+      'Pandev, Goran', 'Júlio César', 'Stanković, Dejan',
     ],
   },
   {
@@ -45,7 +52,8 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
     playerIds: [
       'Müller, Thomas', 'Lahm, Philipp', 'Schweinsteiger, Bastian',
       'Neuer, Manuel', 'Robben, Arjen', 'Ribéry, Franck', 'Alaba, David',
-      'Kroos, Toni',
+      'Kroos, Toni', 'Mandžukić, Mario', 'Gómez, Mario', 'Shaqiri, Xherdan',
+      'Martínez, Javi', 'Dante', 'Rafinha', 'Luiz Gustavo',
     ],
   },
   {
@@ -55,6 +63,7 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Messi, Lionel', 'Neymar', 'Suárez, Luis', 'Iniesta, Andrés',
       'Busquets, Sergio', 'Piqué, Gerard', 'Alves, Dani', 'Rakitić, Ivan',
       'ter Stegen, Marc-André', 'Alba, Jordi', 'Pedro', 'Xavi',
+      'Bravo, Claudio', 'Mascherano, Javier',
     ],
   },
   {
@@ -64,7 +73,7 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Lewandowski, Robert', 'Müller, Thomas', 'Neuer, Manuel',
       'Kimmich, Joshua', 'Goretzka, Leon', 'Gnabry, Serge', 'Coman, Kingsley',
       'Alaba, David', 'Davies, Alphonso', 'Perišić, Ivan', 'Coutinho, Philippe',
-      'Thiago',
+      'Thiago', 'Boateng, Jérôme', 'Hernández, Lucas', 'Martínez, Javi',
     ],
   },
   {
@@ -75,6 +84,18 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Rodri', 'Grealish, Jack', 'Ederson', 'Stones, John', 'Dias, Rúben',
       'Silva, Bernardo', 'Foden, Phil', 'Aké, Nathan', 'Akanji, Manuel',
       'Álvarez, Julián', 'Mahrez, Riyad',
+    ],
+  },
+  {
+    clubId: 'psg',
+    season: '2024-25',
+    playerIds: [
+      // Kolo Muani deliberately absent — loaned to Juventus in January.
+      'Dembélé, Ousmane', 'Hakimi, Achraf', 'Vitinha', 'Marquinhos',
+      'Kvaratskhelia, Khvicha', 'Doué, Désiré', 'Mendes, Nuno',
+      'Neves, João', 'Ruiz, Fabián', 'Zaïre-Emery, Warren',
+      'Donnarumma, Gianluigi', 'Ramos, Gonçalo', 'Barcola, Bradley',
+      'Lee Kang-in',
     ],
   },
 ];

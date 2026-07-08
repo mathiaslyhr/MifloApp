@@ -81,7 +81,8 @@ const CLUB_SHORT: Record<string, string> = {
   'dinamo-zagreb': 'D.Zag.', midtjylland: 'Midt.', copenhagen: 'Copen.', shakhtar: 'Shakh.',
   'dynamo-kyiv': 'D.Kyiv', ferencvaros: 'Ferenc', olympiacos: 'Olymp.',
   augsburg: 'Augsb.', spezia: 'Spezia', norwich: 'Norwich', 'al-shabab': 'Shabab',
-  dnipro: 'Dnipro',
+  dnipro: 'Dnipro', gremio: 'Grêmio', hamburg: 'HSV', blackburn: 'Bburn',
+  'celta-vigo': 'Celta', corinthians: 'Corint.',
 };
 
 /** Country → short 3-letter code (a flag is shown alongside it). */
@@ -223,6 +224,13 @@ function sameCriterion(a: Criterion, b: Criterion): boolean {
 /** Minimum footballers a criterion needs to be a usable axis. */
 const MIN_AXIS = 4;
 
+/**
+ * Clubs need a deeper pool than other axes: a club with a handful of players
+ * (e.g. Vancouver via a single star's MLS spell) makes near-unguessable cells,
+ * so career-history clubs only become axes once they have real depth.
+ */
+const MIN_CLUB_AXIS = 6;
+
 /** Iconic shirt numbers offered as axes (kept only if ≥ MIN_AXIS players). */
 const AXIS_SHIRT_NUMBERS = [7, 9, 10, 11, 8] as const;
 
@@ -291,7 +299,9 @@ function buildCandidates(): Candidate[] {
       c,
       ids: new Set(FOOTBALLERS.filter(f => matches(f, c)).map(f => f.id)),
     }))
-    .filter(cand => cand.ids.size >= MIN_AXIS);
+    .filter(cand =>
+      cand.ids.size >= (cand.c.kind === 'club' ? MIN_CLUB_AXIS : MIN_AXIS),
+    );
 }
 
 function intersectionSize(a: Set<string>, b: Set<string>): number {

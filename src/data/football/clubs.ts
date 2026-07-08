@@ -176,6 +176,14 @@ export const CLUBS: readonly Club[] = [
   {id: 'spezia', name: 'Spezia', country: 'Italy', league: 'serie-a'},
   {id: 'norwich', name: 'Norwich City', country: 'England', league: 'championship'},
   {id: 'al-shabab', name: 'Al-Shabab', country: 'Saudi Arabia', league: 'saudi-pro-league'},
+
+  // --- Curation batch 2026-07: career-history clubs for legends/journeymen ---
+  // (Bordeaux/Brescia deliberately absent: no crest in the logo mirror yet.)
+  {id: 'gremio', name: 'Grêmio', country: 'Brazil', league: 'brasileirao'},
+  {id: 'hamburg', name: 'Hamburger SV', country: 'Germany', league: 'bundesliga'},
+  {id: 'blackburn', name: 'Blackburn Rovers', country: 'England', league: 'premier-league'},
+  {id: 'celta-vigo', name: 'Celta Vigo', country: 'Spain', league: 'la-liga'},
+  {id: 'corinthians', name: 'Corinthians', country: 'Brazil', league: 'brasileirao'},
 ];
 
 const CLUBS_BY_ID: ReadonlyMap<string, Club> = new Map(
