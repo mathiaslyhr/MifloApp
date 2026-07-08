@@ -7,17 +7,17 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, Bug, Crown} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle, Crown} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
-  AppBlur,
   Button,
   CircleButton,
   FloatingBar,
+  GlassCard,
+  GlassTag,
   HowToPlayModal,
-  PressableScale,
   Screen,
   Text,
   TextField,
@@ -26,6 +26,7 @@ import {
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {ReportBugModal} from '../core/feedback/ReportBugModal';
+import {BugReportLink} from '../core/feedback/BugReportLink';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -260,17 +261,10 @@ export function RedCardScreen({route, navigation}: Props) {
           )}
         </View>
 
-        <Pressable
+        <BugReportLink
+          label={t('redCard.reportBug')}
           onPress={() => setShowBug(true)}
-          hitSlop={8}
-          accessibilityRole="button"
-          accessibilityLabel={t('redCard.reportBug')}
-          style={styles.bugLink}>
-          <Bug size={14} color={colors.muted} strokeWidth={2} />
-          <Text variant="caption" color="muted">
-            {t('redCard.reportBug')}
-          </Text>
-        </Pressable>
+        />
       </ScrollView>
 
       {/* Pinned floating corner buttons (back left, help right) — stay put while
@@ -297,8 +291,10 @@ export function RedCardScreen({route, navigation}: Props) {
       {/* Private role reveal — each device shows only its own role. */}
       <Modal visible={showRoleOverlay} transparent animationType="fade">
         <View style={styles.roleScrim}>
-          <View style={styles.roleCard}>
-            <AppBlur amount={28} />
+          <GlassCard
+            blur={28}
+            tintColor="rgba(255,255,255,0.6)"
+            style={styles.roleCard}>
             {role == null ? (
               <Text variant="body" color="secondary" align="center">
                 {t('redCard.role.loading')}
@@ -330,7 +326,7 @@ export function RedCardScreen({route, navigation}: Props) {
               disabled={role == null}
               onPress={() => setRoleDismissed(true)}
             />
-          </View>
+          </GlassCard>
         </View>
       </Modal>
 
@@ -409,11 +405,11 @@ function AskingPhase({
     state.order.indexOf(state.turnUserId) === state.order.length - 1;
   return (
     <View style={styles.phase}>
-      <View style={styles.roundPill}>
+      <GlassTag tint="light" style={styles.roundPill}>
         <Text variant="caption" color="muted" style={styles.roundText}>
           {t('redCard.round', {round: state.round, total: ROUNDS})}
         </Text>
-      </View>
+      </GlassTag>
 
       {myTurn ? (
         <>
@@ -455,11 +451,11 @@ function VotingPhase({
   const [started, setStarted] = useState(false);
   return (
     <View style={styles.phase}>
-      <View style={styles.roundPill}>
+      <GlassTag tint="light" style={styles.roundPill}>
         <Text variant="caption" color="muted" style={styles.roundText}>
           {t('redCard.vote.pill')}
         </Text>
-      </View>
+      </GlassTag>
       {hasVoted ? (
         <>
           <Text variant="section" align="center" style={styles.headline}>
@@ -542,7 +538,7 @@ function RevealPhase({
 
       {awaitingGuess ? (
         amImposter ? (
-          <View style={styles.redeemBox}>
+          <GlassCard style={styles.redeemBox}>
             <Text variant="secondary" color="secondary" align="center">
               {t('redCard.redeem.prompt')}
             </Text>
@@ -551,7 +547,7 @@ function RevealPhase({
               variant="primary"
               onPress={onGuess}
             />
-          </View>
+          </GlassCard>
         ) : (
           <Text variant="secondary" color="secondary" align="center">
             {t('redCard.redeem.waiting', {name: redeemedName})}
@@ -576,18 +572,21 @@ function RevealPhase({
           <Text variant="caption" color="muted" align="center" style={styles.sectionLabel}>
             {t('redCard.reveal.secret')}
           </Text>
-          <View
-            style={[
-              styles.revealFrame,
+          <GlassCard
+            borderWidth={2}
+            borderColor={
               redemption
-                ? {borderColor: redemption.correct ? colors.success : colors.error}
-                : null,
-            ]}>
+                ? redemption.correct
+                  ? colors.success
+                  : colors.error
+                : undefined
+            }
+            style={styles.revealFrame}>
             <FootballerCard footballerId={reveal.footballerId} />
-          </View>
+          </GlassCard>
 
           {/* Scoreboard — this round's delta + running total, leader crowned. */}
-          <View style={styles.listCard}>
+          <GlassCard style={styles.listCard}>
             <Text variant="label" style={styles.listTitle}>
               {t('redCard.reveal.scoreboard')}
             </Text>
@@ -623,7 +622,7 @@ function RevealPhase({
                 </View>
               );
             })}
-          </View>
+          </GlassCard>
 
           {/* Votes — de-emphasised, no card chrome. */}
           <View style={styles.votesBlock}>
@@ -675,16 +674,15 @@ function PlayerGrid({
       {players
         .filter(p => p.userId !== excludeId)
         .map(p => (
-          <PressableScale
+          <GlassTag
             key={p.userId}
-            style={styles.pickTag}
             onPress={() => onPick(p.userId)}
             accessibilityRole="button"
             accessibilityLabel={p.name}>
             <Text variant="body" style={styles.pickName}>
               {p.name}
             </Text>
-          </PressableScale>
+          </GlassTag>
         ))}
     </View>
   );
@@ -725,10 +723,6 @@ const styles = StyleSheet.create({
   // Quiet glass round pill (was heavy near-black ink).
   roundPill: {
     alignSelf: 'center',
-    backgroundColor: colors.glassLight,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.pill,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
   },
@@ -740,31 +734,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.sm,
   },
-  pickTag: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radii.pill,
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-  },
   pickName: {color: colors.ink},
   sectionLabel: {letterSpacing: 1, marginBottom: -spacing.sm},
   redeemBox: {
     gap: spacing.sm,
     padding: spacing.md,
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
   },
   listCard: {
     gap: spacing.xs,
     padding: spacing.md,
-    backgroundColor: colors.glass,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
   },
   listTitle: {fontFamily: fonts.regular, marginBottom: spacing.xs},
   listRow: {
@@ -784,23 +762,12 @@ const styles = StyleSheet.create({
   revealFrame: {
     alignSelf: 'stretch',
     padding: spacing.lg,
-    backgroundColor: colors.glass,
-    borderWidth: 2,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
   },
   votesBlock: {gap: 2, marginTop: spacing.xs, paddingHorizontal: spacing.sm},
   votesLabel: {letterSpacing: 1, marginBottom: spacing.xs},
   voteLine: {paddingVertical: 1},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
   waiting: {marginTop: spacing.md},
-  bugLink: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.md,
-  },
   // Role reveal overlay: a dim backdrop + a centered, frosted card.
   roleScrim: {
     flex: 1,
@@ -814,13 +781,6 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     gap: spacing.lg,
     padding: spacing.xl,
-    // Real frosted blur (like the nav pill): a light tint over an AppBlur fill,
-    // clipped to the rounded card so you can't read what's behind it.
-    backgroundColor: 'rgba(255,255,255,0.6)',
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
-    overflow: 'hidden',
   },
   imposterTitle: {color: colors.error},
   // Shared search picker (redemption) — matches Tic-Tac-Toe.
