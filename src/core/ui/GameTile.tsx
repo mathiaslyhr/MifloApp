@@ -16,6 +16,12 @@ type Props = {
   /** Trailing status label, e.g. "Coming soon". Shown in place of the chevron. */
   badge?: string;
   /**
+   * Ambient metadata rendered as a small muted pill in the trailing slot, e.g.
+   * an audience label ("Solo" / "1v1" / "3+") on the Games hub. Takes the
+   * chevron's place; ignored when a `badge` is present.
+   */
+  meta?: string;
+  /**
    * How the trailing `badge` renders:
    * - `'pill'` (default): off-white pill with purple text, matching the left
    *   icon badge — for the glassy Games hub on the rainbow canvas.
@@ -47,6 +53,7 @@ export function GameTile({
   accessibilityLabel,
   disabled = false,
   badge,
+  meta,
   badgeVariant = 'pill',
   surface = 'glass',
 }: Props) {
@@ -61,7 +68,8 @@ export function GameTile({
       </View>
     ) : null;
 
-  // Trailing slot: the `'text'` badge, otherwise the chevron on a tappable tile.
+  // Trailing slot, in priority: a `'text'` badge, then a muted `meta` pill (e.g.
+  // audience label), then the chevron on a tappable tile.
   let trailing: React.ReactNode = null;
   if (badge && badgeVariant === 'text') {
     trailing = (
@@ -72,6 +80,14 @@ export function GameTile({
         style={styles.textBadge}>
         {badge}
       </Text>
+    );
+  } else if (meta && !badge) {
+    trailing = (
+      <View style={styles.metaPill}>
+        <Text variant="caption" color="secondary" style={styles.metaText}>
+          {meta}
+        </Text>
+      </View>
     );
   } else if (!disabled && !badge) {
     trailing = (
@@ -161,6 +177,17 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
+  // Ambient audience chip in the trailing slot — off-white pill matching the
+  // icon badge tone, muted text (metadata, not a call-to-action).
+  metaPill: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surface2,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+  },
+  metaText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   // Plain muted label (picker popup) — no background to clash with glass tiles.
   textBadge: {fontSize: 12, lineHeight: 15},
   badge: {

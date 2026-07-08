@@ -16,6 +16,7 @@ import {
   Button,
   CircleButton,
   FloatingBar,
+  HowToPlayModal,
   PressableScale,
   Screen,
   Text,
@@ -694,23 +695,17 @@ function PlayerGrid({
   );
 }
 
-/** Lightweight how-to-play sheet (scrim + white card), matching the app pattern. */
+/** Lightweight how-to-play sheet — the shared app-wide popover. */
 function HelpModal({visible, onClose}: {visible: boolean; onClose: () => void}) {
   const {t} = useTranslation();
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
-      <Pressable style={styles.scrim} onPress={onClose}>
-        <Pressable style={styles.helpCard} onPress={() => {}}>
-          <Text variant="section" align="center">
-            {t('redCard.help.title')}
-          </Text>
-          <Text variant="body" color="secondary">
-            {t('redCard.help.rule')}
-          </Text>
-          <Button label={t('common.close')} variant="secondary" onPress={onClose} />
-        </Pressable>
-      </Pressable>
-    </Modal>
+    <HowToPlayModal
+      visible={visible}
+      onClose={onClose}
+      title={t('redCard.help.title')}
+      lines={[{text: t('redCard.help.rule')}]}
+      closeLabel={t('common.close')}
+    />
   );
 }
 
@@ -870,13 +865,4 @@ const styles = StyleSheet.create({
   },
   resultFlag: {width: 24, height: 18, borderRadius: 2},
   hint: {paddingVertical: spacing.lg},
-  helpCard: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 380,
-    gap: spacing.md,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.xl,
-  },
 });

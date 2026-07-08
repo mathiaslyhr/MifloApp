@@ -14,6 +14,7 @@ import {ChevronLeft, HelpCircle, Bug, Plus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  AppBlur,
   Button,
   CircleButton,
   Screen,
@@ -713,42 +714,49 @@ function TieOverlay({
         styles.tieOverlay,
         {bottom: insets.bottom + spacing.xl, opacity, transform: [{translateY}]},
       ]}>
-      <View style={styles.tieBanner}>
-        {waiting ? (
-          <>
-            <Text variant="secondary" align="center">
-              {t('hattrick.tieWaiting', {accepted, total})}
-            </Text>
-            <Button
-              label={t('common.cancel')}
-              variant="outline"
-              fullWidth={false}
-              onPress={() => onRespond(false)}
-            />
-          </>
-        ) : (
-          <>
-            <Text variant="secondary" align="center">
-              {t('hattrick.tiePrompt', {name: proposerName})}
-            </Text>
-            <View style={styles.row2}>
-              <View style={styles.flex1}>
-                <Button
-                  label={t('hattrick.acceptTie')}
-                  variant="primary"
-                  onPress={() => onRespond(true)}
-                />
+      <View style={styles.tieCard}>
+        {/* Frosted backdrop, clipped to the card radius. */}
+        <View style={styles.tieBlurClip} pointerEvents="none">
+          <AppBlur amount={24} />
+          <View style={styles.tieTint} />
+        </View>
+        <View style={styles.tieContent}>
+          {waiting ? (
+            <>
+              <Text variant="secondary" align="center">
+                {t('hattrick.tieWaiting', {accepted, total})}
+              </Text>
+              <Button
+                label={t('common.cancel')}
+                variant="outline"
+                fullWidth={false}
+                onPress={() => onRespond(false)}
+              />
+            </>
+          ) : (
+            <>
+              <Text variant="secondary" align="center">
+                {t('hattrick.tiePrompt', {name: proposerName})}
+              </Text>
+              <View style={styles.row2}>
+                <View style={styles.flex1}>
+                  <Button
+                    label={t('hattrick.acceptTie')}
+                    variant="primary"
+                    onPress={() => onRespond(true)}
+                  />
+                </View>
+                <View style={styles.flex1}>
+                  <Button
+                    label={t('hattrick.decline')}
+                    variant="secondary"
+                    onPress={() => onRespond(false)}
+                  />
+                </View>
               </View>
-              <View style={styles.flex1}>
-                <Button
-                  label={t('hattrick.decline')}
-                  variant="secondary"
-                  onPress={() => onRespond(false)}
-                />
-              </View>
-            </View>
-          </>
-        )}
+            </>
+          )}
+        </View>
       </View>
     </Animated.View>
   );
@@ -871,20 +879,41 @@ const styles = StyleSheet.create({
     right: spacing.xl,
     alignItems: 'stretch',
   },
-  tieBanner: {
+  // Frosted glass tie card — real backdrop blur behind a translucent tint so the
+  // board reads through it (Liquid Glass), replacing the old opaque white surface.
+  tieCard: {
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    shadowColor: '#140F32',
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    shadowOffset: {width: 0, height: 8},
+    elevation: 6,
+  },
+  // Inner clip: rounds + hides the absolute-fill blur/tint to the card corners.
+  // (Kept separate from tieCard so the card's own shadow isn't clipped.)
+  tieBlurClip: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: radii.card,
+    overflow: 'hidden',
+  },
+  tieTint: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.glass, // legible frost over the busy glass board
+  },
+  tieContent: {
     alignItems: 'center',
     gap: spacing.sm,
     padding: spacing.md,
-    // Opaque surface (not glass) so it reads clearly above the glass board.
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    borderRadius: radii.card,
-    shadowColor: colors.shadow,
-    shadowOpacity: 1,
-    shadowRadius: 16,
-    shadowOffset: {width: 0, height: 6},
-    elevation: 6,
   },
   bugLink: {
     flexDirection: 'row',

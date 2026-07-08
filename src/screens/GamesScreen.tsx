@@ -14,7 +14,7 @@ import {spacing} from '../theme';
 import {useAppNavigation} from '../core/navigation';
 import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
 import {randomFootballName} from '../core/identity/funnyName';
-import {GAMES, GAME_CATEGORIES, GameType} from './gamesCatalog';
+import {GAMES, GameType} from './gamesCatalog';
 
 /**
  * Games — the hub on the rainbow canvas. The wordmark header is the first item
@@ -79,32 +79,23 @@ export function GamesScreen() {
             {t('games.title')}
           </Text>
         </View>
-        {GAME_CATEGORIES.map(({category, i18nKey}) => {
-          const games = GAMES.filter(g => g.category === category);
-          if (games.length === 0) {
-            return null;
-          }
-          return (
-            <View key={category}>
-              <Text variant="section" style={styles.sectionHeader}>
-                {t(`games.categories.${i18nKey}`)}
-              </Text>
-              <View style={styles.group}>
-                {games.map(game => (
-                  <GameTile
-                    key={game.gameType}
-                    title={t(`games.${game.i18nKey}.title`)}
-                    tagline={t(`games.${game.i18nKey}.tagline`)}
-                    Icon={game.Icon}
-                    disabled={!game.available}
-                    badge={game.available ? undefined : t('games.comingSoon')}
-                    onPress={() => handleSelect(game.gameType)}
-                  />
-                ))}
-              </View>
-            </View>
-          );
-        })}
+        {/* One flat list — playable games first (each with an audience chip),
+            then "coming soon" games dimmed at the bottom. No section headers. */}
+        <View style={styles.group}>
+          {GAMES.map(game => (
+            <GameTile
+              key={game.gameType}
+              title={t(`games.${game.i18nKey}.title`)}
+              tagline={t(`games.${game.i18nKey}.tagline`)}
+              Icon={game.Icon}
+              disabled={!game.available}
+              meta={game.available ? t(`games.audience.${game.category}`) : undefined}
+              badge={game.available ? undefined : t('games.comingSoon')}
+              badgeVariant="text"
+              onPress={() => handleSelect(game.gameType)}
+            />
+          ))}
+        </View>
       </ScrollView>
 
       {/* Seamless frosted fade behind the status bar — content dissolves under
@@ -123,9 +114,6 @@ const styles = StyleSheet.create({
   scroll: {flex: 1},
   list: {
     gap: spacing.lg,
-  },
-  sectionHeader: {
-    marginBottom: spacing.md,
   },
   group: {
     gap: spacing.md,

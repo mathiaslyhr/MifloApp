@@ -61,10 +61,10 @@
   "games": {
     "title": "Spil",
     "comingSoon": "Kommer snart",
-    "categories": {
-      "solo": "Anbefalet til solo",
-      "duel": "Anbefalet til 1 mod 1",
-      "party": "Anbefalet til 3+"
+    "audience": {
+      "solo": "Solo",
+      "duel": "1v1",
+      "party": "3+"
     },
     "hattrick": {
       "title": "Hattrick",

@@ -61,10 +61,10 @@
   "games": {
     "title": "Games",
     "comingSoon": "Coming soon",
-    "categories": {
-      "solo": "Recommended for solo",
-      "duel": "Recommended for 1v1",
-      "party": "Recommended for 3+"
+    "audience": {
+      "solo": "Solo",
+      "duel": "1v1",
+      "party": "3+"
     },
     "hattrick": {
       "title": "Hattrick",

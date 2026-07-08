@@ -37,7 +37,7 @@ export function HowToPlayScreen({navigation}: Props) {
       onBack={() => navigation.goBack()}
       backLabel={t('common.back')}
       contentStyle={styles.body}>
-      <Text variant="body" color="secondary">
+      <Text variant="secondary" color="secondary">
         {t('howToPlay.intro')}
       </Text>
 
@@ -49,7 +49,7 @@ export function HowToPlayScreen({navigation}: Props) {
             </Text>
           </View>
           <View style={styles.stepText}>
-            <Text variant="section">{s.title}</Text>
+            <Text variant="body">{s.title}</Text>
             <Text variant="secondary" color="secondary">
               {s.desc}
             </Text>
@@ -67,7 +67,7 @@ export function HowToPlayScreen({navigation}: Props) {
             <View style={styles.badge}>
               <g.Icon size={18} color={colors.ink} strokeWidth={1.75} />
             </View>
-            <Text variant="section">{g.title}</Text>
+            <Text variant="body">{g.title}</Text>
           </View>
           <View style={styles.rules}>
             {g.rules.map((rule, i) => (

@@ -24,8 +24,8 @@ export type GameType =
   | 'heatmap';
 
 /**
- * Audience bucket a game is recommended for, by group size. Drives the
- * "Recommended for …" section headers on the Games hub:
+ * Audience bucket a game is recommended for, by group size. Surfaced as a small
+ * chip on each tile in the Games hub (label resolved via `games.audience.*`):
  * - `solo` — best played alone.
  * - `duel` — head-to-head, two players (1v1).
  * - `party` — a group of three or more.
@@ -37,7 +37,7 @@ export type GameEntry = {
   /** i18n key prefix under `games.*` (title/tagline resolved at render). */
   i18nKey: string;
   Icon: LucideIcon;
-  /** Which "Recommended for …" group the game is filed under on the hub. */
+  /** Audience bucket, shown as a chip on the hub tile (via `games.audience.*`). */
   category: GameCategory;
   /** Whether the game has a real engine and can actually be started. */
   available: boolean;
@@ -48,6 +48,11 @@ export type GameEntry = {
   single?: boolean;
 };
 
+/**
+ * Games in hub display order: playable games first, then "coming soon" ones.
+ * The hub renders this list flat (no grouping); each tile shows an audience chip
+ * from its `category`, and unavailable games render dimmed at the bottom.
+ */
 export const GAMES: GameEntry[] = [
   {
     gameType: 'scout',
@@ -58,25 +63,11 @@ export const GAMES: GameEntry[] = [
     single: true,
   },
   {
-    gameType: 'tenball',
-    i18nKey: 'tenball',
-    Icon: ListOrdered,
-    category: 'solo',
-    available: false,
-  },
-  {
     gameType: 'hattrick',
     i18nKey: 'hattrick',
     Icon: Grid3x3,
     category: 'duel',
     available: true,
-  },
-  {
-    gameType: 'heatmap',
-    i18nKey: 'heatmap',
-    Icon: Hexagon,
-    category: 'duel',
-    available: false,
   },
   {
     gameType: 'red-card',
@@ -85,18 +76,20 @@ export const GAMES: GameEntry[] = [
     category: 'party',
     available: true,
   },
-];
-
-/**
- * The "Recommended for …" groups, in display order. Each entry pairs a
- * {@link GameCategory} with its i18n key under `games.categories.*`. The Games
- * hub walks this list to render a section header followed by the games whose
- * `category` matches.
- */
-export const GAME_CATEGORIES: {category: GameCategory; i18nKey: string}[] = [
-  {category: 'solo', i18nKey: 'solo'},
-  {category: 'duel', i18nKey: 'duel'},
-  {category: 'party', i18nKey: 'party'},
+  {
+    gameType: 'tenball',
+    i18nKey: 'tenball',
+    Icon: ListOrdered,
+    category: 'solo',
+    available: false,
+  },
+  {
+    gameType: 'heatmap',
+    i18nKey: 'heatmap',
+    Icon: Hexagon,
+    category: 'duel',
+    available: false,
+  },
 ];
 
 /**
