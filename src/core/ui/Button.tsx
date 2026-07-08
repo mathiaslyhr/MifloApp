@@ -26,7 +26,8 @@ type Props = {
 /**
  * The pill button — three variants, all fully round (design.md §3), all sharing
  * the springy press-scale:
- *  - `primary`   solid black ink, white hairline rim + soft lift (marketing SolidButton)
+ *  - `primary`   solid black ink, white hairline rim, fully flat (no shadow —
+ *                the ink fill alone carries the hierarchy on the pastel mesh)
  *  - `secondary` frosted white glass, ink text (the "Join a party" pill)
  *  - `outline`   ink-hairline border on light glass (tertiary CTA)
  */
@@ -65,7 +66,6 @@ export function Button({
         style={[
           styles.base,
           VARIANT_STYLES[variant],
-          isPrimary && styles.primaryLift,
           disabled && styles.disabled,
           press.animatedStyle,
           style,
@@ -109,15 +109,6 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  // Deliberately faint: a standalone black pill on the empty pastel mesh must
-  // never read as a gray smear (a heavier lift did, in the games).
-  primaryLift: {
-    shadowColor: colors.shadowInk,
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 4},
-    shadowRadius: 10,
-    elevation: 3,
   },
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},

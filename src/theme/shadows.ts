@@ -2,9 +2,11 @@ import {colors} from './colors';
 
 /**
  * The two ambient lift recipes shared across the glass chrome. Spread into
- * `StyleSheet.create` entries (`{...shadows.soft}`); components with a bespoke
- * lift (the solid button's `primaryLift`, sheets) keep their own numbers and
- * only share `colors.shadowInk`.
+ * `StyleSheet.create` entries (`{...shadows.soft}`). Lifts belong ONLY to
+ * elements that truly float above other content (nav island, pinned circle
+ * buttons, sheets over a scrim, toasts); in-flow glass and the black button
+ * are flat. Components with a bespoke lift (sheets) keep their own numbers
+ * and only share `colors.shadowInk`.
  */
 export const shadows = {
   /** Soft glass lift — circle buttons, tiles, and chips resting on the canvas. */
