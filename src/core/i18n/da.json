@@ -264,6 +264,7 @@
       "nationality": "Har spillet for {{value}}",
       "club": "Har spillet for {{value}}",
       "honour": "Har vundet {{value}}",
+      "honourLeagueTitle": "Har vundet {{value}}",
       "teammate": "Har spillet med {{value}}",
       "league": "Har spillet i {{value}}",
       "position": "Spiller som {{value}}",

@@ -264,6 +264,7 @@
       "nationality": "Has played for {{value}}",
       "club": "Has played for {{value}}",
       "honour": "Has won the {{value}}",
+      "honourLeagueTitle": "Has won a {{value}}",
       "teammate": "Has played with {{value}}",
       "league": "Has played in the {{value}}",
       "position": "Plays as a {{value}}",

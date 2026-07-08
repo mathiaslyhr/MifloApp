@@ -39,7 +39,12 @@ export function AxisInfoModal({criterion, onClose}: Props) {
           ) : null}
           <Text variant="body" align="center">
             {criterion != null
-              ? t(`legend.meaning.${criterion.kind}`, {value: criterionValue(criterion)})
+              ? t(
+                  criterion.kind === 'honour' && criterion.honour === 'league-title'
+                    ? 'legend.meaning.honourLeagueTitle'
+                    : `legend.meaning.${criterion.kind}`,
+                  {value: criterionValue(criterion)},
+                )
               : ''}
           </Text>
         </Pressable>
