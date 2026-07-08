@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -26,16 +26,30 @@ type Props = NativeStackScreenProps<RootStackParamList, 'GamePicker'>;
  * appear; the choice is handed back to the Lobby, which owns starting the round.
  */
 export function GamePickerScreen({route, navigation}: Props) {
-  const {onPick} = route.params;
+  const {roomId, onPick} = route.params;
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const [busy, setBusy] = useState(false);
 
-  // Hand the pick straight to the Lobby's startGame (called synchronously so no
-  // frozen-screen/effect timing can swallow it), then pop back. The room state
-  // then drives every device into the round.
-  function handleSelect(gameType: GameType) {
-    onPick(gameType);
-    navigation.goBack();
+  // Build the round via the Lobby's startGame, then REPLACE this page with the
+  // game screen — so the host goes picker → game with no lobby flash in between,
+  // and the stack stays Lobby → game (the game's back button still lands here's
+  // parent). While the write is in flight the tiles disable. On a blocked/failed
+  // start (e.g. too few players) startGame resolves undefined; we just pop back.
+  async function handleSelect(gameType: GameType) {
+    if (busy) {
+      return;
+    }
+    setBusy(true);
+    const target = await onPick(gameType);
+    if (target === 'Hattrick') {
+      navigation.replace('Hattrick', {roomId});
+    } else if (target === 'RedCard') {
+      navigation.replace('RedCard', {roomId});
+    } else {
+      setBusy(false);
+      navigation.goBack();
+    }
   }
 
   return (
@@ -67,7 +81,7 @@ export function GamePickerScreen({route, navigation}: Props) {
               title={t(`games.${game.i18nKey}.title`)}
               tagline={t(`games.${game.i18nKey}.tagline`)}
               Icon={game.Icon}
-              disabled={!game.available}
+              disabled={!game.available || busy}
               meta={game.available ? t(`games.audience.${game.category}`) : undefined}
               badge={game.available ? undefined : t('games.comingSoon')}
               badgeVariant="text"
@@ -115,7 +129,9 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.lg,
   },
+  // Extra gap so the audience pill overhanging each tile's top edge clears the
+  // tile stacked above it.
   group: {
-    gap: spacing.md,
+    gap: spacing.xl,
   },
 });

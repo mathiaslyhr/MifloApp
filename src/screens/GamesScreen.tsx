@@ -115,7 +115,9 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.lg,
   },
+  // Extra gap so the audience pill overhanging each tile's top edge clears the
+  // tile stacked above it.
   group: {
-    gap: spacing.md,
+    gap: spacing.xl,
   },
 });
