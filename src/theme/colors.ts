@@ -44,6 +44,12 @@ export const colors = {
 
   /** Ambient lift shadow color (used with elevation/offsets per component). */
   shadow: 'rgba(20,15,50,0.18)',
+  /**
+   * The shadow ink behind every lift in the app — pair with a per-recipe
+   * `shadowOpacity` (see `theme/shadows`). `shadow` above is this same hue
+   * pre-multiplied to 0.18 for call sites that keep `shadowOpacity: 1`.
+   */
+  shadowInk: '#140F32',
 
   /** Modal scrims — dark dim for reveal overlays, light dim for picker/help sheets. */
   scrim: 'rgba(13,13,22,0.45)',
