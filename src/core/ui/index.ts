@@ -10,6 +10,8 @@ export {Button} from './Button';
 export type {ButtonVariant} from './Button';
 export {CircleButton} from './CircleButton';
 export {GameTile} from './GameTile';
+export {GlassCard} from './GlassCard';
+export {GlassTag} from './GlassTag';
 export {MenuRow} from './MenuRow';
 export type {MenuRowKind} from './MenuRow';
 export {MenuGroup} from './MenuGroup';

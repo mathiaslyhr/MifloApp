@@ -16,10 +16,16 @@ type Props = {
   label: string;
   /** Optional second line — e.g. the current nickname under "Profile". */
   subtitle?: string;
-  Icon: LucideIcon;
+  /** Leading icon; some rows (language options) carry none. */
+  Icon?: LucideIcon;
   /** Trailing affordance (defaults to `nav`). */
   kind?: MenuRowKind;
+  /** Custom trailing element (a check, a Switch…) — replaces the kind glyph. */
+  accessory?: React.ReactNode;
   onPress?: () => void;
+  disabled?: boolean;
+  /** Announced to assistive tech, e.g. the active language option. */
+  selected?: boolean;
   /** The last row in a group drops its divider. */
   isLast?: boolean;
   accessibilityHint?: string;
@@ -36,28 +42,39 @@ export function MenuRow({
   subtitle,
   Icon,
   kind = 'nav',
+  accessory,
   onPress,
+  disabled = false,
+  selected,
   isLast = false,
   accessibilityHint,
 }: Props) {
   const press = usePressScale();
   const Trailing = kind === 'link' ? ArrowUpRight : ChevronRight;
+  // Rows without a handler (e.g. a Switch row) skip the button semantics and
+  // press-feel — the accessory owns the interaction.
+  const pressable = onPress != null && !disabled;
 
   return (
     <Pressable
-      onPress={onPress}
-      onPressIn={press.onPressIn}
-      onPressOut={press.onPressOut}
-      accessibilityRole="button"
+      onPress={pressable ? onPress : undefined}
+      onPressIn={pressable ? press.onPressIn : undefined}
+      onPressOut={pressable ? press.onPressOut : undefined}
+      disabled={!pressable}
+      accessibilityRole={onPress ? 'button' : undefined}
       accessibilityLabel={label}
-      accessibilityHint={accessibilityHint}>
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{disabled, selected}}>
       <Animated.View
         style={[
           styles.row,
           !isLast && styles.divider,
+          disabled && styles.disabled,
           press.animatedStyle,
         ]}>
-        <Icon size={22} color={colors.textSecondary} strokeWidth={2} />
+        {Icon ? (
+          <Icon size={22} color={colors.textSecondary} strokeWidth={2} />
+        ) : null}
         <View style={styles.text}>
           <Text variant="body">{label}</Text>
           {subtitle ? (
@@ -66,7 +83,11 @@ export function MenuRow({
             </Text>
           ) : null}
         </View>
-        <Trailing size={20} color={colors.textTertiary} strokeWidth={2} />
+        {accessory !== undefined ? (
+          accessory
+        ) : onPress ? (
+          <Trailing size={20} color={colors.textTertiary} strokeWidth={2} />
+        ) : null}
       </Animated.View>
     </Pressable>
   );
@@ -93,4 +114,5 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 0,
   },
   text: {flex: 1},
+  disabled: {opacity: 0.5},
 });
