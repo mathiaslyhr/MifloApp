@@ -746,7 +746,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psg', from: 2000, to: 2002},
       {clubId: 'liverpool', from: 2001, to: 2002, loan: true},
       {clubId: 'man-city', from: 2002, to: 2005},
-      {clubId: 'fenerbahce', from: 2005, to: 2007},
+      {clubId: 'fenerbahce', from: 2005, to: 2006},
+      {clubId: 'bolton', from: 2006, to: 2008},
       {clubId: 'chelsea', from: 2008, to: 2012},
       {clubId: 'juventus', from: 2012, to: 2012, loan: true},
       {clubId: 'west-brom', from: 2013, to: 2014},
@@ -921,6 +922,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW'],
     shirtNumbers: [14, 17],
     clubs: [
+      {clubId: 'saint-etienne', from: 2011, to: 2013},
       {clubId: 'dortmund', from: 2013, to: 2018},
       {clubId: 'arsenal', from: 2018, to: 2022},
       {clubId: 'barcelona', from: 2022, to: 2023},
@@ -1076,13 +1078,14 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['MF'],
     shirtNumbers: [13],
     clubs: [
+      {clubId: 'kaiserslautern', from: 1997, to: 1999},
       {clubId: 'leverkusen', from: 1999, to: 2002},
       {clubId: 'bayern', from: 2002, to: 2006},
       {clubId: 'chelsea', from: 2006, to: 2010},
       {clubId: 'leverkusen', from: 2010, to: 2012},
     ],
     honours: [
-      {type: 'league-title', count: 4, years: [2003, 2005, 2006, 2010]},
+      {type: 'league-title', count: 5, years: [1998, 2003, 2005, 2006, 2010]},
     ],
     tags: ['legends'],
   },
@@ -2355,6 +2358,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [13, 33],
     clubs: [
       {clubId: 'schalke', from: 2014, to: 2017},
+      {clubId: 'stoke', from: 2017, to: 2018},
       {clubId: 'psg', from: 2018, to: 2020},
       {clubId: 'bayern', from: 2020, to: 2024},
     ],
@@ -3340,6 +3344,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'monaco', from: 1990, to: 1995},
       {clubId: 'psg', from: 1995, to: 1996},
       {clubId: 'inter', from: 1996, to: 1999},
+      {clubId: 'kaiserslautern', from: 1999, to: 2002},
+      {clubId: 'bolton', from: 2002, to: 2004},
     ],
     honours: [
       {type: 'europa-league', count: 1, years: [1998]},
@@ -6314,6 +6320,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW'],
     shirtNumbers: [11],
     clubs: [
+      {clubId: 'kaiserslautern', from: 1999, to: 2004},
       {clubId: 'werder-bremen', from: 2004, to: 2007},
       {clubId: 'bayern', from: 2007, to: 2011},
       {clubId: 'lazio', from: 2011, to: 2016},
@@ -7373,6 +7380,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'valencia', from: 2016, to: 2017, loan: true},
       {clubId: 'everton', from: 2018, to: 2018, loan: true},
       {clubId: 'valencia', from: 2019, to: 2021},
+      {clubId: 'saint-etienne', from: 2021, to: 2021},
     ],
     honours: [
       {type: 'league-title', count: 2, years: [2012, 2013]},
@@ -8955,6 +8963,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [10],
     clubs: [
       {clubId: 'psg', from: 1998, to: 2002},
+      {clubId: 'bolton', from: 2002, to: 2006},
       {clubId: 'fenerbahce', from: 1996, to: 1998},
     ],
     honours: [],
@@ -9371,6 +9380,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'psg', from: 2011, to: 2018},
       {clubId: 'roma', from: 2018, to: 2021},
+      {clubId: 'elche', from: 2021, to: 2023},
     ],
     honours: [
       {type: 'league-title', count: 5, years: [2013, 2014, 2015, 2016, 2018]},
@@ -9884,6 +9894,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW', 'MF'],
     shirtNumbers: [7, 11],
     clubs: [
+      {clubId: 'barcelona', from: 2003, to: 2004},
       {clubId: 'porto', from: 2004, to: 2008},
       {clubId: 'inter', from: 2008, to: 2010},
       {clubId: 'chelsea', from: 2009, to: 2010, loan: true},
@@ -11257,6 +11268,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'basel', from: 2009, to: 2012},
       {clubId: 'bayern', from: 2012, to: 2015},
       {clubId: 'inter', from: 2015, to: 2015},
+      {clubId: 'stoke', from: 2015, to: 2018},
       {clubId: 'liverpool', from: 2018, to: 2021},
       {clubId: 'lyon', from: 2021, to: 2022},
       {clubId: 'basel', from: 2024},
@@ -11563,6 +11575,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'real-madrid', from: 2007, to: 2009},
       {clubId: 'inter', from: 2009, to: 2013},
       {clubId: 'galatasaray', from: 2013, to: 2017},
+      {clubId: 'nice', from: 2017, to: 2018},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2010]},
@@ -11837,6 +11850,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'man-city', from: 2006, to: 2009},
       {clubId: 'chelsea', from: 2009, to: 2013},
+      {clubId: 'bolton', from: 2011, to: 2011, loan: true},
       {clubId: 'liverpool', from: 2013, to: 2019},
       {clubId: 'west-brom', from: 2018, to: 2018, loan: true},
       {clubId: 'trabzonspor', from: 2019, to: 2020},
@@ -12945,6 +12959,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['MF'],
     shirtNumbers: [4],
     clubs: [
+      {clubId: 'cannes', from: 1993, to: 1995},
       {clubId: 'ac-milan', from: 1995, to: 1996},
       {clubId: 'arsenal', from: 1996, to: 2005},
       {clubId: 'juventus', from: 2005, to: 2006},
@@ -12971,6 +12986,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'lazio', from: 1998, to: 1999},
       {clubId: 'inter', from: 1999, to: 2005},
       {clubId: 'ac-milan', from: 2005, to: 2006},
+      {clubId: 'monaco', from: 2006, to: 2006},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [1997]},
@@ -13588,6 +13604,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['MF'],
     shirtNumbers: [10, 5, 21],
     clubs: [
+      {clubId: 'cannes', from: 1989, to: 1992},
       {clubId: 'juventus', from: 1996, to: 2001},
       {clubId: 'real-madrid', from: 2001, to: 2006},
     ],

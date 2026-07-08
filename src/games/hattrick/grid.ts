@@ -83,6 +83,8 @@ const CLUB_SHORT: Record<string, string> = {
   augsburg: 'Augsb.', spezia: 'Spezia', norwich: 'Norwich', 'al-shabab': 'Shabab',
   dnipro: 'Dnipro', gremio: 'Grêmio', hamburg: 'HSV', blackburn: 'Bburn',
   'celta-vigo': 'Celta', corinthians: 'Corint.',
+  stoke: 'Stoke', bolton: 'Bolton', kaiserslautern: 'K\'lautern',
+  'saint-etienne': 'ASSE', elche: 'Elche', cannes: 'Cannes',
 };
 
 /** Country → short 3-letter code (a flag is shown alongside it). */

@@ -87,6 +87,9 @@ const CLUB_SLUG = {
   // Curation batch 2026-07
   gremio: 'gremio', hamburg: 'hamburger-sv', blackburn: 'blackburn-rovers',
   'celta-vigo': 'celta-vigo', corinthians: 'corinthians',
+  stoke: 'stoke-city', bolton: 'bolton-wanderers',
+  kaiserslautern: 'fc-kaiserslautern', 'saint-etienne': 'as-saint-etienne',
+  elche: 'elche-cf', cannes: 'as-cannes',
 };
 
 const slugify = s =>

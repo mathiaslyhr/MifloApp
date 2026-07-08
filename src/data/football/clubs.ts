@@ -184,6 +184,12 @@ export const CLUBS: readonly Club[] = [
   {id: 'blackburn', name: 'Blackburn Rovers', country: 'England', league: 'premier-league'},
   {id: 'celta-vigo', name: 'Celta Vigo', country: 'Spain', league: 'la-liga'},
   {id: 'corinthians', name: 'Corinthians', country: 'Brazil', league: 'brasileirao'},
+  {id: 'stoke', name: 'Stoke City', country: 'England', league: 'premier-league'},
+  {id: 'bolton', name: 'Bolton Wanderers', country: 'England', league: 'premier-league'},
+  {id: 'kaiserslautern', name: '1. FC Kaiserslautern', country: 'Germany', league: 'bundesliga'},
+  {id: 'saint-etienne', name: 'Saint-Étienne', country: 'France', league: 'ligue-1'},
+  {id: 'elche', name: 'Elche', country: 'Spain', league: 'la-liga'},
+  {id: 'cannes', name: 'AS Cannes', country: 'France', league: 'ligue-1'},
 ];
 
 const CLUBS_BY_ID: ReadonlyMap<string, Club> = new Map(
