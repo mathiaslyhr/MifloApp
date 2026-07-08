@@ -17,6 +17,7 @@ import {
   AppBlur,
   Button,
   CircleButton,
+  PressableScale,
   Screen,
   Text,
   TextField,
@@ -313,11 +314,8 @@ export function HattrickScreen({route, navigation}: Props) {
               cornerEmpty && styles.cornerBlank,
             ]}>
             {!state.winner && myTurn ? (
-              <Pressable
-                style={({pressed}) => [
-                  styles.cornerBtn,
-                  pressed && styles.cornerBtnPressed,
-                ]}
+              <PressableScale
+                containerStyle={styles.cornerBtn}
                 onPress={handleSkip}
                 accessibilityRole="button"
                 accessibilityLabel={t('hattrick.skip')}>
@@ -328,17 +326,14 @@ export function HattrickScreen({route, navigation}: Props) {
                   adjustsFontSizeToFit>
                   {t('hattrick.skipShort')}
                 </Text>
-              </Pressable>
+              </PressableScale>
             ) : null}
             {!state.winner && myTurn && !tieOffer ? (
               <View style={styles.cornerDiv} />
             ) : null}
             {!state.winner && !tieOffer ? (
-              <Pressable
-                style={({pressed}) => [
-                  styles.cornerBtn,
-                  pressed && styles.cornerBtnPressed,
-                ]}
+              <PressableScale
+                containerStyle={styles.cornerBtn}
                 onPress={handleProposeTie}
                 accessibilityRole="button"
                 accessibilityLabel={t('hattrick.proposeTie')}>
@@ -349,7 +344,7 @@ export function HattrickScreen({route, navigation}: Props) {
                   adjustsFontSizeToFit>
                   {t('hattrick.tieShort')}
                 </Text>
-              </Pressable>
+              </PressableScale>
             ) : null}
           </View>
           <View style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
@@ -791,7 +786,6 @@ const styles = StyleSheet.create({
   corner: {flexDirection: 'column'},
   cornerBlank: {backgroundColor: colors.transparent, borderWidth: 0},
   cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
-  cornerBtnPressed: {opacity: 0.55},
   cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
   axis: {
     alignItems: 'center',

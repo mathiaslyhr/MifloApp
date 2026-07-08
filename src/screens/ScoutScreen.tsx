@@ -14,7 +14,7 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {colors, fonts, radii, screenPadding, shadows, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, POSITION_LABELS, type Footballer} from '../data/football';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
@@ -583,15 +583,8 @@ const styles = StyleSheet.create({
   statValueHot: {color: colors.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-  // Subtle lift so Share matches the cleaned-up buttons (global primary untouched).
-  cta: {
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 4},
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  // Bottom trigger that opens the search overlay (styled like a text field).
+  // Bottom trigger that opens the search overlay — a glass search field, so the
+  // main action speaks the same liquid-glass language as the rest of the app.
   trigger: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -599,9 +592,10 @@ const styles = StyleSheet.create({
     minHeight: 48,
     paddingHorizontal: spacing.lg,
     borderRadius: radii.pill,
-    backgroundColor: colors.surface,
-    borderWidth: 2,
-    borderColor: colors.divider,
+    backgroundColor: colors.glassLight,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    ...shadows.soft,
     marginBottom: spacing.sm,
   },
   // Search overlay anchored near the top so the results clear the keyboard.

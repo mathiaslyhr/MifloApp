@@ -10,6 +10,9 @@ import {usePressScale} from './usePressScale';
 
 type Props = Omit<PressableProps, 'style'> & {
   style?: StyleProp<ViewStyle>;
+  /** Layout style for the outer `Pressable` itself — needed when the control
+   * must flex/stretch inside its parent (the animated wrapper can't do that). */
+  containerStyle?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 };
 
@@ -20,6 +23,7 @@ type Props = Omit<PressableProps, 'style'> & {
  */
 export function PressableScale({
   style,
+  containerStyle,
   children,
   onPressIn,
   onPressOut,
@@ -28,6 +32,7 @@ export function PressableScale({
   const press = usePressScale();
   return (
     <Pressable
+      style={containerStyle}
       onPressIn={e => {
         press.onPressIn();
         onPressIn?.(e);

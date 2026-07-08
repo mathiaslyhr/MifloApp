@@ -329,7 +329,6 @@ export function RedCardScreen({route, navigation}: Props) {
               variant="primary"
               disabled={role == null}
               onPress={() => setRoleDismissed(true)}
-              style={styles.cta}
             />
           </View>
         </View>
@@ -428,7 +427,6 @@ function AskingPhase({
             label={isLastAsk ? t('redCard.finish') : t('redCard.next')}
             variant="primary"
             onPress={onDone}
-            style={styles.cta}
           />
         </>
       ) : (
@@ -486,7 +484,6 @@ function VotingPhase({
             label={t('redCard.vote.start')}
             variant="primary"
             onPress={() => setStarted(true)}
-            style={styles.cta}
           />
         </>
       ) : (
@@ -553,7 +550,6 @@ function RevealPhase({
               label={t('redCard.redeem.button')}
               variant="primary"
               onPress={onGuess}
-              style={styles.cta}
             />
           </View>
         ) : (
@@ -650,7 +646,6 @@ function RevealPhase({
                 label={t('redCard.playAgain')}
                 variant="primary"
                 onPress={onPlayAgain}
-                style={styles.cta}
               />
               <Button label={t('redCard.backToLobby')} variant="secondary" onPress={onBackToLobby} />
             </View>
@@ -739,14 +734,6 @@ const styles = StyleSheet.create({
   },
   roundText: {letterSpacing: 1},
   headline: {color: colors.ink},
-  // Subtler lift than the global primary button (which stays as-is on Home/Lobby).
-  cta: {
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 4},
-    shadowRadius: 10,
-    elevation: 3,
-  },
   pickGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
