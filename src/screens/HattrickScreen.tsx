@@ -774,8 +774,8 @@ const styles = StyleSheet.create({
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
   axisLogo: {width: 24, height: 24},
-  axisText: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: colors.ink},
-  axisTextOnly: {fontSize: 12, lineHeight: 16},
+  axisText: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14, color: colors.ink},
+  axisTextOnly: {fontSize: 10, lineHeight: 14},
   // Shirt number renders as pure text at the same caption size/ink as the labels.
   axisNumber: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: colors.ink},
   // Turn countdown, pinned to the bottom of the board area.
@@ -790,7 +790,7 @@ const styles = StyleSheet.create({
   timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
-  cellName: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16},
+  cellName: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',

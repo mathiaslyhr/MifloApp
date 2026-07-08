@@ -64,6 +64,7 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Lewandowski, Robert', 'Müller, Thomas', 'Neuer, Manuel',
       'Kimmich, Joshua', 'Goretzka, Leon', 'Gnabry, Serge', 'Coman, Kingsley',
       'Alaba, David', 'Davies, Alphonso', 'Perišić, Ivan', 'Coutinho, Philippe',
+      'Thiago',
     ],
   },
   {

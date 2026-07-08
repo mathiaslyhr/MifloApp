@@ -6740,23 +6740,6 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
-    id: 'Nazário, Ronaldo',
-    name: 'Ronaldo Nazário',
-    nationality: ['Brazil'],
-    positions: ['FW'],
-    clubs: [
-      {clubId: 'barcelona', from: 1996, to: 1997},
-      {clubId: 'inter', from: 1997, to: 2002},
-      {clubId: 'real-madrid', from: 2002, to: 2007},
-      {clubId: 'ac-milan', from: 2007, to: 2008},
-    ],
-    honours: [
-      {type: 'world-cup', count: 2, years: [1994, 2002]},
-      {type: 'ballon-dor', count: 2, years: [1997, 2002]},
-    ],
-    tags: ['legends'],
-  },
-  {
     id: 'Ndiaye, Iliman',
     name: 'Iliman Ndiaye',
     nationality: ['Senegal'],
@@ -9673,6 +9656,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 5, years: [2008, 2009, 2012, 2014, 2015]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Thiago',
+    name: 'Thiago Alcântara',
+    nicknames: ['Thiago Alcantara'],
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'barcelona', from: 2009, to: 2013},
+      {clubId: 'bayern', from: 2013, to: 2020},
+      {clubId: 'liverpool', from: 2020, to: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 10, years: [2010, 2011, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]},
+      {type: 'champions-league', count: 1, years: [2020]},
+      {type: 'domestic-cup', count: 6, years: [2012, 2014, 2016, 2019, 2020, 2022]},
+    ],
   },
   {
     id: 'Thuram, Khéphren',

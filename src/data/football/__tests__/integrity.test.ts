@@ -44,6 +44,14 @@ describe('referential integrity', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it('every footballer display name is unique', () => {
+    // Quiz answers and search resolve players by display name — a duplicate
+    // (e.g. two Ronaldo Nazário entries) makes questions ambiguous.
+    const names = all().map(f => f.name);
+    const dupes = names.filter((n, i) => names.indexOf(n) !== i);
+    expect(dupes).toEqual([]);
+  });
+
   it('every referenced clubId exists in CLUBS', () => {
     for (const f of all()) {
       for (const spell of f.clubs) {
