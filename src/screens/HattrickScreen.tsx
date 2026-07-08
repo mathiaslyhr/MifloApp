@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
   axisLogo: {width: 24, height: 24},
-  axisText: {fontFamily: fonts.medium, fontSize: 12, lineHeight: 14, color: colors.ink},
+  axisText: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 14, color: colors.ink},
   axisTextOnly: {fontSize: 12, lineHeight: 15},
   // Shirt number renders as pure text, matching the Scout "#23" reveal.
   axisNumber: {fontFamily: fonts.regular, fontSize: 14, lineHeight: 20, color: colors.textSecondary},
@@ -813,7 +813,7 @@ const styles = StyleSheet.create({
   timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
-  cellName: {fontFamily: fonts.medium, fontSize: 12, lineHeight: 14},
+  cellName: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 14},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',
@@ -848,8 +848,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
     paddingVertical: spacing.md,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.textTertiary,
   },
   resultFlag: {width: 22, height: 16, borderRadius: 2},
   hint: {paddingVertical: spacing.lg},
