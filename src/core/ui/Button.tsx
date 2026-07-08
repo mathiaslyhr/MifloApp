@@ -110,12 +110,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Deliberately faint: a standalone black pill on the empty pastel mesh must
+  // never read as a gray smear (a heavier lift did, in the games).
   primaryLift: {
     shadowColor: colors.shadowInk,
-    shadowOpacity: 0.35,
-    shadowOffset: {width: 0, height: 12},
-    shadowRadius: 20,
-    elevation: 8,
+    shadowOpacity: 0.12,
+    shadowOffset: {width: 0, height: 4},
+    shadowRadius: 10,
+    elevation: 3,
   },
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
