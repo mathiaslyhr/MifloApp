@@ -14,7 +14,7 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, screenPadding, shadows, spacing} from '../theme';
+import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, POSITION_LABELS, type Footballer} from '../data/football';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
@@ -595,7 +595,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.glassLight,
     borderWidth: 1,
     borderColor: colors.glassRim,
-    ...shadows.soft,
     marginBottom: spacing.sm,
   },
   // Search overlay anchored near the top so the results clear the keyboard.

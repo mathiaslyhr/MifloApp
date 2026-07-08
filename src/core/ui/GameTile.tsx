@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
-import {colors, radii, shadows, spacing} from '../../theme';
+import {colors, radii, spacing} from '../../theme';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
 
@@ -135,15 +135,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: radii.card,
     borderWidth: 1,
-    // "Clear" frosted glass — matches the nav island / secondary button.
+    // "Clear" frosted glass — matches the nav island / secondary button. Flat
+    // on purpose: in-flow glass carries no shadow (it smears the pastel mesh
+    // and bleeds into the gaps between stacked tiles).
     backgroundColor: colors.glassLight,
     borderColor: colors.glassRim,
-    ...shadows.soft,
   },
-  // Floating on a dimmed scrim (picker popup): near-solid white + a deeper lift
+  // Floating on a dimmed scrim (picker popup): near-solid white + a real lift
   // so the tile reads as its own card with no container behind it.
   cardFloating: {
     backgroundColor: colors.glassStrong,
+    shadowColor: colors.shadowInk,
     shadowOpacity: 0.22,
     shadowRadius: 24,
     shadowOffset: {width: 0, height: 12},

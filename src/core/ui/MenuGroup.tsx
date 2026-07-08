@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {colors, radii, shadows, spacing} from '../../theme';
+import {colors, radii, spacing} from '../../theme';
 import {Text} from './Text';
 
 type Props = {
@@ -47,8 +47,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.glass,
     borderRadius: radii.card,
     borderWidth: 1,
+    // Flat like all in-flow glass. (A lift here never rendered on iOS anyway:
+    // overflow:'hidden' clips the view's own shadow.)
     borderColor: colors.glassRim,
     overflow: 'hidden',
-    ...shadows.floating,
   },
 });

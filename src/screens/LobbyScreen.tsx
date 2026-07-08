@@ -280,7 +280,7 @@ export function LobbyScreen({route, navigation}: Props) {
           onPress={shareCode}
           accessibilityRole="button"
           accessibilityLabel={t('lobby.shareCode')}>
-          <GlassCard radius="pill" shadow="floating" style={styles.codeCard}>
+          <GlassCard radius="pill" style={styles.codeCard}>
             <Text variant="caption" color="muted" align="center" style={styles.codeLabel}>
               {t('lobby.code')}
             </Text>

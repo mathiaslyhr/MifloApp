@@ -43,7 +43,7 @@ export function HowToPlayScreen({navigation}: Props) {
 
       {steps.map(s => (
         <View key={s.n} style={styles.step}>
-          <GlassCard radius="pill" tint="light" shadow="soft" style={styles.badge}>
+          <GlassCard radius="pill" tint="light" style={styles.badge}>
             <Text variant="label" style={styles.badgeText}>
               {s.n}
             </Text>
@@ -64,7 +64,7 @@ export function HowToPlayScreen({navigation}: Props) {
       {games.map(g => (
         <View key={g.key} style={styles.game}>
           <View style={styles.gameHeader}>
-            <GlassCard radius="pill" tint="light" shadow="soft" style={styles.badge}>
+            <GlassCard radius="pill" tint="light" style={styles.badge}>
               <g.Icon size={18} color={colors.ink} strokeWidth={1.75} />
             </GlassCard>
             <Text variant="body">{g.title}</Text>
