@@ -8632,7 +8632,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'man-utd', from: 2018, to: 2020},
       {clubId: 'inter', from: 2020, to: 2023},
       {clubId: 'marseille', from: 2023, to: 2024},
-      {clubId: 'udinese', from: 2024},
+      {clubId: 'udinese', from: 2024, to: 2025},
+      {clubId: 'sevilla', from: 2025},
     ],
     honours: [
       {type: 'copa-america', count: 2, years: [2015, 2016]},

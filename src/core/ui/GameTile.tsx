@@ -68,8 +68,19 @@ export function GameTile({
       </View>
     ) : null;
 
-  // Trailing slot, in priority: a `'text'` badge, then a muted `meta` pill (e.g.
-  // audience label), then the chevron on a tappable tile.
+  // The audience `meta` pill rides inline at the head of the title line
+  // (vertically centered against the title, left-anchored) rather than in the
+  // trailing slot — mirroring the lobby's host badge, which sits by the name.
+  const metaPill =
+    meta && !badge ? (
+      <View style={styles.metaPill}>
+        <Text variant="caption" color="secondary" style={styles.metaText}>
+          {meta}
+        </Text>
+      </View>
+    ) : null;
+
+  // Trailing slot: a `'text'` badge, else the chevron on a tappable tile.
   let trailing: React.ReactNode = null;
   if (badge && badgeVariant === 'text') {
     trailing = (
@@ -80,14 +91,6 @@ export function GameTile({
         style={styles.textBadge}>
         {badge}
       </Text>
-    );
-  } else if (meta && !badge) {
-    trailing = (
-      <View style={styles.metaPill}>
-        <Text variant="caption" color="secondary" style={styles.metaText}>
-          {meta}
-        </Text>
-      </View>
     );
   } else if (!disabled && !badge) {
     trailing = (
@@ -112,9 +115,12 @@ export function GameTile({
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
       <View style={styles.body}>
-        <Text variant="section" numberOfLines={1}>
-          {title}
-        </Text>
+        <View style={styles.titleRow}>
+          {metaPill}
+          <Text variant="section" numberOfLines={1} style={styles.titleText}>
+            {title}
+          </Text>
+        </View>
         {tagline ? (
           <Text variant="secondary" color="secondary" numberOfLines={1}>
             {tagline}
@@ -194,7 +200,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.card - 4,
-    backgroundColor: colors.surface2,
   },
   body: {flex: 1, gap: 2},
+  // Title line: the audience pill sits inline before the title, vertically
+  // centered against it. The title flex-shrinks so a long name truncates
+  // instead of shoving the pill off-row.
+  titleRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  titleText: {flexShrink: 1},
 });

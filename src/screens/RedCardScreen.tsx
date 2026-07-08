@@ -25,8 +25,6 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {ReportBugModal} from '../core/feedback/ReportBugModal';
-import {BugReportLink} from '../core/feedback/BugReportLink';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -67,7 +65,6 @@ export function RedCardScreen({route, navigation}: Props) {
   const [guessOpen, setGuessOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [showHelp, setShowHelp] = useState(false);
-  const [showBug, setShowBug] = useState(false);
   const insets = useSafeAreaInsets();
   const leftRef = useRef(false);
   const prevPhaseRef = useRef<string | undefined>(undefined);
@@ -260,11 +257,6 @@ export function RedCardScreen({route, navigation}: Props) {
             />
           )}
         </View>
-
-        <BugReportLink
-          label={t('redCard.reportBug')}
-          onPress={() => setShowBug(true)}
-        />
       </ScrollView>
 
       {/* Pinned floating corner buttons (back left, help right) — stay put while
@@ -383,7 +375,6 @@ export function RedCardScreen({route, navigation}: Props) {
       </Modal>
 
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
-      <ReportBugModal visible={showBug} onClose={() => setShowBug(false)} />
     </Screen>
   );
 }
@@ -697,7 +688,6 @@ function HelpModal({visible, onClose}: {visible: boolean; onClose: () => void}) 
       onClose={onClose}
       title={t('redCard.help.title')}
       lines={[{text: t('redCard.help.rule')}]}
-      closeLabel={t('common.close')}
     />
   );
 }

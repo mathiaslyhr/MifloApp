@@ -24,7 +24,6 @@ export function MysteryHelpModal({visible, onClose}: Props) {
         {text: t('scout.help.arrows'), divider: true},
         {text: t('scout.help.daily'), tone: 'strong'},
       ]}
-      closeLabel={t('common.close')}
     />
   );
 }

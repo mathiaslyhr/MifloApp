@@ -36,6 +36,12 @@ export const PRIVACY_POLICY_URL = 'https://miflo.dk/privacy';
 export const FAQ_URL = 'https://miflo.dk/faq';
 
 /**
+ * Feedback / bug-report page on the marketing site, linked from the Menu's About
+ * group. Placeholder until the page is published; swap in the real URL here.
+ */
+export const FEEDBACK_URL = 'https://miflo.dk/feedback';
+
+/**
  * Supabase backend (rooms + realtime lobby). The anon key is the public client
  * key — it's protected by Row Level Security, so it's safe to commit. Paste your
  * project's values here; leaving them empty keeps the app in local/solo mode

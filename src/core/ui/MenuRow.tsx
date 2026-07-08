@@ -73,7 +73,7 @@ export function MenuRow({
           press.animatedStyle,
         ]}>
         {Icon ? (
-          <Icon size={22} color={colors.textSecondary} strokeWidth={2} />
+          <Icon size={22} color={colors.primary} strokeWidth={2} />
         ) : null}
         <View style={styles.text}>
           <Text variant="body">{label}</Text>

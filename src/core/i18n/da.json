@@ -43,6 +43,7 @@
     "starting": "Starter…",
     "waitingHostPick": "Venter på at værten vælger et spil…",
     "waitingHostStart": "Venter på at værten starter…",
+    "rejoin": "Vend tilbage til spillet",
     "renameTitle": "Skift dit brugernavn",
     "namePlaceholder": "Dit navn",
     "removeTitle": "Fjern spiller",
@@ -113,6 +114,7 @@
     "aboutMiflo": "Om Miflo",
     "faq": "FAQ",
     "privacy": "Privatlivspolitik",
+    "reportBug": "Rapportér en fejl",
     "version": "Miflo v{{version}}"
   },
   "hattrick": {
@@ -144,7 +146,6 @@
     "playAgain": "Spil igen",
     "backToLobby": "Tilbage til rummet",
     "newGameError": "Kunne ikke starte et nyt spil.",
-    "reportBug": "Rapportér en fejl",
     "searchPlaceholder": "Søg efter en fodboldspiller",
     "searchHint": "Begynd at skrive for at søge efter en spiller",
     "noPlayers": "Ingen spillere fundet",
@@ -209,7 +210,6 @@
     "playAgain": "Spil igen",
     "backToLobby": "Tilbage til rummet",
     "waitingHost": "Venter på værten…",
-    "reportBug": "Rapportér en fejl",
     "searchPlaceholder": "Søg efter en fodboldspiller",
     "searchHint": "Begynd at skrive for at søge efter en spiller",
     "noPlayers": "Ingen spillere fundet",
@@ -272,16 +272,6 @@
       "topLeagues": "Har spillet i {{value}}+ af de fem største ligaer",
       "tag": "Er en {{value}}"
     }
-  },
-  "bug": {
-    "title": "Rapportér en fejl",
-    "desc": "Fortæl os, hvad der gik galt, og hvad du lavede.",
-    "placeholder": "Beskriv fejlen",
-    "send": "Send rapport",
-    "sending": "Sender…",
-    "thanks": "Tak! Din rapport er sendt.",
-    "unavailable": "Rapporter er ikke tilgængelige lige nu.",
-    "error": "Kunne ikke sende din rapport. Prøv igen."
   },
   "update": {
     "title": "Opdatér Miflo",

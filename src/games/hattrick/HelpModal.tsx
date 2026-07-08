@@ -24,7 +24,6 @@ export function HelpModal({visible, onClose}: Props) {
         {text: t('hattrick.help.rule')},
         {text: t('hattrick.help.tapHint'), tone: 'strong', divider: true},
       ]}
-      closeLabel={t('common.close')}
     />
   );
 }

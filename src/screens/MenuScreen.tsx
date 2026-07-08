@@ -3,6 +3,7 @@ import {Linking, ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   BookOpen,
+  Bug,
   HelpCircle,
   Info,
   Settings,
@@ -18,7 +19,12 @@ import {
   Text,
   TopStatusFade,
 } from '../core/ui';
-import {APP_VERSION, FAQ_URL, PRIVACY_POLICY_URL} from '../core/config';
+import {
+  APP_VERSION,
+  FAQ_URL,
+  FEEDBACK_URL,
+  PRIVACY_POLICY_URL,
+} from '../core/config';
 import {spacing} from '../theme';
 
 /** In-app destinations reachable from the Menu (detail screens land later, #12). */
@@ -99,6 +105,12 @@ export function MenuScreen({onSelectItem}: Props) {
             Icon={Shield}
             kind="link"
             onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
+          />
+          <MenuRow
+            label={t('menu.reportBug')}
+            Icon={Bug}
+            kind="link"
+            onPress={() => Linking.openURL(FEEDBACK_URL).catch(() => {})}
           />
         </MenuGroup>
 

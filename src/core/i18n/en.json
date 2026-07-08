@@ -43,6 +43,7 @@
     "starting": "Starting…",
     "waitingHostPick": "Waiting for the host to pick a game…",
     "waitingHostStart": "Waiting for the host to start…",
+    "rejoin": "Rejoin game",
     "renameTitle": "Change your username",
     "namePlaceholder": "Your name",
     "removeTitle": "Remove player",
@@ -113,6 +114,7 @@
     "aboutMiflo": "About Miflo",
     "faq": "FAQ",
     "privacy": "Privacy Policy",
+    "reportBug": "Report a bug",
     "version": "Miflo v{{version}}"
   },
   "hattrick": {
@@ -144,7 +146,6 @@
     "playAgain": "Play again",
     "backToLobby": "Back to lobby",
     "newGameError": "Couldn't start a new game.",
-    "reportBug": "Report a bug",
     "searchPlaceholder": "Search a footballer",
     "searchHint": "Start typing to search a footballer",
     "noPlayers": "No players found",
@@ -209,7 +210,6 @@
     "playAgain": "Play again",
     "backToLobby": "Back to lobby",
     "waitingHost": "Waiting for the host…",
-    "reportBug": "Report a bug",
     "searchPlaceholder": "Search a footballer",
     "searchHint": "Start typing to search a footballer",
     "noPlayers": "No players found",
@@ -272,16 +272,6 @@
       "topLeagues": "Has played in {{value}}+ of the top five leagues",
       "tag": "Is a {{value}}"
     }
-  },
-  "bug": {
-    "title": "Report a bug",
-    "desc": "Tell us what went wrong, and what you were doing.",
-    "placeholder": "Describe the bug",
-    "send": "Send report",
-    "sending": "Sending…",
-    "thanks": "Thanks! Your report was sent.",
-    "unavailable": "Reports aren't available right now.",
-    "error": "Couldn't send your report. Please try again."
   },
   "update": {
     "title": "Update Miflo",

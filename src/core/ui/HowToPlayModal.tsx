@@ -1,14 +1,13 @@
 /**
  * HowToPlayModal — the single shared "how to play" popover behind the ? button
  * in each game header (Hattrick, Scout, Red Card). A centered surface card with
- * a small title, a few short lines, and a Close button. Deliberately tiny with
- * no scroll region; text runs at the small end of the scale (title 15 / lines 14).
- * Tap outside or Close to dismiss.
+ * a small title and a few short lines. Deliberately tiny with no scroll region;
+ * text runs at the small end of the scale (title 15 / lines 14).
+ * Tap outside the card to dismiss.
  */
 import React from 'react';
 import {Modal, Pressable, StyleSheet, View} from 'react-native';
 import {Text} from './Text';
-import {Button} from './Button';
 import {colors, radii, spacing} from '../../theme';
 
 export type HelpLine = {
@@ -24,10 +23,9 @@ type Props = {
   onClose: () => void;
   title: string;
   lines: HelpLine[];
-  closeLabel: string;
 };
 
-export function HowToPlayModal({visible, onClose, title, lines, closeLabel}: Props) {
+export function HowToPlayModal({visible, onClose, title, lines}: Props) {
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.scrim} onPress={onClose}>
@@ -46,7 +44,6 @@ export function HowToPlayModal({visible, onClose, title, lines, closeLabel}: Pro
               </Text>
             </React.Fragment>
           ))}
-          <Button label={closeLabel} variant="secondary" onPress={onClose} />
         </Pressable>
       </Pressable>
     </Modal>

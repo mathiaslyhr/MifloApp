@@ -24,8 +24,6 @@ import {
   toast,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {ReportBugModal} from '../core/feedback/ReportBugModal';
-import {BugReportLink} from '../core/feedback/BugReportLink';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -81,7 +79,6 @@ export function HattrickScreen({route, navigation}: Props) {
   const [query, setQuery] = useState('');
   const [explain, setExplain] = useState<Criterion | null>(null);
   const [showHelp, setShowHelp] = useState(false);
-  const [showBug, setShowBug] = useState(false);
   const leftRef = useRef(false);
 
   // One board sized from the screen so every cell is identical. Layout is
@@ -466,12 +463,6 @@ export function HattrickScreen({route, navigation}: Props) {
             <TurnTimer deadline={state.turnDeadline} nowTs={nowTs} />
           </View>
         )}
-
-        {/* Always reachable — report a problem without leaving the game. */}
-        <BugReportLink
-          label={t('hattrick.reportBug')}
-          onPress={() => setShowBug(true)}
-        />
       </View>
 
       {/* Footballer picker — light scrim so the selected (purple) cell stays visible */}
@@ -543,7 +534,6 @@ export function HattrickScreen({route, navigation}: Props) {
 
       <AxisInfoModal criterion={explain} onClose={() => setExplain(null)} />
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
-      <ReportBugModal visible={showBug} onClose={() => setShowBug(false)} />
     </Screen>
   );
 }
@@ -782,10 +772,10 @@ const styles = StyleSheet.create({
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
   axisLogo: {width: 24, height: 24},
-  axisText: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 14, color: colors.ink},
-  axisTextOnly: {fontSize: 12, lineHeight: 15},
-  // Shirt number renders as pure text, matching the Scout "#23" reveal.
-  axisNumber: {fontFamily: fonts.regular, fontSize: 14, lineHeight: 20, color: colors.textSecondary},
+  axisText: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: colors.ink},
+  axisTextOnly: {fontSize: 12, lineHeight: 16},
+  // Shirt number renders as pure text at the same caption size/ink as the labels.
+  axisNumber: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: colors.ink},
   // Turn countdown, pinned to the bottom of the board area.
   timerBar: {marginTop: 'auto', paddingTop: spacing.xl, paddingBottom: spacing.md},
   timerLabelRow: {
@@ -798,7 +788,7 @@ const styles = StyleSheet.create({
   timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
-  cellName: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 14},
+  cellName: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',
