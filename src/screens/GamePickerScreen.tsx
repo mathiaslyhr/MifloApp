@@ -26,14 +26,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'GamePicker'>;
  * appear; the choice is handed back to the Lobby, which owns starting the round.
  */
 export function GamePickerScreen({route, navigation}: Props) {
-  const {roomId} = route.params;
+  const {onPick} = route.params;
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
 
-  // Return the pick to the still-mounted Lobby; its startGame owns the roster and
-  // the party-session refs, and the room state drives every device into the game.
+  // Hand the pick straight to the Lobby's startGame (called synchronously so no
+  // frozen-screen/effect timing can swallow it), then pop back. The room state
+  // then drives every device into the round.
   function handleSelect(gameType: GameType) {
-    navigation.navigate('Lobby', {roomId, pickedGame: gameType});
+    onPick(gameType);
+    navigation.goBack();
   }
 
   return (

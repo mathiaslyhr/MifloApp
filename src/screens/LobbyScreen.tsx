@@ -264,18 +264,6 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }
 
-  // The game-picker page hands its choice back via a route param. Clear it first
-  // so a re-focus can't re-fire, then start the round on this (still-mounted) host.
-  const pickedGame = route.params?.pickedGame;
-  useEffect(() => {
-    if (pickedGame) {
-      navigation.setParams({pickedGame: undefined});
-      startGame(pickedGame);
-    }
-    // startGame reads the live roster/refs via closure; keyed on the returned pick.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pickedGame]);
-
   return (
     // Drop top/bottom safe-area edges — the scroll content owns the top inset
     // (the wordmark scrolls away) and the bottom bar owns the bottom inset.
@@ -384,7 +372,7 @@ export function LobbyScreen({route, navigation}: Props) {
             onPress={() =>
               locked && room
                 ? startGame(room.gameType)
-                : navigation.navigate('GamePicker', {roomId})
+                : navigation.navigate('GamePicker', {onPick: startGame})
             }
           />
         ) : room?.status === 'in_progress' ? (

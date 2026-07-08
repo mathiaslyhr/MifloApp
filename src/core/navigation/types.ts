@@ -9,8 +9,10 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Tabs: undefined;
   Join: undefined;
-  Lobby: {roomId: string; pickedGame?: string};
-  GamePicker: {roomId: string};
+  Lobby: {roomId: string};
+  // onPick is a function param (non-serializable, but this app never persists or
+  // deep-links nav state) so the host's startGame runs synchronously on select.
+  GamePicker: {onPick: (gameType: string) => void};
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
   Scout: undefined;
