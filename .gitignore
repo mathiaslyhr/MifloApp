@@ -81,3 +81,7 @@ ios/build-sim/
 
 # Supabase CLI local cache (project link, cli version)
 supabase/.temp/
+
+# Sentry auth token — secret, never commit
+ios/sentry.properties
+sentry.properties

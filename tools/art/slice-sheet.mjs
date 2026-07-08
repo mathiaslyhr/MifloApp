@@ -42,6 +42,75 @@ const SHEETS = {
       {y0: 788, y1: 952, cols: [220, 492, 763, 1026, 1304], names: ['fabregas', 'pogba', 'hakimi', 'rudiger', 'walker']},
     ],
   },
+  // classics sheet (00ad07e0…, 1536×1024) — the 16 classic hub players, 4×4.
+  // Portraits sit very close together: narrow halfW + edge-sliver dropping.
+  classics: {
+    refW: 1536, refH: 1024, halfW: 135, size: 256,
+    out: resolve(ASSETS, 'players'),
+    extras: null,
+    use: null,
+    key: 'edge',
+    tol: 34,
+    rows: [
+      {y0: 15, y1: 255, cols: [235, 578, 916, 1265], names: ['zlatan', 'ramos', 'suarez', 'modric']},
+      {y0: 298, y1: 514, cols: [235, 578, 916, 1265], names: ['benzema', 'busquets', 'xavi', 'iniesta']},
+      {y0: 566, y1: 764, cols: [235, 578, 916, 1265], names: ['lampard', 'gerrard', 'kroos', 'muller']},
+      {y0: 814, y1: 990, cols: [235, 578, 916, 1265], names: ['buffon', 'totti', 'pirlo', 'maldini']},
+    ],
+  },
+  // icons sheet (b61bd962…, 1774×887) — 2×6 trophies + generic chip icons.
+  // Ships into two asset dirs, so `out` is the assets root with subpaths.
+  icons: {
+    refW: 1774, refH: 887, halfW: 146, size: 128,
+    out: ASSETS,
+    extras: resolve(HERE, 'extras/icons'),
+    key: 'edge',
+    tol: 40,
+    holeTol: 26,
+    // the silhouette is broader than the grid pitch; islands handle any bleed
+    halfWOverride: {teammate: 165},
+    use: {
+      'europa-league': 'trophies/europa-league.png',
+      'domestic-cup': 'trophies/domestic-cup.png',
+      'prem-trophy': 'trophies/league-premier-league.png',
+      'squad-number': 'criteria/shirt-number.png',
+      'position-gk': 'criteria/position-gk.png',
+      'position-df': 'criteria/position-df.png',
+      'position-mf': 'criteria/position-mf.png',
+      'teammate': 'criteria/teammate.png',
+      'tag-current-stars': 'criteria/tag-current-stars.png',
+    },
+    rows: [
+      {y0: 20, y1: 378, cols: [148, 444, 739, 1035, 1331, 1627], names: ['europa-league', 'domestic-cup', 'prem-trophy', 'squad-number', 'position-gk', 'position-df']},
+      {y0: 515, y1: 775, cols: [148, 444, 739, 1035, 1331, 1627], names: ['position-mf', 'teammate', 'captain', 'tag-current-stars', 'form-boost', 'consistent']},
+    ],
+  },
+  // managers.png (1254×1254) — 16 managers 4×4; no game feature yet, so
+  // everything lands in extras/managers/ until the "Managed by X" axis exists.
+  managers: {
+    refW: 1254, refH: 1254, halfW: 130, size: 256,
+    out: resolve(HERE, 'extras/managers'),
+    extras: null,
+    use: null,
+    key: 'edge',
+    // darker background than the other sheets — near-black coats (Mourinho,
+    // Klopp) sit close to it, so the tolerance must be tight
+    tol: 26,
+    // Mourinho's tile: shade-varying bg AND green rim-light on the coat share
+    // the same color range — no tol separates them. Kept at the base tol
+    // (coat intact, faint bg remnants); regenerate his tile solo before the
+    // "Managed by X" feature ships.
+    tolOverride: {},
+    // big labels sit tight under the busts; whatever the bands still catch is
+    // disconnected bottom-band text and gets dropped
+    dropBottom: 0.78,
+    rows: [
+      {y0: 31, y1: 272, cols: [173, 468, 761, 1067], names: ['guardiola', 'mourinho', 'ancelotti', 'ferguson']},
+      {y0: 341, y1: 585, cols: [173, 468, 761, 1067], names: ['klopp', 'wenger', 'zidane', 'simeone']},
+      {y0: 655, y1: 880, cols: [173, 468, 761, 1067], names: ['conte', 'benitez', 'tuchel', 'luisenrique']},
+      {y0: 950, y1: 1165, cols: [173, 468, 761, 1067], names: ['delbosque', 'low', 'vangaal', 'capello']},
+    ],
+  },
   // trophies.png — 23 trophies; only 8 map onto the game's HonourType set,
   // the rest land in extras/ for future honour kinds.
   trophies: {
@@ -60,11 +129,17 @@ const SHEETS = {
     // items whose label sits so close it touches the artwork get a hard cut
     yOverride: {'wc-golden-boot': 230, 'laliga-winner': 478},
     use: {
-      'ballon-dor-raw': 'ballon-dor.png',
+      // user prefers the sheet's "Golden Ball" art for the Ballon d'Or chip;
+      // the sheet's own "Ballon d'Or" item stays in extras only
+      'golden-ball': 'ballon-dor.png',
       'world-cup-winner': 'world-cup.png',
       'wc-golden-boot': 'golden-boot.png',
       'ucl-winner': 'champions-league.png',
-      'laliga-winner': 'league-title.png',
+      'laliga-winner': ['league-title.png', 'league-la-liga.png'],
+      'prem-winner': 'league-premier-league.png',
+      'seriea-winner': 'league-serie-a.png',
+      'bundesliga-winner': 'league-bundesliga.png',
+      'treble': 'treble.png',
       'copa-america-winner': 'copa-america.png',
       'euro-winner': 'european-championship.png',
       'player-of-tournament': 'player-of-the-season.png',
@@ -200,9 +275,10 @@ let count = 0, shipped = 0;
 for (const row of cfg.rows) {
   for (let c = 0; c < row.cols.length; c++) {
     const name = row.names[c];
-    const left = Math.max(0, Math.round((row.cols[c] - cfg.halfW) * sx));
+    const halfW = cfg.halfWOverride?.[name] ?? cfg.halfW;
+    const left = Math.max(0, Math.round((row.cols[c] - halfW) * sx));
     const top = Math.round(row.y0 * sy);
-    const cw = Math.min(Math.round(cfg.halfW * 2 * sx), W - left);
+    const cw = Math.min(Math.round(halfW * 2 * sx), W - left);
     const y1 = cfg.yOverride?.[name] ?? row.y1;
     const ch = Math.round((y1 - row.y0) * sy);
     const crop = sharp(sheetPath).extract({left, top, width: cw, height: ch});
@@ -211,16 +287,19 @@ for (const row of cfg.rows) {
       await crop.png().toFile(resolve(PREVIEW, `${name}.png`));
     } else {
       const {data, info} = await crop.ensureAlpha().raw().toBuffer({resolveWithObject: true});
-      keyBackground(data, info.width, info.height, cfg);
+      keyBackground(data, info.width, info.height, {
+        ...cfg,
+        tol: cfg.tolOverride?.[name] ?? cfg.tol,
+      });
       const dest = resolve(baseOut, `${name}.png`);
       await sharp(data, {raw: {width: info.width, height: info.height, channels: 4}})
         .trim()
         .resize(cfg.size, cfg.size, {fit: 'contain', background: {r: 0, g: 0, b: 0, alpha: 0}})
         .png()
         .toFile(dest);
-      const shipAs = cfg.use === null ? null : cfg.use[name];
-      if (cfg.extras && shipAs) {
-        copyFileSync(dest, resolve(cfg.out, shipAs));
+      const shipAs = cfg.use === null ? [] : [cfg.use[name] ?? []].flat();
+      for (const target of shipAs) {
+        copyFileSync(dest, resolve(cfg.out, target));
         shipped++;
       }
     }
