@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Text} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {GlassCard, Text} from '../../core/ui';
+import {colors, spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {GAMES} from '../gamesCatalog';
 import {MenuDetailScreen} from './MenuDetailScreen';
@@ -43,11 +43,11 @@ export function HowToPlayScreen({navigation}: Props) {
 
       {steps.map(s => (
         <View key={s.n} style={styles.step}>
-          <View style={styles.badge}>
+          <GlassCard radius="pill" tint="light" shadow="soft" style={styles.badge}>
             <Text variant="label" style={styles.badgeText}>
               {s.n}
             </Text>
-          </View>
+          </GlassCard>
           <View style={styles.stepText}>
             <Text variant="body">{s.title}</Text>
             <Text variant="secondary" color="secondary">
@@ -64,9 +64,9 @@ export function HowToPlayScreen({navigation}: Props) {
       {games.map(g => (
         <View key={g.key} style={styles.game}>
           <View style={styles.gameHeader}>
-            <View style={styles.badge}>
+            <GlassCard radius="pill" tint="light" shadow="soft" style={styles.badge}>
               <g.Icon size={18} color={colors.ink} strokeWidth={1.75} />
-            </View>
+            </GlassCard>
             <Text variant="body">{g.title}</Text>
           </View>
           <View style={styles.rules}>
@@ -85,23 +85,12 @@ export function HowToPlayScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   body: {gap: spacing.xl},
   step: {flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start'},
-  // Frosted "liquid glass" chip — same language as CircleButton / the nav
-  // island, not a solid purple fill. Holds either a step number or a game icon.
+  // Frosted "liquid glass" chip (GlassCard) holding a step number or game icon.
   badge: {
     width: 30,
     height: 30,
-    borderRadius: radii.pill,
-    backgroundColor: colors.glassLight,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
     alignItems: 'center',
     justifyContent: 'center',
-    // Soft lift for the glass depth.
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 8},
-    shadowRadius: 16,
-    elevation: 4,
     // Nudge down so the number sits level with the step title's cap height.
     marginTop: 2,
   },
