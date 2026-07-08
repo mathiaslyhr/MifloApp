@@ -605,7 +605,9 @@ function AxisCell({
       ) : null}
       <Text
         align="center"
-        numberOfLines={2}
+        // A single word must never wrap ("Teammat / e") — shrink it instead;
+        // multi-word labels ("Golden Boot") still get two lines.
+        numberOfLines={label.includes(' ') ? 2 : 1}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
         style={[
