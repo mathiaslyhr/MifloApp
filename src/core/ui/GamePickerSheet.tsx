@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, radii, spacing} from '../../theme';
+import {colors, radii, shadows, spacing} from '../../theme';
 import {GAMES, GameType} from '../../screens/gamesCatalog';
 import {GameTile} from './GameTile';
 import {Text} from './Text';
@@ -88,11 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.glassStrong,
     borderWidth: 1,
     borderColor: colors.glassRim,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 8},
-    shadowRadius: 16,
-    elevation: 4,
+    ...shadows.soft,
   },
   // Gap between tiles + a little vertical breathing room so the tiles' shadows
   // aren't clipped at the top/bottom of the scroll frame.

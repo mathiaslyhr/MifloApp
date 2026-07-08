@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: radii.card,
     backgroundColor: colors.surface,
-    shadowColor: '#140F32',
+    shadowColor: colors.shadowInk,
     shadowOpacity: 0.12,
     shadowOffset: {width: 0, height: 8},
     shadowRadius: 20,

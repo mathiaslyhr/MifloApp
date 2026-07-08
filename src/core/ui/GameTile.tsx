@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
-import {colors, radii, spacing} from '../../theme';
+import {colors, radii, shadows, spacing} from '../../theme';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
 
@@ -138,11 +138,7 @@ const styles = StyleSheet.create({
     // "Clear" frosted glass — matches the nav island / secondary button.
     backgroundColor: colors.glassLight,
     borderColor: colors.glassRim,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 8},
-    shadowRadius: 16,
-    elevation: 4,
+    ...shadows.soft,
   },
   // Floating on a dimmed scrim (picker popup): near-solid white + a deeper lift
   // so the tile reads as its own card with no container behind it.
@@ -170,7 +166,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface2,
     borderWidth: 1,
     borderColor: colors.glassRim,
-    shadowColor: '#140F32',
+    shadowColor: colors.shadowInk,
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 6,

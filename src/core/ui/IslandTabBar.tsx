@@ -2,7 +2,7 @@ import React from 'react';
 import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Gamepad2, Home, Menu, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, fonts, radii} from '../../theme';
+import {colors, fonts, radii, shadows} from '../../theme';
 import {usePressScale} from './usePressScale';
 import {AppBlur} from './Blur';
 
@@ -76,11 +76,7 @@ const styles = StyleSheet.create({
   // Shadow-only layer (no clip, so the ambient lift isn't cut off).
   island: {
     borderRadius: radii.pill,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.18,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 24,
-    elevation: 8,
+    ...shadows.floating,
   },
   // Visible pill: clips the real backdrop blur to the rounded shape. A light
   // tint over the blur keeps the "clear" frosted look; blur shows through.

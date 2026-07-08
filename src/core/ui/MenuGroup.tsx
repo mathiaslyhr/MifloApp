@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {colors, radii, spacing} from '../../theme';
+import {colors, radii, shadows, spacing} from '../../theme';
 import {Text} from './Text';
 
 type Props = {
@@ -49,10 +49,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.glassRim,
     overflow: 'hidden',
-    shadowColor: '#140F32',
-    shadowOpacity: 0.18,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 24,
-    elevation: 8,
+    ...shadows.floating,
   },
 });

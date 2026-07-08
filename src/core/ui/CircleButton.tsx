@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet} from 'react-native';
-import {colors, radii} from '../../theme';
+import {colors, radii, shadows} from '../../theme';
 import {usePressScale} from './usePressScale';
 
 type Props = {
@@ -50,10 +50,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.glassLight,
     borderWidth: 1,
     borderColor: colors.glassRim,
-    shadowColor: '#140F32',
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 8},
-    shadowRadius: 16,
-    elevation: 4,
+    ...shadows.soft,
   },
 });

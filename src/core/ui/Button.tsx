@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   primaryLift: {
-    shadowColor: '#140F32',
+    shadowColor: colors.shadowInk,
     shadowOpacity: 0.35,
     shadowOffset: {width: 0, height: 12},
     shadowRadius: 20,
