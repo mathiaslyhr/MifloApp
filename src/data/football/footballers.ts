@@ -1940,22 +1940,6 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
-    id: 'Choupo-Moting, Eric',
-    name: 'Eric Maxim Choupo-Moting',
-    nationality: ['Cameroon'],
-    positions: ['FW'],
-    shirtNumbers: [13, 33],
-    clubs: [
-      {clubId: 'schalke', from: 2014, to: 2017},
-      {clubId: 'psg', from: 2018, to: 2020},
-      {clubId: 'bayern', from: 2020, to: 2023},
-    ],
-    honours: [
-      {type: 'league-title', count: 3, years: [2019, 2021, 2022]},
-    ],
-    tags: ['legends'],
-  },
-  {
     id: 'Choupo-Moting, Eric Maxim',
     name: 'Eric Maxim Choupo-Moting',
     nationality: ['Cameroon'],
