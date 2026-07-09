@@ -1,10 +1,18 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {Animated, PanResponder, StyleSheet, View} from 'react-native';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
 import {colors, radii, spacing} from '../../theme';
 import {CircleButton} from './CircleButton';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
+
+/** Swipe-reveal geometry: circle button diameter + breathing room each side. */
+const ACTION_SIZE = 40;
+const REVEAL = ACTION_SIZE + spacing.sm * 2;
+/** The tile can be dragged slightly past the open position, then springs back. */
+const OVERDRAG = 16;
+/** A flick this fast settles the swipe regardless of distance. */
+const SWIPE_VELOCITY = 0.3;
 
 type Props = {
   title: string;
@@ -38,9 +46,10 @@ type Props = {
    */
   surface?: 'glass' | 'floating';
   /**
-   * Optional secondary action rendered as a small circle button before the
-   * chevron (e.g. "play on one phone" on games that support pass-and-play).
-   * The tile's own tap stays the primary action; this is a quieter side door.
+   * Optional hidden leading action, Apple Mail style: swiping the tile to the
+   * right slides it over and reveals a small circle button on the left (e.g.
+   * "play on one phone" on games that support pass-and-play). Tapping the tile
+   * stays the primary action; while revealed, a tile tap just closes the swipe.
    */
   SecondaryIcon?: LucideIcon;
   onSecondaryPress?: () => void;
@@ -69,6 +78,63 @@ export function GameTile({
   onSecondaryPress,
   secondaryAccessibilityLabel,
 }: Props) {
+  const hasSwipeAction =
+    !!SecondaryIcon && !!onSecondaryPress && !disabled && !badge;
+
+  // Swipe-reveal state. The pan responder is created once, so it reads live
+  // values through refs (same pattern as the toast pills).
+  const translateX = useRef(new Animated.Value(0)).current;
+  const openRef = useRef(false);
+  const startXRef = useRef(0);
+  const swipeEnabledRef = useRef(hasSwipeAction);
+  swipeEnabledRef.current = hasSwipeAction;
+  // Mirrors openRef for render: gates the action's tappability.
+  const [revealed, setRevealed] = useState(false);
+
+  const settle = useCallback(
+    (open: boolean) => {
+      openRef.current = open;
+      setRevealed(open);
+      Animated.spring(translateX, {
+        toValue: open ? REVEAL : 0,
+        speed: 20,
+        bounciness: 4,
+        useNativeDriver: true,
+      }).start();
+    },
+    [translateX],
+  );
+
+  // Claimed in the capture phase (the PressableScale would otherwise hold the
+  // gesture), but only once the finger clearly moves sideways, so plain taps
+  // and vertical list scrolling are untouched.
+  const pan = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponderCapture: (_, g) =>
+        swipeEnabledRef.current &&
+        Math.abs(g.dx) > 8 &&
+        Math.abs(g.dx) > Math.abs(g.dy) &&
+        (g.dx > 0 || openRef.current),
+      onPanResponderGrant: () => {
+        startXRef.current = openRef.current ? REVEAL : 0;
+      },
+      onPanResponderMove: (_, g) => {
+        translateX.setValue(
+          Math.max(0, Math.min(REVEAL + OVERDRAG, startXRef.current + g.dx)),
+        );
+      },
+      onPanResponderRelease: (_, g) => {
+        const open =
+          g.vx > SWIPE_VELOCITY
+            ? true
+            : g.vx < -SWIPE_VELOCITY
+            ? false
+            : startXRef.current + g.dx > REVEAL / 2;
+        settle(open);
+      },
+      onPanResponderTerminate: () => settle(false),
+    }),
+  ).current;
   // `'pill'` badge sits on the top edge (like the lobby host badge) so it never
   // steals row width from the name/tagline.
   const topPill =
@@ -110,9 +176,20 @@ export function GameTile({
     );
   }
 
-  return (
+  const tile = (
     <PressableScale
-      onPress={disabled ? undefined : onPress}
+      onPress={
+        disabled
+          ? undefined
+          : () => {
+              // A tap on a swiped-open tile just closes it, Mail style.
+              if (openRef.current) {
+                settle(false);
+                return;
+              }
+              onPress?.();
+            }
+      }
       disabled={disabled}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
@@ -137,16 +214,46 @@ export function GameTile({
           </Text>
         ) : null}
       </View>
-      {SecondaryIcon && onSecondaryPress && !disabled && !badge ? (
-        <CircleButton
-          size={32}
-          accessibilityLabel={secondaryAccessibilityLabel ?? ''}
-          onPress={onSecondaryPress}>
-          <SecondaryIcon size={16} color={colors.ink} strokeWidth={2} />
-        </CircleButton>
-      ) : null}
       {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
     </PressableScale>
+  );
+
+  if (!hasSwipeAction) {
+    return tile;
+  }
+
+  return (
+    <View>
+      {/* The hidden leading action. It fades in with the swipe — the tile's
+          glass is translucent, so at rest it must be fully invisible. */}
+      <Animated.View
+        pointerEvents={revealed ? 'auto' : 'none'}
+        style={[
+          styles.leadingAction,
+          {
+            opacity: translateX.interpolate({
+              inputRange: [0, REVEAL],
+              outputRange: [0, 1],
+              extrapolate: 'clamp',
+            }),
+          },
+        ]}>
+        <CircleButton
+          size={ACTION_SIZE}
+          accessibilityLabel={secondaryAccessibilityLabel ?? ''}
+          onPress={() => {
+            settle(false);
+            onSecondaryPress?.();
+          }}>
+          {SecondaryIcon ? (
+            <SecondaryIcon size={18} color={colors.ink} strokeWidth={2} />
+          ) : null}
+        </CircleButton>
+      </Animated.View>
+      <Animated.View {...pan.panHandlers} style={{transform: [{translateX}]}}>
+        {tile}
+      </Animated.View>
+    </View>
   );
 }
 
@@ -178,6 +285,15 @@ const styles = StyleSheet.create({
   cardDisabled: {opacity: 0.5},
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
   trailing: {flexShrink: 0},
+  // Swipe-reveal leading action: pinned behind the tile's left edge, vertically
+  // centered; the tile slides right over/off it.
+  leadingAction: {
+    position: 'absolute',
+    left: spacing.sm,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
   // Shared top-edge pill: an off-white chip straddling the tile's top border
   // (like the lobby host badge). Left-anchored to line up with the title text
   // below it: card padding + icon badge (44) + gap. Both the trailing-status

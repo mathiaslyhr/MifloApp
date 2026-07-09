@@ -80,7 +80,8 @@
         "rules": [
           "På din tur nævner du en fodboldspiller, der passer til både rækken og kolonnen i en celle.",
           "Få tre celler på stribe for at vinde.",
-          "Gået i stå? Spring din tur over, eller foreslå uafgjort, som alle er enige om."
+          "Gået i stå? Spring din tur over, eller foreslå uafgjort, som alle er enige om.",
+          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
       }
     },
@@ -91,7 +92,8 @@
         "rules": [
           "Alle undtagen snyderen får den samme fodboldspiller.",
           "Over to runder stiller I på skift spørgsmål til hinanden og stemmer så om, hvem der skal sendes af banen.",
-          "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage."
+          "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage.",
+          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
       }
     },

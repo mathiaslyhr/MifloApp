@@ -80,7 +80,8 @@
         "rules": [
           "On your turn, name a footballer who fits both the row and the column of a cell.",
           "Claim three cells in a row to win.",
-          "Stuck? Skip your turn or propose a tie that everyone agrees to."
+          "Stuck? Skip your turn or propose a tie that everyone agrees to.",
+          "No internet? Swipe right on the game card to play on one phone."
         ]
       }
     },
@@ -91,7 +92,8 @@
         "rules": [
           "Everyone but the faker is given the same footballer.",
           "Over two rounds, take turns questioning each other, then vote on who to send off.",
-          "Sent off as the faker? Name the footballer to steal the win back."
+          "Sent off as the faker? Name the footballer to steal the win back.",
+          "No internet? Swipe right on the game card to play on one phone."
         ]
       }
     },
