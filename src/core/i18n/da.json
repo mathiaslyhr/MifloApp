@@ -110,8 +110,13 @@
         ]
       }
     },
-    "tenball": {"title": "Tenball", "tagline": "Find de 10 bedste svar"},
-    "heatmap": {"title": "Heatmap", "tagline": "Byg varme på tværs af gitteret"}
+    "tenball": {"title": "Top Bins", "tagline": "Find de 10 bedste svar"},
+    "heatmap": {"title": "Possession", "tagline": "Erobr banen felt for felt"},
+    "matchday": {"title": "Matchday", "tagline": "Kryds dit kort af — første fulde række vinder"},
+    "journeyman": {"title": "Journeyman", "tagline": "Følg klubberne, gæt spilleren"},
+    "teamsheet": {"title": "Teamsheet", "tagline": "Udfyld de manglende navne i berømte XI'er"},
+    "offside": {"title": "Offside", "tagline": "Fire spillere. Én hører ikke til."},
+    "cultHero": {"title": "Cult Hero", "tagline": "Det mest obskure rigtige svar vinder"}
   },
   "menu": {
     "title": "Menu",

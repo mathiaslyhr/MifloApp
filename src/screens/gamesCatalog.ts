@@ -1,7 +1,12 @@
 import {
+  ClipboardList,
+  Flag,
+  Gem,
   Grid3x3,
   Hexagon,
   ListOrdered,
+  Route,
+  Ticket,
   UserSearch,
   VenetianMask,
   type LucideIcon,
@@ -21,7 +26,12 @@ export type GameType =
   | 'red-card'
   | 'scout'
   | 'tenball'
-  | 'heatmap';
+  | 'heatmap'
+  | 'matchday'
+  | 'journeyman'
+  | 'teamsheet'
+  | 'offside'
+  | 'cult-hero';
 
 /**
  * Audience bucket a game is recommended for, by group size. Surfaced as a small
@@ -95,6 +105,41 @@ export const GAMES: GameEntry[] = [
     i18nKey: 'heatmap',
     Icon: Hexagon,
     category: 'duel',
+    available: false,
+  },
+  {
+    gameType: 'matchday',
+    i18nKey: 'matchday',
+    Icon: Ticket,
+    category: 'party',
+    available: false,
+  },
+  {
+    gameType: 'journeyman',
+    i18nKey: 'journeyman',
+    Icon: Route,
+    category: 'solo',
+    available: false,
+  },
+  {
+    gameType: 'teamsheet',
+    i18nKey: 'teamsheet',
+    Icon: ClipboardList,
+    category: 'party',
+    available: false,
+  },
+  {
+    gameType: 'offside',
+    i18nKey: 'offside',
+    Icon: Flag,
+    category: 'party',
+    available: false,
+  },
+  {
+    gameType: 'cult-hero',
+    i18nKey: 'cultHero',
+    Icon: Gem,
+    category: 'party',
     available: false,
   },
 ];

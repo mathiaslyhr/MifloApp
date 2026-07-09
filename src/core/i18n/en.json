@@ -110,8 +110,13 @@
         ]
       }
     },
-    "tenball": {"title": "Tenball", "tagline": "Find the top 10 answers"},
-    "heatmap": {"title": "Heatmap", "tagline": "Build heat across the grid"}
+    "tenball": {"title": "Top Bins", "tagline": "Find the top 10 answers"},
+    "heatmap": {"title": "Possession", "tagline": "Claim the pitch, square by square"},
+    "matchday": {"title": "Matchday", "tagline": "Tick off your card — first full row wins"},
+    "journeyman": {"title": "Journeyman", "tagline": "Trace the clubs, name the player"},
+    "teamsheet": {"title": "Teamsheet", "tagline": "Fill in the famous lineup's missing names"},
+    "offside": {"title": "Offside", "tagline": "Four players. One doesn't belong."},
+    "cultHero": {"title": "Cult Hero", "tagline": "The most obscure right answer wins"}
   },
   "menu": {
     "title": "Menu",
