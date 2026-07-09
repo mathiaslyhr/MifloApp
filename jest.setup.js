@@ -14,3 +14,9 @@ jest.mock('react-native-localize', () =>
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest'),
 );
+
+// Notifee (Scout's local daily reminder) is a native module with no JS
+// fallback; its shipped jest mock keeps screens that import it renderable.
+jest.mock('@notifee/react-native', () =>
+  require('@notifee/react-native/jest-mock'),
+);

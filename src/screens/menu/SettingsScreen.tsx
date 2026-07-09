@@ -17,6 +17,11 @@ import {
   getHapticsPreference,
   setHapticsPreference,
 } from '../../core/settings/preferences';
+import {
+  disableScoutReminder,
+  enableScoutReminder,
+  getScoutReminderPreference,
+} from '../../core/notifications/scoutReminder';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -31,10 +36,12 @@ export function SettingsScreen({navigation}: Props) {
   const {t} = useTranslation();
   const [lang, setLang] = useState<LanguagePreference>('system');
   const [haptics, setHaptics] = useState(true);
+  const [reminder, setReminder] = useState(false);
 
   useEffect(() => {
     getLanguagePreference().then(setLang).catch(() => {});
     getHapticsPreference().then(setHaptics).catch(() => {});
+    getScoutReminderPreference().then(setReminder).catch(() => {});
   }, []);
 
   const langLabel: Record<LanguagePreference, string> = {
@@ -60,6 +67,27 @@ export function SettingsScreen({navigation}: Props) {
     try {
       await setHapticsPreference(value);
     } catch {
+      toast.error(t('settings.errorSave'));
+    }
+  }
+
+  // Turning the reminder on runs the iOS permission flow; when the user has
+  // notifications denied system-wide the switch snaps back with a pointer to
+  // iOS Settings instead of silently pretending it worked.
+  async function toggleReminder(value: boolean) {
+    setReminder(value);
+    try {
+      if (value) {
+        const granted = await enableScoutReminder();
+        if (!granted) {
+          setReminder(false);
+          toast.error(t('scout.reminderDenied'));
+        }
+      } else {
+        await disableScoutReminder();
+      }
+    } catch {
+      setReminder(!value);
       toast.error(t('settings.errorSave'));
     }
   }
@@ -105,6 +133,17 @@ export function SettingsScreen({navigation}: Props) {
             <Switch
               value={haptics}
               onValueChange={toggleHaptics}
+              trackColor={{true: colors.primary, false: colors.divider}}
+            />
+          }
+        />
+        <MenuRow
+          label={t('settings.scoutReminder')}
+          subtitle={t('settings.scoutReminderDesc')}
+          accessory={
+            <Switch
+              value={reminder}
+              onValueChange={toggleReminder}
               trackColor={{true: colors.primary, false: colors.divider}}
             />
           }

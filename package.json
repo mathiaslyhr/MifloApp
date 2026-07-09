@@ -18,6 +18,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "^3.1.1",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-masked-view/masked-view": "^0.3.2",

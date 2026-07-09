@@ -294,8 +294,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Miflo/Miflo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CODE_SIGN_ENTITLEMENTS = "Miflo/Miflo.entitlements";
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U326NK67AQ;
 				ENABLE_BITCODE = NO;
@@ -327,8 +327,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Miflo/Miflo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CODE_SIGN_ENTITLEMENTS = "Miflo/Miflo.entitlements";
 				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U326NK67AQ;
 				INFOPLIST_FILE = Miflo/Info.plist;

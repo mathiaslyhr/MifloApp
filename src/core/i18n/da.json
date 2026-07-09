@@ -100,6 +100,13 @@
       }
     },
     "scout": {
+    "reminderTitle": "Daglig påmindelse?",
+    "reminderPrompt": "Vil du have et prik, når morgendagens spiller lander?",
+    "reminderYes": "Påmind mig",
+    "reminderNo": "Ikke nu",
+    "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
+    "reminderNotifTitle": "Scout",
+    "reminderNotifBody": "Dagens spiller er landet — seks forsøg. ⚽",
       "title": "Scout",
       "tagline": "Gæt dagens spiller, hold din stime",
       "howToPlay": {
@@ -368,6 +375,8 @@
     "languageDa": "Dansk",
     "haptics": "Haptisk feedback",
     "hapticsDesc": "Vibrationer ved tryk og vigtige øjeblikke.",
+    "scoutReminder": "Scout-påmindelse",
+    "scoutReminderDesc": "Et dagligt prik, når den nye spiller lander.",
     "errorSave": "Kunne ikke gemme dine indstillinger."
   },
   "stats": {

@@ -1,5 +1,5 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {Image, Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {Alert, Image, Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {ChevronLeft, HelpCircle, Search} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
@@ -17,6 +17,11 @@ import {haptics} from '../core/haptics';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
+import {
+  enableScoutReminder,
+  markScoutReminderOffered,
+  shouldOfferScoutReminder,
+} from '../core/notifications/scoutReminder';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';
@@ -103,6 +108,38 @@ export function ScoutScreen({navigation}: Props) {
 
   // Rehydrate today's puzzle (replaying stored guesses through the engine) and
   // the streak. No re-recording here — recordResult only runs on a live finish.
+  // One-time reminder offer, shown the moment a puzzle is finished — that's
+  // when a daily nudge is worth something. Declining (or iOS denying) never
+  // asks again; Settings has the toggle for changed minds.
+  const reminderOffered = useRef(false);
+  useEffect(() => {
+    if (!state || !isFinished(state) || reminderOffered.current) {
+      return;
+    }
+    reminderOffered.current = true;
+    (async () => {
+      if (!(await shouldOfferScoutReminder())) {
+        return;
+      }
+      await markScoutReminderOffered();
+      Alert.alert(t('scout.reminderTitle'), t('scout.reminderPrompt'), [
+        {text: t('scout.reminderNo'), style: 'cancel'},
+        {
+          text: t('scout.reminderYes'),
+          onPress: () => {
+            enableScoutReminder()
+              .then(granted => {
+                if (!granted) {
+                  toast.error(t('scout.reminderDenied'));
+                }
+              })
+              .catch(() => toast.error(t('scout.reminderDenied')));
+          },
+        },
+      ]);
+    })().catch(() => {});
+  }, [state, t]);
+
   useEffect(() => {
     let alive = true;
     (async () => {

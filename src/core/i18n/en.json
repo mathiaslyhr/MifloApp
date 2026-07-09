@@ -100,6 +100,13 @@
       }
     },
     "scout": {
+    "reminderTitle": "Daily reminder?",
+    "reminderPrompt": "Want a nudge when tomorrow's player drops?",
+    "reminderYes": "Remind me",
+    "reminderNo": "Not now",
+    "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
+    "reminderNotifTitle": "Scout",
+    "reminderNotifBody": "Today's player has dropped — six tries. ⚽",
       "title": "Scout",
       "tagline": "Guess today's player, keep your streak",
       "howToPlay": {
@@ -368,6 +375,8 @@
     "languageDa": "Dansk",
     "haptics": "Haptic feedback",
     "hapticsDesc": "Vibrations on taps and key moments.",
+    "scoutReminder": "Scout reminder",
+    "scoutReminderDesc": "A daily nudge when the new player drops.",
     "errorSave": "Couldn't save your settings."
   },
   "stats": {
