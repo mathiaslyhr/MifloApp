@@ -1,5 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {Modal, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import {ChevronLeft, HelpCircle} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -246,6 +253,10 @@ export function RedCardScreen({route, navigation}: Props) {
     // Drop the top safe-area edge — the scroll content owns the top inset so the
     // wordmark scrolls away; back/help stay pinned as floating corner buttons.
     <Screen canvas edges={['left', 'right', 'bottom']}>
+      {/* Lift the centered content above the keyboard while typing an answer. */}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         contentContainerStyle={[
           styles.body,
@@ -300,6 +311,7 @@ export function RedCardScreen({route, navigation}: Props) {
           )}
         </View>
       </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Pinned floating corner buttons (back left, help right) — stay put while
           the wordmark scrolls away. */}
@@ -699,6 +711,7 @@ function HelpModal({visible, onClose}: {visible: boolean; onClose: () => void}) 
 }
 
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row.
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
