@@ -298,7 +298,7 @@
     "reminderNo": "Not now",
     "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
     "reminderNotifTitle": "Scout",
-    "reminderNotifBody": "Today's player has dropped — six tries. ⚽",
+    "reminderNotifBody": "Today's player has dropped.",
     "title": "Scout",
     "back": "Back",
     "loading": "Loading…",
