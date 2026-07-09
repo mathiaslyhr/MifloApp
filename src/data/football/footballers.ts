@@ -23,6 +23,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Brenden Aaronson',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '2000-10-22',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'salzburg', from: 2021, to: 2022},
@@ -37,6 +38,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Saud Abdulhamid',
     nationality: ['Saudi Arabia'],
     positions: ['DF'],
+    born: '1999-07-18',
     shirtNumbers: [66, 2],
     clubs: [
       {clubId: 'al-hilal', from: 2019, to: 2024},
@@ -50,6 +52,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Éric Abidal',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1979-09-11',
     shirtNumbers: [22],
     clubs: [
       {clubId: 'monaco', from: 2000, to: 2002},
@@ -70,6 +73,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tammy Abraham',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1997-10-02',
     shirtNumbers: [9, 18],
     clubs: [
       {clubId: 'chelsea', from: 2016, to: 2021},
@@ -86,6 +90,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Che Adams',
     nationality: ['Scotland'],
     positions: ['FW'],
+    born: '1996-07-13',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'southampton', from: 2019, to: 2024},
@@ -99,6 +104,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tony Adams',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1966-10-10',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'arsenal', from: 1983, to: 2002},
@@ -113,6 +119,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tyler Adams',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '1999-02-14',
     shirtNumbers: [12, 4],
     clubs: [
       {clubId: 'rb-leipzig', from: 2019, to: 2022},
@@ -127,6 +134,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Karim Adeyemi',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '2002-01-18',
     shirtNumbers: [27, 7],
     clubs: [
       {clubId: 'salzburg', from: 2018, to: 2022},
@@ -140,6 +148,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Simon Adingra',
     nationality: ['Ivory Coast'],
     positions: ['FW'],
+    born: '2002-01-01',
     shirtNumbers: [24, 11],
     clubs: [
       {clubId: 'brighton', from: 2022, to: 2025},
@@ -153,6 +162,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Amine Adli',
     nationality: ['Morocco'],
     positions: ['FW', 'MF'],
+    born: '2000-05-10',
     shirtNumbers: [21, 11],
     clubs: [
       {clubId: 'toulouse', from: 2019, to: 2021},
@@ -170,6 +180,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Adriano Leite Ribeiro',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1982-02-17',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'inter', from: 2001, to: 2009},
@@ -190,6 +201,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Akram Afif',
     nationality: ['Qatar'],
     positions: ['FW', 'MF'],
+    born: '1996-11-18',
     shirtNumbers: [11, 10],
     clubs: [
       {clubId: 'villarreal', from: 2016, to: 2019},
@@ -203,6 +215,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nayef Aguerd',
     nationality: ['Morocco'],
     positions: ['DF'],
+    born: '1996-03-30',
     shirtNumbers: [27, 5],
     clubs: [
       {clubId: 'rennes', from: 2020, to: 2022},
@@ -218,6 +231,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sergio Agüero',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1988-06-02',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'atletico-madrid', from: 2006, to: 2011},
@@ -236,6 +250,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pablo Aimar',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1979-11-03',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'river-plate', from: 1996, to: 2001},
@@ -253,6 +268,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ola Aina',
     nationality: ['Nigeria'],
     positions: ['DF'],
+    born: '1996-10-08',
     shirtNumbers: [34, 43],
     clubs: [
       {clubId: 'torino', from: 2018, to: 2022},
@@ -266,6 +282,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Manuel Akanji',
     nationality: ['Switzerland'],
     positions: ['DF'],
+    born: '1995-07-19',
     shirtNumbers: [25, 16],
     clubs: [
       {clubId: 'basel', from: 2015, to: 2018},
@@ -284,6 +301,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nathan Aké',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1995-02-18',
     shirtNumbers: [6, 5],
     clubs: [
       {clubId: 'chelsea', from: 2012, to: 2017},
@@ -301,6 +319,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kerem Aktürkoğlu',
     nationality: ['Turkey'],
     positions: ['FW'],
+    born: '1998-10-21',
     shirtNumbers: [7, 42],
     clubs: [
       {clubId: 'galatasaray', from: 2020, to: 2024},
@@ -317,6 +336,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ali Al-Bulaihi',
     nationality: ['Saudi Arabia'],
     positions: ['DF'],
+    born: '1989-11-21',
     shirtNumbers: [4, 66],
     clubs: [
       {clubId: 'al-hilal', from: 2018},
@@ -329,6 +349,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Firas Al-Buraikan',
     nationality: ['Saudi Arabia'],
     positions: ['FW'],
+    born: '2000-05-14',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'al-ahli', from: 2023, to: 2024},
@@ -342,6 +363,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Salem Al-Dawsari',
     nationality: ['Saudi Arabia'],
     positions: ['FW', 'MF'],
+    born: '1991-08-19',
     shirtNumbers: [10, 29],
     clubs: [
       {clubId: 'al-hilal', from: 2011},
@@ -358,6 +380,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sultan Al-Ghannam',
     nationality: ['Saudi Arabia'],
     positions: ['DF'],
+    born: '1994-05-06',
     shirtNumbers: [12, 2],
     clubs: [
       {clubId: 'al-nassr', from: 2018},
@@ -370,6 +393,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hassan Al-Haydos',
     nationality: ['Qatar'],
     positions: ['MF', 'FW'],
+    born: '1990-12-11',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'al-sadd', from: 2008},
@@ -382,6 +406,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohammed Al-Owais',
     nationality: ['Saudi Arabia'],
     positions: ['GK'],
+    born: '1991-10-10',
     shirtNumbers: [21, 1],
     clubs: [
       {clubId: 'al-hilal', from: 2018, to: 2024},
@@ -395,6 +420,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mousa Al-Tamari',
     nationality: ['Jordan'],
     positions: ['FW', 'MF'],
+    born: '1997-06-10',
     shirtNumbers: [7, 17],
     clubs: [
       {clubId: 'montpellier', from: 2022},
@@ -407,6 +433,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Alaba',
     nationality: ['Austria'],
     positions: ['DF'],
+    born: '1992-06-24',
     shirtNumbers: [27, 4],
     clubs: [
       {clubId: 'bayern', from: 2010, to: 2021},
@@ -424,6 +451,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jordi Alba',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1989-03-21',
     shirtNumbers: [18],
     clubs: [
       {clubId: 'valencia', from: 2008, to: 2012},
@@ -442,6 +470,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raúl Albiol',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1985-09-04',
     shirtNumbers: [18, 33],
     clubs: [
       {clubId: 'valencia', from: 2004, to: 2009},
@@ -462,6 +491,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Omar Alderete',
     nationality: ['Paraguay'],
     positions: ['DF'],
+    born: '1996-12-26',
     shirtNumbers: [17, 22],
     clubs: [
       {clubId: 'hertha-berlin', from: 2020, to: 2021},
@@ -477,6 +507,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Toby Alderweireld',
     nationality: ['Belgium'],
     positions: ['DF'],
+    born: '1989-03-02',
     shirtNumbers: [4, 2],
     clubs: [
       {clubId: 'ajax', from: 2009, to: 2013},
@@ -496,6 +527,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Alex Sandro Lobo Silva',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1991-01-26',
     shirtNumbers: [12, 4],
     clubs: [
       {clubId: 'santos', from: 2010, to: 2011},
@@ -514,6 +546,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Trent Alexander-Arnold',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1998-10-07',
     shirtNumbers: [66, 12],
     clubs: [
       {clubId: 'liverpool', from: 2016, to: 2025},
@@ -530,6 +563,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Almoez Ali',
     nationality: ['Qatar'],
     positions: ['FW'],
+    born: '1996-08-19',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'al-duhail', from: 2017},
@@ -543,6 +577,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Alisson Becker',
     nationality: ['Brazil'],
     positions: ['GK'],
+    born: '1992-10-02',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'roma', from: 2016, to: 2018},
@@ -560,6 +595,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dele Alli',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1996-04-11',
     shirtNumbers: [20, 36],
     clubs: [
       {clubId: 'tottenham', from: 2015, to: 2022},
@@ -575,6 +611,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Miguel Almirón',
     nationality: ['Paraguay'],
     positions: ['MF', 'FW'],
+    born: '1994-02-10',
     shirtNumbers: [24, 10],
     clubs: [
       {clubId: 'newcastle', from: 2019, to: 2025},
@@ -587,6 +624,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marcos Alonso',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1990-12-28',
     shirtNumbers: [3, 33],
     clubs: [
       {clubId: 'fiorentina', from: 2013, to: 2016},
@@ -605,6 +643,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Xabi Alonso',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1981-11-25',
     shirtNumbers: [14, 22],
     clubs: [
       {clubId: 'real-sociedad', from: 2000, to: 2004},
@@ -625,6 +664,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Edson Álvarez',
     nationality: ['Mexico'],
     positions: ['MF', 'DF'],
+    born: '1997-10-24',
     shirtNumbers: [4, 19],
     clubs: [
       {clubId: 'club-america', from: 2016, to: 2019},
@@ -642,6 +682,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Julián Álvarez',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '2000-01-31',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'river-plate', from: 2018, to: 2022},
@@ -660,6 +701,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kevin Álvarez',
     nationality: ['Mexico'],
     positions: ['DF'],
+    born: '1999-01-15',
     shirtNumbers: [21, 2],
     clubs: [
       {clubId: 'pumas', from: 2023},
@@ -672,6 +714,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dani Alves',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1983-05-06',
     shirtNumbers: [2, 22],
     clubs: [
       {clubId: 'sevilla', from: 2003, to: 2008},
@@ -692,6 +735,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sofyan Amrabat',
     nationality: ['Morocco'],
     positions: ['MF'],
+    born: '1996-08-21',
     shirtNumbers: [4, 34],
     clubs: [
       {clubId: 'feyenoord', from: 2016, to: 2017},
@@ -708,6 +752,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Joachim Andersen',
     nationality: ['Denmark'],
     positions: ['DF'],
+    born: '1996-05-31',
     shirtNumbers: [16, 5],
     clubs: [
       {clubId: 'sampdoria', from: 2017, to: 2019},
@@ -723,6 +768,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robert Andrich',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1994-09-22',
     shirtNumbers: [8, 21],
     clubs: [
       {clubId: 'union-berlin', from: 2019, to: 2021},
@@ -738,6 +784,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolas Anelka',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1979-03-14',
     shirtNumbers: [39, 9],
     clubs: [
       {clubId: 'psg', from: 1996, to: 1997},
@@ -764,6 +811,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Frank Anguissa',
     nationality: ['Cameroon'],
     positions: ['MF'],
+    born: '1995-11-16',
     shirtNumbers: [99, 8],
     clubs: [
       {clubId: 'marseille', from: 2016, to: 2018},
@@ -780,6 +828,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michail Antonio',
     nationality: ['Jamaica'],
     positions: ['FW'],
+    born: '1990-03-28',
     shirtNumbers: [9, 30],
     clubs: [
       {clubId: 'nottingham-forest', from: 2014, to: 2015},
@@ -794,6 +843,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Antony Matheus dos Santos',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2000-02-24',
     shirtNumbers: [21, 7],
     clubs: [
       {clubId: 'ajax', from: 2020, to: 2022},
@@ -808,6 +858,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Uriel Antuna',
     nationality: ['Mexico'],
     positions: ['FW', 'MF'],
+    born: '1997-08-21',
     shirtNumbers: [7, 22],
     clubs: [
       {clubId: 'guadalajara', from: 2019, to: 2022},
@@ -821,6 +872,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Houssem Aouar',
     nationality: ['Algeria', 'France'],
     positions: ['MF'],
+    born: '1998-06-30',
     shirtNumbers: [8, 22],
     clubs: [
       {clubId: 'lyon', from: 2016, to: 2023},
@@ -834,6 +886,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ronald Araújo',
     nationality: ['Uruguay'],
     positions: ['DF'],
+    born: '1999-03-07',
     shirtNumbers: [4, 6],
     clubs: [
       {clubId: 'barcelona', from: 2020},
@@ -848,6 +901,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marko Arnautović',
     nationality: ['Austria'],
     positions: ['FW'],
+    born: '1989-04-19',
     shirtNumbers: [7, 8],
     clubs: [
       {clubId: 'twente', from: 2007, to: 2009},
@@ -867,6 +921,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mikel Arteta',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1982-03-26',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'psg', from: 2001, to: 2002},
@@ -883,6 +938,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Arthur Henrique Ramos de Oliveira Melo',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1996-08-12',
     shirtNumbers: [8, 5],
     clubs: [
       {clubId: 'barcelona', from: 2018, to: 2020},
@@ -901,6 +957,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marco Asensio',
     nationality: ['Spain'],
     positions: ['FW', 'MF'],
+    born: '1996-01-21',
     shirtNumbers: [11, 20],
     clubs: [
       {clubId: 'real-mallorca', from: 2014, to: 2015},
@@ -920,6 +977,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pierre-Emerick Aubameyang',
     nationality: ['Gabon'],
     positions: ['FW'],
+    born: '1989-06-18',
     shirtNumbers: [14, 17],
     clubs: [
       {clubId: 'saint-etienne', from: 2011, to: 2013},
@@ -937,6 +995,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Serge Aurier',
     nationality: ['Ivory Coast'],
     positions: ['DF'],
+    born: '1992-12-24',
     shirtNumbers: [24, 2],
     clubs: [
       {clubId: 'toulouse', from: 2011, to: 2014},
@@ -956,6 +1015,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'André Ayew',
     nationality: ['Ghana'],
     positions: ['FW', 'MF'],
+    born: '1989-12-17',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'marseille', from: 2007, to: 2015},
@@ -969,6 +1029,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sardar Azmoun',
     nationality: ['Iran'],
     positions: ['FW'],
+    born: '1995-01-01',
     shirtNumbers: [7, 20],
     clubs: [
       {clubId: 'leverkusen', from: 2022, to: 2024},
@@ -982,6 +1043,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'César Azpilicueta',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1989-08-28',
     shirtNumbers: [28, 3],
     clubs: [
       {clubId: 'marseille', from: 2010, to: 2012},
@@ -1000,6 +1062,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Carlos Bacca',
     nationality: ['Colombia'],
     positions: ['FW'],
+    born: '1986-09-08',
     shirtNumbers: [9, 70],
     clubs: [
       {clubId: 'club-brugge', from: 2012, to: 2013},
@@ -1017,6 +1080,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leandro Bacuna',
     nationality: ['Curacao'],
     positions: ['MF', 'DF'],
+    born: '1991-08-21',
     shirtNumbers: [7, 8],
     clubs: [
       {clubId: 'aston-villa', from: 2013, to: 2017},
@@ -1025,10 +1089,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Baena, Álex',
+    name: 'Álex Baena',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [10, 21],
+    born: '2001-07-11',
+    clubs: [
+      {clubId: 'villarreal', from: 2020, to: 2025},
+      {clubId: 'atletico-madrid', from: 2025},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Baggio, Roberto',
     name: 'Roberto Baggio',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1967-02-18',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'fiorentina', from: 1985, to: 1990},
@@ -1049,6 +1130,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leon Bailey',
     nationality: ['Jamaica'],
     positions: ['FW'],
+    born: '1997-08-09',
     shirtNumbers: [31, 7],
     clubs: [
       {clubId: 'leverkusen', from: 2017, to: 2021},
@@ -1062,6 +1144,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cédric Bakambu',
     nationality: ['DR Congo'],
     positions: ['FW'],
+    born: '1991-04-11',
     shirtNumbers: [13, 17],
     clubs: [
       {clubId: 'villarreal', from: 2015, to: 2018},
@@ -1072,10 +1155,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Balde, Alejandro',
+    name: 'Alejandro Balde',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [3, 28],
+    born: '2003-10-18',
+    clubs: [
+      {clubId: 'barcelona', from: 2021},
+    ],
+    honours: [
+      {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Bale, Gareth',
     name: 'Gareth Bale',
     nationality: ['Wales'],
     positions: ['FW'],
+    born: '1989-07-16',
     shirtNumbers: [11, 9],
     clubs: [
       {clubId: 'southampton', from: 2006, to: 2007},
@@ -1094,6 +1193,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michael Ballack',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1976-09-26',
     shirtNumbers: [13],
     clubs: [
       {clubId: 'kaiserslautern', from: 1997, to: 1999},
@@ -1112,6 +1212,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Folarin Balogun',
     nationality: ['USA'],
     positions: ['FW'],
+    born: '2001-07-03',
     shirtNumbers: [26, 9],
     clubs: [
       {clubId: 'arsenal', from: 2019, to: 2023},
@@ -1126,6 +1227,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Balotelli',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1990-08-12',
     shirtNumbers: [45, 9],
     clubs: [
       {clubId: 'inter', from: 2007, to: 2010},
@@ -1147,6 +1249,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Éver Banega',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1988-06-29',
     shirtNumbers: [10, 19],
     clubs: [
       {clubId: 'valencia', from: 2008, to: 2014},
@@ -1165,6 +1268,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bradley Barcola',
     nationality: ['France'],
     positions: ['FW'],
+    born: '2002-09-02',
     shirtNumbers: [29, 7],
     clubs: [
       {clubId: 'lyon', from: 2021, to: 2023},
@@ -1181,6 +1285,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolò Barella',
     nationality: ['Italy'],
     positions: ['MF'],
+    born: '1997-02-07',
     shirtNumbers: [23],
     clubs: [
       {clubId: 'inter', from: 2019},
@@ -1195,6 +1300,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Franco Baresi',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1960-05-08',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'ac-milan', from: 1977, to: 1997},
@@ -1211,6 +1317,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Harvey Barnes',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1997-12-09',
     shirtNumbers: [11, 15],
     clubs: [
       {clubId: 'leicester', from: 2015, to: 2023},
@@ -1224,6 +1331,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Calvin Bassey',
     nationality: ['Nigeria'],
     positions: ['DF'],
+    born: '1999-12-31',
     shirtNumbers: [3, 34],
     clubs: [
       {clubId: 'ajax', from: 2022, to: 2023},
@@ -1233,10 +1341,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Bastoni, Alessandro',
+    name: 'Alessandro Bastoni',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [95],
+    born: '1999-03-31',
+    clubs: [
+      {clubId: 'atalanta', from: 2016, to: 2019},
+      {clubId: 'parma', from: 2018, to: 2019, loan: true},
+      {clubId: 'inter', from: 2019},
+    ],
+    honours: [
+      {type: 'league-title', count: 3, years: [2021, 2024, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Batistuta, Gabriel',
     name: 'Gabriel Batistuta',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1969-02-01',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'river-plate', from: 1989, to: 1990},
@@ -1256,6 +1382,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christoph Baumgartner',
     nationality: ['Austria'],
     positions: ['MF'],
+    born: '1999-08-01',
     shirtNumbers: [14, 19],
     clubs: [
       {clubId: 'hoffenheim', from: 2019, to: 2023},
@@ -1269,6 +1396,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Franz Beckenbauer',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1945-09-11',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'bayern', from: 1964, to: 1977},
@@ -1285,6 +1413,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Beckham',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1975-05-02',
     shirtNumbers: [7, 23],
     clubs: [
       {clubId: 'man-utd', from: 1992, to: 2003},
@@ -1304,6 +1433,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jude Bellingham',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2003-06-29',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'dortmund', from: 2020, to: 2023},
@@ -1323,6 +1453,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wissam Ben Yedder',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1990-08-12',
     shirtNumbers: [9, 10],
     clubs: [
       {clubId: 'toulouse', from: 2010, to: 2016},
@@ -1337,6 +1468,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lars Bender',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1989-04-27',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'leverkusen', from: 2009, to: 2021},
@@ -1348,6 +1480,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sven Bender',
     nationality: ['Germany'],
     positions: ['DF', 'MF'],
+    born: '1989-04-27',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'dortmund', from: 2009, to: 2017},
@@ -1362,6 +1495,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Niklas Bendtner',
     nationality: ['Denmark'],
     positions: ['FW'],
+    born: '1988-01-16',
     shirtNumbers: [52, 11],
     clubs: [
       {clubId: 'arsenal', from: 2005, to: 2014},
@@ -1379,6 +1513,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ismaël Bennacer',
     nationality: ['Algeria'],
     positions: ['MF'],
+    born: '1997-12-01',
     shirtNumbers: [4, 7],
     clubs: [
       {clubId: 'empoli', from: 2017, to: 2019},
@@ -1394,6 +1529,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rodrigo Bentancur',
     nationality: ['Uruguay'],
     positions: ['MF'],
+    born: '1997-06-25',
     shirtNumbers: [30, 5],
     clubs: [
       {clubId: 'boca-juniors', from: 2015, to: 2017},
@@ -1411,6 +1547,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Karim Benzema',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1987-12-19',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'lyon', from: 2005, to: 2009},
@@ -1430,6 +1567,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dimitar Berbatov',
     nationality: ['Bulgaria'],
     positions: ['FW'],
+    born: '1981-01-30',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'leverkusen', from: 2001, to: 2006},
@@ -1449,6 +1587,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sander Berge',
     nationality: ['Norway'],
     positions: ['MF'],
+    born: '1998-02-14',
     shirtNumbers: [8, 22],
     clubs: [
       {clubId: 'genk', from: 2017, to: 2020},
@@ -1463,6 +1602,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dennis Bergkamp',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1969-05-10',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'ajax', from: 1986, to: 1993},
@@ -1480,6 +1620,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Bernat',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1993-03-01',
     shirtNumbers: [14, 18],
     clubs: [
       {clubId: 'valencia', from: 2011, to: 2014},
@@ -1498,6 +1639,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ryan Bertrand',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1989-08-05',
     shirtNumbers: [3, 18],
     clubs: [
       {clubId: 'chelsea', from: 2005, to: 2015},
@@ -1514,6 +1656,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jérôme Boateng',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1988-09-03',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'hamburg', from: 2007, to: 2010},
@@ -1533,6 +1676,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kevin-Prince Boateng',
     nationality: ['Ghana', 'Germany'],
     positions: ['MF', 'FW'],
+    born: '1987-03-06',
     shirtNumbers: [10, 27],
     clubs: [
       {clubId: 'hertha-berlin', from: 2005, to: 2007},
@@ -1556,6 +1700,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Oscar Bobb',
     nationality: ['Norway'],
     positions: ['FW', 'MF'],
+    born: '2003-07-12',
     shirtNumbers: [52, 11],
     clubs: [
       {clubId: 'man-city', from: 2022},
@@ -1570,6 +1715,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Moïse Bombito',
     nationality: ['Canada'],
     positions: ['DF'],
+    born: '2000-01-07',
     shirtNumbers: [20, 5],
     clubs: [
       {clubId: 'nice', from: 2024},
@@ -1582,6 +1728,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Victor Boniface',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '2000-12-23',
     shirtNumbers: [22, 14],
     clubs: [
       {clubId: 'union-sg', from: 2020, to: 2023},
@@ -1597,6 +1744,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leonardo Bonucci',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1987-05-01',
     shirtNumbers: [19],
     clubs: [
       {clubId: 'juventus', from: 2010, to: 2017},
@@ -1615,6 +1763,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rafael Santos Borré',
     nationality: ['Colombia'],
     positions: ['FW'],
+    born: '1995-09-15',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'river-plate', from: 2017, to: 2021},
@@ -1631,6 +1780,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jordan Bos',
     nationality: ['Australia'],
     positions: ['DF'],
+    born: '2002-10-29',
     shirtNumbers: [3, 22],
     clubs: [
       {clubId: 'lens', from: 2025},
@@ -1643,6 +1793,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yassine Bounou',
     nationality: ['Morocco'],
     positions: ['GK'],
+    born: '1991-04-05',
     shirtNumbers: [1, 13],
     clubs: [
       {clubId: 'girona', from: 2016, to: 2019},
@@ -1660,6 +1811,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jarrod Bowen',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1996-12-20',
     shirtNumbers: [20, 7],
     clubs: [
       {clubId: 'west-ham', from: 2020, to: 2025},
@@ -1673,6 +1825,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Martin Braithwaite',
     nationality: ['Denmark'],
     positions: ['FW'],
+    born: '1991-06-05',
     shirtNumbers: [12, 9],
     clubs: [
       {clubId: 'toulouse', from: 2013, to: 2017},
@@ -1687,6 +1840,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Julian Brandt',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1996-05-02',
     shirtNumbers: [19, 10],
     clubs: [
       {clubId: 'leverkusen', from: 2014, to: 2019},
@@ -1700,6 +1854,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Claudio Bravo',
     nationality: ['Chile'],
     positions: ['GK'],
+    born: '1983-04-13',
     shirtNumbers: [1, 25],
     clubs: [
       {clubId: 'real-sociedad', from: 2006, to: 2014},
@@ -1720,6 +1875,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Gleison Bremer Silva Nascimento',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1997-03-18',
     shirtNumbers: [3, 5],
     clubs: [
       {clubId: 'torino', from: 2018, to: 2022},
@@ -1733,6 +1889,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marcelo Brozović',
     nationality: ['Croatia'],
     positions: ['MF'],
+    born: '1992-11-16',
     shirtNumbers: [77, 11],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2012, to: 2015},
@@ -1749,6 +1906,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bruno Guimarães',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1997-11-16',
     shirtNumbers: [39],
     clubs: [
       {clubId: 'lyon', from: 2020, to: 2022},
@@ -1762,6 +1920,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tajon Buchanan',
     nationality: ['Canada'],
     positions: ['DF', 'MF'],
+    born: '1999-02-08',
     shirtNumbers: [17, 11],
     clubs: [
       {clubId: 'club-brugge', from: 2022, to: 2024},
@@ -1778,6 +1937,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gianluigi Buffon',
     nationality: ['Italy'],
     positions: ['GK'],
+    born: '1978-01-28',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'parma', from: 1995, to: 2001},
@@ -1798,6 +1958,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sergio Busquets',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1988-07-16',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'barcelona', from: 2008, to: 2023},
@@ -1815,6 +1976,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Martín Cáceres',
     nationality: ['Uruguay'],
     positions: ['DF'],
+    born: '1987-04-07',
     shirtNumbers: [22, 4],
     clubs: [
       {clubId: 'villarreal', from: 2007, to: 2008},
@@ -1840,6 +2002,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cafu',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1970-06-07',
     shirtNumbers: [2],
     clubs: [
       {clubId: 'palmeiras', from: 1995, to: 1997},
@@ -1859,6 +2022,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gary Cahill',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1985-12-19',
     shirtNumbers: [24, 6],
     clubs: [
       {clubId: 'aston-villa', from: 2004, to: 2008},
@@ -1878,6 +2042,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Moisés Caicedo',
     nationality: ['Ecuador'],
     positions: ['MF'],
+    born: '2001-11-02',
     shirtNumbers: [25, 3],
     clubs: [
       {clubId: 'brighton', from: 2021, to: 2023},
@@ -1889,10 +2054,29 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Calafiori, Riccardo',
+    name: 'Riccardo Calafiori',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [33, 3],
+    born: '2002-05-19',
+    clubs: [
+      {clubId: 'roma', from: 2018, to: 2022},
+      {clubId: 'basel', from: 2022, to: 2023},
+      {clubId: 'bologna', from: 2023, to: 2024},
+      {clubId: 'arsenal', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Çalhanoğlu, Hakan',
     name: 'Hakan Çalhanoğlu',
     nationality: ['Turkey'],
     positions: ['MF'],
+    born: '1994-02-08',
     shirtNumbers: [20, 10],
     clubs: [
       {clubId: 'leverkusen', from: 2014, to: 2017},
@@ -1910,6 +2094,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'José Callejón',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1987-02-11',
     shirtNumbers: [7, 21],
     clubs: [
       {clubId: 'real-madrid', from: 2011, to: 2013},
@@ -1926,6 +2111,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eduardo Camavinga',
     nationality: ['France'],
     positions: ['MF'],
+    born: '2002-11-10',
     shirtNumbers: [12, 6],
     clubs: [
       {clubId: 'rennes', from: 2019, to: 2021},
@@ -1942,6 +2128,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Esteban Cambiasso',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1980-08-18',
     shirtNumbers: [19],
     clubs: [
       {clubId: 'real-madrid', from: 2002, to: 2004},
@@ -1959,6 +2146,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Joel Campbell',
     nationality: ['Costa Rica'],
     positions: ['FW'],
+    born: '1992-06-26',
     shirtNumbers: [12, 17],
     clubs: [
       {clubId: 'arsenal', from: 2011, to: 2018},
@@ -1973,6 +2161,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sol Campbell',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1974-09-18',
     shirtNumbers: [23, 5],
     clubs: [
       {clubId: 'tottenham', from: 1992, to: 2001},
@@ -1989,6 +2178,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Emre Can',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1994-01-12',
     shirtNumbers: [23, 8],
     clubs: [
       {clubId: 'bayern', from: 2009, to: 2013},
@@ -2007,6 +2197,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'João Cancelo',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1994-05-27',
     shirtNumbers: [7, 2],
     clubs: [
       {clubId: 'benfica', from: 2012, to: 2014},
@@ -2032,6 +2223,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fabio Cannavaro',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1973-09-13',
     shirtNumbers: [5, 28],
     clubs: [
       {clubId: 'napoli', from: 1992, to: 1995},
@@ -2054,6 +2246,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eric Cantona',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1966-05-24',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'marseille', from: 1988, to: 1991},
@@ -2070,6 +2263,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yannick Carrasco',
     nationality: ['Belgium'],
     positions: ['FW', 'MF'],
+    born: '1993-09-04',
     shirtNumbers: [21, 11],
     clubs: [
       {clubId: 'monaco', from: 2010, to: 2015},
@@ -2086,6 +2280,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Adalberto Carrasquilla',
     nationality: ['Panama'],
     positions: ['MF'],
+    born: '1998-11-14',
     shirtNumbers: [20, 6],
     clubs: [
       {clubId: 'pumas', from: 2021},
@@ -2098,6 +2293,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Álvaro Carreras',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '2003-03-23',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'benfica', from: 2024, to: 2025},
@@ -2111,6 +2307,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michael Carrick',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1981-07-28',
     shirtNumbers: [16, 28],
     clubs: [
       {clubId: 'west-ham', from: 1999, to: 2004},
@@ -2129,6 +2326,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cameron Carter-Vickers',
     nationality: ['USA'],
     positions: ['DF'],
+    born: '1997-12-31',
     shirtNumbers: [5, 20],
     clubs: [
       {clubId: 'tottenham', from: 2014, to: 2021},
@@ -2144,6 +2342,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ricardo Carvalho',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1978-05-18',
     shirtNumbers: [6, 2],
     clubs: [
       {clubId: 'porto', from: 2001, to: 2004},
@@ -2164,6 +2363,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Casemiro',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1992-02-23',
     shirtNumbers: [14, 18],
     clubs: [
       {clubId: 'real-madrid', from: 2013, to: 2022},
@@ -2182,6 +2382,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matty Cash',
     nationality: ['Poland'],
     positions: ['DF'],
+    born: '1997-08-07',
     shirtNumbers: [2, 33],
     clubs: [
       {clubId: 'nottingham-forest', from: 2016, to: 2020},
@@ -2195,6 +2396,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Iker Casillas',
     nationality: ['Spain'],
     positions: ['GK'],
+    born: '1981-05-20',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'real-madrid', from: 1999, to: 2015},
@@ -2213,6 +2415,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antonio Cassano',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1982-07-12',
     shirtNumbers: [18, 99],
     clubs: [
       {clubId: 'roma', from: 2001, to: 2006},
@@ -2233,6 +2436,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Edinson Cavani',
     nationality: ['Uruguay'],
     positions: ['FW'],
+    born: '1987-02-14',
     shirtNumbers: [9, 7],
     clubs: [
       {clubId: 'napoli', from: 2010, to: 2013},
@@ -2251,6 +2455,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Santi Cazorla',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1984-12-13',
     shirtNumbers: [19, 8],
     clubs: [
       {clubId: 'villarreal', from: 2006, to: 2011},
@@ -2268,6 +2473,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dani Ceballos',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1996-08-07',
     shirtNumbers: [19, 8],
     clubs: [
       {clubId: 'real-betis', from: 2015, to: 2017},
@@ -2286,6 +2492,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Petr Čech',
     nationality: ['Czech Republic'],
     positions: ['GK'],
+    born: '1982-05-20',
     shirtNumbers: [1, 33],
     clubs: [
       {clubId: 'rennes', from: 2002, to: 2004},
@@ -2304,6 +2511,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Farès Chaïbi',
     nationality: ['Algeria'],
     positions: ['MF'],
+    born: '2002-11-28',
     shirtNumbers: [21, 8],
     clubs: [
       {clubId: 'toulouse', from: 2022, to: 2023},
@@ -2317,6 +2525,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rayan Cherki',
     nationality: ['France'],
     positions: ['MF', 'FW'],
+    born: '2003-08-17',
     shirtNumbers: [10, 18],
     clubs: [
       {clubId: 'lyon', from: 2019, to: 2025},
@@ -2326,10 +2535,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Chevalier, Lucas',
+    name: 'Lucas Chevalier',
+    nationality: ['France'],
+    positions: ['GK'],
+    shirtNumbers: [30, 1],
+    born: '2001-11-06',
+    clubs: [
+      {clubId: 'lille', from: 2020, to: 2025},
+      {clubId: 'psg', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2026]},
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Chiellini, Giorgio',
     name: 'Giorgio Chiellini',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1984-08-14',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'juventus', from: 2005, to: 2022},
@@ -2345,6 +2572,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Federico Chiesa',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1997-10-25',
     shirtNumbers: [14],
     clubs: [
       {clubId: 'fiorentina', from: 2016, to: 2020},
@@ -2361,6 +2589,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cristian Chivu',
     nationality: ['Romania'],
     positions: ['DF'],
+    born: '1980-10-26',
     shirtNumbers: [26, 5],
     clubs: [
       {clubId: 'ajax', from: 1999, to: 2003},
@@ -2378,6 +2607,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tahith Chong',
     nationality: ['Curacao'],
     positions: ['MF', 'FW'],
+    born: '1999-12-04',
     shirtNumbers: [17, 44],
     clubs: [
       {clubId: 'man-utd', from: 2016, to: 2022},
@@ -2390,6 +2620,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eric Maxim Choupo-Moting',
     nationality: ['Cameroon'],
     positions: ['FW'],
+    born: '1989-03-23',
     shirtNumbers: [13, 33],
     clubs: [
       {clubId: 'schalke', from: 2014, to: 2017},
@@ -2407,6 +2638,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andreas Christensen',
     nationality: ['Denmark'],
     positions: ['DF'],
+    born: '1996-04-10',
     shirtNumbers: [15, 4],
     clubs: [
       {clubId: 'chelsea', from: 2015, to: 2022},
@@ -2424,6 +2656,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Carney Chukwuemeka',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2003-10-20',
     shirtNumbers: [17, 23],
     clubs: [
       {clubId: 'aston-villa', from: 2021, to: 2022},
@@ -2439,6 +2672,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Samuel Chukwueze',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '1999-05-22',
     shirtNumbers: [21, 11],
     clubs: [
       {clubId: 'villarreal', from: 2018, to: 2023},
@@ -2452,6 +2686,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Djibril Cissé',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1981-08-12',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'liverpool', from: 2004, to: 2007},
@@ -2469,6 +2704,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gaël Clichy',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1985-07-26',
     shirtNumbers: [22, 3],
     clubs: [
       {clubId: 'arsenal', from: 2003, to: 2011},
@@ -2484,6 +2720,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fábio Coentrão',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1988-03-11',
     shirtNumbers: [5, 15],
     clubs: [
       {clubId: 'benfica', from: 2007, to: 2011},
@@ -2503,6 +2740,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andy Cole',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1971-10-15',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'newcastle', from: 1993, to: 1995},
@@ -2523,6 +2761,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ashley Cole',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1980-12-20',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'arsenal', from: 1999, to: 2006},
@@ -2542,6 +2781,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Joe Cole',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1981-11-08',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'west-ham', from: 1998, to: 2003},
@@ -2557,10 +2797,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Colwill, Levi',
+    name: 'Levi Colwill',
+    nationality: ['England'],
+    positions: ['DF'],
+    shirtNumbers: [26, 6],
+    born: '2003-02-26',
+    clubs: [
+      {clubId: 'chelsea', from: 2020},
+      {clubId: 'brighton', from: 2022, to: 2023, loan: true},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Coman, Kingsley',
     name: 'Kingsley Coman',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1996-06-13',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'psg', from: 2012, to: 2014},
@@ -2579,6 +2834,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Francisco Conceição',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '2002-12-14',
     shirtNumbers: [7, 14],
     clubs: [
       {clubId: 'porto', from: 2021, to: 2024},
@@ -2594,6 +2850,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Derek Cornelius',
     nationality: ['Canada'],
     positions: ['DF'],
+    born: '1997-11-25',
     shirtNumbers: [13, 3],
     clubs: [
       {clubId: 'marseille', from: 2024},
@@ -2606,6 +2863,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ángel Correa',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1995-03-09',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'atletico-madrid', from: 2015, to: 2025},
@@ -2624,6 +2882,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Costa',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1988-10-07',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'atletico-madrid', from: 2010, to: 2014},
@@ -2645,6 +2904,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Douglas Costa',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1990-09-14',
     shirtNumbers: [11, 27],
     clubs: [
       {clubId: 'shakhtar', from: 2010, to: 2015},
@@ -2664,6 +2924,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Vladimír Coufal',
     nationality: ['Czech Republic'],
     positions: ['DF'],
+    born: '1992-08-22',
     shirtNumbers: [5, 22],
     clubs: [
       {clubId: 'west-ham', from: 2020},
@@ -2676,6 +2937,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thibaut Courtois',
     nationality: ['Belgium'],
     positions: ['GK'],
+    born: '1992-05-11',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'genk', from: 2009, to: 2011},
@@ -2694,6 +2956,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Philippe Coutinho',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1992-06-12',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'inter', from: 2010, to: 2013},
@@ -2713,6 +2976,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Maxime Crépeau',
     nationality: ['Canada'],
     positions: ['GK'],
+    born: '1994-05-11',
     shirtNumbers: [16, 1],
     clubs: [
       {clubId: 'vancouver', from: 2019, to: 2021},
@@ -2726,6 +2990,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hernán Crespo',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1975-07-05',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'river-plate', from: 1993, to: 1996},
@@ -2749,6 +3014,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Peter Crouch',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1981-01-30',
     shirtNumbers: [25, 9],
     clubs: [
       {clubId: 'qpr', from: 2000, to: 2001},
@@ -2766,6 +3032,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Cuadrado',
     nationality: ['Colombia'],
     positions: ['MF', 'DF'],
+    born: '1988-05-26',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'udinese', from: 2009, to: 2012},
@@ -2786,6 +3053,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pau Cubarsí',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '2007-01-22',
     shirtNumbers: [2, 5],
     clubs: [
       {clubId: 'barcelona', from: 2024},
@@ -2800,6 +3068,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marc Cucurella',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1998-07-22',
     shirtNumbers: [3, 32],
     clubs: [
       {clubId: 'barcelona', from: 2018, to: 2019},
@@ -2817,6 +3086,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matheus Cunha',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1999-05-27',
     shirtNumbers: [10, 12],
     clubs: [
       {clubId: 'hertha-berlin', from: 2020, to: 2021},
@@ -2832,6 +3102,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diogo Dalot',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1999-03-18',
     shirtNumbers: [20, 2],
     clubs: [
       {clubId: 'porto', from: 2017, to: 2018},
@@ -2846,6 +3117,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Danilo Luiz da Silva',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1991-07-15',
     shirtNumbers: [6, 13],
     clubs: [
       {clubId: 'porto', from: 2012, to: 2015},
@@ -2865,6 +3137,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kevin Danso',
     nationality: ['Austria'],
     positions: ['DF'],
+    born: '1998-09-19',
     shirtNumbers: [4, 6],
     clubs: [
       {clubId: 'augsburg', from: 2017, to: 2021},
@@ -2880,6 +3153,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Dante Bonfim Costa Santos',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1983-10-18',
     shirtNumbers: [4, 31],
     clubs: [
       {clubId: 'monchengladbach', from: 2009, to: 2012},
@@ -2899,6 +3173,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'David Luiz Moreira Marinho',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1987-04-22',
     shirtNumbers: [4, 30],
     clubs: [
       {clubId: 'benfica', from: 2007, to: 2011},
@@ -2920,6 +3195,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jonathan David',
     nationality: ['Canada'],
     positions: ['FW'],
+    born: '2000-01-14',
     shirtNumbers: [9, 20],
     clubs: [
       {clubId: 'lille', from: 2020, to: 2025},
@@ -2933,6 +3209,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Edgar Davids',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1973-03-13',
     shirtNumbers: [26, 8],
     clubs: [
       {clubId: 'ajax', from: 1991, to: 1996},
@@ -2954,6 +3231,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alphonso Davies',
     nationality: ['Canada'],
     positions: ['DF'],
+    born: '2000-11-02',
     shirtNumbers: [19],
     clubs: [
       {clubId: 'vancouver', from: 2016, to: 2019},
@@ -2970,6 +3248,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Giorgian de Arrascaeta',
     nationality: ['Uruguay'],
     positions: ['MF'],
+    born: '1994-06-01',
     shirtNumbers: [10, 14],
     clubs: [
       {clubId: 'fluminense', from: 2015, to: 2018},
@@ -2983,6 +3262,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kevin De Bruyne',
     nationality: ['Belgium'],
     positions: ['MF'],
+    born: '1991-06-28',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'genk', from: 2008, to: 2012},
@@ -3001,10 +3281,14 @@ export const FOOTBALLERS: readonly Footballer[] = [
   {
     id: 'De Cordova-Reid, Bobby',
     name: 'Bobby De Cordova-Reid',
+    // Went by "Bobby Reid" at Bristol City; one entry covers both names.
+    nicknames: ['Bobby Reid'],
     nationality: ['Jamaica'],
     positions: ['FW', 'MF'],
-    shirtNumbers: [14, 7],
+    born: '1993-02-02',
+    shirtNumbers: [14, 7, 11],
     clubs: [
+      {clubId: 'bristol-city', from: 2015, to: 2018},
       {clubId: 'fulham', from: 2019, to: 2024},
       {clubId: 'leicester', from: 2024},
     ],
@@ -3016,6 +3300,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David de Gea',
     nationality: ['Spain'],
     positions: ['GK'],
+    born: '1990-11-07',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'atletico-madrid', from: 2009, to: 2011},
@@ -3033,6 +3318,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Frenkie de Jong',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1997-05-12',
     shirtNumbers: [21],
     clubs: [
       {clubId: 'ajax', from: 2015, to: 2019},
@@ -3047,6 +3333,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matthijs de Ligt',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1999-08-12',
     shirtNumbers: [4, 5],
     clubs: [
       {clubId: 'ajax', from: 2016, to: 2019},
@@ -3064,6 +3351,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rodrigo De Paul',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1994-05-24',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'valencia', from: 2014, to: 2016},
@@ -3082,6 +3370,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Anderson Luís de Souza',
     nationality: ['Portugal', 'Brazil'],
     positions: ['MF'],
+    born: '1977-08-27',
     shirtNumbers: [20, 10],
     clubs: [
       {clubId: 'porto', from: 1999, to: 2004},
@@ -3101,6 +3390,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jermain Defoe',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1982-10-07',
     shirtNumbers: [18, 23],
     clubs: [
       {clubId: 'west-ham', from: 1999, to: 2004},
@@ -3117,6 +3407,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alessandro Del Piero',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1974-11-09',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'juventus', from: 1993, to: 2012},
@@ -3134,6 +3425,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thomas Delaney',
     nationality: ['Denmark'],
     positions: ['MF'],
+    born: '1991-09-03',
     shirtNumbers: [6, 8],
     clubs: [
       {clubId: 'copenhagen', from: 2009, to: 2017},
@@ -3153,6 +3445,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ousmane Dembélé',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1997-05-15',
     shirtNumbers: [10, 7, 11],
     clubs: [
       {clubId: 'rennes', from: 2015, to: 2016},
@@ -3173,6 +3466,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Martín Demichelis',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1980-12-20',
     shirtNumbers: [26, 6],
     clubs: [
       {clubId: 'river-plate', from: 2000, to: 2003},
@@ -3190,6 +3484,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Merih Demiral',
     nationality: ['Turkey'],
     positions: ['DF'],
+    born: '1998-03-05',
     shirtNumbers: [3, 4],
     clubs: [
       {clubId: 'juventus', from: 2019, to: 2022},
@@ -3204,6 +3499,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Memphis Depay',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1994-02-13',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'psv', from: 2011, to: 2015},
@@ -3223,6 +3519,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Didier Deschamps',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1968-10-15',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'marseille', from: 1989, to: 1994},
@@ -3242,6 +3539,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sergiño Dest',
     nationality: ['USA'],
     positions: ['DF'],
+    born: '2000-11-03',
     shirtNumbers: [2, 4],
     clubs: [
       {clubId: 'ajax', from: 2018, to: 2020},
@@ -3258,6 +3556,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kiernan Dewsbury-Hall',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1998-09-06',
     shirtNumbers: [22, 42],
     clubs: [
       {clubId: 'leicester', from: 2020, to: 2024},
@@ -3268,10 +3567,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Di Lorenzo, Giovanni',
+    name: 'Giovanni Di Lorenzo',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [22],
+    born: '1993-08-04',
+    clubs: [
+      {clubId: 'empoli', from: 2017, to: 2019},
+      {clubId: 'napoli', from: 2019},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2021]},
+      {type: 'league-title', count: 2, years: [2023, 2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Di María, Ángel',
     name: 'Ángel Di María',
     nationality: ['Argentina'],
     positions: ['FW', 'MF'],
+    born: '1988-02-14',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'benfica', from: 2007, to: 2010},
@@ -3294,6 +3611,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Éric Di Meco',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1963-09-07',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'marseille', from: 1983, to: 1995},
@@ -3310,6 +3628,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mouctar Diakhaby',
     nationality: ['France', 'Guinea'],
     positions: ['DF'],
+    born: '1996-12-19',
     shirtNumbers: [12, 4],
     clubs: [
       {clubId: 'lyon', from: 2014, to: 2018},
@@ -3319,10 +3638,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Diallo, Amad',
+    name: 'Amad Diallo',
+    nationality: ['Ivory Coast'],
+    positions: ['FW'],
+    shirtNumbers: [16, 14],
+    born: '2002-07-11',
+    clubs: [
+      {clubId: 'atalanta', from: 2019, to: 2021},
+      {clubId: 'man-utd', from: 2021},
+      {clubId: 'sunderland', from: 2022, to: 2023, loan: true},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Dias, Rúben',
     name: 'Rúben Dias',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1997-05-14',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'benfica', from: 2017, to: 2020},
@@ -3339,6 +3674,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Brahim Díaz',
     nationality: ['Morocco', 'Spain'],
     positions: ['MF', 'FW'],
+    born: '1999-08-03',
     shirtNumbers: [21, 10],
     clubs: [
       {clubId: 'man-city', from: 2015, to: 2019},
@@ -3356,6 +3692,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Luis Díaz',
     nationality: ['Colombia'],
     positions: ['FW'],
+    born: '1997-01-13',
     shirtNumbers: [7, 23],
     clubs: [
       {clubId: 'porto', from: 2019, to: 2022},
@@ -3368,10 +3705,29 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Dimarco, Federico',
+    name: 'Federico Dimarco',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    shirtNumbers: [32],
+    born: '1997-11-10',
+    clubs: [
+      {clubId: 'inter', from: 2014, to: 2019},
+      {clubId: 'empoli', from: 2016, to: 2017, loan: true},
+      {clubId: 'parma', from: 2018, to: 2019, loan: true},
+      {clubId: 'inter', from: 2021},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2024, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Disasi, Axel',
     name: 'Axel Disasi',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1998-03-11',
     shirtNumbers: [2, 5],
     clubs: [
       {clubId: 'reims', from: 2016, to: 2020},
@@ -3387,6 +3743,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Youri Djorkaeff',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1968-03-09',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'monaco', from: 1990, to: 1995},
@@ -3407,6 +3764,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ritsu Doan',
     nationality: ['Japan'],
     positions: ['FW', 'MF'],
+    born: '1998-06-16',
     shirtNumbers: [8, 42],
     clubs: [
       {clubId: 'psv', from: 2019, to: 2022},
@@ -3421,6 +3779,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jérémy Doku',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '2002-05-27',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'anderlecht', from: 2018, to: 2020},
@@ -3437,6 +3796,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gianluigi Donnarumma',
     nationality: ['Italy'],
     positions: ['GK'],
+    born: '1999-02-25',
     shirtNumbers: [1, 99],
     clubs: [
       {clubId: 'ac-milan', from: 2015, to: 2021},
@@ -3454,6 +3814,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Désiré Doué',
     nationality: ['France'],
     positions: ['MF', 'FW'],
+    born: '2005-06-03',
     shirtNumbers: [14, 10],
     clubs: [
       {clubId: 'rennes', from: 2022, to: 2024},
@@ -3470,6 +3831,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Artem Dovbyk',
     nationality: ['Ukraine'],
     positions: ['FW'],
+    born: '1997-06-21',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'girona', from: 2023, to: 2024},
@@ -3483,6 +3845,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Julian Draxler',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1993-09-20',
     shirtNumbers: [10, 23],
     clubs: [
       {clubId: 'schalke', from: 2011, to: 2015},
@@ -3502,6 +3865,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Danny Drinkwater',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1990-03-05',
     shirtNumbers: [7, 27],
     clubs: [
       {clubId: 'leicester', from: 2012, to: 2017},
@@ -3518,6 +3882,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Didier Drogba',
     nationality: ['Ivory Coast'],
     positions: ['FW'],
+    born: '1978-03-11',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'marseille', from: 2003, to: 2004},
@@ -3536,6 +3901,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Denzel Dumfries',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1996-04-18',
     shirtNumbers: [2, 22],
     clubs: [
       {clubId: 'psv', from: 2018, to: 2021},
@@ -3551,6 +3917,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jhon Durán',
     nationality: ['Colombia'],
     positions: ['FW'],
+    born: '2003-12-13',
     shirtNumbers: [9, 24],
     clubs: [
       {clubId: 'aston-villa', from: 2023, to: 2025},
@@ -3564,6 +3931,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Erik Durm',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1992-05-12',
     shirtNumbers: [37, 15],
     clubs: [
       {clubId: 'dortmund', from: 2012, to: 2018},
@@ -3578,6 +3946,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Paulo Dybala',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1993-11-15',
     shirtNumbers: [10, 21],
     clubs: [
       {clubId: 'juventus', from: 2015, to: 2022},
@@ -3593,6 +3962,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Edin Džeko',
     nationality: ['Bosnia and Herzegovina'],
     positions: ['FW'],
+    born: '1986-03-17',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'wolfsburg', from: 2007, to: 2011},
@@ -3614,6 +3984,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Ederson Moraes',
     nationality: ['Brazil'],
     positions: ['GK'],
+    born: '1993-08-17',
     shirtNumbers: [31],
     clubs: [
       {clubId: 'benfica', from: 2015, to: 2017},
@@ -3631,6 +4002,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Stefan Effenberg',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1968-08-02',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'monchengladbach', from: 1990, to: 1992},
@@ -3648,6 +4020,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hugo Ekitiké',
     nationality: ['France'],
     positions: ['FW'],
+    born: '2002-06-20',
     shirtNumbers: [22, 9],
     clubs: [
       {clubId: 'reims', from: 2020, to: 2022},
@@ -3665,6 +4038,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohamed El Shenawy',
     nationality: ['Egypt'],
     positions: ['GK'],
+    born: '1988-12-18',
     shirtNumbers: [1, 16],
     clubs: [
       {clubId: 'al-ahly', from: 2016},
@@ -3677,6 +4051,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Giovane Elber',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1972-07-23',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 1994, to: 1997},
@@ -3694,6 +4069,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohamed Elneny',
     nationality: ['Egypt'],
     positions: ['MF'],
+    born: '1992-07-11',
     shirtNumbers: [25, 4],
     clubs: [
       {clubId: 'basel', from: 2013, to: 2016},
@@ -3707,6 +4083,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Breel Embolo',
     nationality: ['Switzerland'],
     positions: ['FW'],
+    born: '1997-02-14',
     shirtNumbers: [7, 36],
     clubs: [
       {clubId: 'basel', from: 2014, to: 2016},
@@ -3723,6 +4100,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Emerson Ferreira da Rosa',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1976-04-04',
     shirtNumbers: [5, 8],
     clubs: [
       {clubId: 'gremio', from: 1993, to: 1997},
@@ -3744,6 +4122,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Youssef En-Nesyri',
     nationality: ['Morocco'],
     positions: ['FW'],
+    born: '1997-06-01',
     shirtNumbers: [15, 9],
     clubs: [
       {clubId: 'sevilla', from: 2020, to: 2024},
@@ -3759,6 +4138,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Julio Enciso',
     nationality: ['Paraguay'],
     positions: ['FW', 'MF'],
+    born: '2004-01-23',
     shirtNumbers: [20, 30],
     clubs: [
       {clubId: 'brighton', from: 2022},
@@ -3771,6 +4151,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wataru Endo',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1993-02-09',
     shirtNumbers: [3, 22],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2019, to: 2023},
@@ -3787,6 +4168,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Endrick Felipe',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2006-07-21',
     shirtNumbers: [16, 9],
     clubs: [
       {clubId: 'palmeiras', from: 2022, to: 2024},
@@ -3800,6 +4182,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christian Eriksen',
     nationality: ['Denmark'],
     positions: ['MF'],
+    born: '1992-02-14',
     shirtNumbers: [10, 14],
     clubs: [
       {clubId: 'ajax', from: 2010, to: 2013},
@@ -3819,6 +4202,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michael Essien',
     nationality: ['Ghana'],
     positions: ['MF'],
+    born: '1982-12-03',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'lyon', from: 2003, to: 2005},
@@ -3839,6 +4223,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Estêvão Willian',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2007-04-24',
     shirtNumbers: [41, 7],
     clubs: [
       {clubId: 'palmeiras', from: 2024, to: 2025},
@@ -3852,6 +4237,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pervis Estupiñán',
     nationality: ['Ecuador'],
     positions: ['DF'],
+    born: '1998-01-21',
     shirtNumbers: [30, 3],
     clubs: [
       {clubId: 'villarreal', from: 2020, to: 2022},
@@ -3866,6 +4252,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Samuel Eto\'o',
     nationality: ['Cameroon'],
     positions: ['FW'],
+    born: '1981-03-10',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'real-madrid', from: 1997, to: 2000},
@@ -3887,6 +4274,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Eusébio da Silva Ferreira',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1942-01-25',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'benfica', from: 1961, to: 1975},
@@ -3905,6 +4293,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Stephen Eustáquio',
     nationality: ['Canada'],
     positions: ['MF'],
+    born: '1996-12-21',
     shirtNumbers: [7, 6],
     clubs: [
       {clubId: 'porto', from: 2022},
@@ -3919,6 +4308,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Patrice Evra',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1981-05-15',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'monaco', from: 2002, to: 2006},
@@ -3938,6 +4328,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eberechi Eze',
     nationality: ['England'],
     positions: ['MF', 'FW'],
+    born: '1998-06-29',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'qpr', from: 2016, to: 2020},
@@ -3955,6 +4346,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Fábio Henrique Tavares',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1993-10-23',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'real-madrid', from: 2012, to: 2013, loan: true},
@@ -3973,6 +4365,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cesc Fàbregas',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1987-05-04',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'arsenal', from: 2003, to: 2011},
@@ -3993,6 +4386,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Radamel Falcao',
     nationality: ['Colombia'],
     positions: ['FW'],
+    born: '1986-02-10',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'river-plate', from: 2009, to: 2011},
@@ -4014,6 +4408,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ansu Fati',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '2002-10-31',
     shirtNumbers: [10, 22],
     clubs: [
       {clubId: 'barcelona', from: 2019, to: 2025},
@@ -4030,6 +4425,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'João Félix',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1999-11-10',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'benfica', from: 2018, to: 2019},
@@ -4050,6 +4446,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marouane Fellaini',
     nationality: ['Belgium'],
     positions: ['MF'],
+    born: '1987-11-22',
     shirtNumbers: [27, 31],
     clubs: [
       {clubId: 'everton', from: 2008, to: 2013},
@@ -4065,6 +4462,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rio Ferdinand',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1978-11-07',
     shirtNumbers: [5, 15],
     clubs: [
       {clubId: 'west-ham', from: 1995, to: 2000},
@@ -4083,6 +4481,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bruno Fernandes',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1994-09-08',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'sporting', from: 2017, to: 2020},
@@ -4095,6 +4494,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Enzo Fernández',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '2001-01-17',
     shirtNumbers: [5, 8],
     clubs: [
       {clubId: 'river-plate', from: 2019, to: 2022},
@@ -4112,6 +4512,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Fernando Luiz Roza',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1985-05-04',
     shirtNumbers: [25, 5],
     clubs: [
       {clubId: 'shakhtar', from: 2005, to: 2013},
@@ -4129,6 +4530,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Luís Figo',
     nationality: ['Portugal'],
     positions: ['MF', 'FW'],
+    born: '1972-11-04',
     shirtNumbers: [7, 10],
     clubs: [
       {clubId: 'sporting', from: 1989, to: 1995},
@@ -4149,6 +4551,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Filipe Luís Kasmirski',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1985-08-09',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'atletico-madrid', from: 2010, to: 2014},
@@ -4168,6 +4571,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Roberto Firmino',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1991-10-02',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'hoffenheim', from: 2011, to: 2015},
@@ -4186,6 +4590,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Phil Foden',
     nationality: ['England'],
     positions: ['MF', 'FW'],
+    born: '2000-05-28',
     shirtNumbers: [47],
     clubs: [
       {clubId: 'man-city', from: 2017},
@@ -4201,6 +4606,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Seko Fofana',
     nationality: ['Ivory Coast'],
     positions: ['MF'],
+    born: '1995-05-07',
     shirtNumbers: [8, 25],
     clubs: [
       {clubId: 'udinese', from: 2018, to: 2020},
@@ -4215,6 +4621,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wesley Fofana',
     nationality: ['France'],
     positions: ['DF'],
+    born: '2000-12-17',
     shirtNumbers: [3, 33],
     clubs: [
       {clubId: 'leicester', from: 2020, to: 2022},
@@ -4228,6 +4635,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Youssouf Fofana',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1999-01-10',
     shirtNumbers: [29, 19],
     clubs: [
       {clubId: 'monaco', from: 2020, to: 2024},
@@ -4241,6 +4649,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Forlán',
     nationality: ['Uruguay'],
     positions: ['FW'],
+    born: '1979-05-19',
     shirtNumbers: [7, 10],
     clubs: [
       {clubId: 'man-utd', from: 2002, to: 2004},
@@ -4260,6 +4669,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lyle Foster',
     nationality: ['South Africa'],
     positions: ['FW'],
+    born: '2000-09-03',
     shirtNumbers: [17, 9],
     clubs: [
       {clubId: 'monaco', from: 2019, to: 2020},
@@ -4273,6 +4683,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Foyth',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1998-01-12',
     shirtNumbers: [8, 2],
     clubs: [
       {clubId: 'tottenham', from: 2017, to: 2021},
@@ -4289,6 +4700,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jeremie Frimpong',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '2000-12-10',
     shirtNumbers: [30, 2],
     clubs: [
       {clubId: 'celtic', from: 2019, to: 2021},
@@ -4305,6 +4717,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kyogo Furuhashi',
     nationality: ['Japan'],
     positions: ['FW'],
+    born: '1995-01-20',
     shirtNumbers: [8, 9],
     clubs: [
       {clubId: 'celtic', from: 2021, to: 2025},
@@ -4320,6 +4733,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Paulo Futre',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1966-02-28',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'porto', from: 1984, to: 1987},
@@ -4340,6 +4754,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gabriel Magalhães',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1997-12-19',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'lille', from: 2017, to: 2020},
@@ -4355,6 +4770,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gabriel Jesus',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1997-04-03',
     shirtNumbers: [9, 33],
     clubs: [
       {clubId: 'palmeiras', from: 2015, to: 2017},
@@ -4372,6 +4788,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cody Gakpo',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1999-05-07',
     shirtNumbers: [18, 11],
     clubs: [
       {clubId: 'psv', from: 2018, to: 2023},
@@ -4387,6 +4804,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Conor Gallagher',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2000-02-06',
     shirtNumbers: [23, 5],
     clubs: [
       {clubId: 'chelsea', from: 2019, to: 2024},
@@ -4401,6 +4819,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jesús Gallardo',
     nationality: ['Mexico'],
     positions: ['DF'],
+    born: '1994-08-15',
     shirtNumbers: [23, 3],
     clubs: [
       {clubId: 'pumas', from: 2013, to: 2018},
@@ -4414,6 +4833,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kévin Gameiro',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1987-05-09',
     shirtNumbers: [9, 21],
     clubs: [
       {clubId: 'lorient', from: 2008, to: 2011},
@@ -4433,6 +4853,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fran García',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1999-08-14',
     shirtNumbers: [20],
     clubs: [
       {clubId: 'real-madrid', from: 2023, to: 2026},
@@ -4444,10 +4865,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'García, Joan',
+    name: 'Joan García',
+    nationality: ['Spain'],
+    positions: ['GK'],
+    shirtNumbers: [13, 1],
+    born: '2001-05-04',
+    clubs: [
+      {clubId: 'barcelona', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Garnacho, Alejandro',
     name: 'Alejandro Garnacho',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '2004-07-01',
     shirtNumbers: [17, 49],
     clubs: [
       {clubId: 'man-utd', from: 2020, to: 2025},
@@ -4461,6 +4898,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gennaro Gattuso',
     nationality: ['Italy'],
     positions: ['MF'],
+    born: '1978-01-09',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'ac-milan', from: 1999, to: 2012},
@@ -4477,6 +4915,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gavi',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '2004-08-05',
     shirtNumbers: [6, 9],
     clubs: [
       {clubId: 'barcelona', from: 2021},
@@ -4490,6 +4929,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Steven Gerrard',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1980-05-30',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'liverpool', from: 1998, to: 2015},
@@ -4505,6 +4945,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Gervais Yao Kouassi',
     nationality: ['Ivory Coast'],
     positions: ['FW'],
+    born: '1987-05-27',
     shirtNumbers: [27, 11],
     clubs: [
       {clubId: 'lille', from: 2009, to: 2011},
@@ -4523,6 +4964,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Saman Ghoddos',
     nationality: ['Iran'],
     positions: ['MF', 'FW'],
+    born: '1993-09-06',
     shirtNumbers: [20, 8],
     clubs: [
       {clubId: 'brentford', from: 2020, to: 2024},
@@ -4535,6 +4977,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ryan Giggs',
     nationality: ['Wales'],
     positions: ['MF'],
+    born: '1973-11-29',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'man-utd', from: 1990, to: 2014},
@@ -4550,6 +4993,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Gila',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '2000-08-29',
     shirtNumbers: [34],
     clubs: [
       {clubId: 'lazio', from: 2022, to: 2026},
@@ -4562,6 +5006,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Billy Gilmour',
     nationality: ['Scotland'],
     positions: ['MF'],
+    born: '2001-06-11',
     shirtNumbers: [6, 23],
     clubs: [
       {clubId: 'chelsea', from: 2019, to: 2022},
@@ -4578,6 +5023,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'José María Giménez',
     nationality: ['Uruguay'],
     positions: ['DF'],
+    born: '1995-01-20',
     shirtNumbers: [2, 13],
     clubs: [
       {clubId: 'atletico-madrid', from: 2013},
@@ -4593,6 +5039,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Santiago Giménez',
     nationality: ['Mexico'],
     positions: ['FW'],
+    born: '2001-04-18',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'cruz-azul', from: 2017, to: 2022},
@@ -4609,6 +5056,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matthias Ginter',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1994-01-19',
     shirtNumbers: [28],
     clubs: [
       {clubId: 'freiburg', from: 2012, to: 2014},
@@ -4625,13 +5073,15 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Olivier Giroud',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1986-09-30',
     shirtNumbers: [9, 18],
     clubs: [
       {clubId: 'montpellier', from: 2010, to: 2012},
       {clubId: 'arsenal', from: 2012, to: 2018},
       {clubId: 'chelsea', from: 2018, to: 2021},
       {clubId: 'ac-milan', from: 2021, to: 2024},
-      {clubId: 'lafc', from: 2024},
+      {clubId: 'lafc', from: 2024, to: 2025},
+      {clubId: 'lille', from: 2025},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2021]},
@@ -4646,6 +5096,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Serge Gnabry',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1995-07-14',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'arsenal', from: 2012, to: 2016},
@@ -4665,6 +5116,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Godín',
     nationality: ['Uruguay'],
     positions: ['DF'],
+    born: '1986-02-16',
     shirtNumbers: [2, 3],
     clubs: [
       {clubId: 'villarreal', from: 2007, to: 2010},
@@ -4680,10 +5132,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Golovin, Aleksandr',
+    name: 'Aleksandr Golovin',
+    nationality: ['Russia'],
+    positions: ['MF'],
+    shirtNumbers: [17],
+    born: '1996-05-30',
+    clubs: [
+      {clubId: 'monaco', from: 2018},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Gomes, André',
     name: 'André Gomes',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1993-07-30',
     shirtNumbers: [21, 8],
     clubs: [
       {clubId: 'benfica', from: 2012, to: 2014},
@@ -4700,6 +5166,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Gómez',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1985-07-10',
     shirtNumbers: [33, 9],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2003, to: 2009},
@@ -4721,6 +5188,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Alejandro Darío Gómez',
     nationality: ['Argentina'],
     positions: ['MF', 'FW'],
+    born: '1988-02-15',
     shirtNumbers: [10, 24],
     clubs: [
       {clubId: 'atalanta', from: 2014, to: 2021},
@@ -4738,6 +5206,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Anthony Gordon',
     nationality: ['England'],
     positions: ['FW'],
+    born: '2001-02-24',
     shirtNumbers: [10, 8],
     clubs: [
       {clubId: 'everton', from: 2017, to: 2023},
@@ -4751,6 +5220,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leon Goretzka',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1995-02-06',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'schalke', from: 2013, to: 2018},
@@ -4767,6 +5237,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Götze',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1992-06-03',
     shirtNumbers: [10, 19],
     clubs: [
       {clubId: 'dortmund', from: 2009, to: 2013},
@@ -4786,6 +5257,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Amine Gouiri',
     nationality: ['Algeria'],
     positions: ['FW'],
+    born: '2000-02-16',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'nice', from: 2020, to: 2022},
@@ -4800,6 +5272,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ryan Gravenberch',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '2002-05-16',
     shirtNumbers: [38, 8],
     clubs: [
       {clubId: 'ajax', from: 2018, to: 2022},
@@ -4816,6 +5289,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Demarai Gray',
     nationality: ['Jamaica'],
     positions: ['FW', 'MF'],
+    born: '1996-06-28',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'leicester', from: 2016, to: 2021},
@@ -4829,10 +5303,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jack Grealish',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1995-09-10',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'aston-villa', from: 2014, to: 2021},
       {clubId: 'man-city', from: 2021},
+      {clubId: 'everton', from: 2025, to: 2026, loan: true},
     ],
     honours: [
       {type: 'champions-league', count: 1, years: [2023]},
@@ -4845,6 +5321,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mason Greenwood',
     nationality: ['England'],
     positions: ['FW'],
+    born: '2001-10-01',
     shirtNumbers: [11, 10],
     clubs: [
       {clubId: 'man-utd', from: 2019, to: 2024},
@@ -4858,6 +5335,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antoine Griezmann',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1991-03-21',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'real-sociedad', from: 2009, to: 2014},
@@ -4875,6 +5353,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Álex Grimaldo',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1995-09-20',
     shirtNumbers: [20, 3],
     clubs: [
       {clubId: 'barcelona', from: 2012, to: 2016},
@@ -4891,6 +5370,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pascal Groß',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1991-06-15',
     shirtNumbers: [13, 8],
     clubs: [
       {clubId: 'brighton', from: 2017, to: 2024},
@@ -4904,6 +5384,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marc Guéhi',
     nationality: ['England'],
     positions: ['DF'],
+    born: '2000-07-13',
     shirtNumbers: [6, 26],
     clubs: [
       {clubId: 'chelsea', from: 2017, to: 2021},
@@ -4917,6 +5398,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mattéo Guendouzi',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1999-04-14',
     shirtNumbers: [6, 29],
     clubs: [
       {clubId: 'lorient', from: 2016, to: 2018},
@@ -4933,6 +5415,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Idrissa Gueye',
     nationality: ['Senegal'],
     positions: ['MF'],
+    born: '1989-09-26',
     shirtNumbers: [27, 5],
     clubs: [
       {clubId: 'aston-villa', from: 2015, to: 2016},
@@ -4946,10 +5429,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Guirassy, Serhou',
+    name: 'Serhou Guirassy',
+    nationality: ['Guinea'],
+    positions: ['FW'],
+    shirtNumbers: [9, 19],
+    born: '1996-03-12',
+    clubs: [
+      {clubId: 'lille', from: 2015, to: 2017},
+      {clubId: 'rennes', from: 2019, to: 2022},
+      {clubId: 'vfb-stuttgart', from: 2022, to: 2024},
+      {clubId: 'dortmund', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Guiu, Marc',
     name: 'Marc Guiu',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '2006-01-04',
     shirtNumbers: [9, 38],
     clubs: [
       {clubId: 'barcelona', from: 2023, to: 2024},
@@ -4963,6 +5463,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Arda Güler',
     nationality: ['Turkey'],
     positions: ['MF'],
+    born: '2005-02-25',
     shirtNumbers: [15, 24],
     clubs: [
       {clubId: 'fenerbahce', from: 2021, to: 2023},
@@ -4978,6 +5479,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ruud Gullit',
     nationality: ['Netherlands'],
     positions: ['MF', 'FW'],
+    born: '1962-09-01',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'ac-milan', from: 1987, to: 1993},
@@ -4995,6 +5497,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'İlkay Gündoğan',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1990-10-24',
     shirtNumbers: [8, 19],
     clubs: [
       {clubId: 'dortmund', from: 2011, to: 2016},
@@ -5013,6 +5516,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Malo Gusto',
     nationality: ['France'],
     positions: ['DF'],
+    born: '2003-05-19',
     shirtNumbers: [27, 2],
     clubs: [
       {clubId: 'lyon', from: 2021, to: 2023},
@@ -5027,6 +5531,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'José María Gutiérrez',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1976-10-31',
     shirtNumbers: [14],
     clubs: [
       {clubId: 'real-madrid', from: 1995, to: 2010},
@@ -5042,6 +5547,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Joško Gvardiol',
     nationality: ['Croatia'],
     positions: ['DF'],
+    born: '2002-01-23',
     shirtNumbers: [24],
     clubs: [
       {clubId: 'rb-leipzig', from: 2021, to: 2023},
@@ -5057,6 +5563,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Viktor Gyökeres',
     nationality: ['Sweden'],
     positions: ['FW'],
+    born: '1998-06-04',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'brighton', from: 2018, to: 2023},
@@ -5073,6 +5580,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Erling Haaland',
     nationality: ['Norway'],
     positions: ['FW'],
+    born: '2000-07-21',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'dortmund', from: 2020, to: 2022},
@@ -5094,6 +5602,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gheorghe Hagi',
     nationality: ['Romania'],
     positions: ['MF'],
+    born: '1965-02-05',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'real-madrid', from: 1990, to: 1992},
@@ -5111,6 +5620,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Achraf Hakimi',
     nationality: ['Morocco'],
     positions: ['DF'],
+    born: '1998-11-04',
     shirtNumbers: [2],
     clubs: [
       {clubId: 'real-madrid', from: 2017, to: 2018},
@@ -5129,6 +5639,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sébastien Haller',
     nationality: ['Ivory Coast', 'France'],
     positions: ['FW'],
+    born: '1994-06-22',
     shirtNumbers: [22, 9],
     clubs: [
       {clubId: 'eintracht-frankfurt', from: 2017, to: 2019},
@@ -5146,6 +5657,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marek Hamšík',
     nationality: ['Slovakia'],
     positions: ['MF'],
+    born: '1987-07-27',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'napoli', from: 2007, to: 2019},
@@ -5158,6 +5670,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Amine Harit',
     nationality: ['Morocco'],
     positions: ['MF'],
+    born: '1997-06-18',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'schalke', from: 2017, to: 2021},
@@ -5171,6 +5684,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Reo Hatate',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1997-11-21',
     shirtNumbers: [8, 41],
     clubs: [
       {clubId: 'celtic', from: 2022},
@@ -5185,6 +5699,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kai Havertz',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1999-06-11',
     shirtNumbers: [29, 7],
     clubs: [
       {clubId: 'leverkusen', from: 2016, to: 2020},
@@ -5202,6 +5717,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eden Hazard',
     nationality: ['Belgium'],
     positions: ['FW', 'MF'],
+    born: '1991-01-07',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'lille', from: 2007, to: 2012},
@@ -5220,6 +5736,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gabriel Heinze',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1978-04-19',
     shirtNumbers: [4, 19],
     clubs: [
       {clubId: 'psg', from: 2001, to: 2004},
@@ -5238,6 +5755,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jordan Henderson',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1990-06-17',
     shirtNumbers: [14, 8],
     clubs: [
       {clubId: 'sunderland', from: 2008, to: 2011},
@@ -5256,6 +5774,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thierry Henry',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1977-08-17',
     shirtNumbers: [14],
     clubs: [
       {clubId: 'monaco', from: 1994, to: 1999},
@@ -5277,6 +5796,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mads Hermansen',
     nationality: ['Denmark'],
     positions: ['GK'],
+    born: '2000-07-11',
     shirtNumbers: [30, 1],
     clubs: [
       {clubId: 'leicester', from: 2023},
@@ -5291,6 +5811,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nicknames: ['Chicharito'],
     nationality: ['Mexico'],
     positions: ['FW'],
+    born: '1988-06-01',
     shirtNumbers: [14, 9],
     clubs: [
       {clubId: 'man-utd', from: 2010, to: 2015},
@@ -5311,6 +5832,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lucas Hernández',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1996-02-14',
     shirtNumbers: [21],
     clubs: [
       {clubId: 'atletico-madrid', from: 2014, to: 2019},
@@ -5329,6 +5851,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Théo Hernández',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1997-10-06',
     shirtNumbers: [19, 21],
     clubs: [
       {clubId: 'real-madrid', from: 2017, to: 2019},
@@ -5347,6 +5870,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Héctor Herrera',
     nationality: ['Mexico'],
     positions: ['MF'],
+    born: '1990-04-19',
     shirtNumbers: [16, 25],
     clubs: [
       {clubId: 'pachuca', from: 2010, to: 2013},
@@ -5364,6 +5888,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yangel Herrera',
     nationality: ['Venezuela'],
     positions: ['MF'],
+    born: '1998-01-07',
     shirtNumbers: [21, 8],
     clubs: [
       {clubId: 'man-city', from: 2017, to: 2021},
@@ -5377,6 +5902,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fernando Hierro',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1968-03-23',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'real-madrid', from: 1989, to: 2003},
@@ -5392,6 +5918,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gonzalo Higuaín',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1987-12-10',
     shirtNumbers: [9, 20],
     clubs: [
       {clubId: 'river-plate', from: 2005, to: 2007},
@@ -5412,6 +5939,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Piero Hincapié',
     nationality: ['Ecuador'],
     positions: ['DF'],
+    born: '2002-01-09',
     shirtNumbers: [3, 5],
     clubs: [
       {clubId: 'leverkusen', from: 2021, to: 2025},
@@ -5427,6 +5955,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Morten Hjulmand',
     nationality: ['Denmark'],
     positions: ['MF'],
+    born: '1999-06-25',
     shirtNumbers: [42, 6],
     clubs: [
       {clubId: 'lecce', from: 2021, to: 2023},
@@ -5443,6 +5972,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Adam Hložek',
     nationality: ['Czech Republic'],
     positions: ['FW'],
+    born: '2002-07-25',
     shirtNumbers: [10, 21],
     clubs: [
       {clubId: 'leverkusen', from: 2022, to: 2024},
@@ -5458,6 +5988,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pierre-Emile Højbjerg',
     nationality: ['Denmark'],
     positions: ['MF'],
+    born: '1995-08-05',
     shirtNumbers: [23, 5],
     clubs: [
       {clubId: 'bayern', from: 2012, to: 2016},
@@ -5473,6 +6004,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rasmus Højlund',
     nationality: ['Denmark'],
     positions: ['FW'],
+    born: '2003-02-04',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'copenhagen', from: 2020, to: 2022},
@@ -5488,6 +6020,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ajdin Hrustic',
     nationality: ['Australia'],
     positions: ['MF'],
+    born: '1996-07-05',
     shirtNumbers: [8, 24],
     clubs: [
       {clubId: 'eintracht-frankfurt', from: 2020, to: 2022},
@@ -5502,6 +6035,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Callum Hudson-Odoi',
     nationality: ['England'],
     positions: ['FW'],
+    born: '2000-11-07',
     shirtNumbers: [20, 11],
     clubs: [
       {clubId: 'chelsea', from: 2018, to: 2023},
@@ -5518,6 +6052,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dean Huijsen',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '2005-04-14',
     shirtNumbers: [24, 3],
     clubs: [
       {clubId: 'juventus', from: 2023, to: 2024},
@@ -5533,6 +6068,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Givanildo Vieira de Sousa',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1986-07-25',
     shirtNumbers: [7, 29],
     clubs: [
       {clubId: 'porto', from: 2008, to: 2012},
@@ -5548,6 +6084,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mats Hummels',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1988-12-16',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'bayern', from: 2006, to: 2008},
@@ -5566,6 +6103,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Klaas-Jan Huntelaar',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1983-08-12',
     shirtNumbers: [9, 25],
     clubs: [
       {clubId: 'ajax', from: 2006, to: 2009},
@@ -5585,6 +6123,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hwang Hee-chan',
     nationality: ['South Korea'],
     positions: ['FW'],
+    born: '1996-01-26',
     shirtNumbers: [11, 26],
     clubs: [
       {clubId: 'salzburg', from: 2015, to: 2020},
@@ -5602,6 +6141,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hwang In-beom',
     nationality: ['South Korea'],
     positions: ['MF'],
+    born: '1996-09-20',
     shirtNumbers: [6, 18],
     clubs: [
       {clubId: 'feyenoord', from: 2024},
@@ -5614,6 +6154,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Zlatan Ibrahimović',
     nationality: ['Sweden'],
     positions: ['FW'],
+    born: '1981-10-03',
     shirtNumbers: [9, 10, 11],
     clubs: [
       {clubId: 'ajax', from: 2001, to: 2004},
@@ -5638,6 +6179,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kelechi Iheanacho',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '1996-10-03',
     shirtNumbers: [14, 8],
     clubs: [
       {clubId: 'man-city', from: 2015, to: 2017},
@@ -5652,6 +6194,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ciro Immobile',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1990-02-20',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'torino', from: 2012, to: 2014},
@@ -5668,10 +6211,30 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Ings, Danny',
+    name: 'Danny Ings',
+    nationality: ['England'],
+    positions: ['FW'],
+    born: '1992-07-23',
+    shirtNumbers: [9, 18],
+    clubs: [
+      {clubId: 'bournemouth', from: 2009, to: 2011},
+      {clubId: 'burnley', from: 2011, to: 2015},
+      {clubId: 'liverpool', from: 2015, to: 2018},
+      {clubId: 'southampton', from: 2018, to: 2021},
+      {clubId: 'aston-villa', from: 2021, to: 2023},
+      {clubId: 'west-ham', from: 2023, to: 2026},
+      {clubId: 'leicester', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Iniesta, Andrés',
     name: 'Andrés Iniesta',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1984-05-11',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'barcelona', from: 2002, to: 2018},
@@ -5689,6 +6252,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lorenzo Insigne',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1991-06-04',
     shirtNumbers: [24, 10],
     clubs: [
       {clubId: 'napoli', from: 2010, to: 2022},
@@ -5704,6 +6268,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Filippo Inzaghi',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1973-08-09',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'juventus', from: 1997, to: 2001},
@@ -5721,6 +6286,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexander Isak',
     nationality: ['Sweden'],
     positions: ['FW'],
+    born: '1999-09-21',
     shirtNumbers: [14, 9],
     clubs: [
       {clubId: 'dortmund', from: 2017, to: 2019},
@@ -5737,6 +6303,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Francisco Román Alarcón',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1992-04-21',
     shirtNumbers: [22, 14],
     clubs: [
       {clubId: 'real-madrid', from: 2013, to: 2022},
@@ -5754,6 +6321,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ko Itakura',
     nationality: ['Japan'],
     positions: ['DF'],
+    born: '1997-01-27',
     shirtNumbers: [16, 4],
     clubs: [
       {clubId: 'monchengladbach', from: 2022, to: 2025},
@@ -5767,6 +6335,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Junya Ito',
     nationality: ['Japan'],
     positions: ['FW', 'MF'],
+    born: '1993-03-09',
     shirtNumbers: [14, 9],
     clubs: [
       {clubId: 'genk', from: 2019, to: 2022},
@@ -5780,6 +6349,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alex Iwobi',
     nationality: ['Nigeria'],
     positions: ['MF', 'FW'],
+    born: '1996-05-03',
     shirtNumbers: [17, 10],
     clubs: [
       {clubId: 'arsenal', from: 2015, to: 2019},
@@ -5794,6 +6364,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolas Jackson',
     nationality: ['Senegal'],
     positions: ['FW'],
+    born: '2001-06-20',
     shirtNumbers: [15, 9],
     clubs: [
       {clubId: 'villarreal', from: 2020, to: 2023},
@@ -5808,6 +6379,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alireza Jahanbakhsh',
     nationality: ['Iran'],
     positions: ['FW', 'MF'],
+    born: '1993-08-11',
     shirtNumbers: [7, 16],
     clubs: [
       {clubId: 'az-alkmaar', from: 2015, to: 2018},
@@ -5824,6 +6396,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Reece James',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1999-12-08',
     shirtNumbers: [24, 16],
     clubs: [
       {clubId: 'chelsea', from: 2019},
@@ -5838,6 +6411,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raúl Jiménez',
     nationality: ['Mexico'],
     positions: ['FW'],
+    born: '1991-05-05',
     shirtNumbers: [9, 7],
     clubs: [
       {clubId: 'club-america', from: 2011, to: 2014},
@@ -5854,6 +6428,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'João Mário Naval da Costa Eduardo',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1993-01-19',
     shirtNumbers: [16, 20],
     clubs: [
       {clubId: 'sporting', from: 2012, to: 2016},
@@ -5874,6 +6449,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'João Pedro Junqueira',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2001-09-26',
     shirtNumbers: [20, 9],
     clubs: [
       {clubId: 'watford', from: 2020, to: 2023},
@@ -5888,6 +6464,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alistair Johnston',
     nationality: ['Canada'],
     positions: ['DF'],
+    born: '1998-10-08',
     shirtNumbers: [2, 24],
     clubs: [
       {clubId: 'celtic', from: 2023},
@@ -5903,6 +6480,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Jorge Luiz Frello Filho',
     nationality: ['Italy'],
     positions: ['MF'],
+    born: '1991-12-20',
     shirtNumbers: [5, 8],
     clubs: [
       {clubId: 'napoli', from: 2014, to: 2018},
@@ -5922,6 +6500,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diogo Jota',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1996-12-04',
     shirtNumbers: [20, 9],
     clubs: [
       {clubId: 'atletico-madrid', from: 2016, to: 2017},
@@ -5939,6 +6518,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Luka Jović',
     nationality: ['Serbia'],
     positions: ['FW'],
+    born: '1997-12-23',
     shirtNumbers: [9, 8],
     clubs: [
       {clubId: 'benfica', from: 2016, to: 2019},
@@ -5959,6 +6539,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Júlio César Soares de Espíndola',
     nationality: ['Brazil'],
     positions: ['GK'],
+    born: '1979-09-03',
     shirtNumbers: [1, 12],
     clubs: [
       {clubId: 'flamengo', from: 1997, to: 2005},
@@ -5978,6 +6559,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ferdi Kadıoğlu',
     nationality: ['Turkey'],
     positions: ['DF', 'MF'],
+    born: '1999-10-07',
     shirtNumbers: [3, 20],
     clubs: [
       {clubId: 'fenerbahce', from: 2018, to: 2024},
@@ -5991,6 +6573,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Shinji Kagawa',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1989-03-17',
     shirtNumbers: [23, 26],
     clubs: [
       {clubId: 'dortmund', from: 2010, to: 2012},
@@ -6008,6 +6591,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Oliver Kahn',
     nationality: ['Germany'],
     positions: ['GK'],
+    born: '1969-06-15',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'bayern', from: 1994, to: 2008},
@@ -6023,6 +6607,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kaká',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1982-04-22',
     shirtNumbers: [22, 8, 10],
     clubs: [
       {clubId: 'ac-milan', from: 2003, to: 2009},
@@ -6042,6 +6627,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Daichi Kamada',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1996-08-05',
     shirtNumbers: [15, 20],
     clubs: [
       {clubId: 'eintracht-frankfurt', from: 2017, to: 2023},
@@ -6058,6 +6644,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Harry Kane',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1993-07-28',
     shirtNumbers: [9, 10],
     clubs: [
       {clubId: 'tottenham', from: 2011, to: 2023},
@@ -6077,6 +6664,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohamed Kanno',
     nationality: ['Saudi Arabia'],
     positions: ['MF'],
+    born: '1994-09-22',
     shirtNumbers: [28, 12],
     clubs: [
       {clubId: 'al-hilal', from: 2013, to: 2024},
@@ -6090,6 +6678,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: "N'Golo Kanté",
     nationality: ['France'],
     positions: ['MF'],
+    born: '1991-03-29',
     shirtNumbers: [7, 13],
     clubs: [
       {clubId: 'leicester', from: 2015, to: 2016},
@@ -6109,6 +6698,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Moise Kean',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '2000-02-28',
     shirtNumbers: [20, 18],
     clubs: [
       {clubId: 'juventus', from: 2016, to: 2019},
@@ -6127,6 +6717,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robbie Keane',
     nationality: ['Ireland'],
     positions: ['FW'],
+    born: '1980-07-08',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'wolves', from: 1997, to: 1999},
@@ -6147,6 +6738,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Roy Keane',
     nationality: ['Ireland'],
     positions: ['MF'],
+    born: '1971-08-10',
     shirtNumbers: [16],
     clubs: [
       {clubId: 'nottingham-forest', from: 1990, to: 1993},
@@ -6164,6 +6756,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thilo Kehrer',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1996-09-21',
     shirtNumbers: [5, 24],
     clubs: [
       {clubId: 'schalke', from: 2015, to: 2018},
@@ -6181,6 +6774,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Seydou Keita',
     nationality: ['Mali'],
     positions: ['MF'],
+    born: '1980-01-16',
     shirtNumbers: [15, 21],
     clubs: [
       {clubId: 'marseille', from: 2000, to: 2002},
@@ -6202,6 +6796,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Kempes',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1954-07-15',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'river-plate', from: 1974, to: 1976},
@@ -6218,6 +6813,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Milos Kerkez',
     nationality: ['Hungary'],
     positions: ['DF'],
+    born: '2003-11-07',
     shirtNumbers: [6, 3],
     clubs: [
       {clubId: 'az-alkmaar', from: 2022, to: 2023},
@@ -6232,6 +6828,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Franck Kessié',
     nationality: ['Ivory Coast'],
     positions: ['MF'],
+    born: '1996-12-19',
     shirtNumbers: [79, 19],
     clubs: [
       {clubId: 'atalanta', from: 2015, to: 2017},
@@ -6249,6 +6846,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sami Khedira',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1987-04-04',
     shirtNumbers: [6, 28],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2007, to: 2010},
@@ -6268,6 +6866,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Boualem Khoukhi',
     nationality: ['Qatar', 'Algeria'],
     positions: ['DF', 'MF'],
+    born: '1990-07-09',
     shirtNumbers: [15, 5],
     clubs: [
       {clubId: 'al-sadd', from: 2015},
@@ -6280,6 +6879,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Abdukodir Khusanov',
     nationality: ['Uzbekistan'],
     positions: ['DF'],
+    born: '2004-02-29',
     shirtNumbers: [4, 24],
     clubs: [
       {clubId: 'lens', from: 2023, to: 2025},
@@ -6293,6 +6893,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kim Min-jae',
     nationality: ['South Korea'],
     positions: ['DF'],
+    born: '1996-11-15',
     shirtNumbers: [3, 4],
     clubs: [
       {clubId: 'napoli', from: 2022, to: 2023},
@@ -6309,6 +6910,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Joshua Kimmich',
     nationality: ['Germany'],
     positions: ['MF', 'DF'],
+    born: '1995-02-08',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'rb-leipzig', from: 2013, to: 2015},
@@ -6325,6 +6927,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jakub Kiwior',
     nationality: ['Poland'],
     positions: ['DF'],
+    born: '2000-02-15',
     shirtNumbers: [15, 4],
     clubs: [
       {clubId: 'spezia', from: 2021, to: 2023},
@@ -6340,6 +6943,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Simon Kjær',
     nationality: ['Denmark'],
     positions: ['DF'],
+    born: '1989-03-26',
     shirtNumbers: [24, 4],
     clubs: [
       {clubId: 'wolfsburg', from: 2010, to: 2013},
@@ -6360,6 +6964,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jürgen Klinsmann',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1964-07-30',
     shirtNumbers: [18, 9],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 1984, to: 1989},
@@ -6383,6 +6988,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Miroslav Klose',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1978-06-09',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'kaiserslautern', from: 1999, to: 2004},
@@ -6403,6 +7009,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Patrick Kluivert',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1976-07-01',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'ajax', from: 1994, to: 1997},
@@ -6418,10 +7025,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Kobel, Gregor',
+    name: 'Gregor Kobel',
+    nationality: ['Switzerland'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    born: '1997-12-06',
+    clubs: [
+      {clubId: 'hoffenheim', from: 2016, to: 2019},
+      {clubId: 'augsburg', from: 2018, to: 2019, loan: true},
+      {clubId: 'vfb-stuttgart', from: 2019, to: 2021},
+      {clubId: 'dortmund', from: 2021},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Koch, Robin',
     name: 'Robin Koch',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1996-07-17',
     shirtNumbers: [4, 25],
     clubs: [
       {clubId: 'freiburg', from: 2017, to: 2020},
@@ -6436,6 +7060,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Orkun Kökçü',
     nationality: ['Turkey'],
     positions: ['MF'],
+    born: '2000-12-29',
     shirtNumbers: [10, 22],
     clubs: [
       {clubId: 'feyenoord', from: 2018, to: 2023},
@@ -6450,6 +7075,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Jorge Resurrección Merodio',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1992-01-08',
     shirtNumbers: [6, 8],
     clubs: [
       {clubId: 'atletico-madrid', from: 2009},
@@ -6465,6 +7091,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Aleksandar Kolarov',
     nationality: ['Serbia'],
     positions: ['DF'],
+    born: '1985-11-10',
     shirtNumbers: [11, 13],
     clubs: [
       {clubId: 'lazio', from: 2007, to: 2010},
@@ -6482,6 +7109,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Randal Kolo Muani',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1998-12-05',
     shirtNumbers: [23, 9],
     clubs: [
       {clubId: 'nantes', from: 2018, to: 2022},
@@ -6500,6 +7128,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Vincent Kompany',
     nationality: ['Belgium'],
     positions: ['DF'],
+    born: '1986-04-10',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'anderlecht', from: 2003, to: 2006},
@@ -6517,6 +7146,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ibrahima Konaté',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1999-05-25',
     shirtNumbers: [5, 38],
     clubs: [
       {clubId: 'rb-leipzig', from: 2017, to: 2021},
@@ -6532,6 +7162,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ismaël Koné',
     nationality: ['Canada'],
     positions: ['MF'],
+    born: '2002-06-16',
     shirtNumbers: [8, 22],
     clubs: [
       {clubId: 'marseille', from: 2024},
@@ -6541,10 +7172,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Koopmeiners, Teun',
+    name: 'Teun Koopmeiners',
+    nationality: ['Netherlands'],
+    positions: ['MF'],
+    shirtNumbers: [7, 8],
+    born: '1998-02-28',
+    clubs: [
+      {clubId: 'az-alkmaar', from: 2017, to: 2021},
+      {clubId: 'atalanta', from: 2021, to: 2024},
+      {clubId: 'juventus', from: 2024},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Kostić, Filip',
     name: 'Filip Kostić',
     nationality: ['Serbia'],
     positions: ['DF', 'MF'],
+    born: '1992-11-01',
     shirtNumbers: [11, 17],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2015, to: 2016},
@@ -6563,6 +7212,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kalidou Koulibaly',
     nationality: ['Senegal'],
     positions: ['DF'],
+    born: '1991-06-20',
     shirtNumbers: [3, 26],
     clubs: [
       {clubId: 'genk', from: 2012, to: 2014},
@@ -6580,6 +7230,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jules Koundé',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1998-11-12',
     shirtNumbers: [23, 4],
     clubs: [
       {clubId: 'sevilla', from: 2019, to: 2022},
@@ -6596,6 +7247,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mateo Kovačić',
     nationality: ['Croatia'],
     positions: ['MF'],
+    born: '1994-05-06',
     shirtNumbers: [8, 23],
     clubs: [
       {clubId: 'inter', from: 2013, to: 2015},
@@ -6613,6 +7265,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andrej Kramarić',
     nationality: ['Croatia'],
     positions: ['FW'],
+    born: '1991-06-19',
     shirtNumbers: [9, 27],
     clubs: [
       {clubId: 'leicester', from: 2015, to: 2016},
@@ -6626,6 +7279,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Toni Kroos',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1990-01-04',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'bayern', from: 2007, to: 2014},
@@ -6644,6 +7298,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Grzegorz Krychowiak',
     nationality: ['Poland'],
     positions: ['MF'],
+    born: '1990-01-29',
     shirtNumbers: [4, 10],
     clubs: [
       {clubId: 'reims', from: 2012, to: 2014},
@@ -6662,6 +7317,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Takefusa Kubo',
     nationality: ['Japan'],
     positions: ['FW', 'MF'],
+    born: '2001-06-04',
     shirtNumbers: [14, 11],
     clubs: [
       {clubId: 'real-madrid', from: 2019, to: 2022},
@@ -6677,6 +7333,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohammed Kudus',
     nationality: ['Ghana'],
     positions: ['MF', 'FW'],
+    born: '2000-08-02',
     shirtNumbers: [20, 14],
     clubs: [
       {clubId: 'ajax', from: 2020, to: 2023},
@@ -6691,6 +7348,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dejan Kulusevski',
     nationality: ['Sweden'],
     positions: ['MF', 'FW'],
+    born: '2000-04-25',
     shirtNumbers: [21, 44],
     clubs: [
       {clubId: 'atalanta', from: 2019, to: 2020},
@@ -6708,6 +7366,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Garang Kuol',
     nationality: ['Australia'],
     positions: ['FW'],
+    born: '2004-09-15',
     shirtNumbers: [37, 29],
     clubs: [
       {clubId: 'newcastle', from: 2022},
@@ -6720,6 +7379,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dirk Kuyt',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1980-07-22',
     shirtNumbers: [18, 7],
     clubs: [
       {clubId: 'feyenoord', from: 2003, to: 2006},
@@ -6737,6 +7397,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Khvicha Kvaratskhelia',
     nationality: ['Georgia'],
     positions: ['FW'],
+    born: '2001-02-12',
     shirtNumbers: [7, 77],
     clubs: [
       {clubId: 'napoli', from: 2022, to: 2025},
@@ -6749,10 +7410,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Lacazette, Alexandre',
+    name: 'Alexandre Lacazette',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [10, 9],
+    born: '1991-05-28',
+    clubs: [
+      {clubId: 'lyon', from: 2010, to: 2017},
+      {clubId: 'arsenal', from: 2017, to: 2022},
+      {clubId: 'lyon', from: 2022, to: 2025},
+    ],
+    honours: [],
+    tags: ['legends'],
+  },
+  {
     id: 'Lahm, Philipp',
     name: 'Philipp Lahm',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1983-11-11',
     shirtNumbers: [21],
     clubs: [
       {clubId: 'bayern', from: 2002, to: 2017},
@@ -6770,6 +7447,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Konrad Laimer',
     nationality: ['Austria'],
     positions: ['MF'],
+    born: '1997-05-27',
     shirtNumbers: [24, 27],
     clubs: [
       {clubId: 'salzburg', from: 2015, to: 2017},
@@ -6786,6 +7464,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Adam Lallana',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1988-05-10',
     shirtNumbers: [20, 14],
     clubs: [
       {clubId: 'southampton', from: 2006, to: 2014},
@@ -6804,6 +7483,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Frank Lampard',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1978-06-20',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'west-ham', from: 1995, to: 2001},
@@ -6822,6 +7502,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cyle Larin',
     nationality: ['Canada'],
     positions: ['FW'],
+    born: '1995-04-17',
     shirtNumbers: [9, 17],
     clubs: [
       {clubId: 'besiktas', from: 2021, to: 2023},
@@ -6835,6 +7516,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Henrik Larsson',
     nationality: ['Sweden'],
     positions: ['FW'],
+    born: '1971-09-20',
     shirtNumbers: [7, 17],
     clubs: [
       {clubId: 'celtic', from: 1997, to: 2004},
@@ -6853,6 +7535,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Richie Laryea',
     nationality: ['Canada'],
     positions: ['DF'],
+    born: '1995-01-07',
     shirtNumbers: [22, 27],
     clubs: [
       {clubId: 'nottingham-forest', from: 2022, to: 2023},
@@ -6866,6 +7549,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robin Le Normand',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1996-11-11',
     shirtNumbers: [22, 3],
     clubs: [
       {clubId: 'real-sociedad', from: 2016, to: 2024},
@@ -6881,6 +7565,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rafael Leão',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1999-06-10',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'sporting', from: 2017, to: 2018},
@@ -6897,6 +7582,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lee Kang-in',
     nationality: ['South Korea'],
     positions: ['MF', 'FW'],
+    born: '2001-02-19',
     shirtNumbers: [19, 18],
     clubs: [
       {clubId: 'valencia', from: 2018, to: 2021},
@@ -6915,6 +7601,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Clément Lenglet',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1995-06-17',
     shirtNumbers: [15, 23],
     clubs: [
       {clubId: 'sevilla', from: 2017, to: 2018},
@@ -6933,6 +7620,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jefferson Lerma',
     nationality: ['Colombia'],
     positions: ['MF'],
+    born: '1994-10-25',
     shirtNumbers: [8, 20],
     clubs: [
       {clubId: 'bournemouth', from: 2018, to: 2023},
@@ -6946,6 +7634,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robert Lewandowski',
     nationality: ['Poland'],
     positions: ['FW'],
+    born: '1988-08-21',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'dortmund', from: 2010, to: 2014},
@@ -6967,6 +7656,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Victor Lindelöf',
     nationality: ['Sweden'],
     positions: ['DF'],
+    born: '1994-07-17',
     shirtNumbers: [2],
     clubs: [
       {clubId: 'benfica', from: 2016, to: 2017},
@@ -6983,6 +7673,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jesper Lindstrøm',
     nationality: ['Denmark'],
     positions: ['MF', 'FW'],
+    born: '2000-02-29',
     shirtNumbers: [29, 21],
     clubs: [
       {clubId: 'eintracht-frankfurt', from: 2021, to: 2023},
@@ -7000,6 +7691,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gary Lineker',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1960-11-30',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'leicester', from: 1978, to: 1985},
@@ -7016,6 +7708,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jari Litmanen',
     nationality: ['Finland'],
     positions: ['MF', 'FW'],
+    born: '1971-02-20',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'ajax', from: 1992, to: 1999},
@@ -7034,6 +7727,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dominik Livaković',
     nationality: ['Croatia'],
     positions: ['GK'],
+    born: '1995-01-09',
     shirtNumbers: [1, 40],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2015, to: 2023},
@@ -7047,6 +7741,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fredrik Ljungberg',
     nationality: ['Sweden'],
     positions: ['MF'],
+    born: '1977-04-16',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'arsenal', from: 1998, to: 2007},
@@ -7062,6 +7757,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fernando Llorente',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1985-02-26',
     shirtNumbers: [9, 18],
     clubs: [
       {clubId: 'juventus', from: 2013, to: 2015},
@@ -7077,10 +7773,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Llorente, Marcos',
+    name: 'Marcos Llorente',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    shirtNumbers: [14, 6],
+    born: '1995-01-30',
+    clubs: [
+      {clubId: 'real-madrid', from: 2015, to: 2019},
+      {clubId: 'atletico-madrid', from: 2019},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2018]},
+      {type: 'league-title', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Locadia, Jürgen',
     name: 'Jürgen Locadia',
     nationality: ['Curacao'],
     positions: ['FW'],
+    born: '1993-11-07',
     shirtNumbers: [9, 19],
     clubs: [
       {clubId: 'psv', from: 2014, to: 2018},
@@ -7092,10 +7806,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Locatelli, Manuel',
+    name: 'Manuel Locatelli',
+    nationality: ['Italy'],
+    positions: ['MF'],
+    shirtNumbers: [5, 27],
+    born: '1998-01-08',
+    clubs: [
+      {clubId: 'ac-milan', from: 2015, to: 2018},
+      {clubId: 'juventus', from: 2021},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Lookman, Ademola',
     name: 'Ademola Lookman',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '1997-10-20',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'everton', from: 2017, to: 2019},
@@ -7114,6 +7845,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dejan Lovren',
     nationality: ['Croatia'],
     positions: ['DF'],
+    born: '1989-07-05',
     shirtNumbers: [6, 5],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2006, to: 2010},
@@ -7132,6 +7864,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Anthony Lozano',
     nationality: ['Honduras'],
     positions: ['FW'],
+    born: '1993-04-25',
     shirtNumbers: [9, 19],
     clubs: [
       {clubId: 'girona', from: 2017, to: 2018},
@@ -7144,6 +7877,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hirving Lozano',
     nationality: ['Mexico'],
     positions: ['FW'],
+    born: '1995-07-30',
     shirtNumbers: [22, 11],
     clubs: [
       {clubId: 'pachuca', from: 2014, to: 2017},
@@ -7162,6 +7896,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Lucimar Ferreira da Silva',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1978-05-08',
     shirtNumbers: [3, 6],
     clubs: [
       {clubId: 'leverkusen', from: 2001, to: 2004},
@@ -7184,6 +7919,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Luiz Gustavo Dias',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1987-07-23',
     shirtNumbers: [30, 22],
     clubs: [
       {clubId: 'hoffenheim', from: 2008, to: 2011},
@@ -7204,6 +7940,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Romelu Lukaku',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '1993-05-13',
     shirtNumbers: [9, 10],
     clubs: [
       {clubId: 'anderlecht', from: 2009, to: 2011},
@@ -7226,6 +7963,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ian Maatsen',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '2002-03-10',
     shirtNumbers: [22, 3],
     clubs: [
       {clubId: 'chelsea', from: 2018, to: 2024},
@@ -7241,6 +7979,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexis Mac Allister',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1998-12-24',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'boca-juniors', from: 2019, to: 2019, loan: true},
@@ -7258,6 +7997,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'James Maddison',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1996-11-23',
     shirtNumbers: [10, 23],
     clubs: [
       {clubId: 'leicester', from: 2018, to: 2023},
@@ -7273,6 +8013,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Assim Madibo',
     nationality: ['Qatar'],
     positions: ['MF'],
+    born: '1996-10-22',
     shirtNumbers: [12, 6],
     clubs: [
       {clubId: 'al-duhail', from: 2016},
@@ -7285,6 +8026,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Riyad Mahrez',
     nationality: ['Algeria'],
     positions: ['FW'],
+    born: '1991-02-21',
     shirtNumbers: [26],
     clubs: [
       {clubId: 'leicester', from: 2014, to: 2018},
@@ -7302,6 +8044,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Maicon Douglas Sisenando',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1981-07-26',
     shirtNumbers: [13],
     clubs: [
       {clubId: 'monaco', from: 2004, to: 2006},
@@ -7321,6 +8064,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mike Maignan',
     nationality: ['France'],
     positions: ['GK'],
+    born: '1995-07-03',
     shirtNumbers: [16, 1],
     clubs: [
       {clubId: 'psg', from: 2015, to: 2015},
@@ -7337,6 +8081,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kobbie Mainoo',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2005-04-19',
     shirtNumbers: [37, 8],
     clubs: [
       {clubId: 'man-utd', from: 2023},
@@ -7349,6 +8094,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Claude Makélélé',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1973-02-18',
     shirtNumbers: [4, 6],
     clubs: [
       {clubId: 'nantes', from: 1992, to: 1997},
@@ -7368,6 +8114,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Paolo Maldini',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1968-06-26',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'ac-milan', from: 1985, to: 2009},
@@ -7383,6 +8130,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Steve Mandanda',
     nationality: ['France'],
     positions: ['GK'],
+    born: '1985-03-28',
     shirtNumbers: [1, 30],
     clubs: [
       {clubId: 'marseille', from: 2007, to: 2016},
@@ -7399,6 +8147,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mario Mandžukić',
     nationality: ['Croatia'],
     positions: ['FW'],
+    born: '1986-05-21',
     shirtNumbers: [17, 9],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2007, to: 2010},
@@ -7420,6 +8169,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sadio Mané',
     nationality: ['Senegal'],
     positions: ['FW'],
+    born: '1992-04-10',
     shirtNumbers: [10, 19],
     clubs: [
       {clubId: 'southampton', from: 2014, to: 2016},
@@ -7438,6 +8188,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eliaquim Mangala',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1991-02-13',
     shirtNumbers: [20, 4],
     clubs: [
       {clubId: 'porto', from: 2011, to: 2014},
@@ -7457,6 +8208,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Maradona',
     nationality: ['Argentina'],
     positions: ['FW', 'MF'],
+    born: '1960-10-30',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'boca-juniors', from: 1981, to: 1982},
@@ -7478,6 +8230,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Marcelo Vieira',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1988-05-12',
     shirtNumbers: [12],
     clubs: [
       {clubId: 'real-madrid', from: 2007, to: 2022},
@@ -7494,6 +8247,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Omar Marmoush',
     nationality: ['Egypt'],
     positions: ['FW'],
+    born: '1999-02-07',
     shirtNumbers: [7, 14],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2021, to: 2023},
@@ -7509,6 +8263,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Marcos Aoás Corrêa',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1994-05-14',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'roma', from: 2012, to: 2013},
@@ -7525,6 +8280,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gabriel Martinelli',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2001-06-18',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'arsenal', from: 2019},
@@ -7539,6 +8295,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Emiliano Martínez',
     nationality: ['Argentina'],
     positions: ['GK'],
+    born: '1992-09-02',
     shirtNumbers: [23],
     clubs: [
       {clubId: 'arsenal', from: 2010, to: 2020},
@@ -7554,6 +8311,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Javi Martínez',
     nationality: ['Spain'],
     positions: ['MF', 'DF'],
+    born: '1988-09-02',
     shirtNumbers: [8, 6],
     clubs: [
       {clubId: 'athletic-bilbao', from: 2006, to: 2012},
@@ -7572,6 +8330,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lautaro Martínez',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1997-08-22',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'inter', from: 2018},
@@ -7587,6 +8346,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gelson Martins',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1995-05-11',
     shirtNumbers: [17, 77],
     clubs: [
       {clubId: 'sporting', from: 2016, to: 2018},
@@ -7600,6 +8360,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Javier Mascherano',
     nationality: ['Argentina'],
     positions: ['MF', 'DF'],
+    born: '1984-06-08',
     shirtNumbers: [14, 20],
     clubs: [
       {clubId: 'river-plate', from: 2003, to: 2005},
@@ -7619,6 +8380,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Franco Mastantuono',
     nationality: ['Argentina'],
     positions: ['MF', 'FW'],
+    born: '2007-08-14',
     shirtNumbers: [30, 7],
     clubs: [
       {clubId: 'river-plate', from: 2024, to: 2025},
@@ -7632,6 +8394,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Mata',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1988-04-28',
     shirtNumbers: [8, 10],
     clubs: [
       {clubId: 'valencia', from: 2007, to: 2011},
@@ -7652,6 +8415,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marco Materazzi',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1973-08-19',
     shirtNumbers: [23],
     clubs: [
       {clubId: 'everton', from: 1998, to: 1999},
@@ -7665,10 +8429,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Mateta, Jean-Philippe',
+    name: 'Jean-Philippe Mateta',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [14],
+    born: '1997-06-28',
+    clubs: [
+      {clubId: 'lyon', from: 2016, to: 2018},
+      {clubId: 'mainz', from: 2018, to: 2021},
+      {clubId: 'crystal-palace', from: 2021},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Matić, Nemanja',
     name: 'Nemanja Matić',
     nationality: ['Serbia'],
     positions: ['MF'],
+    born: '1988-08-01',
     shirtNumbers: [31, 21],
     clubs: [
       {clubId: 'chelsea', from: 2009, to: 2011},
@@ -7689,6 +8469,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lothar Matthäus',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1961-03-21',
     shirtNumbers: [8, 10],
     clubs: [
       {clubId: 'monchengladbach', from: 1979, to: 1984},
@@ -7709,6 +8490,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Neal Maupay',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1996-08-14',
     shirtNumbers: [9, 20],
     clubs: [
       {clubId: 'everton', from: 2022, to: 2024},
@@ -7723,6 +8505,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Maxwell Scherrer Cabelino Andrade',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1981-08-27',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'ajax', from: 2001, to: 2006},
@@ -7741,6 +8524,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Noussair Mazraoui',
     nationality: ['Morocco'],
     positions: ['DF'],
+    born: '1997-11-14',
     shirtNumbers: [12, 3],
     clubs: [
       {clubId: 'ajax', from: 2018, to: 2022},
@@ -7757,6 +8541,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kylian Mbappé',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1998-12-20',
     shirtNumbers: [7, 9, 10],
     clubs: [
       {clubId: 'monaco', from: 2015, to: 2017},
@@ -7778,6 +8563,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Chancel Mbemba',
     nationality: ['DR Congo'],
     positions: ['DF'],
+    born: '1994-08-08',
     shirtNumbers: [5, 19],
     clubs: [
       {clubId: 'anderlecht', from: 2013, to: 2015},
@@ -7796,6 +8582,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bryan Mbeumo',
     nationality: ['Cameroon'],
     positions: ['FW'],
+    born: '1999-08-07',
     shirtNumbers: [19, 30],
     clubs: [
       {clubId: 'brentford', from: 2019, to: 2025},
@@ -7809,6 +8596,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'John McGinn',
     nationality: ['Scotland'],
     positions: ['MF'],
+    born: '1994-10-18',
     shirtNumbers: [7, 8],
     clubs: [
       {clubId: 'celtic', from: 2015, to: 2016},
@@ -7822,6 +8610,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Weston McKennie',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '1998-08-28',
     shirtNumbers: [16, 8],
     clubs: [
       {clubId: 'schalke', from: 2016, to: 2020},
@@ -7836,6 +8625,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dwight McNeil',
     nationality: ['England'],
     positions: ['MF', 'FW'],
+    born: '1999-11-22',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'burnley', from: 2018, to: 2022},
@@ -7849,6 +8639,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Scott McTominay',
     nationality: ['Scotland'],
     positions: ['MF'],
+    born: '1996-12-08',
     shirtNumbers: [8, 39],
     clubs: [
       {clubId: 'man-utd', from: 2017, to: 2024},
@@ -7864,6 +8655,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gary Medel',
     nationality: ['Chile'],
     positions: ['DF', 'MF'],
+    born: '1987-08-03',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'boca-juniors', from: 2009, to: 2011},
@@ -7881,6 +8673,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raúl Meireles',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1983-03-17',
     shirtNumbers: [16, 4],
     clubs: [
       {clubId: 'porto', from: 2004, to: 2010},
@@ -7899,6 +8692,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hannibal Mejbri',
     nationality: ['Tunisia'],
     positions: ['MF'],
+    born: '2003-01-21',
     shirtNumbers: [46, 8],
     clubs: [
       {clubId: 'man-utd', from: 2019, to: 2024},
@@ -7912,6 +8706,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nuno Mendes',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '2002-06-19',
     shirtNumbers: [25, 15],
     clubs: [
       {clubId: 'sporting', from: 2019, to: 2021},
@@ -7928,6 +8723,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Benjamin Mendy',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1994-07-17',
     shirtNumbers: [22],
     clubs: [
       {clubId: 'marseille', from: 2013, to: 2016},
@@ -7945,6 +8741,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Édouard Mendy',
     nationality: ['Senegal'],
     positions: ['GK'],
+    born: '1992-03-01',
     shirtNumbers: [16, 1],
     clubs: [
       {clubId: 'rennes', from: 2019, to: 2020},
@@ -7961,6 +8758,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mikel Merino',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1996-06-22',
     shirtNumbers: [23, 8],
     clubs: [
       {clubId: 'newcastle', from: 2017, to: 2018},
@@ -7978,6 +8776,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dries Mertens',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '1987-05-06',
     shirtNumbers: [14, 10],
     clubs: [
       {clubId: 'psv', from: 2011, to: 2013},
@@ -7994,6 +8793,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lionel Messi',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1987-06-24',
     shirtNumbers: [10, 30],
     clubs: [
       {clubId: 'barcelona', from: 2004, to: 2021},
@@ -8018,6 +8818,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thomas Meunier',
     nationality: ['Belgium'],
     positions: ['DF'],
+    born: '1991-09-12',
     shirtNumbers: [24, 12],
     clubs: [
       {clubId: 'club-brugge', from: 2011, to: 2016},
@@ -8035,6 +8836,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Simon Mignolet',
     nationality: ['Belgium'],
     positions: ['GK'],
+    born: '1988-03-06',
     shirtNumbers: [22, 1],
     clubs: [
       {clubId: 'sunderland', from: 2010, to: 2013},
@@ -8052,6 +8854,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Siniša Mihajlović',
     nationality: ['Serbia'],
     positions: ['DF'],
+    born: '1969-02-20',
     shirtNumbers: [11, 21],
     clubs: [
       {clubId: 'roma', from: 1992, to: 1994},
@@ -8069,6 +8872,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Arkadiusz Milik',
     nationality: ['Poland'],
     positions: ['FW'],
+    born: '1994-02-28',
     shirtNumbers: [99, 14],
     clubs: [
       {clubId: 'leverkusen', from: 2013, to: 2014},
@@ -8086,6 +8890,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sergej Milinković-Savić',
     nationality: ['Serbia'],
     positions: ['MF'],
+    born: '1995-02-27',
     shirtNumbers: [21, 20],
     clubs: [
       {clubId: 'genk', from: 2014, to: 2015},
@@ -8102,6 +8907,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Éder Militão',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1998-01-18',
     shirtNumbers: [3, 24],
     clubs: [
       {clubId: 'porto', from: 2018, to: 2019},
@@ -8118,6 +8924,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Milito',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1979-06-12',
     shirtNumbers: [22],
     clubs: [
       {clubId: 'inter', from: 2009, to: 2014},
@@ -8133,6 +8940,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'James Milner',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1986-01-04',
     shirtNumbers: [7, 8],
     clubs: [
       {clubId: 'leeds', from: 2002, to: 2004},
@@ -8153,6 +8961,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Takumi Minamino',
     nationality: ['Japan'],
     positions: ['MF', 'FW'],
+    born: '1995-01-16',
     shirtNumbers: [18, 10],
     clubs: [
       {clubId: 'liverpool', from: 2020, to: 2022},
@@ -8166,6 +8975,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Óscar Mingueza',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1999-05-13',
     shirtNumbers: [24, 3],
     clubs: [
       {clubId: 'barcelona', from: 2020, to: 2022},
@@ -8180,6 +8990,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kaoru Mitoma',
     nationality: ['Japan'],
     positions: ['FW', 'MF'],
+    born: '1997-05-20',
     shirtNumbers: [22, 7],
     clubs: [
       {clubId: 'brighton', from: 2021},
@@ -8192,6 +9003,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Aleksandar Mitrović',
     nationality: ['Serbia'],
     positions: ['FW'],
+    born: '1994-09-16',
     shirtNumbers: [9, 22],
     clubs: [
       {clubId: 'anderlecht', from: 2013, to: 2015},
@@ -8209,6 +9021,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Maximilian Mittelstädt',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1997-03-18',
     shirtNumbers: [18, 3],
     clubs: [
       {clubId: 'hertha-berlin', from: 2015, to: 2023},
@@ -8222,6 +9035,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Henrikh Mkhitaryan',
     nationality: ['Armenia'],
     positions: ['MF'],
+    born: '1989-01-21',
     shirtNumbers: [22, 77],
     clubs: [
       {clubId: 'shakhtar', from: 2010, to: 2013},
@@ -8242,6 +9056,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Luka Modrić',
     nationality: ['Croatia'],
     positions: ['MF'],
+    born: '1985-09-09',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2003, to: 2008},
@@ -8261,6 +9076,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mostafa Mohamed',
     nationality: ['Egypt'],
     positions: ['FW'],
+    born: '1997-11-28',
     shirtNumbers: [9, 99],
     clubs: [
       {clubId: 'galatasaray', from: 2021, to: 2022},
@@ -8274,6 +9090,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nahuel Molina',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1998-04-06',
     shirtNumbers: [16, 26],
     clubs: [
       {clubId: 'udinese', from: 2020, to: 2022},
@@ -8289,6 +9106,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nacho Monreal',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1986-02-26',
     shirtNumbers: [18],
     clubs: [
       {clubId: 'arsenal', from: 2013, to: 2019},
@@ -8302,6 +9120,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'César Montes',
     nationality: ['Mexico'],
     positions: ['DF'],
+    born: '1997-02-24',
     shirtNumbers: [3, 15],
     clubs: [
       {clubId: 'monterrey', from: 2016, to: 2022},
@@ -8314,6 +9133,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gonzalo Montiel',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1997-01-01',
     shirtNumbers: [4, 2],
     clubs: [
       {clubId: 'river-plate', from: 2016, to: 2021},
@@ -8330,6 +9150,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Álvaro Morata',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1992-10-23',
     shirtNumbers: [7, 9],
     clubs: [
       {clubId: 'real-madrid', from: 2010, to: 2014},
@@ -8355,6 +9176,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gerard Moreno',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1992-04-07',
     shirtNumbers: [7, 9],
     clubs: [
       {clubId: 'real-mallorca', from: 2011, to: 2013},
@@ -8370,6 +9192,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wes Morgan',
     nationality: ['Jamaica'],
     positions: ['DF'],
+    born: '1984-01-21',
     shirtNumbers: [5, 26],
     clubs: [
       {clubId: 'nottingham-forest', from: 2003, to: 2012},
@@ -8385,6 +9208,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fernando Morientes',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1976-04-05',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'real-madrid', from: 1997, to: 2005},
@@ -8403,6 +9227,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hidemasa Morita',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1995-05-10',
     shirtNumbers: [5, 25],
     clubs: [
       {clubId: 'sporting', from: 2022},
@@ -8417,6 +9242,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ravel Morrison',
     nationality: ['Jamaica', 'England'],
     positions: ['MF'],
+    born: '1993-02-02',
     shirtNumbers: [7, 21],
     clubs: [
       {clubId: 'man-utd', from: 2010, to: 2012},
@@ -8430,6 +9256,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thiago Motta',
     nationality: ['Italy', 'Brazil'],
     positions: ['MF'],
+    born: '1982-08-28',
     shirtNumbers: [8, 5],
     clubs: [
       {clubId: 'barcelona', from: 2001, to: 2007},
@@ -8449,6 +9276,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'João Moutinho',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1986-09-08',
     shirtNumbers: [8, 28],
     clubs: [
       {clubId: 'sporting', from: 2004, to: 2010},
@@ -8468,6 +9296,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mykhailo Mudryk',
     nationality: ['Ukraine'],
     positions: ['FW'],
+    born: '2001-01-05',
     shirtNumbers: [10, 15],
     clubs: [
       {clubId: 'shakhtar', from: 2018, to: 2023},
@@ -8481,6 +9310,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nordi Mukiele',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1997-11-01',
     shirtNumbers: [26, 22],
     clubs: [
       {clubId: 'montpellier', from: 2017, to: 2018},
@@ -8499,6 +9329,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thomas Müller',
     nationality: ['Germany'],
     positions: ['FW', 'MF'],
+    born: '1989-09-13',
     shirtNumbers: [25],
     clubs: [
       {clubId: 'bayern', from: 2008, to: 2025},
@@ -8515,6 +9346,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Daniel Muñoz',
     nationality: ['Colombia'],
     positions: ['DF'],
+    born: '1996-05-26',
     shirtNumbers: [12, 2],
     clubs: [
       {clubId: 'genk', from: 2020, to: 2024},
@@ -8528,6 +9360,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michael Amir Murillo',
     nationality: ['Panama'],
     positions: ['DF'],
+    born: '1996-02-11',
     shirtNumbers: [4, 12],
     clubs: [
       {clubId: 'anderlecht', from: 2019, to: 2023},
@@ -8541,6 +9374,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ahmed Musa',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '1992-10-14',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'leicester', from: 2016, to: 2018},
@@ -8554,6 +9388,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yunus Musah',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '2002-11-29',
     shirtNumbers: [6, 80],
     clubs: [
       {clubId: 'valencia', from: 2019, to: 2023},
@@ -8568,6 +9403,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jamal Musiala',
     nationality: ['Germany'],
     positions: ['MF', 'FW'],
+    born: '2003-02-26',
     shirtNumbers: [10, 42],
     clubs: [
       {clubId: 'bayern', from: 2020},
@@ -8581,6 +9417,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Shkodran Mustafi',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1992-04-17',
     shirtNumbers: [20, 2],
     clubs: [
       {clubId: 'everton', from: 2009, to: 2012},
@@ -8599,6 +9436,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Steven N\'Zonzi',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1988-12-15',
     shirtNumbers: [15, 42],
     clubs: [
       {clubId: 'blackburn', from: 2009, to: 2012},
@@ -8617,6 +9455,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Radja Nainggolan',
     nationality: ['Belgium'],
     positions: ['MF'],
+    born: '1988-05-04',
     shirtNumbers: [4, 14],
     clubs: [
       {clubId: 'cagliari', from: 2010, to: 2014},
@@ -8631,6 +9470,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andy Nájar',
     nationality: ['Honduras'],
     positions: ['DF', 'MF'],
+    born: '1993-03-16',
     shirtNumbers: [26, 14],
     clubs: [
       {clubId: 'anderlecht', from: 2013, to: 2019},
@@ -8645,6 +9485,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nahitan Nández',
     nationality: ['Uruguay'],
     positions: ['MF'],
+    born: '1995-12-28',
     shirtNumbers: [36, 18],
     clubs: [
       {clubId: 'boca-juniors', from: 2016, to: 2019},
@@ -8660,6 +9501,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Luís Nani',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1986-11-17',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'sporting', from: 2005, to: 2007},
@@ -8681,6 +9523,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Samir Nasri',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1987-06-26',
     shirtNumbers: [8, 10],
     clubs: [
       {clubId: 'marseille', from: 2004, to: 2008},
@@ -8699,6 +9542,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jesús Navas',
     nationality: ['Spain'],
     positions: ['DF', 'FW'],
+    born: '1985-11-21',
     shirtNumbers: [16, 21],
     clubs: [
       {clubId: 'sevilla', from: 2003, to: 2013},
@@ -8718,6 +9562,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Keylor Navas',
     nationality: ['Costa Rica'],
     positions: ['GK'],
+    born: '1986-12-15',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'real-madrid', from: 2014, to: 2019},
@@ -8736,6 +9581,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Iliman Ndiaye',
     nationality: ['Senegal'],
     positions: ['FW', 'MF'],
+    born: '2000-03-06',
     shirtNumbers: [10, 20],
     clubs: [
       {clubId: 'marseille', from: 2023, to: 2024},
@@ -8749,6 +9595,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wilfred Ndidi',
     nationality: ['Nigeria'],
     positions: ['MF'],
+    born: '1996-12-16',
     shirtNumbers: [25, 6],
     clubs: [
       {clubId: 'genk', from: 2015, to: 2017},
@@ -8763,6 +9610,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dan Ndoye',
     nationality: ['Switzerland'],
     positions: ['FW'],
+    born: '2000-10-25',
     shirtNumbers: [11, 20],
     clubs: [
       {clubId: 'nice', from: 2020, to: 2021},
@@ -8778,6 +9626,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pavel Nedvěd',
     nationality: ['Czech Republic'],
     positions: ['MF'],
+    born: '1972-08-30',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'lazio', from: 1996, to: 2001},
@@ -8795,6 +9644,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alessandro Nesta',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1976-03-19',
     shirtNumbers: [13],
     clubs: [
       {clubId: 'lazio', from: 1993, to: 2002},
@@ -8812,6 +9662,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pedro Neto',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '2000-03-09',
     shirtNumbers: [7, 20],
     clubs: [
       {clubId: 'lazio', from: 2017, to: 2019},
@@ -8828,6 +9679,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Manuel Neuer',
     nationality: ['Germany'],
     positions: ['GK'],
+    born: '1986-03-27',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'schalke', from: 2006, to: 2011},
@@ -8844,6 +9696,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'João Neves',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '2004-09-27',
     shirtNumbers: [87, 27],
     clubs: [
       {clubId: 'benfica', from: 2022, to: 2024},
@@ -8860,6 +9713,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rúben Neves',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1997-03-13',
     shirtNumbers: [8, 18],
     clubs: [
       {clubId: 'porto', from: 2014, to: 2017},
@@ -8874,6 +9728,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gary Neville',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1975-02-18',
     shirtNumbers: [2],
     clubs: [
       {clubId: 'man-utd', from: 1992, to: 2011},
@@ -8889,6 +9744,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Neymar',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1992-02-05',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'santos', from: 2009, to: 2013},
@@ -8907,6 +9763,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christopher Nkunku',
     nationality: ['France'],
     positions: ['FW', 'MF'],
+    born: '1997-11-14',
     shirtNumbers: [18, 45],
     clubs: [
       {clubId: 'psg', from: 2015, to: 2019},
@@ -8925,6 +9782,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Manuel Agudo Durán',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1986-10-15',
     shirtNumbers: [9, 10],
     clubs: [
       {clubId: 'barcelona', from: 2010, to: 2011},
@@ -8942,6 +9800,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matheus Nunes',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1998-08-27',
     shirtNumbers: [27, 17],
     clubs: [
       {clubId: 'sporting', from: 2019, to: 2022},
@@ -8958,6 +9817,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Darwin Núñez',
     nationality: ['Uruguay'],
     positions: ['FW'],
+    born: '1999-06-24',
     shirtNumbers: [9, 27],
     clubs: [
       {clubId: 'benfica', from: 2020, to: 2022},
@@ -8972,6 +9832,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antonio Nusa',
     nationality: ['Norway'],
     positions: ['FW'],
+    born: '2005-04-17',
     shirtNumbers: [24, 20],
     clubs: [
       {clubId: 'club-brugge', from: 2021, to: 2024},
@@ -8985,6 +9846,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ethan Nwaneri',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2007-03-21',
     shirtNumbers: [53, 22],
     clubs: [
       {clubId: 'arsenal', from: 2022},
@@ -8995,10 +9857,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Oblak, Jan',
+    name: 'Jan Oblak',
+    nationality: ['Slovenia'],
+    positions: ['GK'],
+    shirtNumbers: [13, 1],
+    born: '1993-01-07',
+    clubs: [
+      {clubId: 'benfica', from: 2010, to: 2014},
+      {clubId: 'atletico-madrid', from: 2014},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2014, 2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Ochoa, Guillermo',
     name: 'Guillermo Ochoa',
     nationality: ['Mexico'],
     positions: ['GK'],
+    born: '1985-07-13',
     shirtNumbers: [13, 1],
     clubs: [
       {clubId: 'club-america', from: 2004, to: 2011},
@@ -9013,6 +9892,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Martin Ødegaard',
     nationality: ['Norway'],
     positions: ['MF'],
+    born: '1998-12-17',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'real-madrid', from: 2015, to: 2021},
@@ -9028,6 +9908,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Oh Hyeon-gyu',
     nationality: ['South Korea'],
     positions: ['FW'],
+    born: '2001-04-12',
     shirtNumbers: [9, 38],
     clubs: [
       {clubId: 'celtic', from: 2023, to: 2025},
@@ -9043,6 +9924,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jay-Jay Okocha',
     nationality: ['Nigeria'],
     positions: ['MF'],
+    born: '1973-08-14',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'psg', from: 1998, to: 2002},
@@ -9053,10 +9935,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Olise, Michael',
+    name: 'Michael Olise',
+    nationality: ['France'],
+    positions: ['FW', 'MF'],
+    shirtNumbers: [17, 7],
+    born: '2001-12-12',
+    clubs: [
+      {clubId: 'crystal-palace', from: 2021, to: 2024},
+      {clubId: 'bayern', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2025, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Olmo, Dani',
     name: 'Dani Olmo',
     nationality: ['Spain'],
     positions: ['MF', 'FW'],
+    born: '1998-05-07',
     shirtNumbers: [20, 7],
     clubs: [
       {clubId: 'rb-leipzig', from: 2020, to: 2024},
@@ -9073,6 +9972,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Amadou Onana',
     nationality: ['Belgium'],
     positions: ['MF'],
+    born: '2001-08-16',
     shirtNumbers: [24, 8],
     clubs: [
       {clubId: 'lille', from: 2021, to: 2022},
@@ -9087,6 +9987,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'André Onana',
     nationality: ['Cameroon'],
     positions: ['GK'],
+    born: '1996-04-02',
     shirtNumbers: [24, 1],
     clubs: [
       {clubId: 'ajax', from: 2016, to: 2022},
@@ -9104,6 +10005,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Loïs Openda',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '2000-02-16',
     shirtNumbers: [17, 9],
     clubs: [
       {clubId: 'club-brugge', from: 2018, to: 2022},
@@ -9119,6 +10021,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Willi Orbán',
     nationality: ['Hungary'],
     positions: ['DF'],
+    born: '1992-11-03',
     shirtNumbers: [4, 5],
     clubs: [
       {clubId: 'rb-leipzig', from: 2015},
@@ -9131,6 +10034,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Divock Origi',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '1995-04-18',
     shirtNumbers: [27, 14],
     clubs: [
       {clubId: 'lille', from: 2010, to: 2015},
@@ -9149,6 +10053,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Stefan Ortega',
     nationality: ['Germany'],
     positions: ['GK'],
+    born: '1992-11-06',
     shirtNumbers: [18],
     clubs: [
       {clubId: 'man-city', from: 2022},
@@ -9164,6 +10069,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Oscar dos Santos Emboaba Júnior',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1991-09-09',
     shirtNumbers: [8, 11],
     clubs: [
       {clubId: 'internacional', from: 2010, to: 2012},
@@ -9180,6 +10086,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Victor Osimhen',
     nationality: ['Nigeria'],
     positions: ['FW'],
+    born: '1998-12-29',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'lille', from: 2019, to: 2020},
@@ -9196,6 +10103,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Ospina',
     nationality: ['Colombia'],
     positions: ['GK'],
+    born: '1988-08-31',
     shirtNumbers: [1, 25],
     clubs: [
       {clubId: 'nice', from: 2008, to: 2014},
@@ -9211,6 +10119,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolás Otamendi',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1988-02-12',
     shirtNumbers: [19],
     clubs: [
       {clubId: 'porto', from: 2010, to: 2014},
@@ -9229,6 +10138,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Azzedine Ounahi',
     nationality: ['Morocco'],
     positions: ['MF'],
+    born: '2000-04-19',
     shirtNumbers: [8, 18],
     clubs: [
       {clubId: 'marseille', from: 2023, to: 2025},
@@ -9241,6 +10151,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marc Overmars',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1973-03-29',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'ajax', from: 1992, to: 1997},
@@ -9258,6 +10169,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Michael Owen',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1979-12-14',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'liverpool', from: 1996, to: 2004},
@@ -9275,6 +10187,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alex Oxlade-Chamberlain',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1993-08-15',
     shirtNumbers: [15, 35],
     clubs: [
       {clubId: 'southampton', from: 2010, to: 2011},
@@ -9293,6 +10206,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mikel Oyarzabal',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1997-04-21',
     shirtNumbers: [10, 21],
     clubs: [
       {clubId: 'real-sociedad', from: 2015},
@@ -9307,6 +10221,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mesut Özil',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1988-10-15',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'schalke', from: 2006, to: 2008},
@@ -9322,10 +10237,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Pacho, Willian',
+    name: 'Willian Pacho',
+    nationality: ['Ecuador'],
+    positions: ['DF'],
+    shirtNumbers: [51, 5],
+    born: '2001-10-16',
+    clubs: [
+      {clubId: 'eintracht-frankfurt', from: 2023, to: 2024},
+      {clubId: 'psg', from: 2024},
+    ],
+    honours: [
+      {type: 'champions-league', count: 2, years: [2025, 2026]},
+      {type: 'league-title', count: 2, years: [2025, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Palma, Luis',
     name: 'Luis Palma',
     nationality: ['Honduras'],
     positions: ['FW', 'MF'],
+    born: '2000-01-17',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'celtic', from: 2023, to: 2025},
@@ -9340,6 +10273,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cole Palmer',
     nationality: ['England'],
     positions: ['MF'],
+    born: '2002-05-06',
     shirtNumbers: [20, 10],
     clubs: [
       {clubId: 'man-city', from: 2020, to: 2023},
@@ -9356,6 +10290,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Goran Pandev',
     nationality: ['North Macedonia'],
     positions: ['FW'],
+    born: '1983-07-27',
     shirtNumbers: [19, 27],
     clubs: [
       {clubId: 'inter', from: 2001, to: 2004},
@@ -9376,6 +10311,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jean-Pierre Papin',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1963-11-05',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'marseille', from: 1986, to: 1992},
@@ -9393,6 +10329,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lucas Paquetá',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1997-08-27',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'ac-milan', from: 2019, to: 2020},
@@ -9407,6 +10344,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leandro Paredes',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1994-06-29',
     shirtNumbers: [5, 8],
     clubs: [
       {clubId: 'boca-juniors', from: 2010, to: 2014},
@@ -9429,6 +10367,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Park Ji-sung',
     nationality: ['South Korea'],
     positions: ['MF'],
+    born: '1981-02-25',
     shirtNumbers: [13, 7],
     clubs: [
       {clubId: 'man-utd', from: 2005, to: 2012},
@@ -9445,6 +10384,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thomas Partey',
     nationality: ['Ghana'],
     positions: ['MF'],
+    born: '1993-06-13',
     shirtNumbers: [5, 18],
     clubs: [
       {clubId: 'atletico-madrid', from: 2015, to: 2020},
@@ -9459,6 +10399,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Javier Pastore',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1989-06-20',
     shirtNumbers: [27, 10],
     clubs: [
       {clubId: 'psg', from: 2011, to: 2018},
@@ -9475,6 +10416,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rui Patrício',
     nationality: ['Portugal'],
     positions: ['GK'],
+    born: '1988-02-15',
     shirtNumbers: [1, 11],
     clubs: [
       {clubId: 'sporting', from: 2006, to: 2018},
@@ -9492,6 +10434,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Benjamin Pavard',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1996-03-28',
     shirtNumbers: [5, 28],
     clubs: [
       {clubId: 'bayern', from: 2019, to: 2023},
@@ -9509,6 +10452,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Vangelis Pavlidis',
     nationality: ['Greece'],
     positions: ['FW'],
+    born: '1998-11-21',
     shirtNumbers: [9, 20],
     clubs: [
       {clubId: 'az-alkmaar', from: 2021, to: 2024},
@@ -9522,6 +10466,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Aleksandar Pavlović',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '2004-05-03',
     shirtNumbers: [45, 6],
     clubs: [
       {clubId: 'bayern', from: 2023},
@@ -9536,6 +10481,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Strahinja Pavlović',
     nationality: ['Serbia'],
     positions: ['DF'],
+    born: '2001-05-24',
     shirtNumbers: [31, 35],
     clubs: [
       {clubId: 'salzburg', from: 2020, to: 2024},
@@ -9549,6 +10495,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nico Paz',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '2004-09-08',
     shirtNumbers: [10, 14],
     clubs: [
       {clubId: 'real-madrid', from: 2022, to: 2024},
@@ -9562,6 +10509,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pedri',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '2002-11-25',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'barcelona', from: 2020},
@@ -9577,6 +10525,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Pedro Rodríguez Ledesma',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1987-07-28',
     shirtNumbers: [17, 11],
     clubs: [
       {clubId: 'barcelona', from: 2008, to: 2015},
@@ -9597,6 +10546,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pelé',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1940-10-23',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'santos', from: 1956, to: 1974},
@@ -9611,6 +10561,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Iñaki Peña',
     nationality: ['Spain'],
     positions: ['GK'],
+    born: '1999-03-02',
     shirtNumbers: [13, 1],
     clubs: [
       {clubId: 'barcelona', from: 2016},
@@ -9626,6 +10577,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Képler Laveran Lima Ferreira',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1983-02-26',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'porto', from: 2004, to: 2007},
@@ -9645,6 +10597,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolas Pépé',
     nationality: ['Ivory Coast'],
     positions: ['FW'],
+    born: '1995-05-29',
     shirtNumbers: [19, 21],
     clubs: [
       {clubId: 'lille', from: 2017, to: 2019},
@@ -9659,6 +10612,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ricardo Pepi',
     nationality: ['USA'],
     positions: ['FW'],
+    born: '2003-01-09',
     shirtNumbers: [9, 16],
     clubs: [
       {clubId: 'psv', from: 2023},
@@ -9673,6 +10627,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ricardo Pereira',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1993-10-06',
     shirtNumbers: [21, 6],
     clubs: [
       {clubId: 'porto', from: 2013, to: 2018},
@@ -9688,6 +10643,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Enzo Pérez',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1986-02-22',
     shirtNumbers: [24, 8],
     clubs: [
       {clubId: 'benfica', from: 2011, to: 2014},
@@ -9704,6 +10660,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ivan Perišić',
     nationality: ['Croatia'],
     positions: ['FW', 'MF'],
+    born: '1989-02-02',
     shirtNumbers: [14, 44],
     clubs: [
       {clubId: 'club-brugge', from: 2009, to: 2011},
@@ -9725,6 +10682,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Emmanuel Petit',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1970-09-22',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'monaco', from: 1989, to: 1997},
@@ -9744,6 +10702,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jordan Pickford',
     nationality: ['England'],
     positions: ['GK'],
+    born: '1994-03-07',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'sunderland', from: 2015, to: 2017},
@@ -9757,6 +10716,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Orbelín Pineda',
     nationality: ['Mexico'],
     positions: ['MF'],
+    born: '1996-03-24',
     shirtNumbers: [10, 8],
     clubs: [
       {clubId: 'guadalajara', from: 2015, to: 2019},
@@ -9770,6 +10730,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gerard Piqué',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1987-02-02',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'man-utd', from: 2004, to: 2008},
@@ -9787,6 +10748,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robert Pires',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1973-10-29',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'marseille', from: 1998, to: 2000},
@@ -9805,6 +10767,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andrea Pirlo',
     nationality: ['Italy'],
     positions: ['MF'],
+    born: '1979-05-19',
     shirtNumbers: [21, 10],
     clubs: [
       {clubId: 'inter', from: 1998, to: 2001},
@@ -9823,6 +10786,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Łukasz Piszczek',
     nationality: ['Poland'],
     positions: ['DF'],
+    born: '1985-06-03',
     shirtNumbers: [26],
     clubs: [
       {clubId: 'hertha-berlin', from: 2004, to: 2010},
@@ -9838,6 +10802,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Claudio Pizarro',
     nationality: ['Peru'],
     positions: ['FW'],
+    born: '1978-10-03',
     shirtNumbers: [14, 39],
     clubs: [
       {clubId: 'werder-bremen', from: 1999, to: 2001},
@@ -9859,6 +10824,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Miralem Pjanić',
     nationality: ['Bosnia and Herzegovina'],
     positions: ['MF'],
+    born: '1990-04-02',
     shirtNumbers: [5, 8],
     clubs: [
       {clubId: 'metz', from: 2007, to: 2008},
@@ -9878,6 +10844,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gonzalo Plata',
     nationality: ['Ecuador'],
     positions: ['FW'],
+    born: '2000-11-01',
     shirtNumbers: [19, 11],
     clubs: [
       {clubId: 'sporting', from: 2019, to: 2022},
@@ -9892,6 +10859,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lukas Podolski',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1985-06-04',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'bayern', from: 2006, to: 2009},
@@ -9910,6 +10878,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Paul Pogba',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1993-03-15',
     shirtNumbers: [6, 10],
     clubs: [
       {clubId: 'man-utd', from: 2011, to: 2012},
@@ -9926,10 +10895,45 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Politano, Matteo',
+    name: 'Matteo Politano',
+    nationality: ['Italy'],
+    positions: ['FW'],
+    shirtNumbers: [21],
+    born: '1993-08-03',
+    clubs: [
+      {clubId: 'inter', from: 2018, to: 2020},
+      {clubId: 'napoli', from: 2020},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2023, 2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Porro, Pedro',
+    name: 'Pedro Porro',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [23],
+    born: '1999-09-13',
+    clubs: [
+      {clubId: 'man-city', from: 2019, to: 2022},
+      {clubId: 'sporting', from: 2020, to: 2023},
+      {clubId: 'tottenham', from: 2023},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+      {type: 'league-title', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Preciado, Ángelo',
     name: 'Ángelo Preciado',
     nationality: ['Ecuador'],
     positions: ['DF'],
+    born: '1998-02-18',
     shirtNumbers: [17, 2],
     clubs: [
       {clubId: 'genk', from: 2021},
@@ -9942,6 +10946,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christian Pulisic',
     nationality: ['USA'],
     positions: ['FW', 'MF'],
+    born: '1998-09-18',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'dortmund', from: 2016, to: 2019},
@@ -9958,6 +10963,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Carles Puyol',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1978-04-13',
     shirtNumbers: [5],
     clubs: [
       {clubId: 'barcelona', from: 1999, to: 2014},
@@ -9975,6 +10981,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ricardo Quaresma',
     nationality: ['Portugal'],
     positions: ['FW', 'MF'],
+    born: '1983-09-26',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'barcelona', from: 2003, to: 2004},
@@ -9996,6 +11003,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Geovany Quenda',
     nationality: ['Portugal'],
     positions: ['FW', 'MF'],
+    born: '2007-04-30',
     shirtNumbers: [47],
     clubs: [
       {clubId: 'sporting', from: 2024},
@@ -10008,6 +11016,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Adrien Rabiot',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1995-04-03',
     shirtNumbers: [25, 14],
     clubs: [
       {clubId: 'psg', from: 2012, to: 2019},
@@ -10026,6 +11035,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Márcio Rafael Ferreira de Souza',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1985-09-07',
     shirtNumbers: [13],
     clubs: [
       {clubId: 'schalke', from: 2005, to: 2010},
@@ -10045,6 +11055,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ivan Rakitić',
     nationality: ['Croatia'],
     positions: ['MF'],
+    born: '1988-03-10',
     shirtNumbers: [4, 10],
     clubs: [
       {clubId: 'schalke', from: 2007, to: 2011},
@@ -10065,6 +11076,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Ramires Santos do Nascimento',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1987-03-24',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'benfica', from: 2009, to: 2010},
@@ -10082,6 +11094,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gonçalo Ramos',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '2001-06-20',
     shirtNumbers: [9, 29],
     clubs: [
       {clubId: 'benfica', from: 2020, to: 2023},
@@ -10098,6 +11111,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sergio Ramos',
     nationality: ['Spain'],
     positions: ['DF'],
+    born: '1986-03-30',
     shirtNumbers: [4, 15],
     clubs: [
       {clubId: 'sevilla', from: 2004, to: 2005},
@@ -10120,6 +11134,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Raphael Dias Belloli',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1996-12-14',
     shirtNumbers: [11, 22],
     clubs: [
       {clubId: 'leeds', from: 2020, to: 2022},
@@ -10135,6 +11150,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marcus Rashford',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1997-10-31',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'man-utd', from: 2016, to: 2025},
@@ -10152,6 +11168,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raúl',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1977-06-27',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'real-madrid', from: 1994, to: 2010},
@@ -10168,6 +11185,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Raum',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1998-04-22',
     shirtNumbers: [22, 3],
     clubs: [
       {clubId: 'hoffenheim', from: 2021, to: 2022},
@@ -10177,10 +11195,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Raya, David',
+    name: 'David Raya',
+    nationality: ['Spain'],
+    positions: ['GK'],
+    shirtNumbers: [22, 1],
+    born: '1995-09-15',
+    clubs: [
+      {clubId: 'blackburn', from: 2012, to: 2019},
+      {clubId: 'brentford', from: 2019, to: 2023},
+      {clubId: 'arsenal', from: 2023},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Rebić, Ante',
     name: 'Ante Rebić',
     nationality: ['Croatia'],
     positions: ['FW'],
+    born: '1993-09-21',
     shirtNumbers: [12, 18],
     clubs: [
       {clubId: 'fiorentina', from: 2013, to: 2016},
@@ -10200,6 +11236,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fernando Redondo',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1969-06-06',
     shirtNumbers: [6, 16],
     clubs: [
       {clubId: 'real-madrid', from: 1994, to: 2000},
@@ -10212,25 +11249,11 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
-    id: 'Reid, Bobby',
-    name: 'Bobby Reid',
-    fullName: 'Bobby De Cordova-Reid',
-    nationality: ['Jamaica'],
-    positions: ['FW', 'MF'],
-    shirtNumbers: [7, 11],
-    clubs: [
-      {clubId: 'bristol-city', from: 2015, to: 2018},
-      {clubId: 'fulham', from: 2018, to: 2024},
-      {clubId: 'leicester', from: 2024},
-    ],
-    honours: [],
-    tags: ['current-stars'],
-  },
-  {
     id: 'Reid, Winston',
     name: 'Winston Reid',
     nationality: ['New Zealand'],
     positions: ['DF'],
+    born: '1988-07-03',
     shirtNumbers: [2, 15],
     clubs: [
       {clubId: 'west-ham', from: 2010, to: 2021},
@@ -10243,6 +11266,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tijjani Reijnders',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1998-07-29',
     shirtNumbers: [14, 8],
     clubs: [
       {clubId: 'az-alkmaar', from: 2020, to: 2023},
@@ -10257,6 +11281,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pepe Reina',
     nationality: ['Spain'],
     positions: ['GK'],
+    born: '1982-08-31',
     shirtNumbers: [25, 1],
     clubs: [
       {clubId: 'barcelona', from: 2000, to: 2002},
@@ -10278,6 +11303,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marco Reus',
     nationality: ['Germany'],
     positions: ['FW', 'MF'],
+    born: '1989-05-31',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'monchengladbach', from: 2009, to: 2012},
@@ -10291,6 +11317,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'José Antonio Reyes',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1983-09-01',
     shirtNumbers: [9, 19],
     clubs: [
       {clubId: 'sevilla', from: 2000, to: 2004},
@@ -10310,6 +11337,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Giovanni Reyna',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '2002-11-13',
     shirtNumbers: [7, 21],
     clubs: [
       {clubId: 'dortmund', from: 2019, to: 2025},
@@ -10324,6 +11352,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Franck Ribéry',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1983-04-07',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'metz', from: 2004, to: 2005},
@@ -10343,6 +11372,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Declan Rice',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1999-01-14',
     shirtNumbers: [41],
     clubs: [
       {clubId: 'west-ham', from: 2017, to: 2023},
@@ -10357,6 +11387,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Chris Richards',
     nationality: ['USA'],
     positions: ['DF'],
+    born: '2000-03-28',
     shirtNumbers: [26, 4],
     clubs: [
       {clubId: 'bayern', from: 2018, to: 2022},
@@ -10370,6 +11401,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Román Riquelme',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1978-06-24',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'boca-juniors', from: 1996, to: 2002},
@@ -10387,6 +11419,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rivaldo',
     nationality: ['Brazil'],
     positions: ['FW', 'MF'],
+    born: '1972-04-19',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'barcelona', from: 1997, to: 2002},
@@ -10405,6 +11438,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Arjen Robben',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1984-01-23',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'psv', from: 2002, to: 2004},
@@ -10423,6 +11457,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Roberto Carlos',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1973-04-10',
     shirtNumbers: [3],
     clubs: [
       {clubId: 'inter', from: 1995, to: 1996},
@@ -10442,6 +11477,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andrew Robertson',
     nationality: ['Scotland'],
     positions: ['DF'],
+    born: '1994-03-11',
     shirtNumbers: [26],
     clubs: [
       {clubId: 'liverpool', from: 2017},
@@ -10458,6 +11494,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Robson de Souza',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1984-01-25',
     shirtNumbers: [7, 10],
     clubs: [
       {clubId: 'santos', from: 2002, to: 2005},
@@ -10476,6 +11513,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antonee Robinson',
     nationality: ['USA'],
     positions: ['DF'],
+    born: '1997-08-08',
     shirtNumbers: [33, 3],
     clubs: [
       {clubId: 'everton', from: 2016, to: 2019},
@@ -10489,6 +11527,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rodri',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1996-06-22',
     shirtNumbers: [16],
     clubs: [
       {clubId: 'atletico-madrid', from: 2018, to: 2019},
@@ -10507,6 +11546,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'James Rodríguez',
     nationality: ['Colombia'],
     positions: ['MF', 'FW'],
+    born: '1991-07-12',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'monaco', from: 2013, to: 2014},
@@ -10525,6 +11565,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Rodrygo Goes',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2001-01-09',
     shirtNumbers: [11, 21],
     clubs: [
       {clubId: 'santos', from: 2017, to: 2019},
@@ -10537,10 +11578,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Rogers, Morgan',
+    name: 'Morgan Rogers',
+    nationality: ['England'],
+    positions: ['MF', 'FW'],
+    shirtNumbers: [27],
+    born: '2002-07-26',
+    clubs: [
+      {clubId: 'aston-villa', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Rojo, Marcos',
     name: 'Marcos Rojo',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1990-03-20',
     shirtNumbers: [5, 16],
     clubs: [
       {clubId: 'man-utd', from: 2014, to: 2021},
@@ -10557,6 +11612,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Romário',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1966-01-29',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'psv', from: 1988, to: 1993},
@@ -10575,6 +11631,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cristian Romero',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1998-04-27',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'atalanta', from: 2019, to: 2021},
@@ -10590,6 +11647,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Oriol Romeu',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1991-09-24',
     shirtNumbers: [6, 14],
     clubs: [
       {clubId: 'chelsea', from: 2011, to: 2015},
@@ -10608,6 +11666,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ronaldinho',
     nationality: ['Brazil'],
     positions: ['FW', 'MF'],
+    born: '1980-03-21',
     shirtNumbers: [10, 80],
     clubs: [
       {clubId: 'gremio', from: 1998, to: 2001},
@@ -10633,6 +11692,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nicknames: ['R9', 'O Fenômeno', 'El Fenómeno', 'The Phenomenon', 'Ronaldo'],
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1976-09-22',
     shirtNumbers: [9, 10, 11],
     clubs: [
       {clubId: 'psv', from: 1994, to: 1996},
@@ -10655,6 +11715,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Cristiano Ronaldo',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1985-02-05',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'sporting', from: 2002, to: 2003},
@@ -10681,6 +11742,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Salomón Rondón',
     nationality: ['Venezuela'],
     positions: ['FW'],
+    born: '1989-09-16',
     shirtNumbers: [23, 9],
     clubs: [
       {clubId: 'west-brom', from: 2015, to: 2018},
@@ -10695,6 +11757,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wayne Rooney',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1985-10-24',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'everton', from: 2002, to: 2004},
@@ -10712,6 +11775,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antonio Rüdiger',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1993-03-03',
     shirtNumbers: [2, 22],
     clubs: [
       {clubId: 'roma', from: 2015, to: 2017},
@@ -10731,6 +11795,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Rui Manuel César Costa',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1972-03-29',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'benfica', from: 1991, to: 1994},
@@ -10749,6 +11814,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bryan Ruiz',
     nationality: ['Costa Rica'],
     positions: ['FW', 'MF'],
+    born: '1985-08-18',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'twente', from: 2009, to: 2011},
@@ -10765,6 +11831,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Fabián Ruiz',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1996-04-03',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'real-betis', from: 2016, to: 2018},
@@ -10782,6 +11849,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mathew Ryan',
     nationality: ['Australia'],
     positions: ['GK'],
+    born: '1992-04-08',
     shirtNumbers: [1, 33],
     clubs: [
       {clubId: 'brighton', from: 2017, to: 2021},
@@ -10796,6 +11864,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Julian Ryerson',
     nationality: ['Norway'],
     positions: ['DF'],
+    born: '1997-11-17',
     shirtNumbers: [26, 19],
     clubs: [
       {clubId: 'union-berlin', from: 2018, to: 2023},
@@ -10809,6 +11878,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marcel Sabitzer',
     nationality: ['Austria'],
     positions: ['MF'],
+    born: '1994-03-17',
     shirtNumbers: [18, 7],
     clubs: [
       {clubId: 'rb-leipzig', from: 2014, to: 2021},
@@ -10824,6 +11894,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexis Saelemaekers',
     nationality: ['Belgium'],
     positions: ['FW', 'MF'],
+    born: '1999-06-27',
     shirtNumbers: [56, 28],
     clubs: [
       {clubId: 'anderlecht', from: 2018, to: 2020},
@@ -10841,6 +11912,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bukayo Saka',
     nationality: ['England'],
     positions: ['FW', 'MF'],
+    born: '2001-09-05',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'arsenal', from: 2018},
@@ -10855,6 +11927,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mohamed Salah',
     nationality: ['Egypt'],
     positions: ['FW'],
+    born: '1992-06-15',
     shirtNumbers: [11],
     clubs: [
       {clubId: 'chelsea', from: 2014, to: 2016},
@@ -10879,6 +11952,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'William Saliba',
     nationality: ['France'],
     positions: ['DF'],
+    born: '2001-03-24',
     shirtNumbers: [2, 12],
     clubs: [
       {clubId: 'arsenal', from: 2019},
@@ -10895,6 +11969,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Roland Sallai',
     nationality: ['Hungary'],
     positions: ['FW', 'MF'],
+    born: '1997-05-22',
     shirtNumbers: [22, 17],
     clubs: [
       {clubId: 'freiburg', from: 2018, to: 2024},
@@ -10910,6 +11985,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lazar Samardžić',
     nationality: ['Serbia'],
     positions: ['MF'],
+    born: '2002-02-24',
     shirtNumbers: [24, 10],
     clubs: [
       {clubId: 'rb-leipzig', from: 2020, to: 2021},
@@ -10924,6 +12000,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matthias Sammer',
     nationality: ['Germany'],
     positions: ['DF', 'MF'],
+    born: '1967-09-05',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 1990, to: 1992},
@@ -10943,6 +12020,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Walter Samuel',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1978-03-23',
     shirtNumbers: [25, 23],
     clubs: [
       {clubId: 'boca-juniors', from: 1997, to: 2000},
@@ -10962,6 +12040,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antonio Sanabria',
     nationality: ['Paraguay'],
     positions: ['FW'],
+    born: '1996-03-04',
     shirtNumbers: [9, 19],
     clubs: [
       {clubId: 'roma', from: 2016, to: 2017},
@@ -10976,6 +12055,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexis Sánchez',
     nationality: ['Chile'],
     positions: ['FW'],
+    born: '1988-12-19',
     shirtNumbers: [7, 17],
     clubs: [
       {clubId: 'udinese', from: 2008, to: 2011},
@@ -10999,6 +12079,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dávinson Sánchez',
     nationality: ['Colombia'],
     positions: ['DF'],
+    born: '1996-06-12',
     shirtNumbers: [6, 2],
     clubs: [
       {clubId: 'ajax', from: 2016, to: 2017},
@@ -11015,6 +12096,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jorge Sánchez',
     nationality: ['Mexico'],
     positions: ['DF'],
+    born: '1997-12-10',
     shirtNumbers: [19, 2],
     clubs: [
       {clubId: 'club-america', from: 2018, to: 2022},
@@ -11028,6 +12110,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jadon Sancho',
     nationality: ['England'],
     positions: ['FW'],
+    born: '2000-03-25',
     shirtNumbers: [7, 25],
     clubs: [
       {clubId: 'dortmund', from: 2017, to: 2021},
@@ -11044,6 +12127,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leroy Sané',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1996-01-11',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'schalke', from: 2014, to: 2016},
@@ -11060,6 +12144,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andrey Santos',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '2004-05-03',
     shirtNumbers: [17, 8],
     clubs: [
       {clubId: 'chelsea', from: 2023, to: 2026},
@@ -11073,6 +12158,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Josh Sargent',
     nationality: ['USA'],
     positions: ['FW'],
+    born: '2000-02-20',
     shirtNumbers: [9, 24],
     clubs: [
       {clubId: 'werder-bremen', from: 2017, to: 2021},
@@ -11085,6 +12171,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ismaïla Sarr',
     nationality: ['Senegal'],
     positions: ['FW'],
+    born: '1998-02-25',
     shirtNumbers: [23, 7],
     clubs: [
       {clubId: 'rennes', from: 2017, to: 2019},
@@ -11100,6 +12187,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pape Matar Sarr',
     nationality: ['Senegal'],
     positions: ['MF'],
+    born: '2002-09-14',
     shirtNumbers: [29, 8],
     clubs: [
       {clubId: 'metz', from: 2020, to: 2022},
@@ -11116,6 +12204,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Saúl Ñíguez Esclápez',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1994-11-21',
     shirtNumbers: [8, 17],
     clubs: [
       {clubId: 'atletico-madrid', from: 2012, to: 2024},
@@ -11136,6 +12225,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Sávio Moreira',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2004-04-10',
     shirtNumbers: [26, 11],
     clubs: [
       {clubId: 'girona', from: 2023, to: 2024, loan: true},
@@ -11149,6 +12239,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Javier Saviola',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1981-12-11',
     shirtNumbers: [9, 30],
     clubs: [
       {clubId: 'river-plate', from: 1998, to: 2001},
@@ -11169,6 +12260,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Patrik Schick',
     nationality: ['Czech Republic'],
     positions: ['FW'],
+    born: '1996-01-24',
     shirtNumbers: [14, 10],
     clubs: [
       {clubId: 'sampdoria', from: 2017, to: 2017},
@@ -11185,6 +12277,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nico Schlotterbeck',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1999-12-01',
     shirtNumbers: [4, 15],
     clubs: [
       {clubId: 'freiburg', from: 2021, to: 2022},
@@ -11198,6 +12291,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kasper Schmeichel',
     nationality: ['Denmark'],
     positions: ['GK'],
+    born: '1986-11-05',
     shirtNumbers: [1, 16],
     clubs: [
       {clubId: 'leicester', from: 2011, to: 2022},
@@ -11214,6 +12308,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Peter Schmeichel',
     nationality: ['Denmark'],
     positions: ['GK'],
+    born: '1963-11-18',
     shirtNumbers: [1, 16],
     clubs: [
       {clubId: 'man-utd', from: 1991, to: 1999},
@@ -11233,6 +12328,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Morgan Schneiderlin',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1989-11-08',
     shirtNumbers: [4, 28],
     clubs: [
       {clubId: 'southampton', from: 2008, to: 2016},
@@ -11248,6 +12344,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Paul Scholes',
     nationality: ['England'],
     positions: ['MF'],
+    born: '1974-11-16',
     shirtNumbers: [18],
     clubs: [
       {clubId: 'man-utd', from: 1994, to: 2013},
@@ -11263,6 +12360,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'André Schürrle',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1990-11-06',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'leverkusen', from: 2011, to: 2013},
@@ -11281,6 +12379,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bastian Schweinsteiger',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '1984-08-01',
     shirtNumbers: [31, 7],
     clubs: [
       {clubId: 'bayern', from: 2002, to: 2015},
@@ -11298,6 +12397,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Clarence Seedorf',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1976-04-01',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'ajax', from: 1992, to: 1995},
@@ -11316,6 +12416,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nélson Semedo',
     nationality: ['Portugal'],
     positions: ['DF'],
+    born: '1993-11-16',
     shirtNumbers: [2, 22],
     clubs: [
       {clubId: 'benfica', from: 2015, to: 2017},
@@ -11333,6 +12434,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Antoine Semenyo',
     nationality: ['Ghana'],
     positions: ['FW'],
+    born: '2000-01-07',
     shirtNumbers: [24, 7],
     clubs: [
       {clubId: 'bristol-city', from: 2020, to: 2023},
@@ -11342,10 +12444,29 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Šeško, Benjamin',
+    name: 'Benjamin Šeško',
+    nationality: ['Slovenia'],
+    positions: ['FW'],
+    born: '2003-05-31',
+    shirtNumbers: [30, 11],
+    clubs: [
+      {clubId: 'salzburg', from: 2021, to: 2023},
+      {clubId: 'rb-leipzig', from: 2023, to: 2025},
+      {clubId: 'man-utd', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2022, 2023], clubId: 'salzburg'},
+      {type: 'domestic-cup', count: 1, years: [2022], clubId: 'salzburg'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Shaqiri, Xherdan',
     name: 'Xherdan Shaqiri',
     nationality: ['Switzerland'],
     positions: ['FW', 'MF'],
+    born: '1991-10-10',
     shirtNumbers: [23, 11],
     clubs: [
       {clubId: 'basel', from: 2009, to: 2012},
@@ -11367,6 +12488,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alan Shearer',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1970-08-13',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'southampton', from: 1988, to: 1992},
@@ -11385,6 +12507,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Teddy Sheringham',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1966-04-02',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'tottenham', from: 1992, to: 1997},
@@ -11403,6 +12526,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Andriy Shevchenko',
     nationality: ['Ukraine'],
     positions: ['FW'],
+    born: '1976-09-29',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'dynamo-kyiv', from: 1994, to: 1999},
@@ -11423,6 +12547,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Eldor Shomurodov',
     nationality: ['Uzbekistan'],
     positions: ['FW'],
+    born: '1995-06-29',
     shirtNumbers: [61, 9],
     clubs: [
       {clubId: 'genoa', from: 2020, to: 2021},
@@ -11436,6 +12561,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Djibril Sidibé',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1992-07-29',
     shirtNumbers: [19, 26],
     clubs: [
       {clubId: 'lille', from: 2012, to: 2016},
@@ -11453,6 +12579,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'André Silva',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1995-11-06',
     shirtNumbers: [9, 33],
     clubs: [
       {clubId: 'porto', from: 2015, to: 2017},
@@ -11471,6 +12598,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bernardo Silva',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '1994-08-10',
     shirtNumbers: [20, 10],
     clubs: [
       {clubId: 'benfica', from: 2014, to: 2015},
@@ -11487,6 +12615,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Silva',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1986-01-08',
     shirtNumbers: [21],
     clubs: [
       {clubId: 'valencia', from: 2006, to: 2010},
@@ -11504,6 +12633,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thiago Silva',
     nationality: ['Brazil'],
     positions: ['DF'],
+    born: '1984-09-22',
     shirtNumbers: [2, 33],
     clubs: [
       {clubId: 'ac-milan', from: 2009, to: 2012},
@@ -11523,6 +12653,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Diego Simeone',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1970-04-28',
     shirtNumbers: [8, 14],
     clubs: [
       {clubId: 'sevilla', from: 1992, to: 1994},
@@ -11542,6 +12673,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Giuliano Simeone',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '2002-12-18',
     shirtNumbers: [22, 23],
     clubs: [
       {clubId: 'atletico-madrid', from: 2022},
@@ -11554,6 +12686,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Moses Simon',
     nationality: ['Nigeria'],
     positions: ['FW', 'MF'],
+    born: '1995-07-12',
     shirtNumbers: [7, 17],
     clubs: [
       {clubId: 'nantes', from: 2020, to: 2025},
@@ -11562,10 +12695,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Simón, Unai',
+    name: 'Unai Simón',
+    nationality: ['Spain'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    born: '1997-06-11',
+    clubs: [
+      {clubId: 'athletic-bilbao', from: 2018},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Simons, Xavi',
     name: 'Xavi Simons',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '2003-04-21',
     shirtNumbers: [7, 10],
     clubs: [
       {clubId: 'psg', from: 2019, to: 2023},
@@ -11580,6 +12729,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Sarpreet Singh',
     nationality: ['New Zealand'],
     positions: ['MF'],
+    born: '1999-02-20',
     shirtNumbers: [42, 27],
     clubs: [
       {clubId: 'bayern', from: 2019, to: 2023},
@@ -11592,6 +12742,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wilfried Singo',
     nationality: ['Ivory Coast'],
     positions: ['DF'],
+    born: '2000-12-25',
     shirtNumbers: [17, 4],
     clubs: [
       {clubId: 'torino', from: 2019, to: 2023},
@@ -11605,6 +12756,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ellyes Skhiri',
     nationality: ['Tunisia'],
     positions: ['MF'],
+    born: '1995-05-10',
     shirtNumbers: [42, 15],
     clubs: [
       {clubId: 'montpellier', from: 2015, to: 2019},
@@ -11618,6 +12770,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Milan Škriniar',
     nationality: ['Slovakia'],
     positions: ['DF'],
+    born: '1995-02-11',
     shirtNumbers: [37, 95],
     clubs: [
       {clubId: 'sampdoria', from: 2016, to: 2017},
@@ -11636,6 +12789,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Islam Slimani',
     nationality: ['Algeria'],
     positions: ['FW'],
+    born: '1988-06-18',
     shirtNumbers: [9, 13],
     clubs: [
       {clubId: 'sporting', from: 2013, to: 2016},
@@ -11652,6 +12806,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wesley Sneijder',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1984-06-09',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'ajax', from: 2002, to: 2007},
@@ -11667,10 +12822,29 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Solanke, Dominic',
+    name: 'Dominic Solanke',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [19, 9],
+    born: '1997-09-14',
+    clubs: [
+      {clubId: 'chelsea', from: 2014, to: 2017},
+      {clubId: 'liverpool', from: 2017, to: 2019},
+      {clubId: 'bournemouth', from: 2019, to: 2024},
+      {clubId: 'tottenham', from: 2024},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Soler, Carlos',
     name: 'Carlos Soler',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1997-01-02',
     shirtNumbers: [8, 28],
     clubs: [
       {clubId: 'valencia', from: 2016, to: 2022},
@@ -11688,6 +12862,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ole Gunnar Solskjær',
     nationality: ['Norway'],
     positions: ['FW'],
+    born: '1973-02-26',
     shirtNumbers: [20],
     clubs: [
       {clubId: 'man-utd', from: 1996, to: 2007},
@@ -11703,6 +12878,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yann Sommer',
     nationality: ['Switzerland'],
     positions: ['GK'],
+    born: '1988-12-17',
     shirtNumbers: [1, 24],
     clubs: [
       {clubId: 'basel', from: 2009, to: 2014},
@@ -11720,6 +12896,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Heung-min Son',
     nationality: ['South Korea'],
     positions: ['FW'],
+    born: '1992-07-08',
     shirtNumbers: [7],
     clubs: [
       {clubId: 'leverkusen', from: 2013, to: 2015},
@@ -11735,6 +12912,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexander Sørloth',
     nationality: ['Norway'],
     positions: ['FW'],
+    born: '1995-12-05',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'crystal-palace', from: 2018, to: 2020},
@@ -11750,6 +12928,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ramón Sosa',
     nationality: ['Paraguay'],
     positions: ['FW'],
+    born: '1999-08-31',
     shirtNumbers: [11, 21],
     clubs: [
       {clubId: 'nottingham-forest', from: 2024},
@@ -11762,6 +12941,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yeferson Soteldo',
     nationality: ['Venezuela'],
     positions: ['FW'],
+    born: '1997-06-30',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'santos', from: 2019, to: 2021},
@@ -11775,6 +12955,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Tomáš Souček',
     nationality: ['Czech Republic'],
     positions: ['MF'],
+    born: '1995-02-27',
     shirtNumbers: [28],
     clubs: [
       {clubId: 'west-ham', from: 2020},
@@ -11787,6 +12968,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Harry Souttar',
     nationality: ['Australia'],
     positions: ['DF'],
+    born: '1998-10-22',
     shirtNumbers: [19, 6],
     clubs: [
       {clubId: 'leicester', from: 2023},
@@ -11799,6 +12981,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Çağlar Söyüncü',
     nationality: ['Turkey'],
     positions: ['DF'],
+    born: '1996-05-23',
     shirtNumbers: [4, 24],
     clubs: [
       {clubId: 'freiburg', from: 2016, to: 2018},
@@ -11814,6 +12997,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jaap Stam',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1972-07-17',
     shirtNumbers: [6, 31],
     clubs: [
       {clubId: 'psv', from: 1996, to: 1998},
@@ -11833,6 +13017,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Josip Stanišić',
     nationality: ['Croatia'],
     positions: ['DF'],
+    born: '2000-04-02',
     shirtNumbers: [44, 2],
     clubs: [
       {clubId: 'bayern', from: 2020},
@@ -11848,6 +13033,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dejan Stanković',
     nationality: ['Serbia'],
     positions: ['MF'],
+    born: '1978-09-11',
     shirtNumbers: [5, 20],
     clubs: [
       {clubId: 'lazio', from: 1998, to: 2004},
@@ -11864,6 +13050,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raheem Sterling',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1994-12-08',
     shirtNumbers: [7, 17],
     clubs: [
       {clubId: 'liverpool', from: 2012, to: 2015},
@@ -11881,6 +13068,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hristo Stoichkov',
     nationality: ['Bulgaria'],
     positions: ['FW'],
+    born: '1966-02-08',
     shirtNumbers: [8, 9],
     clubs: [
       {clubId: 'barcelona', from: 1990, to: 1998},
@@ -11897,6 +13085,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'John Stones',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1994-05-28',
     shirtNumbers: [5, 6],
     clubs: [
       {clubId: 'barnsley', from: 2011, to: 2013},
@@ -11914,6 +13103,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kevin Strootman',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1990-02-13',
     shirtNumbers: [6, 32],
     clubs: [
       {clubId: 'psv', from: 2011, to: 2013},
@@ -11929,6 +13119,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Daniel Sturridge',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1989-09-01',
     shirtNumbers: [15, 23],
     clubs: [
       {clubId: 'man-city', from: 2006, to: 2009},
@@ -11949,6 +13140,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Luis Suárez',
     nationality: ['Uruguay'],
     positions: ['FW'],
+    born: '1987-01-24',
     shirtNumbers: [9, 7],
     clubs: [
       {clubId: 'ajax', from: 2007, to: 2011},
@@ -11969,6 +13161,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Petar Sučić',
     nationality: ['Croatia'],
     positions: ['MF'],
+    born: '2003-10-25',
     shirtNumbers: [8, 20],
     clubs: [
       {clubId: 'dinamo-zagreb', from: 2022, to: 2025},
@@ -11984,6 +13177,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Heorhiy Sudakov',
     nationality: ['Ukraine'],
     positions: ['MF'],
+    born: '2002-09-01',
     shirtNumbers: [10, 8],
     clubs: [
       {clubId: 'shakhtar', from: 2020, to: 2025},
@@ -11997,6 +13191,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kamaldeen Sulemana',
     nationality: ['Ghana'],
     positions: ['FW'],
+    born: '2002-02-15',
     shirtNumbers: [20, 22],
     clubs: [
       {clubId: 'rennes', from: 2021, to: 2023},
@@ -12012,6 +13207,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Jesús Joaquín Fernández Sáez de la Torre',
     nationality: ['Spain'],
     positions: ['MF', 'FW'],
+    born: '1993-11-19',
     shirtNumbers: [8, 7],
     clubs: [
       {clubId: 'liverpool', from: 2012, to: 2015},
@@ -12029,6 +13225,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Zion Suzuki',
     nationality: ['Japan'],
     positions: ['GK'],
+    born: '2002-08-21',
     shirtNumbers: [1, 12],
     clubs: [
       {clubId: 'parma', from: 2024},
@@ -12041,6 +13238,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wojciech Szczęsny',
     nationality: ['Poland'],
     positions: ['GK'],
+    born: '1990-04-18',
     shirtNumbers: [1, 25],
     clubs: [
       {clubId: 'arsenal', from: 2009, to: 2017},
@@ -12058,6 +13256,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dominik Szoboszlai',
     nationality: ['Hungary'],
     positions: ['MF'],
+    born: '2000-10-25',
     shirtNumbers: [8],
     clubs: [
       {clubId: 'salzburg', from: 2018, to: 2021},
@@ -12074,6 +13273,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Adel Taarabt',
     nationality: ['Morocco'],
     positions: ['MF'],
+    born: '1989-05-24',
     shirtNumbers: [7, 10],
     clubs: [
       {clubId: 'tottenham', from: 2007, to: 2010},
@@ -12091,6 +13291,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dušan Tadić',
     nationality: ['Serbia'],
     positions: ['FW', 'MF'],
+    born: '1988-11-20',
     shirtNumbers: [10, 20],
     clubs: [
       {clubId: 'twente', from: 2010, to: 2012},
@@ -12108,6 +13309,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicolás Tagliafico',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1992-08-31',
     shirtNumbers: [3, 13],
     clubs: [
       {clubId: 'ajax', from: 2018, to: 2022},
@@ -12124,6 +13326,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jonathan Tah',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1996-02-11',
     shirtNumbers: [4, 3],
     clubs: [
       {clubId: 'leverkusen', from: 2015, to: 2025},
@@ -12140,6 +13343,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ao Tanaka',
     nationality: ['Japan'],
     positions: ['MF'],
+    born: '1998-09-10',
     shirtNumbers: [17, 6],
     clubs: [
       {clubId: 'leeds', from: 2024},
@@ -12153,6 +13357,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mehdi Taremi',
     nationality: ['Iran'],
     positions: ['FW'],
+    born: '1992-07-18',
     shirtNumbers: [9, 99],
     clubs: [
       {clubId: 'porto', from: 2020, to: 2024},
@@ -12168,6 +13373,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Percy Tau',
     nationality: ['South Africa'],
     positions: ['FW'],
+    born: '1994-05-13',
     shirtNumbers: [22, 21],
     clubs: [
       {clubId: 'brighton', from: 2018, to: 2021},
@@ -12182,6 +13388,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Aurélien Tchouaméni',
     nationality: ['France'],
     positions: ['MF'],
+    born: '2000-01-27',
     shirtNumbers: [18, 14],
     clubs: [
       {clubId: 'monaco', from: 2020, to: 2022},
@@ -12198,6 +13405,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marc-André ter Stegen',
     nationality: ['Germany'],
     positions: ['GK'],
+    born: '1992-04-30',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'monchengladbach', from: 2011, to: 2014},
@@ -12216,6 +13424,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'John Terry',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1980-12-07',
     shirtNumbers: [26],
     clubs: [
       {clubId: 'chelsea', from: 1998, to: 2017},
@@ -12233,6 +13442,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Carlos Tevez',
     nationality: ['Argentina'],
     positions: ['FW'],
+    born: '1984-02-05',
     shirtNumbers: [32, 10],
     clubs: [
       {clubId: 'boca-juniors', from: 2001, to: 2004},
@@ -12256,6 +13466,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nicknames: ['Thiago Alcantara'],
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1991-04-11',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'barcelona', from: 2009, to: 2013},
@@ -12272,6 +13483,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Khéphren Thuram',
     nationality: ['France'],
     positions: ['MF'],
+    born: '2001-03-26',
     shirtNumbers: [19],
     clubs: [
       {clubId: 'nice', from: 2019, to: 2024},
@@ -12285,6 +13497,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lilian Thuram',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1972-01-01',
     shirtNumbers: [2, 19],
     clubs: [
       {clubId: 'monaco', from: 1991, to: 1996},
@@ -12306,6 +13519,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marcus Thuram',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1997-08-06',
     shirtNumbers: [9, 10],
     clubs: [
       {clubId: 'monchengladbach', from: 2019, to: 2023},
@@ -12321,6 +13535,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Youri Tielemans',
     nationality: ['Belgium'],
     positions: ['MF'],
+    born: '1997-05-07',
     shirtNumbers: [8, 25],
     clubs: [
       {clubId: 'anderlecht', from: 2013, to: 2017},
@@ -12336,6 +13551,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kieran Tierney',
     nationality: ['Scotland'],
     positions: ['DF'],
+    born: '1997-06-05',
     shirtNumbers: [3, 63],
     clubs: [
       {clubId: 'celtic', from: 2015, to: 2019},
@@ -12350,6 +13566,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Malik Tillman',
     nationality: ['USA'],
     positions: ['MF'],
+    born: '2002-05-28',
     shirtNumbers: [10, 42],
     clubs: [
       {clubId: 'bayern', from: 2020, to: 2022},
@@ -12367,6 +13584,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jurriën Timber',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '2001-06-17',
     shirtNumbers: [12, 2],
     clubs: [
       {clubId: 'ajax', from: 2020, to: 2023},
@@ -12378,10 +13596,30 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Tolisso, Corentin',
+    name: 'Corentin Tolisso',
+    nationality: ['France'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    born: '1994-08-03',
+    clubs: [
+      {clubId: 'lyon', from: 2013, to: 2017},
+      {clubId: 'bayern', from: 2017, to: 2022},
+      {clubId: 'lyon', from: 2022},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2018]},
+      {type: 'champions-league', count: 1, years: [2020]},
+      {type: 'league-title', count: 5, years: [2018, 2019, 2020, 2021, 2022]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Tomiyasu, Takehiro',
     name: 'Takehiro Tomiyasu',
     nationality: ['Japan'],
     positions: ['DF'],
+    born: '1998-11-05',
     shirtNumbers: [18, 15],
     clubs: [
       {clubId: 'bologna', from: 2019, to: 2021},
@@ -12393,10 +13631,43 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Tomori, Fikayo',
+    name: 'Fikayo Tomori',
+    nationality: ['England'],
+    positions: ['DF'],
+    shirtNumbers: [23],
+    born: '1997-12-19',
+    clubs: [
+      {clubId: 'chelsea', from: 2016, to: 2021},
+      {clubId: 'ac-milan', from: 2021},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2022]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Tonali, Sandro',
+    name: 'Sandro Tonali',
+    nationality: ['Italy'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    born: '2000-05-08',
+    clubs: [
+      {clubId: 'ac-milan', from: 2020, to: 2023},
+      {clubId: 'newcastle', from: 2023},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2022]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Torres, Fernando',
     name: 'Fernando Torres',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1984-03-20',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'atletico-madrid', from: 2001, to: 2007},
@@ -12418,6 +13689,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ferran Torres',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '2000-02-29',
     shirtNumbers: [7, 11],
     clubs: [
       {clubId: 'valencia', from: 2017, to: 2020},
@@ -12434,6 +13706,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Francesco Totti',
     nationality: ['Italy'],
     positions: ['FW', 'MF'],
+    born: '1976-09-27',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'roma', from: 1993, to: 2017},
@@ -12449,6 +13722,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yaya Touré',
     nationality: ['Ivory Coast'],
     positions: ['MF'],
+    born: '1983-05-13',
     shirtNumbers: [42],
     clubs: [
       {clubId: 'olympiacos', from: 2005, to: 2006},
@@ -12467,6 +13741,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Mahmoud Hassan',
     nationality: ['Egypt'],
     positions: ['FW', 'MF'],
+    born: '1994-10-01',
     shirtNumbers: [17, 22],
     clubs: [
       {clubId: 'aston-villa', from: 2019, to: 2022},
@@ -12480,6 +13755,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Trezeguet',
     nationality: ['France'],
     positions: ['FW'],
+    born: '1977-10-15',
     shirtNumbers: [17, 9],
     clubs: [
       {clubId: 'monaco', from: 1995, to: 2000},
@@ -12498,6 +13774,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Francisco Trincão',
     nationality: ['Portugal'],
     positions: ['FW'],
+    born: '1999-12-29',
     shirtNumbers: [17, 11],
     clubs: [
       {clubId: 'barcelona', from: 2020, to: 2021},
@@ -12514,6 +13791,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kieran Trippier',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1990-09-19',
     shirtNumbers: [2, 12],
     clubs: [
       {clubId: 'tottenham', from: 2015, to: 2019},
@@ -12530,6 +13808,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Leandro Trossard',
     nationality: ['Belgium'],
     positions: ['FW'],
+    born: '1994-12-04',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'genk', from: 2012, to: 2019},
@@ -12546,6 +13825,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kostas Tsimikas',
     nationality: ['Greece'],
     positions: ['DF'],
+    born: '1996-05-12',
     shirtNumbers: [21, 12],
     clubs: [
       {clubId: 'olympiacos', from: 2017, to: 2020},
@@ -12562,6 +13842,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Viktor Tsygankov',
     nationality: ['Ukraine'],
     positions: ['FW', 'MF'],
+    born: '1997-11-15',
     shirtNumbers: [15, 8],
     clubs: [
       {clubId: 'dynamo-kyiv', from: 2015, to: 2023},
@@ -12577,6 +13858,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Arda Turan',
     nationality: ['Turkey'],
     positions: ['MF'],
+    born: '1987-01-30',
     shirtNumbers: [10, 7],
     clubs: [
       {clubId: 'galatasaray', from: 2005, to: 2011},
@@ -12594,6 +13876,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matt Turner',
     nationality: ['USA'],
     positions: ['GK'],
+    born: '1994-06-24',
     shirtNumbers: [1, 30],
     clubs: [
       {clubId: 'arsenal', from: 2022, to: 2023},
@@ -12608,6 +13891,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christos Tzolis',
     nationality: ['Greece'],
     positions: ['FW'],
+    born: '2002-01-30',
     shirtNumbers: [11, 17],
     clubs: [
       {clubId: 'norwich', from: 2021, to: 2022},
@@ -12621,6 +13905,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ayase Ueda',
     nationality: ['Japan'],
     positions: ['FW'],
+    born: '1998-08-28',
     shirtNumbers: [20, 9],
     clubs: [
       {clubId: 'feyenoord', from: 2023},
@@ -12633,6 +13918,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Manuel Ugarte',
     nationality: ['Uruguay'],
     positions: ['MF'],
+    born: '2001-04-11',
     shirtNumbers: [25, 4],
     clubs: [
       {clubId: 'sporting', from: 2021, to: 2023},
@@ -12649,6 +13935,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Deniz Undav',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1996-07-19',
     shirtNumbers: [26, 7],
     clubs: [
       {clubId: 'brighton', from: 2022, to: 2023},
@@ -12662,6 +13949,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dayot Upamecano',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1998-10-27',
     shirtNumbers: [2, 5],
     clubs: [
       {clubId: 'rb-leipzig', from: 2017, to: 2021},
@@ -12677,6 +13965,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Enner Valencia',
     nationality: ['Ecuador'],
     positions: ['FW'],
+    born: '1989-11-04',
     shirtNumbers: [13, 9],
     clubs: [
       {clubId: 'west-ham', from: 2014, to: 2016},
@@ -12691,6 +13980,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Federico Valverde',
     nationality: ['Uruguay'],
     positions: ['MF'],
+    born: '1998-07-22',
     shirtNumbers: [8, 15],
     clubs: [
       {clubId: 'real-madrid', from: 2016},
@@ -12705,6 +13995,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marco van Basten',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1964-10-31',
     shirtNumbers: [9, 12],
     clubs: [
       {clubId: 'ajax', from: 1981, to: 1987},
@@ -12724,6 +14015,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Mark van Bommel',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1977-04-22',
     shirtNumbers: [6, 17],
     clubs: [
       {clubId: 'psv', from: 1999, to: 2005},
@@ -12743,6 +14035,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Micky van de Ven',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '2001-04-19',
     shirtNumbers: [37, 4],
     clubs: [
       {clubId: 'wolfsburg', from: 2021, to: 2023},
@@ -12758,6 +14051,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Edwin van der Sar',
     nationality: ['Netherlands'],
     positions: ['GK'],
+    born: '1970-10-29',
     shirtNumbers: [1, 16],
     clubs: [
       {clubId: 'ajax', from: 1990, to: 1999},
@@ -12776,6 +14070,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Rafael van der Vaart',
     nationality: ['Netherlands'],
     positions: ['MF'],
+    born: '1983-02-11',
     shirtNumbers: [23, 10],
     clubs: [
       {clubId: 'ajax', from: 2000, to: 2005},
@@ -12796,6 +14091,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gregory van der Wiel',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1988-02-03',
     shirtNumbers: [2, 15],
     clubs: [
       {clubId: 'ajax', from: 2007, to: 2012},
@@ -12813,6 +14109,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Virgil van Dijk',
     nationality: ['Netherlands'],
     positions: ['DF'],
+    born: '1991-07-08',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'celtic', from: 2013, to: 2015},
@@ -12830,6 +14127,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ruud van Nistelrooy',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1976-07-01',
     shirtNumbers: [10, 17],
     clubs: [
       {clubId: 'psv', from: 1998, to: 2001},
@@ -12847,6 +14145,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Robin van Persie',
     nationality: ['Netherlands'],
     positions: ['FW'],
+    born: '1983-08-06',
     shirtNumbers: [20, 10],
     clubs: [
       {clubId: 'arsenal', from: 2004, to: 2012},
@@ -12864,6 +14163,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Raphaël Varane',
     nationality: ['France'],
     positions: ['DF'],
+    born: '1993-04-25',
     shirtNumbers: [5, 4],
     clubs: [
       {clubId: 'lens', from: 2010, to: 2011},
@@ -12882,6 +14182,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jamie Vardy',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1987-01-11',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'leicester', from: 2012, to: 2025},
@@ -12897,6 +14198,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Barnabás Varga',
     nationality: ['Hungary'],
     positions: ['FW'],
+    born: '1994-10-25',
     shirtNumbers: [19, 9],
     clubs: [
       {clubId: 'ferencvaros', from: 2022},
@@ -12909,6 +14211,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Johan Vásquez',
     nationality: ['Mexico'],
     positions: ['DF'],
+    born: '1998-10-22',
     shirtNumbers: [3, 23],
     clubs: [
       {clubId: 'pumas', from: 2019, to: 2021},
@@ -12922,6 +14225,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Alexis Vega',
     nationality: ['Mexico'],
     positions: ['FW'],
+    born: '1997-11-25',
     shirtNumbers: [10, 9],
     clubs: [
       {clubId: 'guadalajara', from: 2018, to: 2024},
@@ -12935,6 +14239,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Thomas Vermaelen',
     nationality: ['Belgium'],
     positions: ['DF'],
+    born: '1985-11-14',
     shirtNumbers: [5, 4],
     clubs: [
       {clubId: 'ajax', from: 2004, to: 2009},
@@ -12953,6 +14258,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Juan Sebastián Verón',
     nationality: ['Argentina'],
     positions: ['MF'],
+    born: '1975-03-09',
     shirtNumbers: [4, 11],
     clubs: [
       {clubId: 'sampdoria', from: 1996, to: 1998},
@@ -12972,6 +14278,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Marco Verratti',
     nationality: ['Italy'],
     positions: ['MF'],
+    born: '1992-11-05',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'psg', from: 2012, to: 2023},
@@ -12987,6 +14294,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jan Vertonghen',
     nationality: ['Belgium'],
     positions: ['DF'],
+    born: '1987-04-24',
     shirtNumbers: [5, 4],
     clubs: [
       {clubId: 'ajax', from: 2006, to: 2012},
@@ -12998,10 +14306,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Vicario, Guglielmo',
+    name: 'Guglielmo Vicario',
+    nationality: ['Italy'],
+    positions: ['GK'],
+    shirtNumbers: [13, 1],
+    born: '1996-10-07',
+    clubs: [
+      {clubId: 'cagliari', from: 2019, to: 2021},
+      {clubId: 'empoli', from: 2021, to: 2023},
+      {clubId: 'tottenham', from: 2023},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Vidal, Arturo',
     name: 'Arturo Vidal',
     nationality: ['Chile'],
     positions: ['MF'],
+    born: '1987-05-22',
     shirtNumbers: [23, 22],
     clubs: [
       {clubId: 'leverkusen', from: 2007, to: 2011},
@@ -13024,6 +14350,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nemanja Vidić',
     nationality: ['Serbia'],
     positions: ['DF'],
+    born: '1981-10-21',
     shirtNumbers: [15],
     clubs: [
       {clubId: 'man-utd', from: 2006, to: 2014},
@@ -13040,6 +14367,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Patrick Vieira',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1976-06-23',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'cannes', from: 1993, to: 1995},
@@ -13062,6 +14390,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christian Vieri',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1973-07-12',
     shirtNumbers: [32, 9],
     clubs: [
       {clubId: 'juventus', from: 1996, to: 1997},
@@ -13081,6 +14410,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'David Villa',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '1981-12-03',
     shirtNumbers: [7, 9],
     clubs: [
       {clubId: 'valencia', from: 2005, to: 2010},
@@ -13101,6 +14431,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Vinícius Júnior',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '2000-07-12',
     shirtNumbers: [7, 20],
     clubs: [
       {clubId: 'flamengo', from: 2017, to: 2018},
@@ -13118,6 +14449,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Vítor Machado Ferreira',
     nationality: ['Portugal'],
     positions: ['MF'],
+    born: '2000-02-13',
     shirtNumbers: [17],
     clubs: [
       {clubId: 'porto', from: 2020, to: 2022},
@@ -13135,6 +14467,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dušan Vlahović',
     nationality: ['Serbia'],
     positions: ['FW'],
+    born: '2000-01-28',
     shirtNumbers: [9],
     clubs: [
       {clubId: 'fiorentina', from: 2018, to: 2022},
@@ -13148,6 +14481,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kyle Walker',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1990-05-28',
     shirtNumbers: [2, 5],
     clubs: [
       {clubId: 'tottenham', from: 2009, to: 2017},
@@ -13166,6 +14500,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Aaron Wan-Bissaka',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1997-11-26',
     shirtNumbers: [29, 23],
     clubs: [
       {clubId: 'crystal-palace', from: 2017, to: 2019},
@@ -13180,6 +14515,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ollie Watkins',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1995-12-30',
     shirtNumbers: [11, 9],
     clubs: [
       {clubId: 'brentford', from: 2017, to: 2020},
@@ -13193,6 +14529,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'George Weah',
     nationality: ['Liberia'],
     positions: ['FW'],
+    born: '1966-10-01',
     shirtNumbers: [9, 14],
     clubs: [
       {clubId: 'monaco', from: 1988, to: 1992},
@@ -13212,6 +14549,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Timothy Weah',
     nationality: ['USA'],
     positions: ['FW'],
+    born: '2000-02-22',
     shirtNumbers: [21, 22],
     clubs: [
       {clubId: 'psg', from: 2017, to: 2019},
@@ -13229,6 +14567,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Roman Weidenfeller',
     nationality: ['Germany'],
     positions: ['GK'],
+    born: '1980-08-06',
     shirtNumbers: [1],
     clubs: [
       {clubId: 'dortmund', from: 2002, to: 2018},
@@ -13244,6 +14583,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Danny Welbeck',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1990-11-26',
     shirtNumbers: [18, 23],
     clubs: [
       {clubId: 'man-utd', from: 2008, to: 2014},
@@ -13262,6 +14602,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Timo Werner',
     nationality: ['Germany'],
     positions: ['FW'],
+    born: '1996-03-06',
     shirtNumbers: [11, 9],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2013, to: 2016},
@@ -13280,6 +14621,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ben White',
     nationality: ['England'],
     positions: ['DF'],
+    born: '1997-10-08',
     shirtNumbers: [4, 5],
     clubs: [
       {clubId: 'brighton', from: 2019, to: 2021},
@@ -13295,6 +14637,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Iñaki Williams',
     nationality: ['Ghana'],
     positions: ['FW'],
+    born: '1994-06-15',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'athletic-bilbao', from: 2014},
@@ -13307,6 +14650,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nico Williams',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '2002-07-12',
     shirtNumbers: [10, 11],
     clubs: [
       {clubId: 'athletic-bilbao', from: 2021},
@@ -13321,6 +14665,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Ronwen Williams',
     nationality: ['South Africa'],
     positions: ['GK'],
+    born: '1992-01-21',
     shirtNumbers: [1, 32],
     clubs: [
       {clubId: 'mamelodi-sundowns', from: 2022},
@@ -13334,6 +14679,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'Willian Borges da Silva',
     nationality: ['Brazil'],
     positions: ['FW'],
+    born: '1988-08-09',
     shirtNumbers: [10, 22],
     clubs: [
       {clubId: 'shakhtar', from: 2007, to: 2013},
@@ -13354,6 +14700,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Florian Wirtz',
     nationality: ['Germany'],
     positions: ['MF'],
+    born: '2003-05-03',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'leverkusen', from: 2020, to: 2025},
@@ -13369,6 +14716,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Yoane Wissa',
     nationality: ['DR Congo'],
     positions: ['FW'],
+    born: '1996-09-03',
     shirtNumbers: [11, 20],
     clubs: [
       {clubId: 'lorient', from: 2018, to: 2021},
@@ -13379,10 +14727,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Woltemade, Nick',
+    name: 'Nick Woltemade',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [11],
+    born: '2002-02-14',
+    clubs: [
+      {clubId: 'werder-bremen', from: 2020, to: 2024},
+      {clubId: 'vfb-stuttgart', from: 2024, to: 2025},
+      {clubId: 'newcastle', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Wood, Chris',
     name: 'Chris Wood',
     nationality: ['New Zealand'],
     positions: ['FW'],
+    born: '1991-12-07',
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'leeds', from: 2015, to: 2017},
@@ -13398,6 +14762,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christopher Wooh',
     nationality: ['Cameroon'],
     positions: ['DF'],
+    born: '2001-09-18',
     shirtNumbers: [4, 24],
     clubs: [
       {clubId: 'lens', from: 2021, to: 2022},
@@ -13411,6 +14776,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Christian Wörns',
     nationality: ['Germany'],
     positions: ['DF'],
+    born: '1972-05-10',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'leverkusen', from: 1991, to: 1998},
@@ -13427,6 +14793,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Xavi',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1980-01-25',
     shirtNumbers: [6],
     clubs: [
       {clubId: 'barcelona', from: 1998, to: 2015},
@@ -13444,6 +14811,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Granit Xhaka',
     nationality: ['Switzerland'],
     positions: ['MF'],
+    born: '1992-09-27',
     shirtNumbers: [34, 10],
     clubs: [
       {clubId: 'basel', from: 2012, to: 2012},
@@ -13461,6 +14829,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Lamine Yamal',
     nationality: ['Spain'],
     positions: ['FW'],
+    born: '2007-07-13',
     shirtNumbers: [10],
     clubs: [
       {clubId: 'barcelona', from: 2023},
@@ -13476,6 +14845,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Kenan Yıldız',
     nationality: ['Turkey'],
     positions: ['FW', 'MF'],
+    born: '2005-05-04',
     shirtNumbers: [10, 30],
     clubs: [
       {clubId: 'juventus', from: 2022},
@@ -13488,6 +14858,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Dwight Yorke',
     nationality: ['Trinidad and Tobago'],
     positions: ['FW'],
+    born: '1971-11-03',
     shirtNumbers: [19, 10],
     clubs: [
       {clubId: 'aston-villa', from: 1989, to: 1998},
@@ -13506,6 +14877,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Pablo Zabaleta',
     nationality: ['Argentina'],
     positions: ['DF'],
+    born: '1985-01-16',
     shirtNumbers: [5, 19],
     clubs: [
       {clubId: 'man-city', from: 2008, to: 2017},
@@ -13521,6 +14893,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Illia Zabarnyi',
     nationality: ['Ukraine'],
     positions: ['DF'],
+    born: '2002-09-01',
     shirtNumbers: [27, 4],
     clubs: [
       {clubId: 'dynamo-kyiv', from: 2020, to: 2023},
@@ -13537,6 +14910,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Wilfried Zaha',
     nationality: ['Ivory Coast'],
     positions: ['FW'],
+    born: '1992-11-10',
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'crystal-palace', from: 2010, to: 2023},
@@ -13552,6 +14926,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Warren Zaïre-Emery',
     nationality: ['France'],
     positions: ['MF'],
+    born: '2006-03-08',
     shirtNumbers: [33, 4],
     clubs: [
       {clubId: 'psg', from: 2022},
@@ -13567,6 +14942,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Denis Zakaria',
     nationality: ['Switzerland'],
     positions: ['MF'],
+    born: '1996-11-20',
     shirtNumbers: [8, 20],
     clubs: [
       {clubId: 'monchengladbach', from: 2017, to: 2022},
@@ -13581,6 +14957,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Nicola Zalewski',
     nationality: ['Poland'],
     positions: ['DF', 'MF'],
+    born: '2002-01-23',
     shirtNumbers: [59, 33],
     clubs: [
       {clubId: 'roma', from: 2020, to: 2025},
@@ -13595,6 +14972,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gianluca Zambrotta',
     nationality: ['Italy'],
     positions: ['DF'],
+    born: '1977-02-19',
     shirtNumbers: [19, 3],
     clubs: [
       {clubId: 'como', from: 1994, to: 1997},
@@ -13613,6 +14991,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Bobby Zamora',
     nationality: ['England'],
     positions: ['FW'],
+    born: '1981-01-16',
     shirtNumbers: [25, 9],
     clubs: [
       {clubId: 'tottenham', from: 2003, to: 2004},
@@ -13628,6 +15007,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Iván Zamorano',
     nationality: ['Chile'],
     positions: ['FW'],
+    born: '1967-01-18',
     shirtNumbers: [9, 18],
     clubs: [
       {clubId: 'sevilla', from: 1990, to: 1992},
@@ -13646,6 +15026,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Javier Zanetti',
     nationality: ['Argentina'],
     positions: ['DF', 'MF'],
+    born: '1973-08-10',
     shirtNumbers: [4],
     clubs: [
       {clubId: 'inter', from: 1995, to: 2014},
@@ -13663,6 +15044,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     fullName: 'José Roberto da Silva Júnior',
     nationality: ['Brazil'],
     positions: ['MF'],
+    born: '1974-07-06',
     shirtNumbers: [11, 15],
     clubs: [
       {clubId: 'real-madrid', from: 1997, to: 1998},
@@ -13685,6 +15067,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Zinédine Zidane',
     nationality: ['France'],
     positions: ['MF'],
+    born: '1972-06-23',
     shirtNumbers: [10, 5, 21],
     clubs: [
       {clubId: 'cannes', from: 1989, to: 1992},
@@ -13705,6 +15088,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Piotr Zieliński',
     nationality: ['Poland'],
     positions: ['MF'],
+    born: '1994-05-20',
     shirtNumbers: [20, 7],
     clubs: [
       {clubId: 'udinese', from: 2012, to: 2016},
@@ -13722,6 +15106,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Oleksandr Zinchenko',
     nationality: ['Ukraine'],
     positions: ['DF', 'MF'],
+    born: '1996-12-15',
     shirtNumbers: [17, 35],
     clubs: [
       {clubId: 'man-city', from: 2016, to: 2022},
@@ -13737,6 +15122,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Hakim Ziyech',
     nationality: ['Morocco'],
     positions: ['MF', 'FW'],
+    born: '1993-03-19',
     shirtNumbers: [22, 7],
     clubs: [
       {clubId: 'ajax', from: 2016, to: 2020},
@@ -13754,6 +15140,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Gianfranco Zola',
     nationality: ['Italy'],
     positions: ['FW'],
+    born: '1966-07-05',
     shirtNumbers: [25],
     clubs: [
       {clubId: 'napoli', from: 1989, to: 1993},
@@ -13772,6 +15159,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Martín Zubimendi',
     nationality: ['Spain'],
     positions: ['MF'],
+    born: '1999-02-02',
     shirtNumbers: [4, 36],
     clubs: [
       {clubId: 'real-sociedad', from: 2019, to: 2025},

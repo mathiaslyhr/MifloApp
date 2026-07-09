@@ -266,6 +266,7 @@
     "lost": "Out of guesses",
     "answerWas": "Today's footballer was {{name}}",
     "answerLabel": "The answer",
+    "answerAge": "Age {{value}}",
     "streakCurrent": "Current streak",
     "streakBest": "Best streak",
     "share": "Share result",
@@ -277,12 +278,12 @@
       "position": "Position",
       "club": "Club",
       "league": "League",
-      "shirtNumber": "Shirt"
+      "age": "Age"
     },
     "help": {
       "title": "How to play",
       "rule": "Guess the day's player in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
-      "arrows": "The arrow on Shirt points toward the secret player's number.",
+      "arrows": "The arrow on Age points toward the secret player's age.",
       "daily": "A new footballer drops every day, the same for everyone."
     },
     "history": {

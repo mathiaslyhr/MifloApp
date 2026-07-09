@@ -105,9 +105,10 @@ function dayNumber(dateKey: string): number {
 
 /**
  * The secret footballer for a given day. A deterministic shuffled *sequence*
- * rather than an independent daily draw: each 447-day cycle is a fresh
- * Fisher–Yates permutation of the whole pool, walked one player per day, so no
- * footballer repeats until the entire pool is exhausted.
+ * rather than an independent daily draw: each pool-length cycle of days is a
+ * fresh Fisher–Yates permutation of the whole pool, walked one player per day,
+ * so no footballer repeats until the entire pool is exhausted. Note this makes
+ * the sequence (including today's secret) shift whenever the pool changes.
  */
 export function secretFor(dateKey: string, pool: readonly Footballer[]): Footballer {
   if (pool.length === 0) {

@@ -13,7 +13,7 @@ export type ColumnKey =
   | 'position'
   | 'club'
   | 'league'
-  | 'shirtNumber';
+  | 'age';
 
 /** How a single guessed attribute compares to the secret. */
 export type CellStatus = 'hit' | 'partial' | 'miss';
@@ -24,7 +24,7 @@ export type Direction = 'up' | 'down';
 export type CellResult = {
   key: ColumnKey;
   status: CellStatus;
-  /** Only set on numeric columns (shirtNumber, era) when the value differs. */
+  /** Only set on numeric columns (age) when the value differs. */
   direction?: Direction;
 };
 

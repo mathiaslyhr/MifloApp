@@ -94,6 +94,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "liverpool": require('./logos/liverpool.png'),
   "lorient": require('./logos/lorient.png'),
   "lyon": require('./logos/lyon.png'),
+  "mainz": require('./logos/mainz.png'),
   "mamelodi-sundowns": require('./logos/mamelodi-sundowns.png'),
   "man-city": require('./logos/man-city.png'),
   "man-utd": require('./logos/man-utd.png'),

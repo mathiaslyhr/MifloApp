@@ -4,8 +4,9 @@
  * the read-only `getClub`/`getById` helpers, so it is fully unit-testable with
  * fixture footballers.
  *
- * The dataset has no age / market value / height / detailed position, so the
- * `league` column is derived from the current club.
+ * The dataset has no market value / height / detailed position, so the
+ * `league` column is derived from the current club. Age is computed from
+ * `born` at the puzzle's `dateKey`, keeping the row deterministic per day.
  */
 import {getById, getClub, type Footballer} from '../../data/football';
 import type {CellResult, ColumnKey, GuessRow} from './types';
@@ -16,7 +17,7 @@ export const COLUMNS: readonly ColumnKey[] = [
   'position',
   'club',
   'league',
-  'shirtNumber',
+  'age',
 ];
 
 /** A footballer flattened to the scalars/sets the columns actually compare. */
@@ -27,12 +28,23 @@ export type DerivedAttributes = {
   /** The club with an open-ended spell (`to` undefined), i.e. the current club. */
   activeClubId: string | undefined;
   league: string | undefined;
-  /** Primary shirt number. */
-  shirtNumber: number | undefined;
+  /** Whole years old on the puzzle's day. */
+  age: number | undefined;
 };
 
+/** Whole-year age on `dateKey` for a `YYYY-MM-DD` date of birth. */
+export function ageOn(dateKey: string, born: string): number | undefined {
+  const [y, m, d] = dateKey.split('-').map(Number);
+  const [by, bm, bd] = born.split('-').map(Number);
+  if ([y, m, d, by, bm, bd].some(Number.isNaN)) {
+    return undefined;
+  }
+  const hadBirthday = m > bm || (m === bm && d >= bd);
+  return y - by - (hadBirthday ? 0 : 1);
+}
+
 /** Flatten a footballer to the values the feedback columns compare. */
-export function deriveAttributes(f: Footballer): DerivedAttributes {
+export function deriveAttributes(f: Footballer, dateKey: string): DerivedAttributes {
   // Current club = the open-ended spell, else the most recent (last) spell —
   // matching FootballerCard. Many current players have their current spell
   // end-dated (e.g. `to: 2025`), so relying only on `to === undefined` would
@@ -46,7 +58,7 @@ export function deriveAttributes(f: Footballer): DerivedAttributes {
     position: f.positions[0],
     activeClubId,
     league,
-    shirtNumber: f.shirtNumbers?.[0],
+    age: ageOn(dateKey, f.born),
   };
 }
 
@@ -110,8 +122,8 @@ export function compareCell(
             ? 'hit'
             : 'miss',
       };
-    case 'shirtNumber':
-      return numeric(key, guess.shirtNumber, secret.shirtNumber);
+    case 'age':
+      return numeric(key, guess.age, secret.age);
   }
 }
 
@@ -127,7 +139,11 @@ export function compareAttributes(
  * Compare a guessed footballer against the secret, both by id. Throws if either
  * id is unknown (the caller only ever passes ids from the dataset).
  */
-export function compareFootballers(guessId: string, secretId: string): GuessRow {
+export function compareFootballers(
+  guessId: string,
+  secretId: string,
+  dateKey: string,
+): GuessRow {
   const guess = getById(guessId);
   const secret = getById(secretId);
   if (!guess || !secret) {
@@ -135,6 +151,9 @@ export function compareFootballers(guessId: string, secretId: string): GuessRow 
   }
   return {
     footballerId: guessId,
-    cells: compareAttributes(deriveAttributes(guess), deriveAttributes(secret)),
+    cells: compareAttributes(
+      deriveAttributes(guess, dateKey),
+      deriveAttributes(secret, dateKey),
+    ),
   };
 }

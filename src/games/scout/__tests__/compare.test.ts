@@ -1,4 +1,4 @@
-import {compareAttributes, compareCell, deriveAttributes} from '../compare';
+import {ageOn, compareAttributes, compareCell, deriveAttributes} from '../compare';
 import type {Footballer} from '../../../data/football';
 import type {CellStatus, ColumnKey} from '../types';
 
@@ -12,21 +12,38 @@ function footballer(overrides: Partial<Footballer> = {}): Footballer {
     name: 'Test Player',
     nationality: ['England'],
     positions: ['FW'],
-    shirtNumbers: [9],
+    born: '1998-06-15',
     clubs: [{clubId: 'chelsea', from: 2018}],
     honours: [],
     ...overrides,
   };
 }
 
+/** The puzzle day every comparison in this file runs on. */
+const DATE_KEY = '2026-07-09';
+
+const derive = (f: Footballer) => deriveAttributes(f, DATE_KEY);
+
 const status = (row: ReturnType<typeof compareAttributes>, key: ColumnKey): CellStatus =>
   row.find(c => c.key === key)!.status;
 const dir = (row: ReturnType<typeof compareAttributes>, key: ColumnKey) =>
   row.find(c => c.key === key)!.direction;
 
+describe('ageOn', () => {
+  it('counts whole years, flipping exactly on the birthday', () => {
+    expect(ageOn('2026-06-14', '1998-06-15')).toBe(27); // day before
+    expect(ageOn('2026-06-15', '1998-06-15')).toBe(28); // the birthday itself
+    expect(ageOn('2026-06-16', '1998-06-15')).toBe(28); // day after
+  });
+
+  it('is undefined for a malformed date of birth', () => {
+    expect(ageOn(DATE_KEY, 'unknown')).toBeUndefined();
+  });
+});
+
 describe('deriveAttributes', () => {
   it('picks the open-ended spell as the active club and its league', () => {
-    const d = deriveAttributes(
+    const d = derive(
       footballer({
         clubs: [
           {clubId: 'aston-villa', from: 2015, to: 2018},
@@ -41,46 +58,49 @@ describe('deriveAttributes', () => {
   it('falls back to the most recent spell when none is open-ended', () => {
     // Current players often have their current spell end-dated (e.g. to: 2025),
     // so the last spell is treated as the current club.
-    const d = deriveAttributes(
+    const d = derive(
       footballer({
         clubs: [
           {clubId: 'aston-villa', from: 2015, to: 2018},
           {clubId: 'chelsea', from: 2018, to: 2025},
         ],
-        shirtNumbers: undefined,
       }),
     );
     expect(d.activeClubId).toBe('chelsea');
     expect(d.league).toBe('premier-league');
-    expect(d.shirtNumber).toBeUndefined();
   });
 
   it('has no active club only when there are no clubs at all', () => {
-    const d = deriveAttributes(footballer({clubs: []}));
+    const d = derive(footballer({clubs: []}));
     expect(d.activeClubId).toBeUndefined();
     expect(d.league).toBeUndefined();
+  });
+
+  it('computes the age at the puzzle date', () => {
+    expect(derive(footballer({born: '1998-06-15'})).age).toBe(28);
+    expect(derive(footballer({born: '1998-08-15'})).age).toBe(27); // birthday later this year
   });
 });
 
 describe('compareAttributes', () => {
   it('marks every column hit for an identical player', () => {
     const f = footballer();
-    const row = compareAttributes(deriveAttributes(f), deriveAttributes(f));
+    const row = compareAttributes(derive(f), derive(f));
     expect(row.every(c => c.status === 'hit')).toBe(true);
   });
 
   it('nationality: equal hit, shared dual partial, disjoint miss', () => {
-    const secret = deriveAttributes(footballer({nationality: ['France']}));
+    const secret = derive(footballer({nationality: ['France']}));
     expect(
       status(
-        compareAttributes(deriveAttributes(footballer({nationality: ['France']})), secret),
+        compareAttributes(derive(footballer({nationality: ['France']})), secret),
         'nationality',
       ),
     ).toBe('hit');
     expect(
       status(
         compareAttributes(
-          deriveAttributes(footballer({nationality: ['France', 'Cameroon']})),
+          derive(footballer({nationality: ['France', 'Cameroon']})),
           secret,
         ),
         'nationality',
@@ -88,18 +108,18 @@ describe('compareAttributes', () => {
     ).toBe('partial');
     expect(
       status(
-        compareAttributes(deriveAttributes(footballer({nationality: ['Brazil']})), secret),
+        compareAttributes(derive(footballer({nationality: ['Brazil']})), secret),
         'nationality',
       ),
     ).toBe('miss');
   });
 
   it('club: exact club hit, any other club miss (even same league)', () => {
-    const secret = deriveAttributes(footballer({clubs: [{clubId: 'chelsea', from: 2018}]}));
+    const secret = derive(footballer({clubs: [{clubId: 'chelsea', from: 2018}]}));
     expect(
       status(
         compareAttributes(
-          deriveAttributes(footballer({clubs: [{clubId: 'chelsea', from: 2018}]})),
+          derive(footballer({clubs: [{clubId: 'chelsea', from: 2018}]})),
           secret,
         ),
         'club',
@@ -109,7 +129,7 @@ describe('compareAttributes', () => {
     expect(
       status(
         compareAttributes(
-          deriveAttributes(footballer({clubs: [{clubId: 'arsenal', from: 2018}]})),
+          derive(footballer({clubs: [{clubId: 'arsenal', from: 2018}]})),
           secret,
         ),
         'club',
@@ -118,7 +138,7 @@ describe('compareAttributes', () => {
     expect(
       status(
         compareAttributes(
-          deriveAttributes(footballer({clubs: [{clubId: 'ac-milan', from: 2018}]})),
+          derive(footballer({clubs: [{clubId: 'ac-milan', from: 2018}]})),
           secret,
         ),
         'club',
@@ -126,20 +146,21 @@ describe('compareAttributes', () => {
     ).toBe('miss');
   });
 
-  it('shirt number: hit, and arrows point toward the secret', () => {
-    const secret = deriveAttributes(footballer({shirtNumbers: [10]}));
-    expect(status(compareAttributes(deriveAttributes(footballer({shirtNumbers: [10]})), secret), 'shirtNumber')).toBe('hit');
-    const lower = compareAttributes(deriveAttributes(footballer({shirtNumbers: [7]})), secret);
-    expect(status(lower, 'shirtNumber')).toBe('miss');
-    expect(dir(lower, 'shirtNumber')).toBe('up'); // secret 10 > guess 7
-    const higher = compareAttributes(deriveAttributes(footballer({shirtNumbers: [23]})), secret);
-    expect(dir(higher, 'shirtNumber')).toBe('down');
+  it('age: same age hit, and arrows point toward the secret', () => {
+    const secret = derive(footballer({born: '1996-03-01'})); // 30 on DATE_KEY
+    // Different birthday, same whole-year age = hit.
+    expect(status(compareAttributes(derive(footballer({born: '1996-05-20'})), secret), 'age')).toBe('hit');
+    const younger = compareAttributes(derive(footballer({born: '2003-03-01'})), secret);
+    expect(status(younger, 'age')).toBe('miss');
+    expect(dir(younger, 'age')).toBe('up'); // secret 30 > guess 23
+    const older = compareAttributes(derive(footballer({born: '1988-03-01'})), secret);
+    expect(dir(older, 'age')).toBe('down');
   });
 
   it('numeric columns miss without direction when a value is missing', () => {
-    const secret = deriveAttributes(footballer({shirtNumbers: [10]}));
-    const guess = deriveAttributes(footballer({shirtNumbers: undefined}));
-    const cell = compareCell('shirtNumber', guess, secret);
+    const secret = derive(footballer());
+    const guess = derive(footballer({born: 'unknown'}));
+    const cell = compareCell('age', guess, secret);
     expect(cell.status).toBe('miss');
     expect(cell.direction).toBeUndefined();
   });

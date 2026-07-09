@@ -266,6 +266,7 @@
     "lost": "Ikke flere gæt",
     "answerWas": "Dagens spiller var {{name}}",
     "answerLabel": "Svaret",
+    "answerAge": "{{value}} år",
     "streakCurrent": "Nuværende stime",
     "streakBest": "Bedste stime",
     "share": "Del resultat",
@@ -277,12 +278,12 @@
       "position": "Position",
       "club": "Klub",
       "league": "Liga",
-      "shirtNumber": "Nummer"
+      "age": "Alder"
     },
     "help": {
       "title": "Sådan spiller du",
       "rule": "Gæt dagens spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
-      "arrows": "Pilen på Nummer peger mod den hemmelige spillers nummer.",
+      "arrows": "Pilen på Alder peger mod den hemmelige spillers alder.",
       "daily": "En ny spiller kommer hver dag, den samme for alle."
     },
     "history": {

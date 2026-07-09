@@ -111,6 +111,8 @@ export type Footballer = {
   /** Can hold dual nationality. */
   nationality: string[];
   positions: Position[];
+  /** Date of birth, `YYYY-MM-DD`. Drives the Age column in Scout. */
+  born: string;
   shirtNumbers?: number[];
   clubs: ClubSpell[];
   honours: Honour[];

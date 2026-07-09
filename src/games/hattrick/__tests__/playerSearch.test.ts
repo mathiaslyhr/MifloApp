@@ -2,7 +2,7 @@ import {fold, scoreFootballer, searchPlayers} from '../playerSearch';
 import type {Footballer} from '../../../data/football';
 
 function player(id: string, name: string, extra: Partial<Footballer> = {}): Footballer {
-  return {id, name, nationality: [], positions: ['FW'], clubs: [], honours: [], ...extra};
+  return {id, name, nationality: [], positions: ['FW'], born: '2000-01-01', clubs: [], honours: [], ...extra};
 }
 
 const gavi = player('Gavi', 'Gavi');

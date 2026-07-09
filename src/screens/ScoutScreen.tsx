@@ -215,7 +215,9 @@ export function ScoutScreen({navigation}: Props) {
   const finished = isFinished(state);
   const secretPlayer = getById(state.secretId);
   // The answer reveal (shown once finished): flag + crest + position.
-  const secretAttrs = secretPlayer ? deriveAttributes(secretPlayer) : undefined;
+  const secretAttrs = secretPlayer
+    ? deriveAttributes(secretPlayer, state.dateKey)
+    : undefined;
   const secretFlag = flagImage(secretPlayer?.nationality[0]);
   const secretCrest = logoImage(secretAttrs?.activeClubId);
   const secretPosition =
@@ -285,7 +287,12 @@ export function ScoutScreen({navigation}: Props) {
                   </Text>
                   <View style={styles.cellRow}>
                     {g.cells.map(cell => (
-                      <Cell key={cell.key} cell={cell} player={player} />
+                      <Cell
+                        key={cell.key}
+                        cell={cell}
+                        player={player}
+                        dateKey={state.dateKey}
+                      />
                     ))}
                   </View>
                 </View>
@@ -320,9 +327,9 @@ export function ScoutScreen({navigation}: Props) {
                     {secretPosition}
                   </Text>
                 ) : null}
-                {secretAttrs?.shirtNumber !== undefined ? (
+                {secretAttrs?.age !== undefined ? (
                   <Text variant="secondary" color="secondary">
-                    {`#${secretAttrs.shirtNumber}`}
+                    {t('scout.answerAge', {value: secretAttrs.age})}
                   </Text>
                 ) : null}
               </View>
@@ -423,8 +430,16 @@ export function ScoutScreen({navigation}: Props) {
 }
 
 /** One feedback cell: coloured by status, showing the guessed player's value. */
-function Cell({cell, player}: {cell: CellResult; player: Footballer | undefined}) {
-  const attrs = player ? deriveAttributes(player) : undefined;
+function Cell({
+  cell,
+  player,
+  dateKey,
+}: {
+  cell: CellResult;
+  player: Footballer | undefined;
+  dateKey: string;
+}) {
+  const attrs = player ? deriveAttributes(player, dateKey) : undefined;
   const bg = STATUS_BG[cell.status];
   const arrow = cell.direction === 'up' ? '↑' : cell.direction === 'down' ? '↓' : '';
 
@@ -459,8 +474,8 @@ function cellValue(key: ColumnKey, attrs: ReturnType<typeof deriveAttributes> | 
       return attrs.position ?? '—';
     case 'league':
       return leagueShort(attrs.league);
-    case 'shirtNumber':
-      return attrs.shirtNumber !== undefined ? `${attrs.shirtNumber}` : '—';
+    case 'age':
+      return attrs.age !== undefined ? `${attrs.age}` : '—';
     default:
       return '—';
   }

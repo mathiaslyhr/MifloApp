@@ -113,6 +113,28 @@ describe('club + shape integrity', () => {
       expect(f.clubs.length).toBeGreaterThanOrEqual(1);
     }
   });
+
+  it('every footballer has a valid date of birth (drives the Scout Age column)', () => {
+    const invalid: string[] = [];
+    for (const f of all()) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(f.born);
+      if (!m) {
+        invalid.push(`${f.id}: ${f.born}`);
+        continue;
+      }
+      const [y, mo, d] = [Number(m[1]), Number(m[2]), Number(m[3])];
+      const date = new Date(Date.UTC(y, mo - 1, d));
+      // A rolled-over Date (e.g. Feb 30 → Mar 2) means the day/month is invalid.
+      const real =
+        date.getUTCFullYear() === y &&
+        date.getUTCMonth() === mo - 1 &&
+        date.getUTCDate() === d;
+      if (!real || y < 1930 || y > 2012) {
+        invalid.push(`${f.id}: ${f.born}`);
+      }
+    }
+    expect(invalid).toEqual([]);
+  });
 });
 
 describe('every criterion has a real image asset', () => {

@@ -44,7 +44,7 @@ export function applyGuess(state: MysteryState, footballerId: string): MysterySt
   if (state.guesses.some(g => g.footballerId === footballerId)) {
     return state;
   }
-  const row = compareFootballers(footballerId, state.secretId);
+  const row = compareFootballers(footballerId, state.secretId, state.dateKey);
   const guesses = [...state.guesses, row];
   const won = footballerId === state.secretId;
   const status: GameStatus = won

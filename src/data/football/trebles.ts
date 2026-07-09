@@ -95,7 +95,7 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Kvaratskhelia, Khvicha', 'Doué, Désiré', 'Mendes, Nuno',
       'Neves, João', 'Ruiz, Fabián', 'Zaïre-Emery, Warren',
       'Donnarumma, Gianluigi', 'Ramos, Gonçalo', 'Barcola, Bradley',
-      'Lee Kang-in',
+      'Lee Kang-in', 'Pacho, Willian',
     ],
   },
 ];
