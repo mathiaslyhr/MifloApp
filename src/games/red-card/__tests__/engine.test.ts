@@ -17,7 +17,7 @@ function state(overrides: Partial<ImposterState> = {}): ImposterState {
     phase: 'answering',
     round: 1,
     rounds: 2,
-    questionIds: ['q3', 'q7'],
+    questionIds: ['q3', 'q8'],
     turnUserId: null,
     players: [
       {userId: 'a', name: 'A'},
