@@ -401,9 +401,9 @@ const styles = StyleSheet.create({
     width: '100%',
     // Fully round — toasts speak the same pill language as buttons and tags.
     borderRadius: radii.pill,
-    // Near-solid frosted white: pills overlap in the stack, so the ones
-    // behind must not ghost through the front one.
-    backgroundColor: colors.glassStrong,
+    // Fully solid white: pills overlap in the stack and float over busy
+    // content, so nothing may ghost through.
+    backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.glassRim,
     // Soft lift so the glass reads above the busy rainbow canvas.
