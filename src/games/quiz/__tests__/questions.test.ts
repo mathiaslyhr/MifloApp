@@ -165,14 +165,17 @@ describe('buildQuestions', () => {
   });
 
   it('season-goal questions state the player\'s real tally', () => {
-    // Stats questions are a rare category, so which specific seed surfaces one
-    // depends on the (ever-growing) dataset size. Aggregate a few seeds so the
-    // test stays meaningful as players are added, rather than pinning one seed.
-    const stats = [24, 25, 26, 27].flatMap(seed =>
-      buildQuestions(['all'], 800, {rng: seededRng(seed)}).filter(
-        q => q.topic === 'Stats',
-      ),
-    );
+    // Stats questions are extremely rare (only a handful of players carry
+    // seasonStats), so no fixed seed set survives dataset growth. Hunt seeds
+    // until a sample shows up; only a genuinely dead template fails this.
+    const stats = [];
+    for (let seed = 1; seed <= 30 && stats.length === 0; seed++) {
+      stats.push(
+        ...buildQuestions(['all'], 800, {rng: seededRng(seed)}).filter(
+          q => q.topic === 'Stats',
+        ),
+      );
+    }
     expect(stats.length).toBeGreaterThan(0);
 
     for (const q of stats) {
