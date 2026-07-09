@@ -80,6 +80,11 @@ export function ToastHost() {
     setExpanded(true);
   }, []);
 
+  const collapse = useCallback(() => {
+    LayoutAnimation.configureNext(EXPAND_ANIM);
+    setExpanded(false);
+  }, []);
+
   // The stack collapses on its own once it's down to a single pill.
   useEffect(() => {
     if (expanded && toasts.length <= 1) {
@@ -94,7 +99,23 @@ export function ToastHost() {
   return (
     <View
       pointerEvents="box-none"
-      style={[styles.host, {paddingTop: insets.top + spacing.sm}]}>
+      style={[
+        styles.host,
+        {paddingTop: insets.top + spacing.sm},
+        // While expanded the host covers the screen so the backdrop below can
+        // catch a tap anywhere; collapsed it hugs the pills (box-none keeps
+        // the app tappable through it either way).
+        expanded && styles.hostExpanded,
+      ]}>
+      {expanded ? (
+        // Invisible tap-catcher behind the pills: touch anything that isn't a
+        // toast and the stack folds back up (timers resume and drain it).
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={collapse}
+          accessible={false}
+        />
+      ) : null}
       <View pointerEvents="box-none" style={styles.stack}>
         {ordered.map((t, depth) => (
           <ToastCard
@@ -365,6 +386,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
+  },
+  hostExpanded: {
+    bottom: 0,
   },
   // Overlap container: the front pill lays out normally and gives it height;
   // older pills stack absolutely behind it (or flow as a list when expanded).
