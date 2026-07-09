@@ -24,7 +24,12 @@ export const QUESTION_IDS = [
   'q44', 'q45', 'q48', 'q49', 'q50', 'q51', 'q53', 'q57', 'q58',
 ] as const;
 
-const POOL: readonly string[] = QUESTION_IDS;
+/**
+ * The live question pool. Starts as the bundled QUESTION_IDS; an OTA content
+ * pack replaces the contents in place via store.hydrate() (new question text
+ * arrives through the pack's i18n strings under the same ids).
+ */
+export const QUESTION_POOL: string[] = [...QUESTION_IDS];
 
 /**
  * Pick `rounds` distinct question ids, preferring ones not in `used`. `used`
@@ -36,12 +41,12 @@ export function buildQuestionIds(
   rng: Rng = Math.random,
   used: string[] = [],
 ): string[] {
-  const fresh = POOL.filter(id => !used.includes(id));
+  const fresh = QUESTION_POOL.filter(id => !used.includes(id));
   if (fresh.length >= rounds) {
     return shuffle([...fresh], rng).slice(0, rounds);
   }
   const refill = used
-    .filter(id => POOL.includes(id))
+    .filter(id => QUESTION_POOL.includes(id))
     .slice(0, rounds - fresh.length);
   return shuffle([...fresh, ...refill], rng);
 }

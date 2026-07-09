@@ -3,6 +3,7 @@
  */
 export * from './types';
 export {CLUBS, getClub} from './clubs';
+export {derivedFromData} from './generation';
 export {CATEGORIES, getCategory} from './categories';
 export type {Category} from './categories';
 export {FOOTBALLERS} from './footballers';

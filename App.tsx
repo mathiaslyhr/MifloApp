@@ -15,6 +15,11 @@ import {NavigationContainer} from '@react-navigation/native';
 import type {LinkingOptions} from '@react-navigation/native';
 import {RootNavigator} from './src/core/navigation';
 import type {RootStackParamList} from './src/core/navigation';
+import {navigationRef} from './src/core/navigation/navigationRef';
+import {
+  initFootballDataSync,
+  maybeApplyPending,
+} from './src/data/football/remote/datasetSync';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
@@ -45,6 +50,9 @@ function App(): React.JSX.Element {
     loadHapticsPreference().catch(() => {});
     // Schedule/cancel tonight's streak-saver nudge for the current state.
     syncStreakSaver();
+    // OTA game content: apply the cached pack, then poll for a newer one on
+    // launch + every foreground. Fails silently — bundled data always works.
+    initFootballDataSync().catch(() => {});
   }, []);
 
   // Surface uncaught JS errors (event handlers, effects, async) that an error
@@ -78,7 +86,12 @@ function App(): React.JSX.Element {
         <SafeAreaProvider>
           <StatusBar barStyle="dark-content" />
           <UpdateGate>
-            <NavigationContainer linking={linking}>
+            {/* navigationRef + onStateChange let the OTA content sync apply a
+                downloaded pack the moment the user leaves a game screen. */}
+            <NavigationContainer
+              ref={navigationRef}
+              linking={linking}
+              onStateChange={maybeApplyPending}>
               <RootNavigator />
             </NavigationContainer>
           </UpdateGate>

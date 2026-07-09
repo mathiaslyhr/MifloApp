@@ -10,6 +10,7 @@
 import {CLUBS, getClub} from './clubs';
 import {getCategory} from './categories';
 import {FOOTBALLERS} from './footballers';
+import {derivedFromData} from './generation';
 import {TREBLE_WINNER_IDS} from './trebles';
 import type {ClubSpell, Criterion, Footballer} from './types';
 
@@ -53,12 +54,12 @@ export function all(): readonly Footballer[] {
   return FOOTBALLERS;
 }
 
-const BY_ID: ReadonlyMap<string, Footballer> = new Map(
-  FOOTBALLERS.map(f => [f.id, f]),
+const byId = derivedFromData(
+  (): ReadonlyMap<string, Footballer> => new Map(FOOTBALLERS.map(f => [f.id, f])),
 );
 
 export function getById(id: string): Footballer | undefined {
-  return BY_ID.get(id);
+  return byId().get(id);
 }
 
 /** The leagues a footballer has played in, derived from their club spells. */

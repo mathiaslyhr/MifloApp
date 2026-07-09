@@ -8,7 +8,7 @@
  * every name/alias across the famous lineups, so suggestions cover historical
  * players who predate footballers.ts.
  */
-import {all, FAMOUS_LINEUPS, type LineupPlayer} from '../../data/football';
+import {all, derivedFromData, FAMOUS_LINEUPS, type LineupPlayer} from '../../data/football';
 
 /** Lowercase, strip diacritics + punctuation, collapse whitespace. */
 export function normalize(input: string): string {
@@ -61,13 +61,10 @@ function buildNamePool(): string[] {
   return [...names].sort((a, b) => a.localeCompare(b));
 }
 
-const NAME_POOL = buildNamePool();
-
 /** Pre-normalized pool so suggestions don't re-normalize on every keystroke. */
-const NORMALIZED_POOL: {name: string; norm: string}[] = NAME_POOL.map(name => ({
-  name,
-  norm: normalize(name),
-}));
+const normalizedPool = derivedFromData((): {name: string; norm: string}[] =>
+  buildNamePool().map(name => ({name, norm: normalize(name)})),
+);
 
 /**
  * Autocomplete suggestions for the current input: names whose normalized form
@@ -80,7 +77,7 @@ export function suggestNames(query: string, limit = 6): string[] {
   }
   const prefix: string[] = [];
   const contains: string[] = [];
-  for (const {name, norm} of NORMALIZED_POOL) {
+  for (const {name, norm} of normalizedPool()) {
     if (norm.startsWith(q)) {
       prefix.push(name);
     } else if (norm.includes(q)) {

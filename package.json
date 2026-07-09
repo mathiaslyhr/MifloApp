@@ -8,6 +8,7 @@
     "assets:flags": "node scripts/build-flag-assets.mjs",
     "assets:logos": "node scripts/build-logo-assets.mjs",
     "data:build": "node scripts/build-football-json.mjs",
+    "data:publish": "node --env-file-if-exists=.env scripts/publish-football-dataset.mjs",
     "prepare": "git config core.hooksPath scripts/git-hooks",
     "scout:schedule": "node scripts/build-scout-schedule.mjs",
     "icons": "node scripts/generate-app-icon.mjs",

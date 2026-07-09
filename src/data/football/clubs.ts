@@ -4,6 +4,7 @@
  * Footballers reference clubs by id only — keep this the single source of
  * truth for club name / country / league.
  */
+import {derivedFromData} from './generation';
 import type {Club} from './types';
 
 export const CLUBS: readonly Club[] = [
@@ -193,10 +194,10 @@ export const CLUBS: readonly Club[] = [
   {id: 'orlando-city', name: 'Orlando City', country: 'USA', league: 'mls'},
 ];
 
-const CLUBS_BY_ID: ReadonlyMap<string, Club> = new Map(
-  CLUBS.map(club => [club.id, club]),
+const clubsById = derivedFromData(
+  (): ReadonlyMap<string, Club> => new Map(CLUBS.map(club => [club.id, club])),
 );
 
 export function getClub(clubId: string): Club | undefined {
-  return CLUBS_BY_ID.get(clubId);
+  return clubsById().get(clubId);
 }

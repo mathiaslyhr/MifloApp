@@ -85,3 +85,6 @@ supabase/.temp/
 # Sentry auth token — secret, never commit
 ios/sentry.properties
 sentry.properties
+
+# Publishing secrets (SUPABASE_SERVICE_ROLE_KEY for data:publish) — never commit
+.env
