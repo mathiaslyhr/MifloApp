@@ -1358,6 +1358,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Bendtner, Niklas',
+    name: 'Niklas Bendtner',
+    nationality: ['Denmark'],
+    positions: ['FW'],
+    shirtNumbers: [52, 11],
+    clubs: [
+      {clubId: 'arsenal', from: 2005, to: 2014},
+      {clubId: 'sunderland', from: 2011, to: 2012, loan: true},
+      {clubId: 'juventus', from: 2012, to: 2013, loan: true},
+      {clubId: 'wolfsburg', from: 2014, to: 2016},
+      {clubId: 'nottingham-forest', from: 2016, to: 2017},
+      {clubId: 'copenhagen', from: 2019, to: 2019},
+    ],
+    honours: [],
+    tags: ['legends'],
+  },
+  {
     id: 'Bennacer, Ismaël',
     name: 'Ismaël Bennacer',
     nationality: ['Algeria'],
@@ -5406,6 +5423,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Hjulmand, Morten',
+    name: 'Morten Hjulmand',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    shirtNumbers: [42, 6],
+    clubs: [
+      {clubId: 'lecce', from: 2021, to: 2023},
+      {clubId: 'sporting', from: 2023, to: 2026},
+      {clubId: 'atletico-madrid', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2024, 2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Hložek, Adam',
     name: 'Adam Hložek',
     nationality: ['Czech Republic'],
@@ -5659,6 +5692,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [24, 10],
     clubs: [
       {clubId: 'napoli', from: 2010, to: 2022},
+      {clubId: 'sampdoria', from: 2026},
     ],
     honours: [
       {type: 'european-championship', count: 1, years: [2021]},
