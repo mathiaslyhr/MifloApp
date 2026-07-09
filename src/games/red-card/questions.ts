@@ -21,7 +21,7 @@ import {shuffle, type Rng} from '../../data/football';
 export const QUESTION_IDS = [
   'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q8', 'q10', 'q11', 'q12',
   'q16', 'q18', 'q19', 'q20', 'q21', 'q26', 'q27', 'q30',
-  'q44', 'q45', 'q48', 'q49', 'q50', 'q51', 'q53', 'q57',
+  'q44', 'q45', 'q48', 'q49', 'q50', 'q51', 'q53', 'q57', 'q58',
 ] as const;
 
 const POOL: readonly string[] = QUESTION_IDS;

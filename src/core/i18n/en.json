@@ -225,7 +225,8 @@
       "q50": "Which club that he never played for fits him best?",
       "q51": "Where would he finish in the Ballon d'Or in his best year?",
       "q53": "Rate his big-game performances from 1 to 10.",
-      "q57": "What would make him a better player?"
+      "q57": "What would make him a better player?",
+      "q58": "Is he underrated or overrated?"
     },
     "vote": {
       "title": "Who should be sent off?",

@@ -225,7 +225,8 @@
       "q50": "Hvilken klub, han aldrig har spillet for, passer bedst til ham?",
       "q51": "Hvor ville han slutte i Ballon d'Or-afstemningen i sit bedste år?",
       "q53": "Giv hans præstationer i store kampe point fra 1 til 10.",
-      "q57": "Hvad ville gøre ham til en bedre spiller?"
+      "q57": "Hvad ville gøre ham til en bedre spiller?",
+      "q58": "Er han undervurderet eller overvurderet?"
     },
     "vote": {
       "title": "Hvem skal sendes af banen?",
