@@ -29,9 +29,8 @@ import {
   recordResult,
 } from '../games/scout/engine';
 import {
-  dailyPool,
+  dailySecretFor,
   dateKeyFor,
-  secretFor,
 } from '../games/scout/dailySeed';
 import {
   loadDailyProgress,
@@ -103,11 +102,11 @@ export function ScoutScreen({navigation}: Props) {
         loadDailyProgress(dateKey),
         loadStreak(),
       ]);
-      // Prefer the secret pinned when the day was first opened — a dataset
-      // update reshuffles secretFor's pool, and the day's player must never
-      // change once the puzzle has been seen on this device.
+      // Prefer the secret pinned when the day was first opened — the frozen
+      // schedule keeps days stable across dataset edits, but the pin also
+      // covers pre-schedule saves and dates beyond the schedule horizon.
       const pinned = progress?.secretId ? getById(progress.secretId) : undefined;
-      const secret = pinned ?? secretFor(dateKey, dailyPool());
+      const secret = pinned ?? dailySecretFor(dateKey);
       let s = createInitialState(dateKey, secret.id);
       if (progress) {
         for (const id of progress.guessedIds) {

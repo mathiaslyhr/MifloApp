@@ -5,7 +5,8 @@
  * PRNG -> index into the fairness-filtered pool. All pure, so the same day
  * always yields the same secret and the tests can assert stability.
  */
-import {FOOTBALLERS, getClub, shuffle, type Footballer, type Rng} from '../../data/football';
+import {FOOTBALLERS, getById, getClub, shuffle, type Footballer, type Rng} from '../../data/football';
+import {DAILY_SECRETS} from './schedule.generated';
 
 /** Epoch for the daily sequence: cycle 0, index 0 falls on this day. */
 const EPOCH_KEY = '2026-01-01';
@@ -104,11 +105,31 @@ function dayNumber(dateKey: string): number {
 }
 
 /**
- * The secret footballer for a given day. A deterministic shuffled *sequence*
- * rather than an independent daily draw: each pool-length cycle of days is a
- * fresh Fisher–Yates permutation of the whole pool, walked one player per day,
- * so no footballer repeats until the entire pool is exhausted. Note this makes
- * the sequence (including today's secret) shift whenever the pool changes.
+ * The secret footballer for a given day — schedule first, walk as fallback.
+ *
+ * The committed schedule (schedule.generated.ts, `npm run scout:schedule`) is
+ * the source of truth: an explicit dateKey -> id map, so dataset edits can
+ * never move a scheduled day and every app version agrees on the player. The
+ * permutation walk below only serves dates beyond the schedule's horizon.
+ */
+export function dailySecretFor(dateKey: string): Footballer {
+  const scheduledId = DAILY_SECRETS[dateKey];
+  if (scheduledId !== undefined) {
+    const scheduled = getById(scheduledId);
+    if (scheduled) {
+      return scheduled;
+    }
+  }
+  return secretFor(dateKey, dailyPool());
+}
+
+/**
+ * Fallback for dates beyond the schedule horizon: a deterministic shuffled
+ * *sequence* rather than an independent daily draw — each pool-length cycle of
+ * days is a fresh Fisher–Yates permutation of the whole pool, walked one
+ * player per day, so no footballer repeats until the pool is exhausted. The
+ * sequence shifts whenever the pool changes, which is exactly why scheduled
+ * dates take precedence.
  */
 export function secretFor(dateKey: string, pool: readonly Footballer[]): Footballer {
   if (pool.length === 0) {
