@@ -14,14 +14,15 @@
  */
 import {shuffle, type Rng} from '../../data/football';
 
-// Ids are opaque keys and several have been retired (q7, q9, q13, q14, q15,
-// q17, q22 to q25, q28 — prime/rating clones, coin flips, and questions too
-// hard for the faker to bluff), so the gaps are intentional.
+// Ids are opaque keys and many have been retired (q7, q9, q13 to q15, q17,
+// q22 to q25, q28: prime/rating clones, coin flips, too hard for the faker;
+// q31 to q43: an off-pitch batch that wasn't football enough), so the gaps
+// are intentional. Questions stay football-centred, opinion/estimate style.
 export const QUESTION_IDS = [
   'q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q8', 'q10', 'q11', 'q12',
   'q16', 'q18', 'q19', 'q20', 'q21', 'q26', 'q27', 'q29', 'q30',
-  'q31', 'q32', 'q33', 'q34', 'q35', 'q36', 'q37', 'q38', 'q39', 'q40',
-  'q41', 'q42', 'q43',
+  'q44', 'q45', 'q46', 'q47', 'q48', 'q49', 'q50', 'q51', 'q52',
+  'q53', 'q54', 'q55', 'q56',
 ] as const;
 
 const POOL: readonly string[] = QUESTION_IDS;
