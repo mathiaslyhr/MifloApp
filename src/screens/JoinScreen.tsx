@@ -3,7 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Button, CircleButton, Screen, Text, TextField} from '../core/ui';
+import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
+import {haptics} from '../core/haptics';
 import {colors, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -26,7 +27,6 @@ export function JoinScreen({navigation}: Props) {
   const {t} = useTranslation();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const trimmed = code.trim();
   const canJoin = trimmed.length === CODE_LENGTH && !busy;
@@ -36,14 +36,14 @@ export function JoinScreen({navigation}: Props) {
       return;
     }
     setBusy(true);
-    setError(null);
     try {
       const room = await joinRoom(trimmed, randomFootballName());
       navigation.replace('Lobby', {roomId: room.id});
     } catch (err) {
       // Blame the code only when the server actually rejected it — a request
       // that never got through shows a connection message instead.
-      setError(
+      haptics.error();
+      toast.error(
         err instanceof BackendUnavailableError
           ? t('join.errorUnavailable')
           : isNetworkError(err)
@@ -76,10 +76,7 @@ export function JoinScreen({navigation}: Props) {
         </Text>
         <TextField
           value={code}
-          onChangeText={text => {
-            setCode(text.toUpperCase());
-            setError(null);
-          }}
+          onChangeText={text => setCode(text.toUpperCase())}
           placeholder={t('join.codePlaceholder')}
           autoFocus
           autoCapitalize="characters"
@@ -89,11 +86,6 @@ export function JoinScreen({navigation}: Props) {
           accessibilityLabel={t('join.codeLabel')}
           style={styles.codeField}
         />
-        {error ? (
-          <Text variant="secondary" align="center" style={styles.error}>
-            {error}
-          </Text>
-        ) : null}
         <Button
           label={busy ? t('join.joining') : t('join.join')}
           variant="primary"
@@ -128,5 +120,4 @@ const styles = StyleSheet.create({
     fontSize: 24,
     letterSpacing: 8,
   },
-  error: {color: colors.error},
 });

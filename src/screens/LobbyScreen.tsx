@@ -401,7 +401,13 @@ export function LobbyScreen({route, navigation}: Props) {
                 return;
               }
               haptics.warning();
-              toast.neutral(t('lobby.needPlayers', {count: minPlayers}));
+              // A locked party talks about "this game"; a free party is still
+              // picking, so the message talks about picking instead.
+              toast.neutral(
+                locked && room
+                  ? t('lobby.needPlayers', {count: minPlayers})
+                  : t('lobby.needPlayersPick', {count: minPlayers}),
+              );
             }}
             onPress={async () => {
               if (locked && room) {

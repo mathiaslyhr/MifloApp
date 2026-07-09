@@ -56,7 +56,8 @@
     "errorRemove": "Kunne ikke fjerne {{name}}.",
     "errorRename": "Kunne ikke skifte dit navn.",
     "errorStart": "Kunne ikke starte spillet. Prøv igen.",
-    "needPlayers": "Dette spil kræver mindst {{count}} spillere."
+    "needPlayers": "Dette spil kræver mindst {{count}} spillere.",
+    "needPlayersPick": "I skal være mindst {{count}} spillere for at vælge et spil."
   },
   "tabs": {
     "home": "Hjem",

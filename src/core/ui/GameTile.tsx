@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
 import {colors, radii, spacing} from '../../theme';
+import {CircleButton} from './CircleButton';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
 

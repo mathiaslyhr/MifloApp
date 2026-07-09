@@ -7,16 +7,20 @@
  *
  * Pills enter with a soft fade + drop and auto-dismiss on their own timer.
  * They stack iOS-notification style: the newest sits in front and older ones
- * tuck behind it, peeking out just enough to show there's more. Only the
- * front pill is interactive — tap it away, or swipe it sideways (a quick
- * flick counts even before the distance threshold; the timer pauses while a
- * finger is down). Honors Reduce Motion → opacity-only (matches usePressScale).
+ * tuck behind it, peeking out just enough to show there's more. With one pill,
+ * tap dismisses it; with 2+, tap expands the stack into a readable list (all
+ * timers pause) where each pill can be tapped or swiped away on its own — the
+ * stack collapses by itself once one pill is left. Swiping sideways flings the
+ * pill off (a quick flick counts before the distance threshold; the timer
+ * pauses while a finger is down). Honors Reduce Motion → opacity-only
+ * (matches usePressScale).
  */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AccessibilityInfo,
   Animated,
   Easing,
+  LayoutAnimation,
   PanResponder,
   Pressable,
   StyleSheet,
@@ -57,23 +61,49 @@ const TONE_CHIP: Record<
   error: {Icon: X, color: colors.error, tint: colors.toastTintError},
 };
 
+const EXPAND_ANIM = LayoutAnimation.create(
+  ENTER_MS,
+  LayoutAnimation.Types.easeInEaseOut,
+  LayoutAnimation.Properties.opacity,
+);
+
 export function ToastHost() {
   const insets = useSafeAreaInsets();
   const toasts = useToastStore(s => s.toasts);
+  const [expanded, setExpanded] = useState(false);
   // The front pill's measured height — pills behind are clamped to it so a
   // taller old message never pokes out under a shorter new one.
   const [frontHeight, setFrontHeight] = useState(0);
+
+  const expand = useCallback(() => {
+    LayoutAnimation.configureNext(EXPAND_ANIM);
+    setExpanded(true);
+  }, []);
+
+  // The stack collapses on its own once it's down to a single pill.
+  useEffect(() => {
+    if (expanded && toasts.length <= 1) {
+      LayoutAnimation.configureNext(EXPAND_ANIM);
+      setExpanded(false);
+    }
+  }, [expanded, toasts.length]);
+
+  // Newest first: index 0 is the front pill (and the top row when expanded).
+  const ordered = [...toasts].reverse();
 
   return (
     <View
       pointerEvents="box-none"
       style={[styles.host, {paddingTop: insets.top + spacing.sm}]}>
       <View pointerEvents="box-none" style={styles.stack}>
-        {toasts.map((t, i) => (
+        {ordered.map((t, depth) => (
           <ToastCard
             key={t.id}
             toast={t}
-            depth={toasts.length - 1 - i}
+            depth={depth}
+            expanded={expanded}
+            canExpand={!expanded && ordered.length > 1}
+            onExpand={expand}
             frontHeight={frontHeight}
             onFrontHeight={setFrontHeight}
           />
@@ -87,11 +117,24 @@ type CardProps = {
   toast: Toast;
   /** 0 = front (newest); 1, 2 tuck progressively further behind. */
   depth: number;
+  /** Whole-stack state: expanded pills lay out as a readable list. */
+  expanded: boolean;
+  /** True when a tap should fan the stack out instead of dismissing. */
+  canExpand: boolean;
+  onExpand: () => void;
   frontHeight: number;
   onFrontHeight: (height: number) => void;
 };
 
-function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
+function ToastCard({
+  toast,
+  depth,
+  expanded,
+  canExpand,
+  onExpand,
+  frontHeight,
+  onFrontHeight,
+}: CardProps) {
   const dismiss = useToastStore(s => s.dismiss);
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-8)).current;
@@ -101,17 +144,25 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
   const leavingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFront = depth === 0;
+  // The pan responder is created once, so it reads live state through refs.
   const isFrontRef = useRef(isFront);
   isFrontRef.current = isFront;
+  const expandedRef = useRef(expanded);
+  expandedRef.current = expanded;
+
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
 
   const close = useCallback(() => {
     if (leavingRef.current) {
       return;
     }
     leavingRef.current = true;
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    clearTimer();
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 0,
@@ -124,7 +175,7 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         useNativeDriver: true,
       }),
     ]).start(() => dismiss(toast.id));
-  }, [dismiss, opacity, translateY, toast.id]);
+  }, [clearTimer, dismiss, opacity, translateY, toast.id]);
 
   /** Carry the pill off in the swipe direction, then remove it. */
   const flingOut = useCallback(
@@ -133,9 +184,7 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         return;
       }
       leavingRef.current = true;
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
+      clearTimer();
       Animated.parallel([
         Animated.timing(translateX, {
           toValue: direction * 480,
@@ -151,15 +200,13 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         }),
       ]).start(() => dismiss(toast.id));
     },
-    [dismiss, opacity, translateX, toast.id],
+    [clearTimer, dismiss, opacity, translateX, toast.id],
   );
 
   const startTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
+    clearTimer();
     timerRef.current = setTimeout(close, toast.duration);
-  }, [close, toast.duration]);
+  }, [clearTimer, close, toast.duration]);
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled()
@@ -182,32 +229,41 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         useNativeDriver: true,
       }),
     ]).start();
-
-    startTimer();
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Slide into the new stack slot whenever a pill in front arrives or leaves.
+  // Auto-dismiss runs only while the stack is collapsed — an expanded stack
+  // is being read, so every pill waits for the user.
+  useEffect(() => {
+    if (leavingRef.current) {
+      return;
+    }
+    if (expanded) {
+      clearTimer();
+      return;
+    }
+    startTimer();
+    return clearTimer;
+  }, [expanded, startTimer, clearTimer]);
+
+  // Slide into the new stack slot whenever a pill in front arrives or leaves;
+  // expanding flattens every pill back to its natural size and place.
   useEffect(() => {
     Animated.timing(stack, {
-      toValue: depth,
+      toValue: expanded ? 0 : depth,
       duration: reduceMotion.current ? 0 : ENTER_MS,
       easing: EXIT_EASING,
       useNativeDriver: true,
     }).start();
-  }, [depth, stack]);
+  }, [depth, expanded, stack]);
 
-  // Horizontal swipe on the front pill. Claims the gesture only once the
-  // finger clearly moves sideways, so plain taps still reach the Pressable.
+  // Horizontal swipe. Claimed in the capture phase (the inner Pressable would
+  // otherwise hold the gesture), but only once the finger clearly moves
+  // sideways, so plain taps still reach the Pressable.
   const pan = useRef(
     PanResponder.create({
-      onMoveShouldSetPanResponder: (_, g) =>
-        isFrontRef.current &&
+      onMoveShouldSetPanResponderCapture: (_, g) =>
+        (isFrontRef.current || expandedRef.current) &&
         !leavingRef.current &&
         Math.abs(g.dx) > 8 &&
         Math.abs(g.dx) > Math.abs(g.dy),
@@ -215,6 +271,7 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         // Hold the auto-dismiss while a finger is on the pill.
         if (timerRef.current) {
           clearTimeout(timerRef.current);
+          timerRef.current = null;
         }
       },
       onPanResponderMove: (_, g) => translateX.setValue(g.dx),
@@ -228,7 +285,9 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
             bounciness: 5,
             useNativeDriver: true,
           }).start();
-          startTimer();
+          if (!expandedRef.current) {
+            startTimer();
+          }
         }
       },
       onPanResponderTerminate: () => {
@@ -238,7 +297,9 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
           bounciness: 5,
           useNativeDriver: true,
         }).start();
-        startTimer();
+        if (!expandedRef.current) {
+          startTimer();
+        }
       },
     }),
   ).current;
@@ -256,17 +317,21 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
     extrapolate: 'clamp',
   });
 
+  const behind = !expanded && !isFront;
+
   return (
     <Animated.View
       {...pan.panHandlers}
-      pointerEvents={isFront ? 'auto' : 'none'}
+      pointerEvents={expanded || isFront ? 'auto' : 'none'}
       onLayout={
-        isFront ? e => onFrontHeight(e.nativeEvent.layout.height) : undefined
+        !expanded && isFront
+          ? e => onFrontHeight(e.nativeEvent.layout.height)
+          : undefined
       }
       style={[
         styles.card,
-        !isFront && styles.behind,
-        !isFront && frontHeight > 0 && {height: frontHeight},
+        behind && styles.behind,
+        behind && frontHeight > 0 && {height: frontHeight},
         {
           zIndex: 100 - depth,
           opacity,
@@ -278,7 +343,7 @@ function ToastCard({toast, depth, frontHeight, onFrontHeight}: CardProps) {
         },
       ]}>
       <Pressable
-        onPress={close}
+        onPress={canExpand ? onExpand : close}
         accessibilityRole="alert"
         accessibilityLabel={toast.message}
         style={styles.pressable}>
@@ -302,10 +367,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   // Overlap container: the front pill lays out normally and gives it height;
-  // older pills stack absolutely behind it.
+  // older pills stack absolutely behind it (or flow as a list when expanded).
   stack: {
     width: '92%',
     maxWidth: 420,
+    gap: spacing.sm,
   },
   card: {
     width: '100%',

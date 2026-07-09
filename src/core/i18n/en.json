@@ -56,7 +56,8 @@
     "errorRemove": "Couldn't remove {{name}}.",
     "errorRename": "Couldn't change your name.",
     "errorStart": "Couldn't start the game. Please try again.",
-    "needPlayers": "This game needs at least {{count}} players."
+    "needPlayers": "This game needs at least {{count}} players.",
+    "needPlayersPick": "You need at least {{count}} players to pick a game."
   },
   "tabs": {
     "home": "Home",
