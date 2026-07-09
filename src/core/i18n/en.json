@@ -73,6 +73,7 @@
       "party": "3+"
     },
     "localPlay": "Play on this phone",
+    "oneDeviceShort": "1 device",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Football trivia × three in a row",
@@ -123,6 +124,7 @@
     "faq": "FAQ",
     "privacy": "Privacy Policy",
     "reportBug": "Report a bug",
+    "oneDevice": "One device",
     "version": "Miflo v{{version}}",
     "errorLink": "Couldn't open the link."
   },
@@ -341,5 +343,15 @@
     "step2Title": "Pick a game",
     "step2Desc": "The host picks a game once at least two players have joined.",
     "gamesHeading": "The games"
+  },
+  "oneDevice": {
+    "title": "One device",
+    "intro": "Hattrick and Red Card can also be played together on a single phone. No internet needed, so it works on a plane or anywhere offline.",
+    "step1Title": "Swipe right on the game",
+    "step1Desc": "On the Games tab, swipe the Hattrick or Red Card card to the right.",
+    "step2Title": "Tap the phone button",
+    "step2Desc": "A round 1 device button appears on the left of the card. Tap it to start.",
+    "step3Title": "Pass the phone around",
+    "step3Desc": "Take turns on one phone. In Red Card the screen always says who may look before anything secret is shown."
   }
 }

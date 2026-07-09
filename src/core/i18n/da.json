@@ -73,6 +73,7 @@
       "party": "3+"
     },
     "localPlay": "Spil på denne telefon",
+    "oneDeviceShort": "1 enhed",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Fodboldquiz × tre på stribe",
@@ -123,6 +124,7 @@
     "faq": "FAQ",
     "privacy": "Privatlivspolitik",
     "reportBug": "Rapportér en fejl",
+    "oneDevice": "Én enhed",
     "version": "Miflo v{{version}}",
     "errorLink": "Kunne ikke åbne linket."
   },
@@ -341,5 +343,15 @@
     "step2Title": "Vælg et spil",
     "step2Desc": "Værten vælger et spil, når mindst to spillere er med.",
     "gamesHeading": "Spillene"
+  },
+  "oneDevice": {
+    "title": "Én enhed",
+    "intro": "Hattrick og Red Card kan også spilles sammen på én telefon. Der kræves ikke internet, så det virker på et fly og alle andre steder uden forbindelse.",
+    "step1Title": "Stryg til højre på spillet",
+    "step1Desc": "Stryg Hattrick- eller Red Card-kortet til højre under Spil.",
+    "step2Title": "Tryk på telefonknappen",
+    "step2Desc": "En rund 1 enhed-knap dukker op til venstre på kortet. Tryk på den for at starte.",
+    "step3Title": "Send telefonen rundt",
+    "step3Desc": "I skiftes på én telefon. I Red Card fortæller skærmen altid, hvem der må kigge, før noget hemmeligt vises."
   }
 }

@@ -8,6 +8,7 @@ import {
   Info,
   Settings,
   Shield,
+  Smartphone,
   User,
 } from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
@@ -30,7 +31,7 @@ import {
 import {spacing} from '../theme';
 
 /** In-app destinations reachable from the Menu (detail screens land later, #12). */
-export type MenuItem = 'profile' | 'settings' | 'howToPlay' | 'about';
+export type MenuItem = 'profile' | 'settings' | 'howToPlay' | 'about' | 'oneDevice';
 
 type Props = {
   /** Open a menu destination — its detail screen. Stubbed until those exist. */
@@ -103,6 +104,11 @@ export function MenuScreen({onSelectItem}: Props) {
             label={t('menu.aboutMiflo')}
             Icon={Info}
             onPress={() => onSelectItem?.('about')}
+          />
+          <MenuRow
+            label={t('menu.oneDevice')}
+            Icon={Smartphone}
+            onPress={() => onSelectItem?.('oneDevice')}
           />
           <MenuRow
             label={t('menu.faq')}

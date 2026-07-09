@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {
+  CircleButton,
   GameTile,
   NAV_HEIGHT,
   Screen,
@@ -10,7 +11,7 @@ import {
   toast,
   TopStatusFade,
 } from '../core/ui';
-import {spacing} from '../theme';
+import {colors, spacing} from '../theme';
 import {useAppNavigation} from '../core/navigation';
 import {Smartphone} from 'lucide-react-native';
 import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
@@ -90,11 +91,21 @@ export function GamesScreen() {
           },
         ]}
         showsVerticalScrollIndicator={false}>
-        {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
+        {/* Wordmark header — in the scroll flow, so it scrolls off the top.
+            The corner phone button (mirrors Home's "?") opens the One device
+            page, the signpost for the swipe-right pass-and-play gesture. */}
         <View style={styles.header}>
           <Text variant="wordmark" align="center">
             {t('games.title')}
           </Text>
+          <View style={styles.headerRight}>
+            <CircleButton
+              size={30}
+              accessibilityLabel={t('oneDevice.title')}
+              onPress={() => navigation.navigate('OneDevice')}>
+              <Smartphone size={15} color={colors.textSecondary} strokeWidth={2} />
+            </CircleButton>
+          </View>
         </View>
         {/* One flat list — playable games first (each with an audience chip),
             then "coming soon" games dimmed at the bottom. No section headers. */}
@@ -115,6 +126,7 @@ export function GamesScreen() {
                 game.localPlay ? () => startLocal(game.gameType) : undefined
               }
               secondaryAccessibilityLabel={t('games.localPlay')}
+              secondaryLabel={t('games.oneDeviceShort')}
             />
           ))}
         </View>
@@ -131,6 +143,14 @@ const styles = StyleSheet.create({
   header: {
     height: 44,
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Corner action pinned to the header row's right edge (mirrors Home's "?").
+  headerRight: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
     justifyContent: 'center',
   },
   scroll: {flex: 1},

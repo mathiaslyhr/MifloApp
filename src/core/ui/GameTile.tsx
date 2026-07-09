@@ -6,9 +6,9 @@ import {CircleButton} from './CircleButton';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
 
-/** Swipe-reveal geometry: circle button diameter + breathing room each side. */
-const ACTION_SIZE = 40;
-const REVEAL = ACTION_SIZE + spacing.sm * 2;
+/** Swipe-reveal geometry: the action column (circle + label) is this wide. */
+const ACTION_SIZE = 48;
+const REVEAL = 72;
 /** The tile can be dragged slightly past the open position, then springs back. */
 const OVERDRAG = 16;
 /** A flick this fast settles the swipe regardless of distance. */
@@ -54,6 +54,8 @@ type Props = {
   SecondaryIcon?: LucideIcon;
   onSecondaryPress?: () => void;
   secondaryAccessibilityLabel?: string;
+  /** Short caption under the revealed circle, e.g. "1 device". */
+  secondaryLabel?: string;
 };
 
 /**
@@ -77,6 +79,7 @@ export function GameTile({
   SecondaryIcon,
   onSecondaryPress,
   secondaryAccessibilityLabel,
+  secondaryLabel,
 }: Props) {
   const hasSwipeAction =
     !!SecondaryIcon && !!onSecondaryPress && !disabled && !badge;
@@ -246,9 +249,18 @@ export function GameTile({
             onSecondaryPress?.();
           }}>
           {SecondaryIcon ? (
-            <SecondaryIcon size={18} color={colors.ink} strokeWidth={2} />
+            <SecondaryIcon size={20} color={colors.ink} strokeWidth={2} />
           ) : null}
         </CircleButton>
+        {secondaryLabel ? (
+          <Text
+            variant="caption"
+            color="secondary"
+            numberOfLines={1}
+            style={styles.leadingLabel}>
+            {secondaryLabel}
+          </Text>
+        ) : null}
       </Animated.View>
       <Animated.View {...pan.panHandlers} style={{transform: [{translateX}]}}>
         {tile}
@@ -286,14 +298,19 @@ const styles = StyleSheet.create({
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
   trailing: {flexShrink: 0},
   // Swipe-reveal leading action: pinned behind the tile's left edge, vertically
-  // centered; the tile slides right over/off it.
+  // centered; the tile slides right over/off it. The column matches REVEAL so
+  // the circle + label sit centered in exactly the space the swipe uncovers.
   leadingAction: {
     position: 'absolute',
-    left: spacing.sm,
+    left: 0,
+    width: REVEAL,
     top: 0,
     bottom: 0,
+    alignItems: 'center',
     justifyContent: 'center',
+    gap: spacing.xs,
   },
+  leadingLabel: {fontSize: 11, lineHeight: 13},
   // Shared top-edge pill: an off-white chip straddling the tile's top border
   // (like the lobby host badge). Left-anchored to line up with the title text
   // below it: card padding + icon badge (44) + gap. Both the trailing-status

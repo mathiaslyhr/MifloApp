@@ -8,12 +8,13 @@ import {FloatingBar, IslandTabBar, type TabId} from '../core/ui';
 import type {RootStackParamList} from '../core/navigation';
 
 /** Menu row → the detail route it opens (all param-less). */
-type DetailRoute = 'Profile' | 'Settings' | 'HowToPlay' | 'About';
+type DetailRoute = 'Profile' | 'Settings' | 'HowToPlay' | 'About' | 'OneDevice';
 const MENU_ROUTES: Record<MenuItem, DetailRoute> = {
   profile: 'Profile',
   settings: 'Settings',
   howToPlay: 'HowToPlay',
   about: 'About',
+  oneDevice: 'OneDevice',
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;

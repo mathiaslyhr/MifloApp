@@ -27,6 +27,7 @@ export type RootStackParamList = {
   Settings: undefined;
   HowToPlay: undefined;
   About: undefined;
+  OneDevice: undefined;
 };
 
 /** Typed navigation prop for screens that push/pop the root stack. */
