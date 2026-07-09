@@ -190,6 +190,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'saint-etienne', name: 'Saint-Étienne', country: 'France', league: 'ligue-1'},
   {id: 'elche', name: 'Elche', country: 'Spain', league: 'la-liga'},
   {id: 'cannes', name: 'AS Cannes', country: 'France', league: 'ligue-1'},
+  {id: 'orlando-city', name: 'Orlando City', country: 'USA', league: 'mls'},
 ];
 
 const CLUBS_BY_ID: ReadonlyMap<string, Club> = new Map(

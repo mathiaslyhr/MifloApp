@@ -3,14 +3,26 @@
  * keeps the day's secret identical for every user and immune to dataset edits.
  * If coverage runs low or an id goes stale, the fix is `npm run scout:schedule`.
  */
-import {DAILY_SECRETS} from '../schedule.generated';
-import {dailyPool, dailySecretFor, dateKeyFor, secretFor} from '../dailySeed';
+import {DAILY_SECRETS, POOL_SIGNATURE} from '../schedule.generated';
+import {dailyPool, dailySecretFor, dateKeyFor, hashDateKey, secretFor} from '../dailySeed';
 import {getById} from '../../../data/football';
 
 const EPOCH_KEY = '2026-01-01';
 const dates = Object.keys(DAILY_SECRETS);
 
 describe('frozen daily schedule', () => {
+  it('was generated against the current daily pool (else run `npm run scout:schedule`)', () => {
+    // Normally the pre-commit hook regenerates the schedule whenever the
+    // football data changes; this catches anything that slipped past it.
+    const live = hashDateKey(
+      dailyPool()
+        .map(f => f.id)
+        .sort()
+        .join('|'),
+    );
+    expect(POOL_SIGNATURE).toBe(live);
+  });
+
   it('every scheduled id resolves to a real footballer', () => {
     const stale = dates.filter(d => getById(DAILY_SECRETS[d]) === undefined);
     expect(stale.map(d => `${d}: ${DAILY_SECRETS[d]}`)).toEqual([]);

@@ -112,6 +112,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "norwich": require('./logos/norwich.png'),
   "nottingham-forest": require('./logos/nottingham-forest.png'),
   "olympiacos": require('./logos/olympiacos.png'),
+  "orlando-city": require('./logos/orlando-city.png'),
   "pachuca": require('./logos/pachuca.png'),
   "palmeiras": require('./logos/palmeiras.png'),
   "paris-fc": require('./logos/paris-fc.png'),

@@ -124,6 +124,10 @@ for (const key of allDates) {
 // ---- Write ------------------------------------------------------------------
 const esc = s => s.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 const lines = [...schedule.entries()].map(([k, id]) => `  '${k}': '${esc(id)}',`);
+// Fingerprint of the pool this schedule was generated against. The schedule
+// test recomputes it from the live dataset; a mismatch means the schedule is
+// stale (players added/removed without regenerating).
+const signature = hashDateKey([...poolIds].sort().join('|'));
 writeFileSync(
   OUT,
   `/**
@@ -132,9 +136,14 @@ writeFileSync(
  * The frozen Scout daily schedule: dateKey -> secret footballer id. This file
  * is the single source of truth for the day's player, so dataset edits can
  * never move an already-scheduled day (and every user on any app version sees
- * the same player). Extend/refresh with \`npm run scout:schedule\` after
- * dataset changes — the script only appends; committed dates stay put.
+ * the same player). Regenerated automatically by the pre-commit hook when the
+ * dataset changes (or manually via \`npm run scout:schedule\`) — the script
+ * only appends; committed dates stay put.
  */
+
+/** Fingerprint of the daily pool at generation time — guarded by schedule.test.ts. */
+export const POOL_SIGNATURE = ${signature};
+
 export const DAILY_SECRETS: Record<string, string> = {
 ${lines.join('\n')}
 };

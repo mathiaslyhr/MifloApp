@@ -4,9 +4,14 @@
  * The frozen Scout daily schedule: dateKey -> secret footballer id. This file
  * is the single source of truth for the day's player, so dataset edits can
  * never move an already-scheduled day (and every user on any app version sees
- * the same player). Extend/refresh with `npm run scout:schedule` after
- * dataset changes — the script only appends; committed dates stay put.
+ * the same player). Regenerated automatically by the pre-commit hook when the
+ * dataset changes (or manually via `npm run scout:schedule`) — the script
+ * only appends; committed dates stay put.
  */
+
+/** Fingerprint of the daily pool at generation time — guarded by schedule.test.ts. */
+export const POOL_SIGNATURE = 1763139564;
+
 export const DAILY_SECRETS: Record<string, string> = {
   '2026-01-01': 'Samardžić, Lazar',
   '2026-01-02': 'Rodrygo',

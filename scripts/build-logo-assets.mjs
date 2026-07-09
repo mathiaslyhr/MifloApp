@@ -90,6 +90,7 @@ const CLUB_SLUG = {
   stoke: 'stoke-city', bolton: 'bolton-wanderers',
   kaiserslautern: 'fc-kaiserslautern', 'saint-etienne': 'as-saint-etienne',
   elche: 'elche-cf', cannes: 'as-cannes',
+  'orlando-city': 'orlando-city',
 };
 
 const slugify = s =>

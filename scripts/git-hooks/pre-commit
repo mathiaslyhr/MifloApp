@@ -1,0 +1,10 @@
+#!/bin/sh
+# Keep the frozen Scout schedule in sync with the dataset automatically: when
+# a commit touches the football data, extend the schedule (append-only) and
+# stage the regenerated file. Wired via `git config core.hooksPath` by the
+# npm `prepare` script, so it survives re-clones.
+if git diff --cached --name-only | grep -qE 'src/data/football/(footballers|clubs)\.ts'; then
+  echo 'football data changed — updating Scout schedule'
+  npm run --silent scout:schedule || exit 1
+  git add src/games/scout/schedule.generated.ts
+fi
