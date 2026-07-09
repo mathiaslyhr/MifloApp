@@ -217,7 +217,6 @@
       "q21": "Hvad ville hans højeste FIFA-rating være?",
       "q26": "Ville du stole på ham til et straffespark i en finale?",
       "q27": "Giv hans frisurer gennem tiden point fra 1 til 10.",
-      "q29": "Hvilket ord ville hans holdkammerater beskrive ham med?",
       "q30": "Hvilket landshold ville han forbedre mest?",
       "q44": "Har han indfriet sit potentiale?",
       "q45": "Hvor langt ville et hold med 11 af ham nå i Champions League?",
@@ -225,7 +224,8 @@
       "q49": "Hvilken position ville han være dårligst på?",
       "q50": "Hvilken klub, han aldrig har spillet for, passer bedst til ham?",
       "q51": "Hvor ville han slutte i Ballon d'Or-afstemningen i sit bedste år?",
-      "q53": "Giv hans præstationer i store kampe point fra 1 til 10."
+      "q53": "Giv hans præstationer i store kampe point fra 1 til 10.",
+      "q57": "Hvad ville gøre ham til en bedre spiller?"
     },
     "vote": {
       "title": "Hvem skal sendes af banen?",
