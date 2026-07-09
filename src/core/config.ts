@@ -13,7 +13,7 @@ export const APP_STORE_URL = 'https://apps.apple.com/app/miflo';
  * Shown in the Menu footer and Settings. Bump on each release; mirrors the
  * native marketing version / build number until a build-time source is wired.
  */
-export const APP_VERSION = '1.0 (3)';
+export const APP_VERSION = '1.0 (5)';
 
 /**
  * Machine-comparable version for the update gate, compared against the remote
@@ -21,7 +21,7 @@ export const APP_VERSION = '1.0 (3)';
  * `major.minor.build` (so "1.0 (3)" → "1.0.3"). Bump the build segment on every
  * release so `min_supported_version` can gate older builds.
  */
-export const APP_VERSION_CODE = '1.0.3';
+export const APP_VERSION_CODE = '1.0.5';
 
 /**
  * Privacy policy linked from Settings. Placeholder until the page is published;
