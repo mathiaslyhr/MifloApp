@@ -8,7 +8,8 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   Tabs: undefined;
-  Join: undefined;
+  /** `code` arrives via the miflo.dk/join/CODE deep link → auto-join. */
+  Join: {code?: string} | undefined;
   Lobby: {roomId: string};
   // onPick is a function param (non-serializable, but this app never persists or
   // deep-links nav state): the host's startGame runs on select and resolves to

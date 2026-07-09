@@ -35,7 +35,7 @@
     "leave": "Forlad rummet",
     "shareCode": "Del rumkode",
     "code": "RUMKODE",
-    "shareMessage": "Deltag i mit rum i Miflo! Kode {{code}}",
+    "shareMessage": "Deltag i mit rum i Miflo! Kode {{code}} — tryk for at deltage: {{link}}",
     "waitingFriends": "Venter på at venner deltager…",
     "inParty": "{{count}} i rummet",
     "changeName": "Skift dit navn",

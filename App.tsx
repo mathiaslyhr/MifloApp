@@ -12,7 +12,9 @@ import {Alert, StatusBar, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
+import type {LinkingOptions} from '@react-navigation/native';
 import {RootNavigator} from './src/core/navigation';
+import type {RootStackParamList} from './src/core/navigation';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
@@ -20,6 +22,16 @@ import {ensureSession} from './src/core/supabase/client';
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
+
+/**
+ * Deep links into the app. Only the party join link is routable from outside
+ * (https://miflo.dk/join/CODE via Associated Domains, miflo://join/CODE as the
+ * custom-scheme fallback) — everything else stays app-internal.
+ */
+const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: ['https://miflo.dk', 'miflo://'],
+  config: {screens: {Join: 'join/:code'}},
+};
 
 function App(): React.JSX.Element {
   // Sign in anonymously up front so rooms feel instant; non-fatal and a no-op
@@ -63,7 +75,7 @@ function App(): React.JSX.Element {
         <SafeAreaProvider>
           <StatusBar barStyle="dark-content" />
           <UpdateGate>
-            <NavigationContainer>
+            <NavigationContainer linking={linking}>
               <RootNavigator />
             </NavigationContainer>
           </UpdateGate>

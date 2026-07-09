@@ -35,7 +35,7 @@
     "leave": "Leave party",
     "shareCode": "Share party code",
     "code": "PARTY CODE",
-    "shareMessage": "Join my Miflo party! Code {{code}}",
+    "shareMessage": "Join my Miflo party! Code {{code}} — tap to join: {{link}}",
     "waitingFriends": "Waiting for friends to join…",
     "inParty": "{{count}} in the party",
     "changeName": "Change your name",

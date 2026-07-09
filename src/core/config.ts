@@ -7,7 +7,14 @@
  * can scan to download Miflo. Placeholder until the app ships; swap in the real
  * App Store URL here.
  */
-export const APP_STORE_URL = 'https://apps.apple.com/app/miflo';
+export const APP_STORE_URL = 'https://apps.apple.com/app/id6786893093';
+
+/**
+ * Base for shareable party join links (universal links). The website serves
+ * /join/<code> with an "open in app / get the app" fallback; devices with the
+ * app installed open the Join screen directly (see linking in App.tsx).
+ */
+export const JOIN_URL_BASE = 'https://miflo.dk/join';
 
 /**
  * Shown in the Menu footer and Settings. Bump on each release; mirrors the

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
@@ -23,17 +23,28 @@ const CODE_LENGTH = 4;
  * get a random football name (no prompt) and can rename yourself in the lobby.
  * On success we `replace` this screen with the Lobby so Back goes Home.
  */
-export function JoinScreen({navigation}: Props) {
+export function JoinScreen({navigation, route}: Props) {
   const {t} = useTranslation();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
 
   const trimmed = code.trim();
 
-  async function handleJoin() {
-    if (busy) {
+  // A code arriving via the join deep link (miflo.dk/join/CODE) fills the
+  // field and joins immediately — the tap on the link WAS the join intent.
+  const autoJoined = useRef(false);
+  useEffect(() => {
+    const linkCode = route.params?.code?.trim().toUpperCase() ?? '';
+    if (autoJoined.current || !/^[A-Z0-9]{4}$/.test(linkCode)) {
       return;
     }
+    autoJoined.current = true;
+    setCode(linkCode);
+    join(linkCode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [route.params?.code]);
+
+  async function handleJoin() {
     // A short code can't be a real party — say so instead of silently ignoring
     // the tap (the button stays enabled so the error is discoverable).
     if (trimmed.length !== CODE_LENGTH) {
@@ -41,9 +52,16 @@ export function JoinScreen({navigation}: Props) {
       toast.error(t('join.errorShortCode', {count: CODE_LENGTH}));
       return;
     }
+    await join(trimmed);
+  }
+
+  async function join(joinCode: string) {
+    if (busy) {
+      return;
+    }
     setBusy(true);
     try {
-      const room = await joinRoom(trimmed, randomFootballName());
+      const room = await joinRoom(joinCode, randomFootballName());
       navigation.replace('Lobby', {roomId: room.id});
     } catch (err) {
       // Blame the code only when the server actually rejected it — a request

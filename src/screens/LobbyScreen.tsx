@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {ChevronLeft} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
+import {JOIN_URL_BASE} from '../core/config';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -184,7 +185,12 @@ export function LobbyScreen({route, navigation}: Props) {
       return;
     }
     try {
-      await Share.share({message: t('lobby.shareMessage', {code: room.code})});
+      await Share.share({
+        message: t('lobby.shareMessage', {
+          code: room.code,
+          link: `${JOIN_URL_BASE}/${room.code}`,
+        }),
+      });
     } catch {
       // User dismissed the share sheet; nothing to do.
     }
