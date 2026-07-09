@@ -100,13 +100,6 @@
       }
     },
     "scout": {
-    "reminderTitle": "Daglig påmindelse?",
-    "reminderPrompt": "Vil du have et prik, når morgendagens spiller lander?",
-    "reminderYes": "Påmind mig",
-    "reminderNo": "Ikke nu",
-    "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
-    "reminderNotifTitle": "Scout",
-    "reminderNotifBody": "Dagens spiller er landet — seks forsøg. ⚽",
       "title": "Scout",
       "tagline": "Gæt dagens spiller, hold din stime",
       "howToPlay": {
@@ -299,6 +292,13 @@
     }
   },
   "scout": {
+    "reminderTitle": "Daglig påmindelse?",
+    "reminderPrompt": "Vil du have et prik, når morgendagens spiller lander?",
+    "reminderYes": "Påmind mig",
+    "reminderNo": "Ikke nu",
+    "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
+    "reminderNotifTitle": "Scout",
+    "reminderNotifBody": "Dagens spiller er landet — seks forsøg. ⚽",
     "title": "Scout",
     "back": "Tilbage",
     "loading": "Indlæser…",
