@@ -1,7 +1,8 @@
 /**
  * Red Card presentational atoms shared by the online screen and pass-and-play:
- * the vote grid, the reveal scoreboard, and the votes list. Pure display over
- * plain props — no room, no engine, no network.
+ * the vote grid, the rounds picker, the one-by-one answer reveal, the reveal
+ * scoreboard, and the votes list. Pure display over plain props — no room, no
+ * engine, no network.
  */
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -9,6 +10,7 @@ import {Crown} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {GlassCard, GlassTag, Text} from '../../core/ui';
 import {colors, fonts, spacing} from '../../theme';
+import {MAX_ROUNDS, MIN_ROUNDS} from './types';
 
 export type NamedPlayer = {userId: string; name: string};
 
@@ -38,6 +40,91 @@ export function PlayerGrid({
           </GlassTag>
         ))}
     </View>
+  );
+}
+
+/** How many question rounds this hand runs — a row of small glass tags. */
+export function RoundsPicker({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (rounds: number) => void;
+}) {
+  const {t} = useTranslation();
+  const options = [];
+  for (let n = MIN_ROUNDS; n <= MAX_ROUNDS; n++) {
+    options.push(n);
+  }
+  return (
+    <View style={styles.roundsPicker}>
+      <Text variant="caption" color="muted" style={styles.roundsLabel}>
+        {t('redCard.roundsPicker.label')}
+      </Text>
+      <View style={styles.roundsRow}>
+        {options.map(n => (
+          <GlassTag
+            key={n}
+            size="sm"
+            borderWidth={2}
+            accent={value === n}
+            onPress={() => onChange(n)}
+            accessibilityRole="button"
+            accessibilityLabel={`${t('redCard.roundsPicker.label')}: ${n}`}>
+            <Text variant="body" style={styles.roundsValue}>
+              {n}
+            </Text>
+          </GlassTag>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+/**
+ * One revealed answer with its author, plus progress dots for the round.
+ * The advance button lives in the screens (host-gated online, open locally).
+ */
+export function AnswerRevealBlock({
+  name,
+  text,
+  index,
+  total,
+}: {
+  name: string;
+  text: string;
+  index: number;
+  total: number;
+}) {
+  const {t} = useTranslation();
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    dots.push(i);
+  }
+  return (
+    <>
+      <GlassCard style={styles.answerCard}>
+        <Text variant="caption" color="muted" align="center" style={styles.answerAuthor}>
+          {name}
+        </Text>
+        <Text variant="section" align="center" style={styles.answerText}>
+          {text}
+        </Text>
+      </GlassCard>
+      <View style={styles.answerProgress}>
+        <View style={styles.answerDots}>
+          {dots.map(i => (
+            <View
+              key={i}
+              style={[styles.answerDot, i <= index && styles.answerDotDone]}
+            />
+          ))}
+        </View>
+        <Text variant="caption" color="muted">
+          {t('redCard.answers.progress', {index: index + 1, total})}
+        </Text>
+      </View>
+    </>
   );
 }
 
@@ -127,6 +214,23 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   pickName: {color: colors.ink},
+  roundsPicker: {gap: spacing.sm, alignItems: 'center'},
+  roundsLabel: {letterSpacing: 1},
+  roundsRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.sm},
+  roundsValue: {color: colors.ink},
+  answerCard: {gap: spacing.xs, padding: spacing.lg},
+  answerAuthor: {letterSpacing: 1},
+  answerText: {color: colors.ink},
+  answerProgress: {alignItems: 'center', gap: spacing.xs},
+  answerDots: {flexDirection: 'row', gap: spacing.xs},
+  answerDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.ink,
+    opacity: 0.2,
+  },
+  answerDotDone: {opacity: 1},
   listCard: {
     gap: spacing.xs,
     padding: spacing.md,

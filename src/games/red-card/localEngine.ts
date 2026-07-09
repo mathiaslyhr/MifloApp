@@ -10,8 +10,9 @@
  * award identical points.
  */
 import {shuffle, type Rng} from '../../data/football';
-import {applyRedemption, eligibleFootballerIds, tally} from './engine';
-import {MIN_POOL, ROUNDS, SCORE} from './types';
+import {applyRedemption, cleanAnswer, eligibleFootballerIds, tally} from './engine';
+import {buildQuestionIds} from './questions';
+import {MAX_ROUNDS, MIN_POOL, MIN_ROUNDS, SCORE} from './types';
 
 /**
  * Fewest players for a meaningful local hand (1 imposter + 2 detectives).
@@ -25,8 +26,10 @@ export type LocalPlayer = {id: string; name: string};
 export type LocalStage =
   /** The phone goes around once; each player privately sees their role. */
   | 'roleReveal'
-  /** Questions happen out loud; the state only tracks whose turn it is. */
-  | 'asking'
+  /** Per round: the phone goes around and each player privately types an answer. */
+  | 'answering'
+  /** Phone in the middle: the round's answers show one by one, attributed. */
+  | 'answerReveal'
   /** The phone goes around again; each player secretly taps a vote. */
   | 'voting'
   /** The caught imposter gets the phone for a blind redemption guess. */
@@ -48,12 +51,20 @@ export type LocalRedCardState = {
   /** The two secrets — safe here because the phone itself is shared. */
   imposterId: string;
   footballerId: string;
-  /** Shuffled player order, used for role handoffs, asking, and voting. */
+  /** Shuffled player order, used for role handoffs, answering, and voting. */
   order: string[];
-  /** 1..ROUNDS — each player asks once per round. */
+  /** Host-picked question count, MIN_ROUNDS..MAX_ROUNDS. */
+  rounds: number;
+  /** Stable question ids, one per round (see `questions.ts`). */
+  questionIds: string[];
+  /** 1..rounds — one shared question per round. */
   round: number;
-  /** Index into `order` of the current asker. */
-  turnIndex: number;
+  /** The current round's answers, playerId -> text. */
+  answers: Record<string, string>;
+  /** Randomized playerId order for the current round's answer reveal. */
+  revealOrder: string[];
+  /** Which answer is on screen during answerReveal (0-based). */
+  answerIndex: number;
   votes: Record<string, string>;
   /** Running totals across hands. */
   scores: Record<string, number>;
@@ -68,33 +79,46 @@ export type LocalRedCardState = {
 /** Deal a fresh hand for the named players (3+, trimmed non-empty names). */
 export function createLocalGame(
   names: string[],
+  rounds: number,
   rng: Rng = Math.random,
 ): LocalRedCardState {
   const trimmed = names.map(n => n.trim()).filter(n => n.length > 0);
   if (trimmed.length < LOCAL_MIN_PLAYERS) {
     throw new Error(`Red Card needs at least ${LOCAL_MIN_PLAYERS} players`);
   }
+  if (rounds < MIN_ROUNDS || rounds > MAX_ROUNDS) {
+    throw new Error(`Red Card plays ${MIN_ROUNDS} to ${MAX_ROUNDS} rounds`);
+  }
   const players = trimmed.map((name, i) => ({id: `p${i + 1}`, name}));
   const scores: Record<string, number> = {};
   for (const p of players) {
     scores[p.id] = 0;
   }
-  return dealHand(players, scores, rng);
+  return dealHand(players, scores, rounds, rng);
 }
 
-/** Same players, running scores kept; new imposter, secret, and order. */
+/** Same players, round count and running scores kept; new secrets + questions. */
 export function createLocalRematch(
   state: LocalRedCardState,
   rng: Rng = Math.random,
 ): LocalRedCardState {
-  return dealHand(state.players, state.scores, rng, state.footballerId);
+  return dealHand(
+    state.players,
+    state.scores,
+    state.rounds,
+    rng,
+    state.footballerId,
+    state.questionIds,
+  );
 }
 
 function dealHand(
   players: LocalPlayer[],
   scores: Record<string, number>,
+  rounds: number,
   rng: Rng,
   avoidFootballerId?: string,
+  avoidQuestionIds: string[] = [],
 ): LocalRedCardState {
   const pool = eligibleFootballerIds();
   if (pool.length < MIN_POOL) {
@@ -109,8 +133,12 @@ function dealHand(
     imposterId: players[Math.floor(rng() * players.length)].id,
     footballerId: candidates[Math.floor(rng() * candidates.length)],
     order: shuffle(players.map(p => p.id), rng),
+    rounds,
+    questionIds: buildQuestionIds(rounds, rng, avoidQuestionIds),
     round: 1,
-    turnIndex: 0,
+    answers: {},
+    revealOrder: [],
+    answerIndex: 0,
     votes: {},
     scores,
     stage: 'roleReveal',
@@ -119,18 +147,12 @@ function dealHand(
   };
 }
 
-/** The player the phone is being passed to (role reveal / voting / redemption). */
+/** The player the phone is being passed to (roles / answering / voting / redemption). */
 export function handoffPlayer(state: LocalRedCardState): LocalPlayer | undefined {
   if (state.stage === 'redemption') {
     return state.players.find(p => p.id === state.imposterId);
   }
   const id = state.order[state.handoffIndex];
-  return state.players.find(p => p.id === id);
-}
-
-/** The current asker during the out-loud questioning rounds. */
-export function currentAsker(state: LocalRedCardState): LocalPlayer | undefined {
-  const id = state.order[state.turnIndex];
   return state.players.find(p => p.id === id);
 }
 
@@ -143,9 +165,9 @@ export function showContent(state: LocalRedCardState): LocalRedCardState {
 }
 
 /**
- * "Hide and pass on" after a private role look. The last look starts the
- * asking rounds. (Voting advances through `castLocalVote` instead — a vote IS
- * the private action.)
+ * "Hide and pass on" after a private role look. The last look starts the first
+ * question round. (Answering and voting advance through their own private
+ * actions instead — submitting IS the pass.)
  */
 export function hideAndPass(state: LocalRedCardState): LocalRedCardState {
   if (state.stage !== 'roleReveal' || !state.contentShown) {
@@ -155,24 +177,69 @@ export function hideAndPass(state: LocalRedCardState): LocalRedCardState {
   if (next < state.order.length) {
     return {...state, handoffIndex: next, contentShown: false};
   }
-  return {...state, stage: 'asking', handoffIndex: 0, contentShown: false};
+  return {...state, stage: 'answering', handoffIndex: 0, contentShown: false};
 }
 
 /**
- * Advance past the current asker. Moves to the next player in order; when the
- * order wraps, either starts the next round or — after the final round — hands
- * the phone around for voting.
+ * The gated player privately types their answer to the round's question.
+ * Recording it re-arms the pass gate for the next player; the last answer
+ * shuffles a reveal order and puts the phone in the middle for the one-by-one
+ * reveal. Empty or over-long answers are ignored (the screen disables submit).
  */
-export function advanceAskLocal(state: LocalRedCardState): LocalRedCardState {
-  if (state.stage !== 'asking') {
+export function submitLocalAnswer(
+  state: LocalRedCardState,
+  text: string,
+  rng: Rng = Math.random,
+): LocalRedCardState {
+  if (state.stage !== 'answering' || !state.contentShown) {
     return state;
   }
-  const next = state.turnIndex + 1;
-  if (next < state.order.length) {
-    return {...state, turnIndex: next};
+  const clean = cleanAnswer(text);
+  if (!clean) {
+    return state;
   }
-  if (state.round < ROUNDS) {
-    return {...state, round: state.round + 1, turnIndex: 0};
+  const playerId = state.order[state.handoffIndex];
+  const answers = {...state.answers, [playerId]: clean};
+  const next = state.handoffIndex + 1;
+  if (next < state.order.length) {
+    return {...state, answers, handoffIndex: next, contentShown: false};
+  }
+  return {
+    ...state,
+    answers,
+    stage: 'answerReveal',
+    revealOrder: shuffle([...state.order], rng),
+    answerIndex: 0,
+    handoffIndex: 0,
+    contentShown: false,
+  };
+}
+
+/**
+ * Anyone taps past the answer on the table: next answer, then either the next
+ * round's question (fresh answers, phone goes around again) or — after the
+ * final round — the vote.
+ */
+export function advanceLocalAnswerReveal(
+  state: LocalRedCardState,
+): LocalRedCardState {
+  if (state.stage !== 'answerReveal') {
+    return state;
+  }
+  if (state.answerIndex + 1 < state.revealOrder.length) {
+    return {...state, answerIndex: state.answerIndex + 1};
+  }
+  if (state.round < state.rounds) {
+    return {
+      ...state,
+      stage: 'answering',
+      round: state.round + 1,
+      answers: {},
+      revealOrder: [],
+      answerIndex: 0,
+      handoffIndex: 0,
+      contentShown: false,
+    };
   }
   return {...state, stage: 'voting', handoffIndex: 0, contentShown: false};
 }

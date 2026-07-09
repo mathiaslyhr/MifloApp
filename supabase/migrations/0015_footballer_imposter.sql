@@ -9,13 +9,17 @@
 -- assigned SERVER-SIDE and kept in a private table that no client can read
 -- directly — each device fetches only its own role through get_my_red_card_role.
 --
--- The public game_state only carries coordination data (phase, round, turn
--- order, current asker's target, a vote COUNT, running scores). The secret
--- (imposter id + footballer) is revealed into game_state only once the game is
--- over (phase 'reveal').
+-- The public game_state only carries coordination data (phase, round, question
+-- ids, an answer COUNT, a vote COUNT, running scores). Typed answers stay in a
+-- private table until the whole round is in; the secret (imposter id +
+-- footballer) is revealed into game_state only once the game is over (phase
+-- 'reveal').
 --
--- The 'asking' turn phase reuses the existing play_move RPC (0012): writes are
--- gated by game_state.turnUserId, exactly like Tic-Tac-Toe.
+-- Phases: 'answering' is off-turn — every player submits through
+-- submit_red_card_answer while game_state.turnUserId is null, which keeps the
+-- generic play_move RPC (0012) locked. 'answerReveal' is host-paced: the
+-- resolving submit sets turnUserId to the host, who pages through the answers
+-- via play_move, exactly like Tic-Tac-Toe.
 
 -- ── Private tables (RLS on, NO select policy → unreadable by clients; only the
 --    SECURITY DEFINER RPCs below, owned by the table owner, can read them) ─────
@@ -34,16 +38,35 @@ create table if not exists public.red_card_votes (
   primary key (room_id, voter_user_id)
 );
 
+-- Typed answers for the current hand, keyed by round. Hidden until the whole
+-- round is in — the resolving submit copies them, attributed and shuffled,
+-- into game_state.
+create table if not exists public.red_card_answers (
+  room_id     uuid not null references public.rooms (id) on delete cascade,
+  round       int  not null,
+  user_id     uuid not null references auth.users (id) on delete cascade,
+  answer_text text not null,
+  created_at  timestamptz not null default now(),
+  primary key (room_id, round, user_id)
+);
+
 alter table public.red_card_secrets enable row level security;
 alter table public.red_card_votes enable row level security;
+alter table public.red_card_answers enable row level security;
 -- Deliberately no policies: clients cannot select/insert directly, and these
 -- tables are NOT added to the realtime publication, so secrets never broadcast.
 
--- ── Host starts a hand: assign roles server-side and open the asking phase ────
+-- ── Host starts a hand: assign roles server-side, open the answering phase ────
+
+-- The signature changed (rounds + question ids); drop the old two-arg form so
+-- a dev database that ran the earlier version re-applies cleanly.
+drop function if exists public.start_red_card_game(uuid, text[]);
 
 create or replace function public.start_red_card_game(
-  p_room_id uuid,
-  p_pool    text[]
+  p_room_id      uuid,
+  p_pool         text[],
+  p_rounds       int,
+  p_question_ids text[]
 )
 returns void
 language plpgsql
@@ -53,7 +76,6 @@ as $$
 declare
   v_uid       uuid := auth.uid();
   v_players   jsonb;
-  v_order     jsonb;
   v_scores    jsonb;
   v_imposter  uuid;
   v_footballer text;
@@ -73,17 +95,25 @@ begin
     raise exception 'Footballer pool too small';
   end if;
 
+  if p_rounds is null or p_rounds < 2 or p_rounds > 4 then
+    raise exception 'Round count out of range';
+  end if;
+  -- Question ids are opaque i18n keys (each device localizes its own copy);
+  -- only shape is validated here.
+  if p_question_ids is null
+     or coalesce(array_length(p_question_ids, 1), 0) < p_rounds
+     or exists (
+       select 1 from unnest(p_question_ids[1:p_rounds]) q
+       where q is null or char_length(q) > 8
+     ) then
+    raise exception 'Bad question ids';
+  end if;
+
   -- Roster snapshot + fresh zero scores.
   select
     jsonb_agg(jsonb_build_object('userId', user_id, 'name', name)),
     jsonb_object_agg(user_id::text, 0)
   into v_players, v_scores
-  from public.players
-  where room_id = p_room_id;
-
-  -- Random ask order (independent of who is the imposter).
-  select jsonb_agg(user_id order by random())
-  into v_order
   from public.players
   where room_id = p_room_id;
 
@@ -103,15 +133,20 @@ begin
         created_at = now();
 
   delete from public.red_card_votes where room_id = p_room_id;
+  delete from public.red_card_answers where room_id = p_room_id;
 
+  -- turnUserId is JSON null: play_move stays locked until a round resolves
+  -- and hands the reveal paging to the host.
   v_state := jsonb_build_object(
     'gameType', 'red-card',
-    'phase', 'asking',
+    'phase', 'answering',
     'round', 1,
-    'order', v_order,
-    'turnUserId', v_order->>0,
-    'askTargetUserId', null,
+    'rounds', p_rounds,
+    'questionIds', to_jsonb(p_question_ids[1:p_rounds]),
+    'turnUserId', null,
     'players', v_players,
+    'answeredCount', 0,
+    'answerIndex', 0,
     'votedCount', 0,
     'scores', v_scores
   );
@@ -126,9 +161,13 @@ $$;
 
 -- ── Host plays another hand (Play again): new roles, scores carried forward ───
 
+drop function if exists public.restart_red_card_game(uuid, text[]);
+
 create or replace function public.restart_red_card_game(
-  p_room_id uuid,
-  p_pool    text[]
+  p_room_id      uuid,
+  p_pool         text[],
+  p_rounds       int,
+  p_question_ids text[]
 )
 returns void
 language plpgsql
@@ -139,7 +178,6 @@ declare
   v_uid        uuid := auth.uid();
   v_prev       jsonb;
   v_players    jsonb;
-  v_order      jsonb;
   v_scores     jsonb;
   v_imposter   uuid;
   v_footballer text;
@@ -155,6 +193,17 @@ begin
   if p_pool is null or coalesce(array_length(p_pool, 1), 0) < 12 then
     raise exception 'Footballer pool too small';
   end if;
+  if p_rounds is null or p_rounds < 2 or p_rounds > 4 then
+    raise exception 'Round count out of range';
+  end if;
+  if p_question_ids is null
+     or coalesce(array_length(p_question_ids, 1), 0) < p_rounds
+     or exists (
+       select 1 from unnest(p_question_ids[1:p_rounds]) q
+       where q is null or char_length(q) > 8
+     ) then
+    raise exception 'Bad question ids';
+  end if;
 
   -- Roster snapshot; carry forward each current player's score (new joiners 0).
   select
@@ -164,11 +213,6 @@ begin
       coalesce((v_prev->'scores'->>(user_id::text))::int, 0)
     )
   into v_players, v_scores
-  from public.players
-  where room_id = p_room_id;
-
-  select jsonb_agg(user_id order by random())
-  into v_order
   from public.players
   where room_id = p_room_id;
 
@@ -188,18 +232,102 @@ begin
         created_at = now();
 
   delete from public.red_card_votes where room_id = p_room_id;
+  delete from public.red_card_answers where room_id = p_room_id;
 
   v_state := jsonb_build_object(
     'gameType', 'red-card',
-    'phase', 'asking',
+    'phase', 'answering',
     'round', 1,
-    'order', v_order,
-    'turnUserId', v_order->>0,
-    'askTargetUserId', null,
+    'rounds', p_rounds,
+    'questionIds', to_jsonb(p_question_ids[1:p_rounds]),
+    'turnUserId', null,
     'players', v_players,
+    'answeredCount', 0,
+    'answerIndex', 0,
     'votedCount', 0,
     'scores', v_scores
   );
+
+  update public.rooms set game_state = v_state where id = p_room_id;
+end;
+$$;
+
+-- ── Answering (off-turn): each player types once; the last answer opens the
+--    reveal. Answers stay private until then, mirroring the votes pattern. ────
+
+create or replace function public.submit_red_card_answer(
+  p_room_id uuid,
+  p_text    text
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid     uuid := auth.uid();
+  v_state   jsonb;
+  v_host    uuid;
+  v_text    text := btrim(coalesce(p_text, ''));
+  v_round   int;
+  v_n       int;
+  v_total   int;
+  v_answers jsonb;
+begin
+  if v_text = '' or char_length(v_text) > 80 then
+    raise exception 'Answer must be 1 to 80 characters';
+  end if;
+  if not exists (
+    select 1 from public.players where room_id = p_room_id and user_id = v_uid
+  ) then
+    raise exception 'Only players in the room can answer';
+  end if;
+
+  -- Row lock serializes concurrent submits, so the last two can't both see an
+  -- incomplete count and leave the round unresolved.
+  select game_state, host_id into v_state, v_host
+  from public.rooms
+  where id = p_room_id and status = 'in_progress'
+  for update;
+
+  if v_state is null or v_state->>'phase' <> 'answering' then
+    raise exception 'Not in the answering phase';
+  end if;
+  v_round := (v_state->>'round')::int;
+
+  -- A resubmit before the round resolves just replaces the text (safe retry).
+  insert into public.red_card_answers (room_id, round, user_id, answer_text)
+  values (p_room_id, v_round, v_uid, v_text)
+  on conflict (room_id, round, user_id)
+  do update set answer_text = excluded.answer_text;
+
+  -- Count only answers from players still in the room, so a leaver never
+  -- blocks or appears in the reveal.
+  select count(*) into v_n
+  from public.red_card_answers a
+  join public.players p on p.room_id = a.room_id and p.user_id = a.user_id
+  where a.room_id = p_room_id and a.round = v_round;
+  select count(*) into v_total
+  from public.players where room_id = p_room_id;
+
+  v_state := jsonb_set(v_state, '{answeredCount}', to_jsonb(v_n));
+
+  if v_n >= v_total then
+    -- Everyone is in: publish the round's answers, attributed and in a random
+    -- order, and hand the one-by-one reveal to the host via the play_move gate.
+    select jsonb_agg(
+      jsonb_build_object('userId', a.user_id, 'text', a.answer_text)
+      order by random()
+    ) into v_answers
+    from public.red_card_answers a
+    join public.players p on p.room_id = a.room_id and p.user_id = a.user_id
+    where a.room_id = p_room_id and a.round = v_round;
+
+    v_state := jsonb_set(v_state, '{phase}', to_jsonb('answerReveal'::text));
+    v_state := jsonb_set(v_state, '{answers}', coalesce(v_answers, '[]'::jsonb), true);
+    v_state := jsonb_set(v_state, '{answerIndex}', to_jsonb(0));
+    v_state := jsonb_set(v_state, '{turnUserId}', to_jsonb(v_host::text));
+  end if;
 
   update public.rooms set game_state = v_state where id = p_room_id;
 end;
@@ -405,8 +533,9 @@ begin
 end;
 $$;
 
-grant execute on function public.start_red_card_game(uuid, text[]) to authenticated;
-grant execute on function public.restart_red_card_game(uuid, text[]) to authenticated;
+grant execute on function public.start_red_card_game(uuid, text[], int, text[]) to authenticated;
+grant execute on function public.restart_red_card_game(uuid, text[], int, text[]) to authenticated;
+grant execute on function public.submit_red_card_answer(uuid, text) to authenticated;
 grant execute on function public.get_my_red_card_role(uuid) to authenticated;
 grant execute on function public.cast_red_card_vote(uuid, uuid) to authenticated;
 grant execute on function public.red_card_guess(uuid, text) to authenticated;

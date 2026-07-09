@@ -8,9 +8,12 @@
  * public state only once the hand is over.
  */
 
-export type ImposterPhase = 'asking' | 'voting' | 'reveal';
+export type ImposterPhase = 'answering' | 'answerReveal' | 'voting' | 'reveal';
 
 export type ImposterPlayer = {userId: string; name: string};
+
+/** One revealed answer, attributed; the order was randomized server-side. */
+export type ImposterAnswer = {userId: string; text: string};
 
 /** The end-of-hand summary, made public once everyone has voted. */
 export type ImposterReveal = {
@@ -29,15 +32,24 @@ export type ImposterReveal = {
 export type ImposterState = {
   gameType: 'red-card';
   phase: ImposterPhase;
-  /** 1..ROUNDS — each player asks once per round. */
+  /** 1..rounds — one shared question per round. */
   round: number;
-  /** Flat ask order of userIds. */
-  order: string[];
-  /** The player whose turn it is to question someone (gates `play_move`). */
-  turnUserId: string;
-  /** Who the current asker is questioning (shown on every screen), or null. */
-  askTargetUserId: string | null;
+  /** Host-picked question count, MIN_ROUNDS..MAX_ROUNDS. */
+  rounds: number;
+  /** Stable question ids (see `questions.ts`); each device localizes its own. */
+  questionIds: string[];
+  /**
+   * Gates `play_move`: null during answering/voting (nobody can write the
+   * state), the host's id during answerReveal (only the host pages answers).
+   */
+  turnUserId: string | null;
   players: ImposterPlayer[];
+  /** How many players have answered this round (texts stay hidden until all). */
+  answeredCount: number;
+  /** This round's answers, public once everyone has submitted. */
+  answers?: ImposterAnswer[];
+  /** Which answer is on screen during answerReveal (0-based). */
+  answerIndex: number;
   /** How many players have voted (identities stay hidden until reveal). */
   votedCount: number;
   /** Running totals across hands. */
@@ -50,8 +62,13 @@ export type ImposterRole =
   | {role: 'imposter'}
   | {role: 'detective'; footballerId: string};
 
-/** How many times the ask order goes around before the vote. */
-export const ROUNDS = 2;
+/** The host picks how many question rounds a hand runs before the vote. */
+export const MIN_ROUNDS = 2;
+export const MAX_ROUNDS = 4;
+export const DEFAULT_ROUNDS = 2;
+
+/** Hard cap on a typed answer, enforced client-side AND in the submit RPC. */
+export const ANSWER_MAX_LEN = 80;
 
 /** Fewest players for a meaningful hand (1 imposter + ≥2 detectives to vote). */
 export const MIN_PLAYERS = 3;

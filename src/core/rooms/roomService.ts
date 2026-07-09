@@ -227,16 +227,21 @@ export type ImposterRoleResult =
 /**
  * Host starts a hand: the server privately picks the imposter + secret
  * footballer. `pool` is a batch of candidate footballer ids (the server picks
- * one, so the host never learns which). The asking phase then reuses `playMove`.
+ * one, so the host never learns which); `rounds` is the host-picked question
+ * count and `questionIds` the localizable questions to ask, one per round.
  */
 export async function startRedCardGame(
   roomId: string,
   pool: string[],
+  rounds: number,
+  questionIds: string[],
 ): Promise<void> {
   const client = await requireClient();
   const {error} = await client.rpc('start_red_card_game', {
     p_room_id: roomId,
     p_pool: pool,
+    p_rounds: rounds,
+    p_question_ids: questionIds,
   });
   if (error) {
     throw error;
@@ -247,11 +252,34 @@ export async function startRedCardGame(
 export async function restartRedCardGame(
   roomId: string,
   pool: string[],
+  rounds: number,
+  questionIds: string[],
 ): Promise<void> {
   const client = await requireClient();
   const {error} = await client.rpc('restart_red_card_game', {
     p_room_id: roomId,
     p_pool: pool,
+    p_rounds: rounds,
+    p_question_ids: questionIds,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Submit (or, until the round resolves, safely resubmit) the caller's typed
+ * answer for the current question round. The server hides answers until
+ * everyone is in, then publishes them shuffled into the broadcast state.
+ */
+export async function submitRedCardAnswer(
+  roomId: string,
+  text: string,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('submit_red_card_answer', {
+    p_room_id: roomId,
+    p_text: text,
   });
   if (error) {
     throw error;

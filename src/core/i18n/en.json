@@ -93,7 +93,7 @@
       "howToPlay": {
         "rules": [
           "Everyone but the faker is given the same footballer.",
-          "Over two rounds, take turns questioning each other, then vote on who to send off.",
+          "Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one, then you vote on who to send off.",
           "Sent off as the faker? Name the footballer to steal the win back.",
           "No internet? Swipe right on the game card to play on one phone."
         ]
@@ -101,10 +101,10 @@
     },
     "scout": {
       "title": "Scout",
-      "tagline": "Guess today's player in six tries",
+      "tagline": "Guess today's player, keep your streak",
       "howToPlay": {
         "rules": [
-          "Guess the daily footballer in six tries.",
+          "Guess the daily footballer. Guesses are unlimited, but solve it in under 10 to keep your streak.",
           "After each guess, every column turns green for a match, yellow if close, and grey if wrong.",
           "A new footballer drops every day, the same for everyone."
         ]
@@ -175,7 +175,7 @@
     "loading": "Loading…",
     "help": {
       "title": "How to play",
-      "rule": "Everyone but the faker is given the same footballer. Over two rounds, take turns asking one another a question, then vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
+      "rule": "Everyone but the faker is given the same footballer. Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one, then you vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
     },
     "role": {
       "detectiveIntro": "Everyone got this player",
@@ -185,22 +185,46 @@
       "loading": "Dealing roles…"
     },
     "round": "Round {{round}} of {{total}}",
-    "yourTurn": "Your turn",
-    "askOutLoud": "Ask anyone a question out loud.",
-    "next": "Next",
-    "finish": "Finish",
-    "askerTurn": "{{name}} is asking a question…",
-    "yourTurnPick": "Your turn to question someone",
-    "yourTurnAsk": "Ask {{name}} your question, then tap Done",
-    "done": "Done",
-    "askerChoosing": "{{name}} is choosing who to question",
-    "askerAsking": "{{asker}} is questioning {{target}}",
-    "youAre": "You: {{player}}",
-    "youAreImposter": "You: the faker",
+    "roundsPicker": {"label": "Questions this game"},
+    "answer": {
+      "hint": "Everyone answers the same question. Keep it short.",
+      "placeholder": "Your answer",
+      "submit": "Lock in answer",
+      "waiting": "{{count}} of {{total}} have answered"
+    },
+    "answers": {
+      "progress": "{{index}} of {{total}}",
+      "next": "Next answer",
+      "nextRound": "Next question",
+      "toVote": "Go to the vote",
+      "hostAdvances": "The host reads the answers out loud"
+    },
+    "questions": {
+      "q1": "What would this player be worth in his prime?",
+      "q2": "Rate his career from 1 to 10.",
+      "q3": "Describe his playing style in one word.",
+      "q4": "Which position would suit him best today?",
+      "q5": "Would he get a starting spot on your favourite team?",
+      "q6": "How many goals would he score in a season in his prime?",
+      "q7": "Rate his pace in his prime from 1 to 10.",
+      "q8": "Which shirt number fits him best?",
+      "q9": "Which manager would get the most out of him?",
+      "q10": "How fun is he to watch, from 1 to 10?",
+      "q11": "How famous is he outside football, from 1 to 10?",
+      "q12": "Would he make a good manager one day?",
+      "q13": "Rate his temper on the pitch from 1 to 10.",
+      "q14": "Team player or solo star?",
+      "q15": "What would his transfer fee be if he were 21 today?",
+      "q16": "Which league suits his style best?",
+      "q17": "How good is he in the air, from 1 to 10?",
+      "q18": "Would you buy his shirt?",
+      "q19": "How many yellow cards would he pick up in a season?",
+      "q20": "Rate his goal celebrations from 1 to 10."
+    },
     "vote": {
       "title": "Who should be sent off?",
       "pill": "Final vote",
-      "ready": "Everyone has asked",
+      "ready": "Everyone has answered",
       "readySub": "Ready to decide who to send off?",
       "start": "Start voting",
       "hint": "Tap the player you think was bluffing.",
@@ -233,6 +257,7 @@
     "errorVote": "Couldn't cast your vote. Try again.",
     "errorGuess": "Couldn't submit your guess. Try again.",
     "errorRole": "Couldn't deal your role. Check your connection.",
+    "errorAnswer": "Couldn't send your answer. Try again.",
     "newGameError": "Couldn't start a new round.",
     "local": {
       "setupTitle": "Who's playing?",
@@ -245,6 +270,9 @@
       "roleIntro": "Only {{name}} looks at the screen.",
       "showRole": "Show my role",
       "hideAndPass": "Hide and pass on",
+      "answerIntro": "Type your answer in secret.",
+      "showAnswer": "Answer",
+      "revealIntro": "Put the phone in the middle.",
       "voteIntro": "Your vote stays secret.",
       "showVote": "Vote",
       "redeemPass": "One last guess to steal it back.",
@@ -256,19 +284,23 @@
     "back": "Back",
     "loading": "Loading…",
     "instruction": "Guess today's player",
-    "guessCount": "Guess {{current}} of {{max}}",
+    "guessCount": "{{count}} guess used",
+    "guessCount_plural": "{{count}} guesses used",
     "searchPlaceholder": "Search a footballer",
     "searchHint": "Start typing to guess a footballer",
     "noPlayers": "No players found",
     "alreadyGuessed": "You already guessed that player",
     "errorSave": "Couldn't save your progress.",
     "won": "Got it in {{count}}!",
-    "lost": "Out of guesses",
+    "wonNoStreak": "Got it in {{count}}. Under 10 keeps your streak next time.",
     "answerWas": "Today's footballer was {{name}}",
     "answerLabel": "The answer",
     "answerAge": "Age {{value}}",
+    "guessesUsed": "Guesses",
     "streakCurrent": "Current streak",
     "streakBest": "Best streak",
+    "streakWarning": "Solve it in under 10 guesses to keep your streak",
+    "streakGone": "Your streak is gone for today, but keep guessing",
     "share": "Share result",
     "shareCaption": "Play Scout on Miflo",
     "lockedUntilTomorrow": "Come back tomorrow for a new footballer",
@@ -282,7 +314,7 @@
     },
     "help": {
       "title": "How to play",
-      "rule": "Guess the day's player in six tries. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
+      "rule": "Guess the day's player. Guesses are unlimited, but solve it in under 10 to keep your streak. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
       "arrows": "The arrow on Age points toward the secret player's age.",
       "daily": "A new footballer drops every day, the same for everyone."
     },

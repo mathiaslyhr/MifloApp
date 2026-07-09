@@ -1,5 +1,5 @@
 import {
-  advanceAskLocal,
+  advanceLocalAnswerReveal,
   applyLocalRedemption,
   castLocalVote,
   createLocalGame,
@@ -7,9 +7,11 @@ import {
   hideAndPass,
   LOCAL_MIN_PLAYERS,
   showContent,
+  submitLocalAnswer,
 } from '../localEngine';
 import {eligibleFootballerIds} from '../engine';
-import {ROUNDS, SCORE} from '../types';
+import {QUESTION_IDS} from '../questions';
+import {ANSWER_MAX_LEN, SCORE} from '../types';
 import type {LocalRedCardState} from '../localEngine';
 
 /** Deterministic rng: cycles a fixed sequence of [0,1) values. */
@@ -20,8 +22,8 @@ function seq(values: number[]): () => number {
 
 const NAMES = ['Ana', 'Ben', 'Cai'];
 
-/** Walk a fresh game through every role handoff into the asking stage. */
-function intoAsking(state: LocalRedCardState): LocalRedCardState {
+/** Walk a fresh game through every role handoff into the first question round. */
+function intoAnswering(state: LocalRedCardState): LocalRedCardState {
   let s = state;
   for (let i = 0; i < s.order.length; i++) {
     s = hideAndPass(showContent(s));
@@ -29,11 +31,23 @@ function intoAsking(state: LocalRedCardState): LocalRedCardState {
   return s;
 }
 
-/** Walk asking to its end (each player asks once per round). */
+/** One full round: everyone answers, then page through the whole reveal. */
+function playRound(state: LocalRedCardState): LocalRedCardState {
+  let s = state;
+  for (let i = 0; i < s.order.length; i++) {
+    s = submitLocalAnswer(showContent(s), `answer ${i}`);
+  }
+  while (s.stage === 'answerReveal') {
+    s = advanceLocalAnswerReveal(s);
+  }
+  return s;
+}
+
+/** Walk every question round to its end, landing on voting. */
 function intoVoting(state: LocalRedCardState): LocalRedCardState {
   let s = state;
-  for (let i = 0; i < ROUNDS * s.order.length; i++) {
-    s = advanceAskLocal(s);
+  while (s.stage === 'answering') {
+    s = playRound(s);
   }
   return s;
 }
@@ -53,13 +67,13 @@ function voteAll(
 
 describe('createLocalGame', () => {
   it('is deterministic for a seeded rng', () => {
-    const a = createLocalGame(NAMES, seq([0.1, 0.5, 0.9, 0.3]));
-    const b = createLocalGame(NAMES, seq([0.1, 0.5, 0.9, 0.3]));
+    const a = createLocalGame(NAMES, 2, seq([0.1, 0.5, 0.9, 0.3]));
+    const b = createLocalGame(NAMES, 2, seq([0.1, 0.5, 0.9, 0.3]));
     expect(a).toEqual(b);
   });
 
   it('deals a valid hand: imposter is a player, secret is illustrated, order is a permutation', () => {
-    const s = createLocalGame(NAMES, seq([0.7, 0.2, 0.4]));
+    const s = createLocalGame(NAMES, 2, seq([0.7, 0.2, 0.4]));
     expect(s.players.map(p => p.name)).toEqual(NAMES);
     expect(s.players.some(p => p.id === s.imposterId)).toBe(true);
     expect(eligibleFootballerIds()).toContain(s.footballerId);
@@ -69,17 +83,33 @@ describe('createLocalGame', () => {
     expect(Object.values(s.scores)).toEqual([0, 0, 0]);
   });
 
+  it('deals one distinct known question per round', () => {
+    const s = createLocalGame(NAMES, 3, seq([0.7, 0.2, 0.4]));
+    expect(s.rounds).toBe(3);
+    expect(s.questionIds).toHaveLength(3);
+    expect(new Set(s.questionIds).size).toBe(3);
+    for (const id of s.questionIds) {
+      expect(QUESTION_IDS).toContain(id);
+    }
+    expect(s.answers).toEqual({});
+  });
+
   it('trims names and rejects fewer than the minimum', () => {
-    expect(() => createLocalGame(['A', '  ', 'B'])).toThrow();
+    expect(() => createLocalGame(['A', '  ', 'B'], 2)).toThrow();
     expect(LOCAL_MIN_PLAYERS).toBe(3);
-    const s = createLocalGame(['  Ana ', 'Ben', 'Cai ']);
+    const s = createLocalGame(['  Ana ', 'Ben', 'Cai '], 2);
     expect(s.players.map(p => p.name)).toEqual(['Ana', 'Ben', 'Cai']);
+  });
+
+  it('rejects a round count outside 2 to 4', () => {
+    expect(() => createLocalGame(NAMES, 1)).toThrow();
+    expect(() => createLocalGame(NAMES, 5)).toThrow();
   });
 });
 
 describe('role handoffs', () => {
-  it('walks every player once, then starts the asking rounds', () => {
-    let s = createLocalGame(NAMES, seq([0.5]));
+  it('walks every player once, then starts the first question round', () => {
+    let s = createLocalGame(NAMES, 2, seq([0.5]));
     for (let i = 0; i < s.order.length; i++) {
       expect(s.stage).toBe('roleReveal');
       expect(s.handoffIndex).toBe(i);
@@ -88,42 +118,97 @@ describe('role handoffs', () => {
       expect(s.contentShown).toBe(true);
       s = hideAndPass(s);
     }
-    expect(s.stage).toBe('asking');
+    expect(s.stage).toBe('answering');
     expect(s.round).toBe(1);
-    expect(s.turnIndex).toBe(0);
+    expect(s.handoffIndex).toBe(0);
     expect(s.contentShown).toBe(false);
   });
 
   it('hideAndPass is a no-op while the pass gate is up', () => {
-    const s = createLocalGame(NAMES, seq([0.5]));
+    const s = createLocalGame(NAMES, 2, seq([0.5]));
     expect(hideAndPass(s)).toBe(s);
   });
 });
 
-describe('advanceAskLocal', () => {
-  it('cycles every player each round, then moves to voting', () => {
-    let s = intoAsking(createLocalGame(NAMES, seq([0.5])));
-    for (let round = 1; round <= ROUNDS; round++) {
-      for (let i = 0; i < s.order.length; i++) {
-        expect(s.stage).toBe('asking');
-        expect(s.round).toBe(round);
-        expect(s.turnIndex).toBe(i);
-        s = advanceAskLocal(s);
-      }
+describe('submitLocalAnswer', () => {
+  it('records each answer behind the gate and re-arms it for the next player', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
+    const first = s.order[0];
+    s = submitLocalAnswer(showContent(s), '  80m  ');
+    expect(s.answers[first]).toBe('80m');
+    expect(s.stage).toBe('answering');
+    expect(s.handoffIndex).toBe(1);
+    expect(s.contentShown).toBe(false);
+  });
+
+  it('is a no-op behind the gate and for empty or over-long answers', () => {
+    const gated = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
+    expect(submitLocalAnswer(gated, 'answer')).toBe(gated);
+    const shown = showContent(gated);
+    expect(submitLocalAnswer(shown, '   ')).toBe(shown);
+    expect(submitLocalAnswer(shown, 'x'.repeat(ANSWER_MAX_LEN + 1))).toBe(shown);
+  });
+
+  it('the last answer opens the reveal with a shuffled full reveal order', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
+    for (let i = 0; i < s.order.length; i++) {
+      s = submitLocalAnswer(showContent(s), `answer ${i}`);
     }
+    expect(s.stage).toBe('answerReveal');
+    expect(s.answerIndex).toBe(0);
+    // The reveal order is a permutation of the players.
+    expect([...s.revealOrder].sort()).toEqual([...s.order].sort());
+    for (const id of s.revealOrder) {
+      expect(s.answers[id]).toBeDefined();
+    }
+  });
+});
+
+describe('advanceLocalAnswerReveal', () => {
+  it('pages every answer, then rolls into the next round with fresh answers', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
+    for (let i = 0; i < s.order.length; i++) {
+      s = submitLocalAnswer(showContent(s), `answer ${i}`);
+    }
+    for (let i = 1; i < s.revealOrder.length; i++) {
+      s = advanceLocalAnswerReveal(s);
+      expect(s.stage).toBe('answerReveal');
+      expect(s.answerIndex).toBe(i);
+    }
+    s = advanceLocalAnswerReveal(s);
+    expect(s.stage).toBe('answering');
+    expect(s.round).toBe(2);
+    expect(s.answers).toEqual({});
+    expect(s.revealOrder).toEqual([]);
+    expect(s.handoffIndex).toBe(0);
+    expect(s.contentShown).toBe(false);
+  });
+
+  it('moves to voting after the final round', () => {
+    const s = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5]))));
     expect(s.stage).toBe('voting');
     expect(s.handoffIndex).toBe(0);
   });
 
-  it('is a no-op outside asking', () => {
-    const s = createLocalGame(NAMES, seq([0.5]));
-    expect(advanceAskLocal(s)).toBe(s);
+  it('a 3-round game walks three questions before voting', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 3, seq([0.5])));
+    for (let round = 1; round <= 3; round++) {
+      expect(s.stage).toBe('answering');
+      expect(s.round).toBe(round);
+      s = playRound(s);
+    }
+    expect(s.stage).toBe('voting');
+  });
+
+  it('is a no-op outside answerReveal', () => {
+    const s = createLocalGame(NAMES, 2, seq([0.5]));
+    expect(advanceLocalAnswerReveal(s)).toBe(s);
   });
 });
 
 describe('castLocalVote', () => {
   it('rejects self-votes and votes behind the pass gate', () => {
-    const s = intoVoting(intoAsking(createLocalGame(NAMES, seq([0.5]))));
+    const s = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5]))));
     const voter = s.order[0];
     // Gate still up: no vote.
     expect(castLocalVote(s, s.order[1])).toBe(s);
@@ -133,7 +218,7 @@ describe('castLocalVote', () => {
   });
 
   it('everyone voting the imposter catches them and routes to redemption', () => {
-    const s0 = intoVoting(intoAsking(createLocalGame(NAMES, seq([0.5, 0.1, 0.8]))));
+    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
     const s = voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
@@ -148,7 +233,7 @@ describe('castLocalVote', () => {
   });
 
   it('an escaped imposter scores and goes straight to the reveal', () => {
-    const s0 = intoVoting(intoAsking(createLocalGame(NAMES, seq([0.5, 0.1, 0.8]))));
+    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
     // Everyone votes for one non-imposter scapegoat (the imposter votes for
     // another detective so nobody self-votes).
     const detectives = s0.players.filter(p => p.id !== s0.imposterId).map(p => p.id);
@@ -165,7 +250,7 @@ describe('castLocalVote', () => {
 
 describe('applyLocalRedemption', () => {
   function caughtState(): LocalRedCardState {
-    const s0 = intoVoting(intoAsking(createLocalGame(NAMES, seq([0.5, 0.1, 0.8]))));
+    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
     return voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
@@ -190,14 +275,14 @@ describe('applyLocalRedemption', () => {
   });
 
   it('is a no-op outside the redemption stage', () => {
-    const s = createLocalGame(NAMES, seq([0.5]));
+    const s = createLocalGame(NAMES, 2, seq([0.5]));
     expect(applyLocalRedemption(s, 'anything')).toBe(s);
   });
 });
 
 describe('createLocalRematch', () => {
-  it('keeps players and running scores, redeals secrets, avoids the same footballer', () => {
-    const s0 = intoVoting(intoAsking(createLocalGame(NAMES, seq([0.5, 0.1, 0.8]))));
+  it('keeps players, rounds and running scores, redeals secrets, avoids repeats', () => {
+    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 3, seq([0.5, 0.1, 0.8]))));
     const done = voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
@@ -206,11 +291,17 @@ describe('createLocalRematch', () => {
     const next = createLocalRematch(redeemed, seq([0.9, 0.2, 0.6]));
     expect(next.players).toEqual(redeemed.players);
     expect(next.scores).toEqual(redeemed.scores);
+    expect(next.rounds).toBe(3);
     expect(next.stage).toBe('roleReveal');
     expect(next.round).toBe(1);
     expect(next.votes).toEqual({});
+    expect(next.answers).toEqual({});
     expect(next.reveal).toBeUndefined();
     expect(next.footballerId).not.toBe(redeemed.footballerId);
+    // Fresh questions: nothing from the hand everyone just played.
+    for (const id of next.questionIds) {
+      expect(redeemed.questionIds).not.toContain(id);
+    }
     expect(next.players.some(p => p.id === next.imposterId)).toBe(true);
   });
 });

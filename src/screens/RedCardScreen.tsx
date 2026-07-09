@@ -13,6 +13,7 @@ import {
   HowToPlayModal,
   Screen,
   Text,
+  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
@@ -26,6 +27,7 @@ import {
   playMove,
   restartRedCardGame,
   returnToLobby,
+  submitRedCardAnswer,
   subscribeRoom,
   type ImposterRoleResult,
 } from '../core/rooms/roomService';
@@ -34,14 +36,21 @@ import {ensureSession} from '../core/supabase/client';
 import {getById} from '../data/football';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
 import {FootballerCard} from '../games/red-card/FootballerCard';
-import {PlayerGrid, Scoreboard, VotesBlock} from '../games/red-card/components';
 import {
-  advanceAsk,
+  AnswerRevealBlock,
+  PlayerGrid,
+  Scoreboard,
+  VotesBlock,
+} from '../games/red-card/components';
+import {
+  advanceAnswerReveal,
   buildFootballerPool,
+  cleanAnswer,
   nameOf,
   standings,
 } from '../games/red-card/engine';
-import {ROUNDS} from '../games/red-card/types';
+import {buildQuestionIds} from '../games/red-card/questions';
+import {ANSWER_MAX_LEN} from '../games/red-card/types';
 import type {ImposterState} from '../games/red-card/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RedCard'>;
@@ -119,19 +128,26 @@ export function RedCardScreen({route, navigation}: Props) {
       .catch(fail);
   }, [roomId, t]);
 
-  // A hand always opens in the 'asking' phase. Each time we enter it fresh (first
-  // mount, or Play again after a reveal), reset per-hand local state and re-fetch
-  // the role — Play again re-randomises the imposter and footballer.
+  // A hand always opens in the 'answering' phase. Reset per-hand local state
+  // and re-fetch the role only when a hand starts fresh — on first mount or on
+  // Play again after a reveal (which re-randomises the imposter and
+  // footballer). Coming back from 'answerReveal' is just the next round of the
+  // SAME hand, so nothing resets.
   useEffect(() => {
     if (!state) {
       return;
     }
     const prev = prevPhaseRef.current;
     prevPhaseRef.current = state.phase;
-    if (state.phase === 'asking' && prev !== 'asking') {
+    const freshHand = prev === undefined || prev === 'reveal';
+    if (state.phase === 'answering' && freshHand) {
       setRole(null);
       setRoleDismissed(false);
       setHasVoted(false);
+      fetchRole();
+    } else if (prev === undefined) {
+      // Mounted mid-hand (force-quit + rejoin): recover this device's role
+      // without resetting the per-hand flags.
       fetchRole();
     }
   }, [state?.phase, state, fetchRole]);
@@ -177,15 +193,14 @@ export function RedCardScreen({route, navigation}: Props) {
     );
   }
 
-  const myTurn = state.turnUserId === myUserId;
-
-
-  function finishAsk() {
+  // Host pages the one-by-one answer reveal; the server put the turn on the
+  // host when the round resolved, so play_move only accepts the host here.
+  function advanceReveal() {
     if (!state) {
       return;
     }
     haptics.press();
-    playMove(roomId, advanceAsk(state)).catch(notifyNetworkError);
+    playMove(roomId, advanceAnswerReveal(state)).catch(notifyNetworkError);
   }
 
   function castVote(targetUserId: string) {
@@ -209,14 +224,23 @@ export function RedCardScreen({route, navigation}: Props) {
   }
 
   async function playAgain() {
+    if (!state) {
+      return;
+    }
     try {
-      await restartRedCardGame(roomId, buildFootballerPool());
+      // Fresh questions, skipping the ones this hand just used.
+      await restartRedCardGame(
+        roomId,
+        buildFootballerPool(),
+        state.rounds,
+        buildQuestionIds(state.rounds, Math.random, state.questionIds),
+      );
     } catch {
       toast.error(t('redCard.newGameError'));
     }
   }
 
-  const showRoleOverlay = state.phase === 'asking' && !roleDismissed;
+  const showRoleOverlay = state.phase === 'answering' && !roleDismissed;
 
   return (
     // Drop the top safe-area edge — the scroll content owns the top inset so the
@@ -227,6 +251,7 @@ export function RedCardScreen({route, navigation}: Props) {
           styles.body,
           {paddingTop: insets.top + spacing.sm},
         ]}
+        keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
         {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
         <View style={styles.titleHeader}>
@@ -235,15 +260,27 @@ export function RedCardScreen({route, navigation}: Props) {
           </Text>
         </View>
 
-        {/* Short phases (asking/voting) centre in the space below the header;
-            the tall reveal top-aligns so it scrolls normally. */}
+        {/* Short phases (answering/voting) centre in the space below the
+            header; the tall reveal top-aligns so it scrolls normally. */}
         <View
           style={[
             styles.phaseWrap,
             state.phase === 'reveal' && styles.phaseWrapTop,
           ]}>
-          {state.phase === 'asking' ? (
-            <AskingPhase state={state} myTurn={myTurn} onDone={finishAsk} />
+          {state.phase === 'answering' ? (
+            // Keyed per round so the draft and submitted flag reset with each
+            // new question.
+            <AnsweringPhase
+              key={state.round}
+              state={state}
+              onSubmit={text => submitRedCardAnswer(roomId, text)}
+            />
+          ) : state.phase === 'answerReveal' ? (
+            <AnswerRevealPhase
+              state={state}
+              isHost={isHost}
+              onAdvance={advanceReveal}
+            />
           ) : state.phase === 'voting' ? (
             <VotingPhase
               state={state}
@@ -345,45 +382,126 @@ export function RedCardScreen({route, navigation}: Props) {
 }
 
 
-function AskingPhase({
+/**
+ * The whole table gets the same question; each device types one secret answer.
+ * After submitting, the screen waits on the shared answered count until the
+ * server flips the round into the reveal.
+ */
+function AnsweringPhase({
   state,
-  myTurn,
-  onDone,
+  onSubmit,
 }: {
   state: ImposterState;
-  myTurn: boolean;
-  onDone: () => void;
+  onSubmit: (text: string) => Promise<void>;
 }) {
   const {t} = useTranslation();
-  // The very last ask (last player in the final round) finishes the phase.
-  const isLastAsk =
-    state.round >= ROUNDS &&
-    state.order.indexOf(state.turnUserId) === state.order.length - 1;
+  const [draft, setDraft] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const clean = cleanAnswer(draft);
+
+  function submit() {
+    if (!clean || submitted) {
+      return;
+    }
+    setSubmitted(true);
+    haptics.press();
+    onSubmit(clean).catch(() => {
+      setSubmitted(false);
+      haptics.error();
+      toast.error(t('redCard.errorAnswer'));
+    });
+  }
+
   return (
     <View style={styles.phase}>
       <GlassTag tint="light" style={styles.roundPill}>
         <Text variant="caption" color="muted" style={styles.roundText}>
-          {t('redCard.round', {round: state.round, total: ROUNDS})}
+          {t('redCard.round', {round: state.round, total: state.rounds})}
         </Text>
       </GlassTag>
+      <Text variant="section" align="center" style={styles.headline}>
+        {t(`redCard.questions.${state.questionIds[state.round - 1]}`)}
+      </Text>
 
-      {myTurn ? (
+      {submitted ? (
+        <Text variant="secondary" color="secondary" align="center">
+          {t('redCard.answer.waiting', {
+            count: state.answeredCount,
+            total: state.players.length,
+          })}
+        </Text>
+      ) : (
         <>
-          <Text variant="section" align="center" style={styles.headline}>
-            {t('redCard.yourTurn')}
-          </Text>
           <Text variant="secondary" color="secondary" align="center">
-            {t('redCard.askOutLoud')}
+            {t('redCard.answer.hint')}
           </Text>
+          <TextField
+            value={draft}
+            onChangeText={setDraft}
+            placeholder={t('redCard.answer.placeholder')}
+            maxLength={ANSWER_MAX_LEN}
+            onSubmitEditing={submit}
+            accessibilityLabel={t('redCard.answer.placeholder')}
+          />
           <Button
-            label={isLastAsk ? t('redCard.finish') : t('redCard.next')}
+            label={t('redCard.answer.submit')}
             variant="primary"
-            onPress={onDone}
+            disabled={!clean}
+            onPress={submit}
           />
         </>
+      )}
+    </View>
+  );
+}
+
+/**
+ * The round's answers, one by one with the author's name. The host reads them
+ * out and pages through; after the last answer the button rolls into the next
+ * question or the vote.
+ */
+function AnswerRevealPhase({
+  state,
+  isHost,
+  onAdvance,
+}: {
+  state: ImposterState;
+  isHost: boolean;
+  onAdvance: () => void;
+}) {
+  const {t} = useTranslation();
+  const answers = state.answers ?? [];
+  const answer = answers[state.answerIndex];
+  if (!answer) {
+    return null;
+  }
+  const isLastAnswer = state.answerIndex >= answers.length - 1;
+  const label = !isLastAnswer
+    ? t('redCard.answers.next')
+    : state.round < state.rounds
+    ? t('redCard.answers.nextRound')
+    : t('redCard.answers.toVote');
+  return (
+    <View style={styles.phase}>
+      <GlassTag tint="light" style={styles.roundPill}>
+        <Text variant="caption" color="muted" style={styles.roundText}>
+          {t('redCard.round', {round: state.round, total: state.rounds})}
+        </Text>
+      </GlassTag>
+      <Text variant="secondary" color="secondary" align="center">
+        {t(`redCard.questions.${state.questionIds[state.round - 1]}`)}
+      </Text>
+      <AnswerRevealBlock
+        name={nameOf(state, answer.userId)}
+        text={answer.text}
+        index={state.answerIndex}
+        total={answers.length}
+      />
+      {isHost ? (
+        <Button label={label} variant="primary" onPress={onAdvance} />
       ) : (
-        <Text variant="section" align="center" style={styles.headline}>
-          {t('redCard.askerTurn', {name: nameOf(state, state.turnUserId)})}
+        <Text variant="secondary" color="secondary" align="center">
+          {t('redCard.answers.hostAdvances')}
         </Text>
       )}
     </View>

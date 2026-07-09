@@ -93,7 +93,7 @@
       "howToPlay": {
         "rules": [
           "Alle undtagen snyderen får den samme fodboldspiller.",
-          "Over to runder stiller I på skift spørgsmål til hinanden og stemmer så om, hvem der skal sendes af banen.",
+          "Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen, og til sidst stemmer I om, hvem der skal sendes af banen.",
           "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage.",
           "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
@@ -101,10 +101,10 @@
     },
     "scout": {
       "title": "Scout",
-      "tagline": "Gæt dagens spiller på seks forsøg",
+      "tagline": "Gæt dagens spiller, hold din stime",
       "howToPlay": {
         "rules": [
-          "Gæt dagens fodboldspiller på seks forsøg.",
+          "Gæt dagens fodboldspiller. Du har uendelige gæt, men klar den på under 10 for at beholde din stime.",
           "Efter hvert gæt bliver hver kolonne grøn ved match, gul hvis den er tæt på, og grå hvis den er forkert.",
           "En ny fodboldspiller kommer hver dag, den samme for alle."
         ]
@@ -175,7 +175,7 @@
     "loading": "Indlæser…",
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Alle undtagen snyderen får den samme fodboldspiller. Over to runder stiller I på skift hinanden et spørgsmål og stemmer derefter om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
+      "rule": "Alle undtagen snyderen får den samme fodboldspiller. Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen, og til sidst stemmer I om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
     },
     "role": {
       "detectiveIntro": "Alle fik denne spiller",
@@ -185,22 +185,46 @@
       "loading": "Uddeler roller…"
     },
     "round": "Runde {{round}} af {{total}}",
-    "yourTurn": "Din tur",
-    "askOutLoud": "Stil en spiller et spørgsmål højt.",
-    "next": "Næste",
-    "finish": "Afslut",
-    "askerTurn": "{{name}} stiller et spørgsmål…",
-    "yourTurnPick": "Din tur til at spørge en anden",
-    "yourTurnAsk": "Stil {{name}} dit spørgsmål, og tryk så på Færdig",
-    "done": "Færdig",
-    "askerChoosing": "{{name}} vælger, hvem der skal spørges",
-    "askerAsking": "{{asker}} spørger {{target}}",
-    "youAre": "Dig: {{player}}",
-    "youAreImposter": "Dig: snyderen",
+    "roundsPicker": {"label": "Spørgsmål i spillet"},
+    "answer": {
+      "hint": "Alle svarer på det samme spørgsmål. Hold det kort.",
+      "placeholder": "Dit svar",
+      "submit": "Lås dit svar",
+      "waiting": "{{count}} af {{total}} har svaret"
+    },
+    "answers": {
+      "progress": "{{index}} af {{total}}",
+      "next": "Næste svar",
+      "nextRound": "Næste spørgsmål",
+      "toVote": "Videre til afstemningen",
+      "hostAdvances": "Værten læser svarene højt"
+    },
+    "questions": {
+      "q1": "Hvad ville spilleren være værd på sit højeste?",
+      "q2": "Giv hans karriere point fra 1 til 10.",
+      "q3": "Beskriv hans spillestil med ét ord.",
+      "q4": "Hvilken position ville passe ham bedst i dag?",
+      "q5": "Ville han få en startplads på dit yndlingshold?",
+      "q6": "Hvor mange mål ville han score på en sæson på sit højeste?",
+      "q7": "Giv hans fart på sit højeste point fra 1 til 10.",
+      "q8": "Hvilket rygnummer passer bedst til ham?",
+      "q9": "Hvilken træner ville få mest ud af ham?",
+      "q10": "Hvor sjov er han at se på, fra 1 til 10?",
+      "q11": "Hvor kendt er han uden for fodbold, fra 1 til 10?",
+      "q12": "Ville han blive en god træner en dag?",
+      "q13": "Giv hans temperament på banen point fra 1 til 10.",
+      "q14": "Holdspiller eller solostjerne?",
+      "q15": "Hvad ville han koste, hvis han var 21 i dag?",
+      "q16": "Hvilken liga passer bedst til hans stil?",
+      "q17": "Hvor god er han i luften, fra 1 til 10?",
+      "q18": "Ville du købe hans trøje?",
+      "q19": "Hvor mange gule kort ville han få på en sæson?",
+      "q20": "Giv hans målfejringer point fra 1 til 10."
+    },
     "vote": {
       "title": "Hvem skal sendes af banen?",
       "pill": "Sidste afstemning",
-      "ready": "Alle har spurgt",
+      "ready": "Alle har svaret",
       "readySub": "Klar til at afgøre, hvem der skal sendes af banen?",
       "start": "Start afstemning",
       "hint": "Tryk på den spiller, du tror bluffede.",
@@ -233,6 +257,7 @@
     "errorVote": "Kunne ikke afgive din stemme. Prøv igen.",
     "errorGuess": "Kunne ikke sende dit gæt. Prøv igen.",
     "errorRole": "Kunne ikke give dig din rolle. Tjek din forbindelse.",
+    "errorAnswer": "Kunne ikke sende dit svar. Prøv igen.",
     "newGameError": "Kunne ikke starte en ny runde.",
     "local": {
       "setupTitle": "Hvem spiller?",
@@ -245,6 +270,9 @@
       "roleIntro": "Kun {{name}} kigger på skærmen.",
       "showRole": "Vis min rolle",
       "hideAndPass": "Skjul og giv videre",
+      "answerIntro": "Skriv dit svar i smug.",
+      "showAnswer": "Svar",
+      "revealIntro": "Læg telefonen i midten.",
       "voteIntro": "Din stemme forbliver hemmelig.",
       "showVote": "Stem",
       "redeemPass": "Et sidste gæt for at stjæle sejren tilbage.",
@@ -256,19 +284,23 @@
     "back": "Tilbage",
     "loading": "Indlæser…",
     "instruction": "Gæt dagens spiller",
-    "guessCount": "Gæt {{current}} af {{max}}",
+    "guessCount": "{{count}} gæt brugt",
+    "guessCount_plural": "{{count}} gæt brugt",
     "searchPlaceholder": "Søg efter en fodboldspiller",
     "searchHint": "Begynd at skrive for at gætte en spiller",
     "noPlayers": "Ingen spillere fundet",
     "alreadyGuessed": "Du har allerede gættet den spiller",
     "errorSave": "Kunne ikke gemme din fremgang.",
     "won": "Klaret på {{count}}!",
-    "lost": "Ikke flere gæt",
+    "wonNoStreak": "Klaret på {{count}}. Under 10 beholder din stime næste gang.",
     "answerWas": "Dagens spiller var {{name}}",
     "answerLabel": "Svaret",
     "answerAge": "{{value}} år",
+    "guessesUsed": "Gæt",
     "streakCurrent": "Nuværende stime",
     "streakBest": "Bedste stime",
+    "streakWarning": "Klar den på under 10 gæt for at beholde din stime",
+    "streakGone": "Din stime er tabt i dag, men gæt videre",
     "share": "Del resultat",
     "shareCaption": "Spil Scout på Miflo",
     "lockedUntilTomorrow": "Kom tilbage i morgen for en ny spiller",
@@ -282,7 +314,7 @@
     },
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Gæt dagens spiller på seks forsøg. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
+      "rule": "Gæt dagens spiller. Du har uendelige gæt, men klar den på under 10 for at beholde din stime. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
       "arrows": "Pilen på Alder peger mod den hemmelige spillers alder.",
       "daily": "En ny spiller kommer hver dag, den samme for alle."
     },

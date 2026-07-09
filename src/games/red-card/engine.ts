@@ -1,15 +1,16 @@
 /**
  * Red Card game logic — pure functions over `ImposterState`.
  *
- * Authority split: role assignment, vote tallying and scoring are done
- * SERVER-SIDE (see the 0015 migration) because they touch secrets. The client
- * helpers here drive the one public, turn-gated phase (asking) — the active
- * asker computes the next state and ships it via `play_move`, exactly like
- * Tic-Tac-Toe — plus a `tally` mirror used for tests and the reveal display.
+ * Authority split: role assignment, answer collection, vote tallying and
+ * scoring are done SERVER-SIDE (see the 0015 migration) because they touch
+ * hidden data. The client helpers here drive the one public, turn-gated phase
+ * (answerReveal) — the host pages through the answers by computing the next
+ * state and shipping it via `play_move`, exactly like Tic-Tac-Toe — plus a
+ * `tally` mirror used for tests and the reveal display.
  */
 import {getById, shuffle, type Rng} from '../../data/football';
 import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
-import {ROUNDS, SCORE} from './types';
+import {ANSWER_MAX_LEN, SCORE} from './types';
 import type {ImposterReveal, ImposterState} from './types';
 
 /**
@@ -30,38 +31,39 @@ export function buildFootballerPool(rng: Rng = Math.random): string[] {
   return shuffle(eligibleFootballerIds(), rng);
 }
 
-/** The current asker chooses who to question — everyone's screen then shows it. */
-export function setAskTarget(
-  state: ImposterState,
-  targetUserId: string,
-): ImposterState {
-  return {...state, askTargetUserId: targetUserId};
+/** A typed answer, trimmed; null if empty or over the cap (nothing to submit). */
+export function cleanAnswer(text: string): string | null {
+  const t = text.trim();
+  return t.length > 0 && t.length <= ANSWER_MAX_LEN ? t : null;
 }
 
 /**
- * Advance past the current asker. Moves to the next player in order; when the
- * order wraps, either starts the next round or — after the final round — moves
- * the hand into voting. Clears the ask target each step.
+ * The host pages the one-by-one answer reveal: next answer, then either the
+ * next round's question or — after the final round — the vote. Ships via
+ * `play_move`; the server handed the host the turn when the round resolved,
+ * and moving on returns the turn to null so the state locks again.
  */
-export function advanceAsk(state: ImposterState): ImposterState {
-  if (state.phase !== 'asking') {
+export function advanceAnswerReveal(state: ImposterState): ImposterState {
+  if (state.phase !== 'answerReveal' || !state.answers) {
     return state;
   }
-  const i = state.order.indexOf(state.turnUserId);
-  const next = i + 1;
-  if (next < state.order.length) {
-    return {...state, turnUserId: state.order[next], askTargetUserId: null};
+  if (state.answerIndex + 1 < state.answers.length) {
+    return {...state, answerIndex: state.answerIndex + 1};
   }
-  // Wrapped past the last asker.
-  if (state.round < ROUNDS) {
+  // Past the last answer: this round's texts leave the public state.
+  const rest = {...state};
+  delete rest.answers;
+  if (state.round < state.rounds) {
     return {
-      ...state,
+      ...rest,
+      phase: 'answering',
       round: state.round + 1,
-      turnUserId: state.order[0],
-      askTargetUserId: null,
+      answeredCount: 0,
+      answerIndex: 0,
+      turnUserId: null,
     };
   }
-  return {...state, phase: 'voting', askTargetUserId: null};
+  return {...rest, phase: 'voting', answerIndex: 0, turnUserId: null};
 }
 
 export type TallyResult = {

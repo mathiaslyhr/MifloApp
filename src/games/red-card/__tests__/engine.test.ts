@@ -1,63 +1,129 @@
 import {
-  advanceAsk,
+  advanceAnswerReveal,
   applyRedemption,
   buildFootballerPool,
+  cleanAnswer,
   eligibleFootballerIds,
-  setAskTarget,
   tally,
 } from '../engine';
+import {buildQuestionIds, QUESTION_IDS} from '../questions';
 import {getById} from '../../../data/football';
-import {MIN_POOL, ROUNDS, SCORE} from '../types';
+import {ANSWER_MAX_LEN, MIN_POOL, SCORE} from '../types';
 import type {ImposterState} from '../types';
 
 function state(overrides: Partial<ImposterState> = {}): ImposterState {
   return {
     gameType: 'red-card',
-    phase: 'asking',
+    phase: 'answering',
     round: 1,
-    order: ['a', 'b', 'c'],
-    turnUserId: 'a',
-    askTargetUserId: null,
+    rounds: 2,
+    questionIds: ['q3', 'q7'],
+    turnUserId: null,
     players: [
       {userId: 'a', name: 'A'},
       {userId: 'b', name: 'B'},
       {userId: 'c', name: 'C'},
     ],
+    answeredCount: 0,
+    answerIndex: 0,
     votedCount: 0,
     scores: {a: 0, b: 0, c: 0},
     ...overrides,
   };
 }
 
-describe('advanceAsk', () => {
-  it('cycles all players across two rounds, then moves to voting', () => {
-    let s = state();
-    // Round 1: a -> b -> c
-    s = advanceAsk(s);
-    expect(s).toMatchObject({round: 1, turnUserId: 'b'});
-    s = advanceAsk(s);
-    expect(s).toMatchObject({round: 1, turnUserId: 'c'});
-    // Wrap into round 2, back to the first asker.
-    s = advanceAsk(s);
-    expect(s).toMatchObject({round: 2, turnUserId: 'a'});
-    s = advanceAsk(s);
-    expect(s).toMatchObject({round: 2, turnUserId: 'b'});
-    s = advanceAsk(s);
-    expect(s).toMatchObject({round: 2, turnUserId: 'c'});
-    // After the final asker of the final round → voting.
-    s = advanceAsk(s);
-    expect(s.phase).toBe('voting');
-    expect(ROUNDS).toBe(2);
+/** A resolved round, as the server publishes it: answers out, host on turn. */
+function revealState(overrides: Partial<ImposterState> = {}): ImposterState {
+  return state({
+    phase: 'answerReveal',
+    turnUserId: 'a',
+    answeredCount: 3,
+    answers: [
+      {userId: 'b', text: 'about 120m'},
+      {userId: 'a', text: '80m'},
+      {userId: 'c', text: 'maybe 60m'},
+    ],
+    answerIndex: 0,
+    ...overrides,
+  });
+}
+
+describe('cleanAnswer', () => {
+  it('trims surrounding whitespace', () => {
+    expect(cleanAnswer('  80m  ')).toBe('80m');
   });
 
-  it('clears the ask target each step', () => {
-    const s = advanceAsk(setAskTarget(state(), 'b'));
-    expect(s.askTargetUserId).toBeNull();
+  it('rejects empty and whitespace-only answers', () => {
+    expect(cleanAnswer('')).toBeNull();
+    expect(cleanAnswer('   ')).toBeNull();
   });
 
-  it('is a no-op outside the asking phase', () => {
-    const s = state({phase: 'voting'});
-    expect(advanceAsk(s)).toBe(s);
+  it('accepts exactly the cap and rejects one over', () => {
+    expect(cleanAnswer('x'.repeat(ANSWER_MAX_LEN))).toHaveLength(ANSWER_MAX_LEN);
+    expect(cleanAnswer('x'.repeat(ANSWER_MAX_LEN + 1))).toBeNull();
+  });
+});
+
+describe('advanceAnswerReveal', () => {
+  it('pages through the answers one by one', () => {
+    let s = revealState();
+    s = advanceAnswerReveal(s);
+    expect(s).toMatchObject({phase: 'answerReveal', answerIndex: 1});
+    s = advanceAnswerReveal(s);
+    expect(s).toMatchObject({phase: 'answerReveal', answerIndex: 2});
+  });
+
+  it('rolls a non-final round into the next question with a locked turn', () => {
+    const s = advanceAnswerReveal(revealState({answerIndex: 2}));
+    expect(s).toMatchObject({
+      phase: 'answering',
+      round: 2,
+      answeredCount: 0,
+      answerIndex: 0,
+      turnUserId: null,
+    });
+    // The shown answers leave the public state entirely.
+    expect(s.answers).toBeUndefined();
+  });
+
+  it('moves to voting after the last answer of the final round', () => {
+    const s = advanceAnswerReveal(revealState({round: 2, answerIndex: 2}));
+    expect(s).toMatchObject({phase: 'voting', turnUserId: null});
+    expect(s.answers).toBeUndefined();
+  });
+
+  it('is a no-op outside answerReveal or without published answers', () => {
+    const answering = state();
+    expect(advanceAnswerReveal(answering)).toBe(answering);
+    const broken = state({phase: 'answerReveal'});
+    expect(advanceAnswerReveal(broken)).toBe(broken);
+  });
+});
+
+describe('buildQuestionIds', () => {
+  const rng = () => 0.42;
+
+  it('picks the requested number of distinct known ids', () => {
+    for (const rounds of [2, 3, 4]) {
+      const ids = buildQuestionIds(rounds, rng);
+      expect(ids).toHaveLength(rounds);
+      expect(new Set(ids).size).toBe(rounds);
+      for (const id of ids) {
+        expect(QUESTION_IDS).toContain(id);
+      }
+    }
+  });
+
+  it('never repeats an avoided id (the previous hand)', () => {
+    const previous = buildQuestionIds(4, rng);
+    const next = buildQuestionIds(4, rng, previous);
+    for (const id of next) {
+      expect(previous).not.toContain(id);
+    }
+  });
+
+  it('is deterministic for a seeded rng', () => {
+    expect(buildQuestionIds(3, () => 0.7)).toEqual(buildQuestionIds(3, () => 0.7));
   });
 });
 

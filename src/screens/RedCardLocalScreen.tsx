@@ -22,22 +22,29 @@ import type {RootStackParamList} from '../core/navigation';
 import {getById} from '../data/football';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
 import {FootballerCard} from '../games/red-card/FootballerCard';
-import {PlayerGrid, Scoreboard, VotesBlock} from '../games/red-card/components';
 import {
-  advanceAskLocal,
+  AnswerRevealBlock,
+  PlayerGrid,
+  RoundsPicker,
+  Scoreboard,
+  VotesBlock,
+} from '../games/red-card/components';
+import {cleanAnswer} from '../games/red-card/engine';
+import {
+  advanceLocalAnswerReveal,
   applyLocalRedemption,
   castLocalVote,
   createLocalGame,
   createLocalRematch,
-  currentAsker,
   handoffPlayer,
   hideAndPass,
   LOCAL_MIN_PLAYERS,
   localNameOf,
   localStandings,
   showContent,
+  submitLocalAnswer,
 } from '../games/red-card/localEngine';
-import {ROUNDS} from '../games/red-card/types';
+import {ANSWER_MAX_LEN, DEFAULT_ROUNDS} from '../games/red-card/types';
 import type {LocalRedCardState} from '../games/red-card/localEngine';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RedCardLocal'>;
@@ -48,15 +55,17 @@ const MAX_PLAYERS = 8;
 /**
  * Pass-and-play Red Card — the whole hand on one shared phone, fully offline.
  * Privacy comes from the handoff gate: the screen shows "Pass the phone to X"
- * until X taps, X sees their private content (role or vote), and it hides
- * again before the next pass. Roles and scoring run in the pure local engine;
- * questions still happen out loud around the phone.
+ * until X taps, X sees their private content (role, answer box, or vote), and
+ * it hides again before the next pass. Each round the app asks one question;
+ * everyone types a secret answer, then the phone goes in the middle and the
+ * answers come up one by one. Roles and scoring run in the pure local engine.
  */
 export function RedCardLocalScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const [state, setState] = useState<LocalRedCardState | null>(null);
   const [names, setNames] = useState<string[]>(['', '', '']);
+  const [rounds, setRounds] = useState(DEFAULT_ROUNDS);
   const [guessOpen, setGuessOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
@@ -68,7 +77,7 @@ export function RedCardLocalScreen({navigation}: Props) {
       return;
     }
     haptics.press();
-    setState(createLocalGame(names));
+    setState(createLocalGame(names, rounds));
   }
 
   function submitGuess(footballerId: string) {
@@ -103,13 +112,23 @@ export function RedCardLocalScreen({navigation}: Props) {
             <SetupStage
               names={names}
               onChange={setNames}
+              rounds={rounds}
+              onRounds={setRounds}
               ready={namesReady}
               onStart={start}
             />
           ) : state.stage === 'roleReveal' ? (
             <RoleRevealStage state={state} onAdvance={setState} />
-          ) : state.stage === 'asking' ? (
-            <AskingStage state={state} onAdvance={setState} />
+          ) : state.stage === 'answering' ? (
+            // Keyed per player-and-round so the draft never leaks to the next
+            // person the phone is passed to.
+            <AnsweringStage
+              key={`${state.round}:${state.handoffIndex}`}
+              state={state}
+              onAdvance={setState}
+            />
+          ) : state.stage === 'answerReveal' ? (
+            <AnswerRevealStage state={state} onAdvance={setState} />
           ) : state.stage === 'voting' ? (
             <VotingStage state={state} onAdvance={setState} />
           ) : (
@@ -170,15 +189,19 @@ export function RedCardLocalScreen({navigation}: Props) {
   );
 }
 
-/** Name entry: one field per player, add/remove rows, start at 3+. */
+/** Name entry + round count: one field per player, add/remove rows, start at 3+. */
 function SetupStage({
   names,
   onChange,
+  rounds,
+  onRounds,
   ready,
   onStart,
 }: {
   names: string[];
   onChange: (names: string[]) => void;
+  rounds: number;
+  onRounds: (rounds: number) => void;
   ready: boolean;
   onStart: () => void;
 }) {
@@ -229,6 +252,7 @@ function SetupStage({
           </Text>
         </GlassTag>
       ) : null}
+      <RoundsPicker value={rounds} onChange={onRounds} />
       <Button
         label={t('redCard.local.start')}
         variant="primary"
@@ -335,8 +359,11 @@ function RoleRevealStage({
   );
 }
 
-/** Questions happen out loud; the phone just tracks whose turn it is. */
-function AskingStage({
+/**
+ * One question round: the phone goes around behind the pass gate and each
+ * player privately types an answer to the same question.
+ */
+function AnsweringStage({
   state,
   onAdvance,
 }: {
@@ -344,29 +371,112 @@ function AskingStage({
   onAdvance: (next: LocalRedCardState) => void;
 }) {
   const {t} = useTranslation();
-  const asker = currentAsker(state);
-  // The very last ask (last player in the final round) finishes the phase.
-  const isLastAsk =
-    state.round >= ROUNDS && state.turnIndex === state.order.length - 1;
+  const [draft, setDraft] = useState('');
+  const player = handoffPlayer(state);
+  if (!player) {
+    return null;
+  }
+  const clean = cleanAnswer(draft);
+
+  function submit() {
+    if (!clean) {
+      return;
+    }
+    haptics.press();
+    onAdvance(submitLocalAnswer(state, clean));
+  }
+
   return (
     <View style={styles.phase}>
       <GlassTag tint="light" style={styles.roundPill}>
         <Text variant="caption" color="muted" style={styles.roundText}>
-          {t('redCard.round', {round: state.round, total: ROUNDS})}
+          {t('redCard.round', {round: state.round, total: state.rounds})}
         </Text>
       </GlassTag>
-      <Text variant="section" align="center" style={styles.headline}>
-        {t('redCard.askerTurn', {name: asker?.name ?? ''})}
+      {!state.contentShown ? (
+        <PassGate
+          name={player.name}
+          sub={t('redCard.local.answerIntro')}
+          actionLabel={t('redCard.local.showAnswer')}
+          onShow={() => onAdvance(showContent(state))}
+        />
+      ) : (
+        <>
+          <Text variant="section" align="center" style={styles.headline}>
+            {t(`redCard.questions.${state.questionIds[state.round - 1]}`)}
+          </Text>
+          <Text variant="secondary" color="secondary" align="center">
+            {t('redCard.answer.hint')}
+          </Text>
+          <TextField
+            value={draft}
+            onChangeText={setDraft}
+            placeholder={t('redCard.answer.placeholder')}
+            maxLength={ANSWER_MAX_LEN}
+            onSubmitEditing={submit}
+            accessibilityLabel={t('redCard.answer.placeholder')}
+          />
+          <Button
+            label={t('redCard.answer.submit')}
+            variant="primary"
+            disabled={!clean}
+            onPress={submit}
+          />
+        </>
+      )}
+    </View>
+  );
+}
+
+/**
+ * Phone in the middle: the round's answers come up one by one with the
+ * author's name. Anyone taps past them; after the last one the button rolls
+ * into the next question or the vote.
+ */
+function AnswerRevealStage({
+  state,
+  onAdvance,
+}: {
+  state: LocalRedCardState;
+  onAdvance: (next: LocalRedCardState) => void;
+}) {
+  const {t} = useTranslation();
+  const playerId = state.revealOrder[state.answerIndex];
+  const text = state.answers[playerId];
+  if (!playerId || text === undefined) {
+    return null;
+  }
+  const isLastAnswer = state.answerIndex >= state.revealOrder.length - 1;
+  const label = !isLastAnswer
+    ? t('redCard.answers.next')
+    : state.round < state.rounds
+    ? t('redCard.answers.nextRound')
+    : t('redCard.answers.toVote');
+  return (
+    <View style={styles.phase}>
+      <GlassTag tint="light" style={styles.roundPill}>
+        <Text variant="caption" color="muted" style={styles.roundText}>
+          {t('redCard.round', {round: state.round, total: state.rounds})}
+        </Text>
+      </GlassTag>
+      <Text variant="secondary" color="secondary" align="center">
+        {t('redCard.local.revealIntro')}
       </Text>
       <Text variant="secondary" color="secondary" align="center">
-        {t('redCard.askOutLoud')}
+        {t(`redCard.questions.${state.questionIds[state.round - 1]}`)}
       </Text>
+      <AnswerRevealBlock
+        name={localNameOf(state, playerId)}
+        text={text}
+        index={state.answerIndex}
+        total={state.revealOrder.length}
+      />
       <Button
-        label={isLastAsk ? t('redCard.finish') : t('redCard.next')}
+        label={label}
         variant="primary"
         onPress={() => {
           haptics.press();
-          onAdvance(advanceAskLocal(state));
+          onAdvance(advanceLocalAnswerReveal(state));
         }}
       />
     </View>

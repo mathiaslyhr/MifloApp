@@ -43,7 +43,12 @@ import {ensureSession} from '../core/supabase/client';
 import {generateGrid, gridSignature} from '../games/hattrick/grid';
 import {createIndividualState} from '../games/hattrick/engine';
 import {buildFootballerPool} from '../games/red-card/engine';
-import {MIN_PLAYERS as IMPOSTER_MIN} from '../games/red-card/types';
+import {buildQuestionIds} from '../games/red-card/questions';
+import {RoundsPicker} from '../games/red-card/components';
+import {
+  DEFAULT_ROUNDS,
+  MIN_PLAYERS as IMPOSTER_MIN,
+} from '../games/red-card/types';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
@@ -65,6 +70,9 @@ export function LobbyScreen({route, navigation}: Props) {
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [starting, setStarting] = useState(false);
+  // Host-picked Red Card question rounds (the selector only shows for a locked
+  // Red Card party; a free-pick party starts with the default).
+  const [redCardRounds, setRedCardRounds] = useState(DEFAULT_ROUNDS);
   const insets = useSafeAreaInsets();
   // Measured height of the floating bottom bar, so scroll content clears it.
   const [botH, setBotH] = useState(0);
@@ -263,7 +271,12 @@ export function LobbyScreen({route, navigation}: Props) {
             toast.neutral(t('lobby.needPlayers', {count: IMPOSTER_MIN}));
             return undefined;
           }
-          await startRedCardGame(roomId, buildFootballerPool());
+          await startRedCardGame(
+            roomId,
+            buildFootballerPool(),
+            redCardRounds,
+            buildQuestionIds(redCardRounds),
+          );
           inGameRef.current = true;
           return 'RedCard';
         }
@@ -385,6 +398,11 @@ export function LobbyScreen({route, navigation}: Props) {
       {/* Floating footer — the host's game button (or guest hint) floats over
           the roster with no box behind it. Host picks the game; guests wait. */}
       <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
+        {isHost && locked && room?.gameType === 'red-card' ? (
+          <View style={styles.roundsPickerWrap}>
+            <RoundsPicker value={redCardRounds} onChange={setRedCardRounds} />
+          </View>
+        ) : null}
         {isHost ? (
           <Button
             label={
@@ -504,4 +522,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing.md,
     paddingHorizontal: screenPadding,
   },
+  // Breathing room between the Red Card rounds picker and the start button.
+  roundsPickerWrap: {marginBottom: spacing.md},
 });
