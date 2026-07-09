@@ -10,7 +10,9 @@ import {JoinScreen} from '../../screens/JoinScreen';
 import {LobbyScreen} from '../../screens/LobbyScreen';
 import {GamePickerScreen} from '../../screens/GamePickerScreen';
 import {HattrickScreen} from '../../screens/HattrickScreen';
+import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
+import {RedCardLocalScreen} from '../../screens/RedCardLocalScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
 import {ProfileScreen} from '../../screens/menu/ProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
@@ -37,6 +39,17 @@ export function RootNavigator() {
       <Stack.Screen
         name="RedCard"
         component={RedCardScreen}
+        options={{gestureEnabled: false}}
+      />
+      {/* Pass-and-play on one shared phone — roomless, fully offline. */}
+      <Stack.Screen
+        name="HattrickLocal"
+        component={HattrickLocalScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="RedCardLocal"
+        component={RedCardLocalScreen}
         options={{gestureEnabled: false}}
       />
       {/* Single-player daily puzzle; leave via the header back button. */}

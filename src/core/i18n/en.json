@@ -5,7 +5,10 @@
     "remove": "Remove",
     "close": "Close",
     "back": "Back",
-    "miflo": "Miflo"
+    "miflo": "Miflo",
+    "errorNetwork": "Couldn't reach the server. Check your internet and try again.",
+    "connectionLost": "Connection lost. Reconnecting…",
+    "connectionRestored": "Back online"
   },
   "home": {
     "help": "How it works",
@@ -23,6 +26,7 @@
     "joining": "Joining…",
     "join": "Join",
     "errorUnavailable": "Parties aren't available right now.",
+    "errorNetwork": "Couldn't connect. Check your internet and try again.",
     "errorBadCode": "That code didn't work. Check it and try again."
   },
   "lobby": {
@@ -66,6 +70,13 @@
       "solo": "Solo",
       "duel": "1v1",
       "party": "3+"
+    },
+    "playMode": {
+      "title": "How do you want to play?",
+      "local": "On this phone",
+      "localSub": "Pass one phone around, works offline",
+      "online": "Online with friends",
+      "onlineSub": "Create a party and invite with a code"
     },
     "hattrick": {
       "title": "Hattrick",
@@ -115,7 +126,8 @@
     "faq": "FAQ",
     "privacy": "Privacy Policy",
     "reportBug": "Report a bug",
-    "version": "Miflo v{{version}}"
+    "version": "Miflo v{{version}}",
+    "errorLink": "Couldn't open the link."
   },
   "hattrick": {
     "title": "Hattrick",
@@ -151,7 +163,12 @@
     "noPlayers": "No players found",
     "timeLeft": "Time left",
     "someone": "Someone",
-    "claimCell": "Claim cell"
+    "claimCell": "Claim cell",
+    "local": {
+      "player1": "Player 1",
+      "player2": "Player 2",
+      "exit": "Exit"
+    }
   },
   "redCard": {
     "title": "Red Card",
@@ -215,7 +232,24 @@
     "noPlayers": "No players found",
     "errorVote": "Couldn't cast your vote. Try again.",
     "errorGuess": "Couldn't submit your guess. Try again.",
-    "newGameError": "Couldn't start a new round."
+    "errorRole": "Couldn't deal your role. Check your connection.",
+    "newGameError": "Couldn't start a new round.",
+    "local": {
+      "setupTitle": "Who's playing?",
+      "setupSub": "Add at least {{count}} names, then pass one phone around.",
+      "namePlaceholder": "Player name",
+      "addPlayer": "Add player",
+      "removePlayer": "Remove player",
+      "start": "Start game",
+      "passTo": "Pass the phone to {{name}}",
+      "roleIntro": "Only {{name}} looks at the screen.",
+      "showRole": "Show my role",
+      "hideAndPass": "Hide and pass on",
+      "voteIntro": "Your vote stays secret.",
+      "showVote": "Vote",
+      "redeemPass": "One last guess to steal it back.",
+      "exit": "Exit"
+    }
   },
   "scout": {
     "title": "Scout",
@@ -227,6 +261,7 @@
     "searchHint": "Start typing to guess a footballer",
     "noPlayers": "No players found",
     "alreadyGuessed": "You already guessed that player",
+    "errorSave": "Couldn't save your progress.",
     "won": "Got it in {{count}}!",
     "lost": "Out of guesses",
     "answerWas": "Today's footballer was {{name}}",
@@ -287,7 +322,8 @@
     "languageEn": "English",
     "languageDa": "Dansk",
     "haptics": "Haptic feedback",
-    "hapticsDesc": "Vibrations on taps and key moments."
+    "hapticsDesc": "Vibrations on taps and key moments.",
+    "errorSave": "Couldn't save your settings."
   },
   "stats": {
     "title": "Stats",

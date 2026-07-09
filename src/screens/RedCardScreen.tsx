@@ -1,13 +1,6 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Image,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {ChevronLeft, HelpCircle, Crown} from 'lucide-react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {Modal, ScrollView, StyleSheet, View} from 'react-native';
+import {ChevronLeft, HelpCircle} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -20,12 +13,11 @@ import {
   HowToPlayModal,
   Screen,
   Text,
-  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {colors, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   castRedCardVote,
@@ -37,11 +29,12 @@ import {
   subscribeRoom,
   type ImposterRoleResult,
 } from '../core/rooms/roomService';
+import {createConnectionNotifier} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
-import {FOOTBALLERS, getById} from '../data/football';
-import {searchPlayers} from '../games/hattrick/playerSearch';
-import {flagImage} from '../games/hattrick/criterionIcon';
+import {getById} from '../data/football';
+import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
 import {FootballerCard} from '../games/red-card/FootballerCard';
+import {PlayerGrid, Scoreboard, VotesBlock} from '../games/red-card/components';
 import {
   advanceAsk,
   buildFootballerPool,
@@ -49,7 +42,7 @@ import {
   standings,
 } from '../games/red-card/engine';
 import {ROUNDS} from '../games/red-card/types';
-import type {ImposterPlayer, ImposterState} from '../games/red-card/types';
+import type {ImposterState} from '../games/red-card/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RedCard'>;
 
@@ -63,7 +56,6 @@ export function RedCardScreen({route, navigation}: Props) {
   const [roleDismissed, setRoleDismissed] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [guessOpen, setGuessOpen] = useState(false);
-  const [query, setQuery] = useState('');
   const [showHelp, setShowHelp] = useState(false);
   const insets = useSafeAreaInsets();
   const leftRef = useRef(false);
@@ -92,14 +84,26 @@ export function RedCardScreen({route, navigation}: Props) {
           navigation.popToTop();
         }
       },
+      createConnectionNotifier(),
     );
     return unsub;
   }, [roomId, navigation]);
 
   // Fetch ONLY my own role from the server (never in the broadcast state). The
   // secret is written before the room flips to in_progress, but retry once in
-  // case this device sees the state first.
+  // case this device sees the state first. On failure, say so and quietly try
+  // once more after a beat — otherwise a blip strands the player behind the
+  // "Dealing roles…" overlay with a disabled button.
   const fetchRole = useCallback(() => {
+    const fail = () => {
+      haptics.error();
+      toast.error(t('redCard.errorRole'));
+      setTimeout(() => {
+        getMyRedCardRole(roomId)
+          .then(r => r && setRole(r))
+          .catch(() => {});
+      }, 2000);
+    };
     getMyRedCardRole(roomId)
       .then(r => {
         if (r) {
@@ -108,12 +112,12 @@ export function RedCardScreen({route, navigation}: Props) {
           setTimeout(() => {
             getMyRedCardRole(roomId)
               .then(rr => rr && setRole(rr))
-              .catch(() => {});
+              .catch(fail);
           }, 600);
         }
       })
-      .catch(() => {});
-  }, [roomId]);
+      .catch(fail);
+  }, [roomId, t]);
 
   // A hand always opens in the 'asking' phase. Each time we enter it fresh (first
   // mount, or Play again after a reveal), reset per-hand local state and re-fetch
@@ -134,14 +138,16 @@ export function RedCardScreen({route, navigation}: Props) {
 
   const isHost = !!myUserId && myUserId === hostId;
 
-  const results = useMemo(
-    () => (query.trim() === '' ? [] : searchPlayers(FOOTBALLERS, query, [])),
-    [query],
-  );
+  // Shared catch for room RPCs: the action never reached the server (offline,
+  // timeout), so buzz and say so instead of failing silently.
+  function notifyNetworkError() {
+    haptics.error();
+    toast.error(t('common.errorNetwork'));
+  }
 
   function handleBack() {
     if (isHost) {
-      returnToLobby(roomId).catch(() => {});
+      returnToLobby(roomId).catch(notifyNetworkError);
     } else {
       leftRef.current = true;
       navigation.goBack();
@@ -179,7 +185,7 @@ export function RedCardScreen({route, navigation}: Props) {
       return;
     }
     haptics.press();
-    playMove(roomId, advanceAsk(state)).catch(() => {});
+    playMove(roomId, advanceAsk(state)).catch(notifyNetworkError);
   }
 
   function castVote(targetUserId: string) {
@@ -196,7 +202,6 @@ export function RedCardScreen({route, navigation}: Props) {
 
   function submitGuess(footballerId: string) {
     setGuessOpen(false);
-    setQuery('');
     haptics.press();
     redCardGuess(roomId, footballerId).catch(() => {
       toast.error(t('redCard.errorGuess'));
@@ -253,7 +258,7 @@ export function RedCardScreen({route, navigation}: Props) {
               amImposter={role?.role === 'imposter'}
               onGuess={() => setGuessOpen(true)}
               onPlayAgain={playAgain}
-              onBackToLobby={() => returnToLobby(roomId).catch(() => {})}
+              onBackToLobby={() => returnToLobby(roomId).catch(notifyNetworkError)}
             />
           )}
         </View>
@@ -323,56 +328,16 @@ export function RedCardScreen({route, navigation}: Props) {
       </Modal>
 
       {/* Imposter redemption — search any footballer. */}
-      <Modal
+      <FootballerSearchModal
         visible={guessOpen}
-        transparent
-        animationType="none"
-        onRequestClose={() => setGuessOpen(false)}>
-        <Pressable style={styles.scrim} onPress={() => setGuessOpen(false)}>
-          <Pressable style={styles.pickCard} onPress={() => {}}>
-            <Text variant="section" align="center">
-              {t('redCard.redeem.button')}
-            </Text>
-            <TextField
-              value={query}
-              onChangeText={setQuery}
-              placeholder={t('redCard.searchPlaceholder')}
-              autoFocus
-              autoCapitalize="words"
-              accessibilityLabel={t('redCard.searchPlaceholder')}
-            />
-            <ScrollView
-              style={styles.results}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}>
-              {query.trim() === '' ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('redCard.searchHint')}
-                </Text>
-              ) : results.length === 0 ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('redCard.noPlayers')}
-                </Text>
-              ) : (
-                results.map(f => {
-                  const flag = flagImage(f.nationality[0]);
-                  return (
-                    <Pressable
-                      key={f.id}
-                      style={styles.resultRow}
-                      onPress={() => submitGuess(f.id)}>
-                      {flag != null ? (
-                        <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
-                      ) : null}
-                      <Text variant="body">{f.name}</Text>
-                    </Pressable>
-                  );
-                })
-              )}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
+        title={t('redCard.redeem.button')}
+        titleVariant="section"
+        placeholder={t('redCard.searchPlaceholder')}
+        hint={t('redCard.searchHint')}
+        empty={t('redCard.noPlayers')}
+        onPick={submitGuess}
+        onClose={() => setGuessOpen(false)}
+      />
 
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>
@@ -577,58 +542,10 @@ function RevealPhase({
           </GlassCard>
 
           {/* Scoreboard — this round's delta + running total, leader crowned. */}
-          <GlassCard style={styles.listCard}>
-            <Text variant="label" style={styles.listTitle}>
-              {t('redCard.reveal.scoreboard')}
-            </Text>
-            {board.map((row, i) => {
-              const d = reveal.deltas[row.userId] ?? 0;
-              return (
-                <View key={row.userId} style={styles.listRow}>
-                  <View style={styles.scoreNameCol}>
-                    {i === 0 ? (
-                      <Crown size={14} color={colors.primary} strokeWidth={2} />
-                    ) : null}
-                    <Text
-                      variant="body"
-                      numberOfLines={1}
-                      style={i === 0 ? styles.leaderName : undefined}>
-                      {row.name}
-                    </Text>
-                  </View>
-                  <View style={styles.scoreValueCol}>
-                    {d !== 0 ? (
-                      <Text
-                        variant="secondary"
-                        style={d > 0 ? styles.deltaUp : styles.delta}>
-                        {d > 0 ? `+${d}` : d}
-                      </Text>
-                    ) : null}
-                    <Text
-                      variant="body"
-                      style={[styles.points, i === 0 && styles.leaderScore]}>
-                      {row.score}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
-          </GlassCard>
+          <Scoreboard rows={board} deltas={reveal.deltas} />
 
           {/* Votes — de-emphasised, no card chrome. */}
-          <View style={styles.votesBlock}>
-            <Text variant="caption" color="muted" style={styles.votesLabel}>
-              {t('redCard.reveal.votesTitle')}
-            </Text>
-            {Object.entries(reveal.votes).map(([voter, targetId]) => (
-              <Text key={voter} variant="secondary" color="muted" style={styles.voteLine}>
-                {t('redCard.reveal.votedFor', {
-                  voter: nameOf(state, voter),
-                  target: nameOf(state, targetId),
-                })}
-              </Text>
-            ))}
-          </View>
+          <VotesBlock votes={reveal.votes} nameOf={id => nameOf(state, id)} />
 
           {isHost ? (
             <View style={styles.resultActions}>
@@ -646,35 +563,6 @@ function RevealPhase({
           )}
         </>
       )}
-    </View>
-  );
-}
-
-/** Tappable roster of glass name tags; optionally hides one player (yourself). */
-function PlayerGrid({
-  players,
-  excludeId,
-  onPick,
-}: {
-  players: ImposterPlayer[];
-  excludeId: string | null;
-  onPick: (userId: string) => void;
-}) {
-  return (
-    <View style={styles.pickGrid}>
-      {players
-        .filter(p => p.userId !== excludeId)
-        .map(p => (
-          <GlassTag
-            key={p.userId}
-            onPress={() => onPick(p.userId)}
-            accessibilityRole="button"
-            accessibilityLabel={p.name}>
-            <Text variant="body" style={styles.pickName}>
-              {p.name}
-            </Text>
-          </GlassTag>
-        ))}
     </View>
   );
 }
@@ -718,36 +606,11 @@ const styles = StyleSheet.create({
   },
   roundText: {letterSpacing: 1},
   headline: {color: colors.ink},
-  pickGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: spacing.sm,
-  },
-  pickName: {color: colors.ink},
   sectionLabel: {letterSpacing: 1, marginBottom: -spacing.sm},
   redeemBox: {
     gap: spacing.sm,
     padding: spacing.md,
   },
-  listCard: {
-    gap: spacing.xs,
-    padding: spacing.md,
-  },
-  listTitle: {fontFamily: fonts.regular, marginBottom: spacing.xs},
-  listRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: spacing.xs,
-  },
-  points: {fontFamily: fonts.regular, color: colors.ink},
-  leaderName: {fontFamily: fonts.regular},
-  leaderScore: {color: colors.primary},
-  scoreNameCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flex: 1},
-  scoreValueCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-  delta: {color: colors.textTertiary},
-  deltaUp: {color: colors.success},
   // The revealed footballer sits in a single glass card; a caught guess tints its rim.
   revealFrame: {
     alignSelf: 'stretch',
@@ -773,33 +636,4 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
   },
   imposterTitle: {color: colors.error},
-  // Shared search picker (redemption) — matches Tic-Tac-Toe.
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    justifyContent: 'flex-start',
-    paddingTop: spacing.xxxl + spacing.lg,
-    paddingHorizontal: spacing.xl,
-  },
-  pickCard: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 380,
-    maxHeight: '70%',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  results: {maxHeight: 300},
-  resultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.textTertiary,
-  },
-  resultFlag: {width: 24, height: 18, borderRadius: 2},
-  hint: {paddingVertical: spacing.lg},
 });

@@ -19,6 +19,9 @@ export type RootStackParamList = {
   };
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
+  // Pass-and-play on one shared phone — roomless, fully offline.
+  HattrickLocal: undefined;
+  RedCardLocal: undefined;
   Scout: undefined;
   Profile: undefined;
   Settings: undefined;

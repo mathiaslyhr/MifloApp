@@ -5,7 +5,10 @@
     "remove": "Fjern",
     "close": "Luk",
     "back": "Tilbage",
-    "miflo": "Miflo"
+    "miflo": "Miflo",
+    "errorNetwork": "Kunne ikke få forbindelse til serveren. Tjek dit internet og prøv igen.",
+    "connectionLost": "Mistede forbindelsen. Opretter forbindelse igen…",
+    "connectionRestored": "Forbindelsen er tilbage"
   },
   "home": {
     "help": "Sådan spiller du",
@@ -23,6 +26,7 @@
     "joining": "Deltager…",
     "join": "Deltag",
     "errorUnavailable": "Rum er ikke tilgængelige lige nu.",
+    "errorNetwork": "Kunne ikke oprette forbindelse. Tjek dit internet og prøv igen.",
     "errorBadCode": "Koden virkede ikke. Tjek den og prøv igen."
   },
   "lobby": {
@@ -66,6 +70,13 @@
       "solo": "Solo",
       "duel": "1v1",
       "party": "3+"
+    },
+    "playMode": {
+      "title": "Hvordan vil I spille?",
+      "local": "På denne telefon",
+      "localSub": "Send én telefon rundt, virker offline",
+      "online": "Online med venner",
+      "onlineSub": "Opret et rum og inviter med en kode"
     },
     "hattrick": {
       "title": "Hattrick",
@@ -115,7 +126,8 @@
     "faq": "FAQ",
     "privacy": "Privatlivspolitik",
     "reportBug": "Rapportér en fejl",
-    "version": "Miflo v{{version}}"
+    "version": "Miflo v{{version}}",
+    "errorLink": "Kunne ikke åbne linket."
   },
   "hattrick": {
     "title": "Hattrick",
@@ -151,7 +163,12 @@
     "noPlayers": "Ingen spillere fundet",
     "timeLeft": "Tid tilbage",
     "someone": "Nogen",
-    "claimCell": "Vælg felt"
+    "claimCell": "Vælg felt",
+    "local": {
+      "player1": "Spiller 1",
+      "player2": "Spiller 2",
+      "exit": "Afslut"
+    }
   },
   "redCard": {
     "title": "Red Card",
@@ -215,7 +232,24 @@
     "noPlayers": "Ingen spillere fundet",
     "errorVote": "Kunne ikke afgive din stemme. Prøv igen.",
     "errorGuess": "Kunne ikke sende dit gæt. Prøv igen.",
-    "newGameError": "Kunne ikke starte en ny runde."
+    "errorRole": "Kunne ikke give dig din rolle. Tjek din forbindelse.",
+    "newGameError": "Kunne ikke starte en ny runde.",
+    "local": {
+      "setupTitle": "Hvem spiller?",
+      "setupSub": "Tilføj mindst {{count}} navne, og send så én telefon rundt.",
+      "namePlaceholder": "Spillernavn",
+      "addPlayer": "Tilføj spiller",
+      "removePlayer": "Fjern spiller",
+      "start": "Start spillet",
+      "passTo": "Giv telefonen til {{name}}",
+      "roleIntro": "Kun {{name}} kigger på skærmen.",
+      "showRole": "Vis min rolle",
+      "hideAndPass": "Skjul og giv videre",
+      "voteIntro": "Din stemme forbliver hemmelig.",
+      "showVote": "Stem",
+      "redeemPass": "Et sidste gæt for at stjæle sejren tilbage.",
+      "exit": "Afslut"
+    }
   },
   "scout": {
     "title": "Scout",
@@ -227,6 +261,7 @@
     "searchHint": "Begynd at skrive for at gætte en spiller",
     "noPlayers": "Ingen spillere fundet",
     "alreadyGuessed": "Du har allerede gættet den spiller",
+    "errorSave": "Kunne ikke gemme din fremgang.",
     "won": "Klaret på {{count}}!",
     "lost": "Ikke flere gæt",
     "answerWas": "Dagens spiller var {{name}}",
@@ -287,7 +322,8 @@
     "languageEn": "English",
     "languageDa": "Dansk",
     "haptics": "Haptisk feedback",
-    "hapticsDesc": "Vibrationer ved tryk og vigtige øjeblikke."
+    "hapticsDesc": "Vibrationer ved tryk og vigtige øjeblikke.",
+    "errorSave": "Kunne ikke gemme dine indstillinger."
   },
   "stats": {
     "title": "Statistik",

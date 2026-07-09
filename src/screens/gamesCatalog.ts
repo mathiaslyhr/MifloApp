@@ -46,6 +46,11 @@ export type GameEntry = {
    * minting a party/room, and never appears in the Lobby's multiplayer picker.
    */
   single?: boolean;
+  /**
+   * Also playable pass-and-play on one shared phone (no room, no network).
+   * Tapping the tile opens a mode chooser: "On this phone" vs online.
+   */
+  localPlay?: boolean;
 };
 
 /**
@@ -68,6 +73,7 @@ export const GAMES: GameEntry[] = [
     Icon: Grid3x3,
     category: 'duel',
     available: true,
+    localPlay: true,
   },
   {
     gameType: 'red-card',
@@ -75,6 +81,7 @@ export const GAMES: GameEntry[] = [
     Icon: VenetianMask,
     category: 'party',
     available: true,
+    localPlay: true,
   },
   {
     gameType: 'tenball',

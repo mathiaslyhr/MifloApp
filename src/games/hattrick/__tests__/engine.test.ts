@@ -1,5 +1,6 @@
 import {
   applyMove,
+  createRematchState,
   passTurn,
   proposeTie,
   respondTie,
@@ -148,5 +149,25 @@ describe('validatePick', () => {
 
     const used = {...s, usedFootballerIds: ['Agüero, Sergio']};
     expect(validatePick(used, 0, 'Agüero, Sergio')).toBe(false);
+  });
+});
+
+describe('createRematchState', () => {
+  it('resets the board for the same players, rotating the starter and grid', () => {
+    const finished = twoPlayerState({
+      winner: 'A',
+      board: Array(9).fill({sideId: 'A', footballerId: 'f1'}),
+      usedFootballerIds: ['f1'],
+      signature: 'prev-signature',
+    });
+    const next = createRematchState(finished);
+    expect(next.sides.map(s => s.id).sort()).toEqual(['A', 'B']);
+    expect(next.board.every(cell => cell === null)).toBe(true);
+    expect(next.usedFootballerIds).toEqual([]);
+    expect(next.winner).toBeNull();
+    // Two players: the previous starter never opens twice in a row.
+    expect(next.order[0]).not.toBe(finished.order[0]);
+    expect(next.signature).toBeDefined();
+    expect(next.signature).not.toBe(finished.signature);
   });
 });

@@ -320,6 +320,40 @@ function intersectionSize(a: Set<string>, b: Set<string>): number {
 export type Grid = {rows: Criterion[]; cols: Criterion[]};
 
 /**
+ * True iff every cell can be assigned `demand` footballers with no footballer
+ * assigned to more than one cell. Per-cell counts alone aren't enough: a game
+ * never lets a footballer be reused, so a player who is the answer to several
+ * cells only actually covers one of them. Kuhn's augmenting-path matching over
+ * cell-slots (each cell repeated `demand` times) vs footballer ids.
+ */
+export function hasDisjointAssignment(
+  cellIds: readonly (readonly string[])[],
+  demand: number,
+): boolean {
+  const owner = new Map<string, number>(); // footballer id -> slot
+  const augment = (slot: number, seen: Set<string>): boolean => {
+    for (const id of cellIds[Math.floor(slot / demand)]) {
+      if (seen.has(id)) {
+        continue;
+      }
+      seen.add(id);
+      const current = owner.get(id);
+      if (current === undefined || augment(current, seen)) {
+        owner.set(id, slot);
+        return true;
+      }
+    }
+    return false;
+  };
+  for (let slot = 0; slot < cellIds.length * demand; slot++) {
+    if (!augment(slot, new Set())) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Order-independent fingerprint of a grid's axes (rows/cols swap and any
  * within-axis reorder produce the same signature, since they yield the same
  * puzzle). Used to avoid repeating a recent grid.
@@ -434,6 +468,21 @@ export function generateGrid(
         }
       }
       if (cols.length === 3) {
+        // Per-cell counts (checked above) are necessary but not sufficient:
+        // the same footballer may be counted for several cells, yet he can
+        // only ever be played once. Require a fully disjoint assignment of
+        // minPer distinct footballers per cell (row-major, as in the engine).
+        const cellIds: string[][] = [];
+        for (const r of rows) {
+          for (const c of cols) {
+            const [small, big] =
+              r.ids.size < c.ids.size ? [r.ids, c.ids] : [c.ids, r.ids];
+            cellIds.push([...small].filter(id => big.has(id)));
+          }
+        }
+        if (!hasDisjointAssignment(cellIds, minPer)) {
+          continue;
+        }
         const candidate = {rows: rows.map(r => r.c), cols: cols.map(c => c.c)};
         const fresh = !avoid.has(gridSignature(candidate));
         if (fresh && peakPlayerCoverage(rows, cols) <= MAX_SUPERSTAR_CELLS) {

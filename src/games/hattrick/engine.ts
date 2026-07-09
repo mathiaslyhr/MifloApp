@@ -4,7 +4,7 @@
  * via `play_move`; the server only checks it's their turn).
  */
 import {getById, matches} from '../../data/football';
-import {gridSignature, type Grid} from './grid';
+import {generateGrid, gridSignature, type Grid} from './grid';
 import type {Cell, GridState, Side} from './types';
 
 /** Distinct side colours (individual mode uses one per player). */
@@ -80,6 +80,21 @@ export function createIndividualState(
     winner: null,
     signature: gridSignature(grid),
   };
+}
+
+/**
+ * A fresh "Play again" state for the same players: a new grid that avoids
+ * repeating the finished one, and a starter rotated off whoever opened it.
+ */
+export function createRematchState(state: GridState): GridState {
+  const roster = state.sides.map(s => ({
+    userId: s.memberUserIds[0],
+    name: s.name,
+  }));
+  const grid = generateGrid(Math.random, {
+    avoid: state.signature ? [state.signature] : [],
+  });
+  return createIndividualState(grid, roster, {avoidStarter: state.order[0]});
 }
 
 /** The row + col criteria that meet at a cell. */

@@ -24,6 +24,7 @@ Party, PARTY CODE); code and DB keep the internal name **"room"** (`Room`, `room
 | 10 | Odd One Out — Create/Question/Podium | white / white / canvas | ⬜ todo | Reuse Quiz primitives. |
 | 11 | Missing XI — Create/Question/Podium | white / white / canvas | ⬜ todo | New: lineup UI. |
 | 12 | Menu detail: Profile, Stats, Settings, FAQ, Feedback | white | ⬜ todo | Reuse feedback engine + secondary button. |
+| 13 | **Pass-and-play (1 device)** | canvas | 🟡 built, device-verify pending | Offline mode for Hattrick + Red Card (flight-mode request). Games tab tile → `PlayModeSheet` chooser ("On this phone" / "Online with friends") → roomless `HattrickLocalScreen` (shared `HattrickGameView` + pure engine) or `RedCardLocalScreen` (handoff-gated pass-the-phone flow over `red-card/localEngine.ts`). Zero network in the local paths. |
 
 ## Foundation (Phase A — ships with Home)
 
