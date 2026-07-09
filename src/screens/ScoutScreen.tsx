@@ -27,6 +27,7 @@ import {
   historyEntryFor,
   isFinished,
   recordResult,
+  STREAK_GUESS_LIMIT,
 } from '../games/scout/engine';
 import {
   dailySecretFor,
@@ -173,13 +174,8 @@ export function ScoutScreen({navigation}: Props) {
     }).catch(saveFailed);
 
     if (isFinished(next)) {
-      const won = next.status === 'won';
-      if (won) {
-        haptics.success();
-      } else {
-        haptics.error();
-      }
-      const updated = recordResult(streak, dateKey, won);
+      haptics.success();
+      const updated = recordResult(streak, dateKey, next.guesses.length);
       setStreak(updated);
       // History data is still recorded (the archive button is removed for
       // now). One toast covers both writes failing.
@@ -212,6 +208,11 @@ export function ScoutScreen({navigation}: Props) {
   }
 
   const finished = isFinished(state);
+  const guessesUsed = state.guesses.length;
+  // The streak survives only when the solve lands in under STREAK_GUESS_LIMIT
+  // guesses; once that many are spent, today can no longer keep it.
+  const streakStillAlive = guessesUsed < STREAK_GUESS_LIMIT - 1;
+  const keptStreak = guessesUsed < STREAK_GUESS_LIMIT;
   const secretPlayer = getById(state.secretId);
   // The answer reveal (shown once finished): flag + crest + position.
   const secretAttrs = secretPlayer
@@ -235,24 +236,27 @@ export function ScoutScreen({navigation}: Props) {
         <Text
           variant="section"
           align="center"
-          style={[
-            styles.instruction,
-            finished && {
-              color: state.status === 'won' ? colors.success : colors.error,
-            },
-          ]}>
+          style={[styles.instruction, finished && {color: colors.success}]}>
           {finished
-            ? state.status === 'won'
-              ? t('scout.won', {count: state.guesses.length})
-              : t('scout.lost')
+            ? keptStreak
+              ? t('scout.won', {count: guessesUsed})
+              : t('scout.wonNoStreak', {count: guessesUsed})
             : t('scout.instruction')}
         </Text>
         {!finished ? (
           <Text variant="caption" color="muted" align="center">
-            {t('scout.guessCount', {
-              current: state.guesses.length + 1,
-              max: state.maxGuesses,
-            })}
+            {t('scout.guessCount', {count: guessesUsed})}
+          </Text>
+        ) : null}
+        {/* Streak nudge: a heads-up from guess 7, and once ten are spent the
+            streak is gone for today (but the puzzle plays on). */}
+        {!finished && guessesUsed >= 6 ? (
+          <Text
+            variant="caption"
+            color="muted"
+            align="center"
+            style={!streakStillAlive && {color: colors.error}}>
+            {streakStillAlive ? t('scout.streakWarning') : t('scout.streakGone')}
           </Text>
         ) : null}
 
@@ -335,10 +339,11 @@ export function ScoutScreen({navigation}: Props) {
             </View>
 
             <View style={styles.streakRow}>
+              <Stat label={t('scout.guessesUsed')} value={guessesUsed} />
               <Stat
                 label={t('scout.streakCurrent')}
                 value={streak.current}
-                highlight={state.status === 'won'}
+                highlight={keptStreak}
               />
               <Stat label={t('scout.streakBest')} value={streak.best} />
             </View>

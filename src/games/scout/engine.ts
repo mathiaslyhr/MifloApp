@@ -13,29 +13,22 @@ import type {
   StreakState,
 } from './types';
 
-export const MAX_GUESSES = 6;
+/** Solve in fewer guesses than this to keep the streak (i.e. 1–9 keeps it). */
+export const STREAK_GUESS_LIMIT = 10;
 
 /** A fresh puzzle for the given day and secret. */
-export function createInitialState(
-  dateKey: string,
-  secretId: string,
-  maxGuesses: number = MAX_GUESSES,
-): MysteryState {
-  return {dateKey, secretId, guesses: [], status: 'playing', maxGuesses};
+export function createInitialState(dateKey: string, secretId: string): MysteryState {
+  return {dateKey, secretId, guesses: [], status: 'playing'};
 }
 
 export function isFinished(state: MysteryState): boolean {
   return state.status !== 'playing';
 }
 
-export function remainingGuesses(state: MysteryState): number {
-  return Math.max(0, state.maxGuesses - state.guesses.length);
-}
-
 /**
- * Record a guess. Appends the compared row and flips the status: `won` if the
- * guess is the secret, `lost` when the last guess is spent. No-op if the game is
- * already over or the footballer was already guessed.
+ * Record a guess. Appends the compared row and flips the status to `won` if the
+ * guess is the secret; guesses are unlimited, so the game only ends on a win.
+ * No-op if the game is already over or the footballer was already guessed.
  */
 export function applyGuess(state: MysteryState, footballerId: string): MysteryState {
   if (isFinished(state)) {
@@ -46,12 +39,7 @@ export function applyGuess(state: MysteryState, footballerId: string): MysterySt
   }
   const row = compareFootballers(footballerId, state.secretId, state.dateKey);
   const guesses = [...state.guesses, row];
-  const won = footballerId === state.secretId;
-  const status: GameStatus = won
-    ? 'won'
-    : guesses.length >= state.maxGuesses
-    ? 'lost'
-    : 'playing';
+  const status: GameStatus = footballerId === state.secretId ? 'won' : 'playing';
   return {...state, guesses, status};
 }
 
@@ -63,16 +51,17 @@ export const EMPTY_STREAK: StreakState = {
 };
 
 /**
- * Fold a finished puzzle into the streak. A win the day after the last win
- * extends the streak; a win after a gap restarts it at 1; a loss breaks it.
- * `best` never decreases. Pure — persistence lives in mysteryStorage.ts.
+ * Fold a finished puzzle into the streak. A solve in under
+ * [[STREAK_GUESS_LIMIT]] guesses the day after the last one extends the
+ * streak; after a gap it restarts at 1; a solve that took 10+ guesses breaks
+ * it. `best` never decreases. Pure — persistence lives in mysteryStorage.ts.
  */
 export function recordResult(
   streak: StreakState,
   dateKey: string,
-  won: boolean,
+  guessCount: number,
 ): StreakState {
-  if (!won) {
+  if (guessCount >= STREAK_GUESS_LIMIT) {
     return {...streak, current: 0};
   }
   const continues = streak.lastCompletedDateKey === previousDateKey(dateKey);
@@ -84,11 +73,11 @@ export function recordResult(
   };
 }
 
-/** Build the history entry for a finished puzzle. */
+/** Build the history entry for a finished puzzle (always a win now). */
 export function historyEntryFor(state: MysteryState): HistoryEntry {
   return {
     dateKey: state.dateKey,
-    status: state.status === 'won' ? 'won' : 'lost',
+    status: 'won',
     guessCount: state.guesses.length,
   };
 }

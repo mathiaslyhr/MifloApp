@@ -11,10 +11,9 @@ const SQUARE: Record<CellStatus, string> = {
   miss: '⬛',
 };
 
-/** The `n/6` (win) or `X/6` (loss) score line. */
+/** The `n/∞` score line — guesses are unlimited, so the count is the score. */
 function scoreLine(state: MysteryState): string {
-  const score = state.status === 'won' ? `${state.guesses.length}` : 'X';
-  return `${score}/${state.maxGuesses}`;
+  return `${state.guesses.length}/∞`;
 }
 
 /** Build the shareable text block for a finished puzzle. */

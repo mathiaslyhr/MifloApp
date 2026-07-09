@@ -34,16 +34,15 @@ export type GuessRow = {
   cells: CellResult[];
 };
 
-export type GameStatus = 'playing' | 'won' | 'lost';
+export type GameStatus = 'playing' | 'won';
 
-/** The full in-memory state of today's puzzle. */
+/** The full in-memory state of today's puzzle. Guesses are unlimited. */
 export type MysteryState = {
   /** Local calendar day, `YYYY-MM-DD`. Ties the puzzle to a date. */
   dateKey: string;
   secretId: string;
   guesses: GuessRow[];
   status: GameStatus;
-  maxGuesses: number;
 };
 
 /** Local streak tally, persisted across days. */
@@ -57,8 +56,9 @@ export type StreakState = {
 /** One finished day's outcome, kept for the past-puzzles archive. */
 export type HistoryEntry = {
   dateKey: string;
+  /** `'lost'` only appears in logs saved before guesses became unlimited. */
   status: 'won' | 'lost';
-  /** Guesses used (equals maxGuesses on a loss). */
+  /** Guesses used to solve the puzzle. */
   guessCount: number;
 };
 

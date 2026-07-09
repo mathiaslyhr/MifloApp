@@ -4,17 +4,16 @@ import {
   EMPTY_STREAK,
   historyEntryFor,
   isFinished,
-  MAX_GUESSES,
   recordResult,
-  remainingGuesses,
+  STREAK_GUESS_LIMIT,
   upsertHistory,
 } from '../engine';
 import type {HistoryLog} from '../types';
+import {FOOTBALLERS} from '../../../data/football';
 
 // Real dataset ids — applyGuess resolves them through compareFootballers.
 const SECRET = 'Abraham, Tammy';
 const OTHER = 'Aaronson, Brenden';
-const OTHER2 = 'Adams, Che';
 
 describe('applyGuess', () => {
   it('appends a compared row and keeps playing on a wrong guess', () => {
@@ -31,13 +30,15 @@ describe('applyGuess', () => {
     expect(s.guesses[0].cells.every(c => c.status === 'hit')).toBe(true);
   });
 
-  it('flips to lost when the last guess is spent without the secret', () => {
-    let s = createInitialState('2026-07-07', SECRET, 2);
-    s = applyGuess(s, OTHER);
+  it('never runs out of guesses, and the secret still wins after many misses', () => {
+    const wrong = FOOTBALLERS.filter(f => f.id !== SECRET).slice(0, STREAK_GUESS_LIMIT + 2);
+    let s = createInitialState('2026-07-07', SECRET);
+    for (const f of wrong) {
+      s = applyGuess(s, f.id);
+    }
+    expect(s.guesses).toHaveLength(STREAK_GUESS_LIMIT + 2);
     expect(s.status).toBe('playing');
-    s = applyGuess(s, OTHER2);
-    expect(s.status).toBe('lost');
-    expect(remainingGuesses(s)).toBe(0);
+    expect(applyGuess(s, SECRET).status).toBe('won');
   });
 
   it('is a no-op when finished or the id was already guessed', () => {
@@ -47,29 +48,28 @@ describe('applyGuess', () => {
     expect(applyGuess(s, OTHER).guesses).toHaveLength(1);
   });
 
-  it('defaults to six guesses', () => {
-    expect(createInitialState('2026-07-07', SECRET).maxGuesses).toBe(MAX_GUESSES);
+  it('starts unfinished', () => {
     expect(isFinished(createInitialState('2026-07-07', SECRET))).toBe(false);
   });
 });
 
 describe('recordResult', () => {
-  it('increments on a consecutive-day win', () => {
-    const day1 = recordResult(EMPTY_STREAK, '2026-07-07', true);
+  it('increments on consecutive-day solves under the limit (9 still counts)', () => {
+    const day1 = recordResult(EMPTY_STREAK, '2026-07-07', 3);
     expect(day1).toEqual({current: 1, best: 1, lastCompletedDateKey: '2026-07-07'});
-    const day2 = recordResult(day1, '2026-07-08', true);
+    const day2 = recordResult(day1, '2026-07-08', STREAK_GUESS_LIMIT - 1);
     expect(day2).toEqual({current: 2, best: 2, lastCompletedDateKey: '2026-07-08'});
   });
 
   it('restarts at 1 after a gap and keeps best', () => {
     const prior = {current: 5, best: 5, lastCompletedDateKey: '2026-07-01'};
-    const afterGap = recordResult(prior, '2026-07-07', true);
+    const afterGap = recordResult(prior, '2026-07-07', 1);
     expect(afterGap).toEqual({current: 1, best: 5, lastCompletedDateKey: '2026-07-07'});
   });
 
-  it('breaks the streak on a loss without touching best', () => {
+  it('breaks the streak on a 10-guess solve without touching best', () => {
     const prior = {current: 3, best: 4, lastCompletedDateKey: '2026-07-06'};
-    expect(recordResult(prior, '2026-07-07', false)).toEqual({
+    expect(recordResult(prior, '2026-07-07', STREAK_GUESS_LIMIT)).toEqual({
       current: 0,
       best: 4,
       lastCompletedDateKey: '2026-07-06',

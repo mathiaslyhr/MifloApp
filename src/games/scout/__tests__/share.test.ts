@@ -7,11 +7,10 @@ const row = (...statuses: CellResult['status'][]): {footballerId: string; cells:
 });
 
 describe('buildShareGrid', () => {
-  it('renders a win in three with an n/6 header', () => {
+  it('renders a win in three with an n/∞ header', () => {
     const state: MysteryState = {
       dateKey: '2026-07-07',
       secretId: 's',
-      maxGuesses: 6,
       status: 'won',
       guesses: [
         row('miss', 'miss', 'partial', 'miss', 'miss'),
@@ -21,7 +20,7 @@ describe('buildShareGrid', () => {
     };
     expect(buildShareGrid(state)).toBe(
       [
-        'Scout 2026-07-07 3/6',
+        'Scout 2026-07-07 3/∞',
         '⬛⬛🟨⬛⬛',
         '🟩⬛🟨🟨⬛',
         '🟩🟩🟩🟩🟩',
@@ -29,14 +28,13 @@ describe('buildShareGrid', () => {
     );
   });
 
-  it('renders a loss as X/6', () => {
+  it('keeps counting past the old six-guess cap', () => {
     const state: MysteryState = {
       dateKey: '2026-07-07',
       secretId: 's',
-      maxGuesses: 6,
-      status: 'lost',
-      guesses: [row('miss', 'miss', 'miss', 'miss', 'miss')],
+      status: 'won',
+      guesses: Array.from({length: 11}, () => row('miss', 'miss', 'miss', 'miss', 'miss')),
     };
-    expect(buildShareGrid(state).split('\n')[0]).toBe('Scout 2026-07-07 X/6');
+    expect(buildShareGrid(state).split('\n')[0]).toBe('Scout 2026-07-07 11/∞');
   });
 });
