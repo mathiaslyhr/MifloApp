@@ -33,7 +33,7 @@ export const TREBLE_SQUADS: readonly TrebleSquad[] = [
       'Messi, Lionel', 'Xavi', 'Iniesta, Andrés', 'Busquets, Sergio',
       'Piqué, Gerard', 'Puyol, Carles', 'Henry, Thierry', 'Alves, Dani',
       'Touré, Yaya', 'Cáceres, Martín', 'Eto\'o, Samuel', 'Abidal, Éric',
-      'Keita, Seydou',
+      'Keita, Seydou', 'Valdés, Víctor',
     ],
   },
   {

@@ -294,8 +294,9 @@ function buildCandidates(): Candidate[] {
   AXIS_TEAMMATES.filter(
     id => getById(id) && PLAYER_AVATARS[id] != null,
   ).forEach(playerId => criteria.push({kind: 'teammate', playerId}));
-  // Journeymen across Europe's big leagues.
-  criteria.push({kind: 'topLeagues', count: 3});
+  // The "played in 3+ top-5 leagues" axis is benched — playtesting found it
+  // too hard. Re-add `criteria.push({kind: 'topLeagues', count: 3})` if a
+  // gentler variant (count: 2?) ever earns its place.
 
   return criteria
     .map(c => ({
