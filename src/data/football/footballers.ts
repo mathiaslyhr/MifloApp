@@ -278,6 +278,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Aït-Nouri, Rayan',
+    name: 'Rayan Aït-Nouri',
+    nationality: ['Algeria', 'France'],
+    positions: ['DF'],
+    shirtNumbers: [33, 21],
+    born: '2001-06-06',
+    clubs: [
+      {clubId: 'wolves', from: 2020, to: 2025},
+      {clubId: 'man-city', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Akanji, Manuel',
     name: 'Manuel Akanji',
     nationality: ['Switzerland'],
@@ -312,6 +326,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 1, years: [2023]},
       {type: 'league-title', count: 4, years: [2021, 2022, 2023, 2024]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Akliouche, Maghnes',
+    name: 'Maghnes Akliouche',
+    nationality: ['France'],
+    positions: ['MF', 'FW'],
+    shirtNumbers: [11],
+    born: '2002-02-25',
+    clubs: [
+      {clubId: 'monaco', from: 2021},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -897,6 +924,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Areola, Alphonse',
+    name: 'Alphonse Areola',
+    nationality: ['France'],
+    positions: ['GK'],
+    shirtNumbers: [23, 13],
+    born: '1993-02-27',
+    clubs: [
+      {clubId: 'psg', from: 2013, to: 2021},
+      {clubId: 'villarreal', from: 2015, to: 2016, loan: true},
+      {clubId: 'real-madrid', from: 2019, to: 2020, loan: true},
+      {clubId: 'fulham', from: 2020, to: 2021, loan: true},
+      {clubId: 'west-ham', from: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2018]},
+      {type: 'league-title', count: 3, years: [2018, 2019, 2020]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Arnautović, Marko',
     name: 'Marko Arnautović',
     nationality: ['Austria'],
@@ -913,6 +960,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Arrizabalaga, Kepa',
+    name: 'Kepa Arrizabalaga',
+    nationality: ['Spain'],
+    positions: ['GK'],
+    shirtNumbers: [1, 13],
+    born: '1994-10-03',
+    clubs: [
+      {clubId: 'athletic-bilbao', from: 2015, to: 2018},
+      {clubId: 'chelsea', from: 2018, to: 2025},
+      {clubId: 'real-madrid', from: 2023, to: 2024, loan: true},
+      {clubId: 'bournemouth', from: 2024, to: 2025, loan: true},
+      {clubId: 'arsenal', from: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2021]},
+      {type: 'league-title', count: 1, years: [2026]},
     ],
     tags: ['current-stars'],
   },
@@ -1189,6 +1256,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Baleba, Carlos',
+    name: 'Carlos Baleba',
+    nationality: ['Cameroon'],
+    positions: ['MF'],
+    shirtNumbers: [20],
+    born: '2004-01-03',
+    clubs: [
+      {clubId: 'lille', from: 2022, to: 2023},
+      {clubId: 'brighton', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Ballack, Michael',
     name: 'Michael Ballack',
     nationality: ['Germany'],
@@ -1429,6 +1510,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Beier, Maximilian',
+    name: 'Maximilian Beier',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [14, 20],
+    born: '2002-10-17',
+    clubs: [
+      {clubId: 'hoffenheim', from: 2020, to: 2024},
+      {clubId: 'dortmund', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Bellingham, Jude',
     name: 'Jude Bellingham',
     nationality: ['England'],
@@ -1616,6 +1711,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Bergvall, Lucas',
+    name: 'Lucas Bergvall',
+    nationality: ['Sweden'],
+    positions: ['MF'],
+    shirtNumbers: [15],
+    born: '2006-02-02',
+    clubs: [
+      {clubId: 'tottenham', from: 2024},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Bernat, Juan',
     name: 'Juan Bernat',
     nationality: ['Spain'],
@@ -1789,6 +1899,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Botman, Sven',
+    name: 'Sven Botman',
+    nationality: ['Netherlands'],
+    positions: ['DF'],
+    shirtNumbers: [4],
+    born: '2000-01-12',
+    clubs: [
+      {clubId: 'lille', from: 2020, to: 2022},
+      {clubId: 'newcastle', from: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Bounou, Yassine',
     name: 'Yassine Bounou',
     nationality: ['Morocco'],
@@ -1821,6 +1947,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Bradley, Conor',
+    name: 'Conor Bradley',
+    nationality: ['Northern Ireland'],
+    positions: ['DF'],
+    shirtNumbers: [84, 12],
+    born: '2003-07-09',
+    clubs: [
+      {clubId: 'liverpool', from: 2021},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Braithwaite, Martin',
     name: 'Martin Braithwaite',
     nationality: ['Denmark'],
@@ -1845,6 +1986,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'leverkusen', from: 2014, to: 2019},
       {clubId: 'dortmund', from: 2019},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Branthwaite, Jarrad',
+    name: 'Jarrad Branthwaite',
+    nationality: ['England'],
+    positions: ['DF'],
+    shirtNumbers: [32, 6],
+    born: '2002-06-27',
+    clubs: [
+      {clubId: 'everton', from: 2020},
+      {clubId: 'psv', from: 2022, to: 2023, loan: true},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -1952,6 +2107,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 11, years: [2002, 2003, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Burkardt, Jonathan',
+    name: 'Jonathan Burkardt',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [9, 29],
+    born: '2000-07-11',
+    clubs: [
+      {clubId: 'mainz', from: 2018, to: 2025},
+      {clubId: 'eintracht-frankfurt', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Busquets, Sergio',
@@ -3441,6 +3610,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Delap, Liam',
+    name: 'Liam Delap',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [9],
+    born: '2003-02-08',
+    clubs: [
+      {clubId: 'man-city', from: 2019, to: 2023},
+      {clubId: 'chelsea', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Dembélé, Ousmane',
     name: 'Ousmane Dembélé',
     nationality: ['France'],
@@ -3808,6 +3991,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2020]},
       {type: 'league-title', count: 4, years: [2022, 2023, 2024, 2025]},
     ],
+  },
+  {
+    id: 'Dorgu, Patrick',
+    name: 'Patrick Dorgu',
+    nationality: ['Denmark'],
+    positions: ['DF'],
+    shirtNumbers: [13, 3],
+    born: '2004-10-26',
+    clubs: [
+      {clubId: 'lecce', from: 2022, to: 2025},
+      {clubId: 'man-utd', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Doué, Désiré',
@@ -4713,6 +4910,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Füllkrug, Niclas',
+    name: 'Niclas Füllkrug',
+    nationality: ['Germany'],
+    positions: ['FW'],
+    shirtNumbers: [9, 11],
+    born: '1993-02-09',
+    clubs: [
+      {clubId: 'werder-bremen', from: 2019, to: 2023},
+      {clubId: 'dortmund', from: 2023, to: 2024},
+      {clubId: 'west-ham', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Furuhashi, Kyogo',
     name: 'Kyogo Furuhashi',
     nationality: ['Japan'],
@@ -4973,6 +5185,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Gibbs-White, Morgan',
+    name: 'Morgan Gibbs-White',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [10, 8],
+    born: '2000-01-27',
+    clubs: [
+      {clubId: 'wolves', from: 2017, to: 2022},
+      {clubId: 'nottingham-forest', from: 2022},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Giggs, Ryan',
     name: 'Ryan Giggs',
     nationality: ['Wales'],
@@ -5089,6 +5315,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'world-cup', count: 1, years: [2018]},
       {type: 'league-title', count: 2, years: [2012, 2022]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Gittens, Jamie',
+    name: 'Jamie Gittens',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [43, 11],
+    born: '2004-08-08',
+    clubs: [
+      {clubId: 'dortmund', from: 2020, to: 2025},
+      {clubId: 'chelsea', from: 2025},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -5459,6 +5699,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Gulácsi, Péter',
+    name: 'Péter Gulácsi',
+    nationality: ['Hungary'],
+    positions: ['GK'],
+    shirtNumbers: [1],
+    born: '1990-05-06',
+    clubs: [
+      {clubId: 'liverpool', from: 2008, to: 2013},
+      {clubId: 'salzburg', from: 2013, to: 2015},
+      {clubId: 'rb-leipzig', from: 2015},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2014, 2015]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Güler, Arda',
     name: 'Arda Güler',
     nationality: ['Turkey'],
@@ -5666,6 +5923,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Hancko, Dávid',
+    name: 'Dávid Hancko',
+    nationality: ['Slovakia'],
+    positions: ['DF'],
+    shirtNumbers: [3, 26],
+    born: '1997-12-13',
+    clubs: [
+      {clubId: 'fiorentina', from: 2018, to: 2019},
+      {clubId: 'feyenoord', from: 2022, to: 2025},
+      {clubId: 'atletico-madrid', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Harit, Amine',
     name: 'Amine Harit',
     nationality: ['Morocco'],
@@ -5749,6 +6023,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 3, years: [2007, 2008, 2010]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Henderson, Dean',
+    name: 'Dean Henderson',
+    nationality: ['England'],
+    positions: ['GK'],
+    shirtNumbers: [1, 30],
+    born: '1997-03-12',
+    clubs: [
+      {clubId: 'man-utd', from: 2015, to: 2023},
+      {clubId: 'sheffield-united', from: 2019, to: 2020, loan: true},
+      {clubId: 'nottingham-forest', from: 2022, to: 2023, loan: true},
+      {clubId: 'crystal-palace', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Henderson, Jordan',
@@ -6460,6 +6750,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Johnson, Brennan',
+    name: 'Brennan Johnson',
+    nationality: ['Wales'],
+    positions: ['FW'],
+    shirtNumbers: [22, 11],
+    born: '2001-05-23',
+    clubs: [
+      {clubId: 'nottingham-forest', from: 2019, to: 2023},
+      {clubId: 'tottenham', from: 2023},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Johnston, Alistair',
     name: 'Alistair Johnston',
     nationality: ['Canada'],
@@ -6471,6 +6777,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'league-title', count: 3, years: [2023, 2024, 2025]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Jones, Curtis',
+    name: 'Curtis Jones',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [17],
+    born: '2001-01-30',
+    clubs: [
+      {clubId: 'liverpool', from: 2018},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2025]},
     ],
     tags: ['current-stars'],
   },
@@ -6637,6 +6958,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'europa-league', count: 1, years: [2022]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Kamara, Boubacar',
+    name: 'Boubacar Kamara',
+    nationality: ['France'],
+    positions: ['MF', 'DF'],
+    shirtNumbers: [44],
+    born: '1999-11-23',
+    clubs: [
+      {clubId: 'marseille', from: 2016, to: 2022},
+      {clubId: 'aston-villa', from: 2022},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -7479,6 +7814,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Lammens, Senne',
+    name: 'Senne Lammens',
+    nationality: ['Belgium'],
+    positions: ['GK'],
+    shirtNumbers: [31, 1],
+    born: '2002-04-03',
+    clubs: [
+      {clubId: 'man-utd', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Lampard, Frank',
     name: 'Frank Lampard',
     nationality: ['England'],
@@ -7540,6 +7888,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'nottingham-forest', from: 2022, to: 2023},
       {clubId: 'vancouver', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Lavia, Roméo',
+    name: 'Roméo Lavia',
+    nationality: ['Belgium'],
+    positions: ['MF'],
+    shirtNumbers: [45, 8],
+    born: '2004-01-06',
+    clubs: [
+      {clubId: 'man-city', from: 2020, to: 2022},
+      {clubId: 'southampton', from: 2022, to: 2023},
+      {clubId: 'chelsea', from: 2023},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -7652,6 +8015,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Lewis-Skelly, Myles',
+    name: 'Myles Lewis-Skelly',
+    nationality: ['England'],
+    positions: ['DF'],
+    shirtNumbers: [49, 3],
+    born: '2006-09-26',
+    clubs: [
+      {clubId: 'arsenal', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Lindelöf, Victor',
     name: 'Victor Lindelöf',
     nationality: ['Sweden'],
@@ -7737,6 +8115,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Livramento, Tino',
+    name: 'Tino Livramento',
+    nationality: ['England'],
+    positions: ['DF'],
+    shirtNumbers: [21],
+    born: '2002-11-12',
+    clubs: [
+      {clubId: 'southampton', from: 2021, to: 2023},
+      {clubId: 'newcastle', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Ljungberg, Fredrik',
     name: 'Fredrik Ljungberg',
     nationality: ['Sweden'],
@@ -7786,6 +8178,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'champions-league', count: 1, years: [2018]},
       {type: 'league-title', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Lo Celso, Giovani',
+    name: 'Giovani Lo Celso',
+    nationality: ['Argentina'],
+    positions: ['MF'],
+    shirtNumbers: [18, 20],
+    born: '1996-04-09',
+    clubs: [
+      {clubId: 'rosario-central', from: 2015, to: 2016},
+      {clubId: 'psg', from: 2016, to: 2019},
+      {clubId: 'real-betis', from: 2018, to: 2019, loan: true},
+      {clubId: 'tottenham', from: 2019, to: 2024},
+      {clubId: 'villarreal', from: 2022, to: 2024, loan: true},
+      {clubId: 'real-betis', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2018]},
+      {type: 'copa-america', count: 2, years: [2021, 2024]},
     ],
     tags: ['current-stars'],
   },
@@ -8019,6 +8432,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'al-duhail', from: 2016},
     ],
     honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Madueke, Noni',
+    name: 'Noni Madueke',
+    nationality: ['England'],
+    positions: ['FW'],
+    shirtNumbers: [20, 7],
+    born: '2002-03-10',
+    clubs: [
+      {clubId: 'psv', from: 2020, to: 2023},
+      {clubId: 'chelsea', from: 2023, to: 2025},
+      {clubId: 'arsenal', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2026]},
+    ],
     tags: ['current-stars'],
   },
   {
@@ -8868,6 +9298,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Mikautadze, Georges',
+    name: 'Georges Mikautadze',
+    nationality: ['Georgia'],
+    positions: ['FW'],
+    shirtNumbers: [69, 11],
+    born: '2000-10-31',
+    clubs: [
+      {clubId: 'metz', from: 2018, to: 2023},
+      {clubId: 'ajax', from: 2023, to: 2024},
+      {clubId: 'lyon', from: 2024, to: 2025},
+      {clubId: 'villarreal', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Milik, Arkadiusz',
     name: 'Arkadiusz Milik',
     nationality: ['Poland'],
@@ -9270,6 +9716,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 8, years: [2005, 2006, 2010, 2013, 2014, 2015, 2016, 2018]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Mount, Mason',
+    name: 'Mason Mount',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [19, 7],
+    born: '1999-01-10',
+    clubs: [
+      {clubId: 'chelsea', from: 2017, to: 2023},
+      {clubId: 'man-utd', from: 2023},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Moutinho, João',
@@ -9857,6 +10319,36 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'O\'Reilly, Nico',
+    name: 'Nico O\'Reilly',
+    nationality: ['England'],
+    positions: ['DF', 'MF'],
+    shirtNumbers: [75],
+    born: '2005-03-30',
+    clubs: [
+      {clubId: 'man-city', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'O\'Riley, Matt',
+    name: 'Matt O\'Riley',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    shirtNumbers: [8],
+    born: '2000-11-21',
+    clubs: [
+      {clubId: 'celtic', from: 2022, to: 2024},
+      {clubId: 'brighton', from: 2024, to: 2025},
+      {clubId: 'marseille', from: 2025, to: 2026, loan: true},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2023, 2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Oblak, Jan',
     name: 'Jan Oblak',
     nationality: ['Slovenia'],
@@ -10254,6 +10746,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Paixão, Igor',
+    name: 'Igor Paixão',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    shirtNumbers: [14, 30],
+    born: '2000-06-28',
+    clubs: [
+      {clubId: 'feyenoord', from: 2022, to: 2025},
+      {clubId: 'marseille', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Palma, Luis',
     name: 'Luis Palma',
     nationality: ['Honduras'],
@@ -10428,6 +10936,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2016]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Pau Torres',
+    name: 'Pau Torres',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [14, 4],
+    born: '1997-01-16',
+    clubs: [
+      {clubId: 'villarreal', from: 2019, to: 2023},
+      {clubId: 'aston-villa', from: 2023},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Pavard, Benjamin',
@@ -10908,6 +11432,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 2, years: [2023, 2025]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Pope, Nick',
+    name: 'Nick Pope',
+    nationality: ['England'],
+    positions: ['GK'],
+    shirtNumbers: [22, 1],
+    born: '1992-04-19',
+    clubs: [
+      {clubId: 'burnley', from: 2016, to: 2022},
+      {clubId: 'newcastle', from: 2022},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -11842,6 +12380,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'league-title', count: 4, years: [2023, 2024, 2025, 2026]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Rutter, Georginio',
+    name: 'Georginio Rutter',
+    nationality: ['France'],
+    positions: ['FW'],
+    shirtNumbers: [10, 24],
+    born: '2002-04-20',
+    clubs: [
+      {clubId: 'hoffenheim', from: 2020, to: 2023},
+      {clubId: 'leeds', from: 2023, to: 2024},
+      {clubId: 'brighton', from: 2024},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -13184,6 +13737,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'benfica', from: 2025},
     ],
     honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Süle, Niklas',
+    name: 'Niklas Süle',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    shirtNumbers: [4, 25],
+    born: '1995-09-03',
+    clubs: [
+      {clubId: 'hoffenheim', from: 2013, to: 2017},
+      {clubId: 'bayern', from: 2017, to: 2022},
+      {clubId: 'dortmund', from: 2022},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2020]},
+      {type: 'league-title', count: 5, years: [2018, 2019, 2020, 2021, 2022]},
+    ],
     tags: ['current-stars'],
   },
   {
@@ -14617,6 +15188,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Wharton, Adam',
+    name: 'Adam Wharton',
+    nationality: ['England'],
+    positions: ['MF'],
+    shirtNumbers: [20, 8],
+    born: '2004-06-03',
+    clubs: [
+      {clubId: 'blackburn', from: 2022, to: 2024},
+      {clubId: 'crystal-palace', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'White, Ben',
     name: 'Ben White',
     nationality: ['England'],
@@ -14873,6 +15458,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Yoro, Leny',
+    name: 'Leny Yoro',
+    nationality: ['France'],
+    positions: ['DF'],
+    shirtNumbers: [15, 5],
+    born: '2005-11-13',
+    clubs: [
+      {clubId: 'lille', from: 2022, to: 2024},
+      {clubId: 'man-utd', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Zabaleta, Pablo',
     name: 'Pablo Zabaleta',
     nationality: ['Argentina'],
@@ -15114,6 +15713,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'league-title', count: 5, years: [2018, 2019, 2021, 2022, 2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Zirkzee, Joshua',
+    name: 'Joshua Zirkzee',
+    nationality: ['Netherlands'],
+    positions: ['FW'],
+    shirtNumbers: [11, 9],
+    born: '2001-05-22',
+    clubs: [
+      {clubId: 'bayern', from: 2017, to: 2022},
+      {clubId: 'parma', from: 2021, to: 2021, loan: true},
+      {clubId: 'anderlecht', from: 2021, to: 2022, loan: true},
+      {clubId: 'bologna', from: 2022, to: 2024},
+      {clubId: 'man-utd', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2020, 2021]},
     ],
     tags: ['current-stars'],
   },

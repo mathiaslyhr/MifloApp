@@ -51,6 +51,7 @@ export const FLAG_IMAGES: Record<string, number> = {
   "New Zealand": require('./flags/nz.png'),
   "Nigeria": require('./flags/ng.png'),
   "North Macedonia": require('./flags/mk.png'),
+  "Northern Ireland": require('./flags/gb-nir.png'),
   "Norway": require('./flags/no.png'),
   "Panama": require('./flags/pa.png'),
   "Paraguay": require('./flags/py.png'),
