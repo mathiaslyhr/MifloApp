@@ -27,7 +27,8 @@
     "join": "Join",
     "errorUnavailable": "Parties aren't available right now.",
     "errorNetwork": "Couldn't connect. Check your internet and try again.",
-    "errorBadCode": "That code didn't work. Check it and try again."
+    "errorBadCode": "That code didn't work. Check it and try again.",
+    "errorShortCode": "The party code is {{count}} characters."
   },
   "lobby": {
     "title": "Party",

@@ -27,7 +27,8 @@
     "join": "Deltag",
     "errorUnavailable": "Rum er ikke tilgængelige lige nu.",
     "errorNetwork": "Kunne ikke oprette forbindelse. Tjek dit internet og prøv igen.",
-    "errorBadCode": "Koden virkede ikke. Tjek den og prøv igen."
+    "errorBadCode": "Koden virkede ikke. Tjek den og prøv igen.",
+    "errorShortCode": "Rumkoden er på {{count}} tegn."
   },
   "lobby": {
     "title": "Rum",

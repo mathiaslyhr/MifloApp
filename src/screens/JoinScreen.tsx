@@ -29,10 +29,16 @@ export function JoinScreen({navigation}: Props) {
   const [busy, setBusy] = useState(false);
 
   const trimmed = code.trim();
-  const canJoin = trimmed.length === CODE_LENGTH && !busy;
 
   async function handleJoin() {
-    if (!canJoin) {
+    if (busy) {
+      return;
+    }
+    // A short code can't be a real party — say so instead of silently ignoring
+    // the tap (the button stays enabled so the error is discoverable).
+    if (trimmed.length !== CODE_LENGTH) {
+      haptics.error();
+      toast.error(t('join.errorShortCode', {count: CODE_LENGTH}));
       return;
     }
     setBusy(true);
@@ -90,7 +96,7 @@ export function JoinScreen({navigation}: Props) {
           label={busy ? t('join.joining') : t('join.join')}
           variant="primary"
           onPress={handleJoin}
-          disabled={!canJoin}
+          disabled={busy}
         />
       </View>
     </Screen>
