@@ -2,17 +2,19 @@
 //
 // The schedule is the single source of truth for "which footballer is the
 // secret on day X": an explicit dateKey -> footballer id map committed to the
-// repo. Editing footballers.ts can NEVER move an already-scheduled day — this
-// script only APPENDS missing dates (and replaces entries whose player was
-// deleted from the dataset, with a loud warning). New players enter the
-// rotation when the horizon is extended. Run after dataset changes:
+// repo. Rolling freeze: every date up to today+FREEZE_DAYS is permanent (a
+// day a user may have played or is about to play NEVER moves), while dates
+// beyond the buffer are reshuffled whenever the daily pool changes, so newly
+// added players enter the rotation within the buffer instead of waiting for
+// the horizon. When the pool is unchanged the whole file is kept verbatim and
+// only missing horizon days are appended. Runs automatically from the
+// pre-commit hook; manual run:
 //
 //   npm run scout:schedule
 //
-// Assignment for new dates: seeded Fisher–Yates permutations of the current
-// daily pool, walked one player per day, skipping anyone scheduled in the
-// previous RECENT_WINDOW days so a player never repeats back-to-back across
-// the append seam.
+// Assignment: seeded Fisher–Yates permutations of the current daily pool,
+// walked one player per day, skipping anyone scheduled in the previous
+// RECENT_WINDOW days so a player never repeats across any seam.
 import {existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {FOOTBALLERS, root} from './_load-football.mjs';
@@ -28,6 +30,8 @@ const EPOCH_KEY = '2026-01-01';
 const HORIZON_DAYS = 730;
 /** A scheduled player cannot reappear within this many days. */
 const RECENT_WINDOW = 300;
+/** Days ahead of today that stay frozen even when the pool changes. */
+const FREEZE_DAYS = 14;
 
 const dateKeyFor = date => {
   const y = date.getFullYear();
@@ -45,8 +49,11 @@ const nextDateKey = key => {
 // ---- Load current state ----------------------------------------------------
 const validIds = new Set(FOOTBALLERS.map(f => f.id));
 const existing = new Map();
+let previousSignature;
 if (existsSync(OUT)) {
-  for (const line of readFileSync(OUT, 'utf8').split('\n')) {
+  const source = readFileSync(OUT, 'utf8');
+  previousSignature = Number(source.match(/POOL_SIGNATURE = (\d+)/)?.[1]);
+  for (const line of source.split('\n')) {
     const m = line.match(/^  '(\d{4}-\d{2}-\d{2})': '((?:[^'\\]|\\.)*)',$/);
     if (m) {
       existing.set(m[1], m[2].replace(/\\'/g, "'").replace(/\\\\/g, '\\'));
@@ -68,9 +75,19 @@ const poolIds = dailyPool(FOOTBALLERS).map(f => f.id);
 if (poolIds.length <= RECENT_WINDOW) {
   throw new Error(`daily pool (${poolIds.length}) must exceed RECENT_WINDOW (${RECENT_WINDOW})`);
 }
-// Seed anchored to the first date this run generates, so a given append is
-// reproducible; the committed output is the source of truth either way.
-const anchor = allDates.find(k => !validIds.has(existing.get(k) ?? '')) ?? horizonKey;
+// Fingerprint of the pool. Unchanged pool = keep every existing date verbatim
+// (append-only); changed pool = reshuffle everything beyond the freeze buffer
+// so new players enter the rotation within FREEZE_DAYS.
+const signature = hashDateKey([...poolIds].sort().join('|'));
+const poolChanged = previousSignature !== signature;
+const freezeEnd = new Date();
+freezeEnd.setDate(freezeEnd.getDate() + FREEZE_DAYS);
+const freezeEndKey = dateKeyFor(freezeEnd);
+// Seed anchored to the first date this run generates, so rerunning on the
+// same day is idempotent; the committed output is the source of truth anyway.
+const anchor = poolChanged
+  ? nextDateKey(freezeEndKey)
+  : allDates.find(k => !validIds.has(existing.get(k) ?? '')) ?? horizonKey;
 let cycle = 0;
 let perm = [];
 let permIdx = 0;
@@ -87,7 +104,7 @@ function nextFreshId(recentSet) {
   }
 }
 
-// ---- Assemble: keep existing entries verbatim, fill the gaps ---------------
+// ---- Assemble: keep frozen entries verbatim, regenerate the rest -----------
 const schedule = new Map();
 const recentQueue = [];
 const recentSet = new Set();
@@ -102,19 +119,23 @@ const remember = id => {
 let kept = 0;
 let added = 0;
 let replaced = 0;
+let reshuffled = 0;
 for (const key of allDates) {
   const current = existing.get(key);
-  if (current !== undefined && validIds.has(current)) {
+  const frozen = key <= freezeEndKey || !poolChanged;
+  if (current !== undefined && validIds.has(current) && frozen) {
     schedule.set(key, current);
     remember(current);
     kept++;
     continue;
   }
-  if (current !== undefined) {
+  if (current === undefined) {
+    added++;
+  } else if (!validIds.has(current)) {
     console.warn(`⚠ ${key}: '${current}' no longer exists in the dataset — reassigning`);
     replaced++;
   } else {
-    added++;
+    reshuffled++;
   }
   const id = nextFreshId(recentSet);
   schedule.set(key, id);
@@ -124,21 +145,17 @@ for (const key of allDates) {
 // ---- Write ------------------------------------------------------------------
 const esc = s => s.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 const lines = [...schedule.entries()].map(([k, id]) => `  '${k}': '${esc(id)}',`);
-// Fingerprint of the pool this schedule was generated against. The schedule
-// test recomputes it from the live dataset; a mismatch means the schedule is
-// stale (players added/removed without regenerating).
-const signature = hashDateKey([...poolIds].sort().join('|'));
 writeFileSync(
   OUT,
   `/**
  * AUTO-GENERATED by scripts/build-scout-schedule.mjs — do not edit by hand.
  *
  * The frozen Scout daily schedule: dateKey -> secret footballer id. This file
- * is the single source of truth for the day's player, so dataset edits can
- * never move an already-scheduled day (and every user on any app version sees
- * the same player). Regenerated automatically by the pre-commit hook when the
- * dataset changes (or manually via \`npm run scout:schedule\`) — the script
- * only appends; committed dates stay put.
+ * is the single source of truth for the day's player, so every user on any
+ * app version sees the same player. Rolling freeze: past days + the next two
+ * weeks never change; days beyond that reshuffle when the daily pool changes
+ * so new players enter the rotation quickly. Regenerated automatically by the
+ * pre-commit hook (or manually via \`npm run scout:schedule\`).
  */
 
 /** Fingerprint of the daily pool at generation time — guarded by schedule.test.ts. */
@@ -150,5 +167,7 @@ ${lines.join('\n')}
 `,
 );
 console.log(
-  `✓ ${schedule.size} days (${EPOCH_KEY} → ${horizonKey}) — kept ${kept}, added ${added}, replaced ${replaced}`,
+  `✓ ${schedule.size} days (${EPOCH_KEY} → ${horizonKey}) — kept ${kept}, added ${added}, ` +
+    `reshuffled ${reshuffled}${replaced ? `, replaced ${replaced}` : ''}` +
+    `${poolChanged ? ` (pool changed; frozen through ${freezeEndKey})` : ' (pool unchanged)'}`,
 );
