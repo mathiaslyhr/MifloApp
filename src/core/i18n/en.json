@@ -221,17 +221,11 @@
       "q30": "Which national team would he improve the most?",
       "q44": "Has he fulfilled his potential?",
       "q45": "How far would a team of 11 of him go in the Champions League?",
-      "q46": "How many goals would he score against you and your mates?",
-      "q47": "Rate his defending from 1 to 10.",
       "q48": "Rate his weak foot from 1 to 10.",
       "q49": "Which position would he be worst at?",
-      "q50": "Which club should he have played for at least once?",
+      "q50": "Which club that he never played for fits him best?",
       "q51": "Where would he finish in the Ballon d'Or in his best year?",
-      "q52": "Penalty, free kick or corner: what should he take?",
-      "q53": "Rate his big-game performances from 1 to 10.",
-      "q54": "Which league should he end his career in?",
-      "q55": "Guess how many trophies he has won.",
-      "q56": "Rate his career choices from 1 to 10."
+      "q53": "Rate his big-game performances from 1 to 10."
     },
     "vote": {
       "title": "Who should be sent off?",
