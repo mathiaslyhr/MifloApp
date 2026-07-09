@@ -1,5 +1,10 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {Animated, PanResponder, StyleSheet, View} from 'react-native';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
+import {Animated, StyleSheet, View} from 'react-native';
+import {
+  Gesture,
+  GestureDetector,
+  type ScrollView as GHScrollView,
+} from 'react-native-gesture-handler';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
 import {colors, radii, spacing} from '../../theme';
 import {CircleButton} from './CircleButton';
@@ -11,8 +16,12 @@ const ACTION_SIZE = 48;
 const REVEAL = 72;
 /** The tile can be dragged slightly past the open position, then springs back. */
 const OVERDRAG = 16;
-/** A flick this fast settles the swipe regardless of distance. */
-const SWIPE_VELOCITY = 0.3;
+/** A flick this fast (px/s) settles the swipe regardless of distance. */
+const SWIPE_VELOCITY = 300;
+/** The pan activates once the finger moves this far sideways… */
+const ACTIVATE_X = 12;
+/** …unless it already moved this far vertically, which hands it to the scroll. */
+const FAIL_Y = 16;
 
 type Props = {
   title: string;
@@ -56,6 +65,14 @@ type Props = {
   secondaryAccessibilityLabel?: string;
   /** Short caption under the revealed circle, e.g. "1 device". */
   secondaryLabel?: string;
+  /**
+   * Ref to the enclosing gesture-handler ScrollView. The swipe claims priority
+   * over it: the scroll waits until the pan fails (finger drifts past FAIL_Y),
+   * instead of racing it — without this the scroll view's own recognizer
+   * activates first (~10pt of movement in any direction) and the swipe never
+   * fires.
+   */
+  scrollRef?: React.RefObject<GHScrollView | null>;
 };
 
 /**
@@ -80,17 +97,16 @@ export function GameTile({
   onSecondaryPress,
   secondaryAccessibilityLabel,
   secondaryLabel,
+  scrollRef,
 }: Props) {
   const hasSwipeAction =
     !!SecondaryIcon && !!onSecondaryPress && !disabled && !badge;
 
-  // Swipe-reveal state. The pan responder is created once, so it reads live
-  // values through refs (same pattern as the toast pills).
+  // Swipe-reveal state. The gesture callbacks read live values through refs
+  // (same pattern as the toast pills).
   const translateX = useRef(new Animated.Value(0)).current;
   const openRef = useRef(false);
   const startXRef = useRef(0);
-  const swipeEnabledRef = useRef(hasSwipeAction);
-  swipeEnabledRef.current = hasSwipeAction;
   // Mirrors openRef for render: gates the action's tappability.
   const [revealed, setRevealed] = useState(false);
 
@@ -108,36 +124,49 @@ export function GameTile({
     [translateX],
   );
 
-  // Claimed in the capture phase (the PressableScale would otherwise hold the
-  // gesture), but only once the finger clearly moves sideways, so plain taps
-  // and vertical list scrolling are untouched.
-  const pan = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponderCapture: (_, g) =>
-        swipeEnabledRef.current &&
-        Math.abs(g.dx) > 8 &&
-        Math.abs(g.dx) > Math.abs(g.dy) &&
-        (g.dx > 0 || openRef.current),
-      onPanResponderGrant: () => {
+  // Native-side pan recognition (gesture-handler), so the swipe reliably beats
+  // the list's vertical scroll: `blocksExternalGesture(scrollRef)` makes the
+  // scroll wait until the pan fails, and the ACTIVATE_X / FAIL_Y corridor
+  // decides the finger's intent while tolerating the diagonal drift of a thumb
+  // swipe. A leftward pan on a closed tile is harmless — the clamp holds it at
+  // 0 — and on an open tile it swipes the reveal shut. Callbacks run on the JS
+  // thread (no reanimated), same as the Animated.Value they drive.
+  const pan = useMemo(() => {
+    const gesture = Gesture.Pan()
+      .enabled(hasSwipeAction)
+      .activeOffsetX([-ACTIVATE_X, ACTIVATE_X])
+      .failOffsetY([-FAIL_Y, FAIL_Y])
+      .onStart(() => {
         startXRef.current = openRef.current ? REVEAL : 0;
-      },
-      onPanResponderMove: (_, g) => {
+      })
+      .onUpdate(e => {
         translateX.setValue(
-          Math.max(0, Math.min(REVEAL + OVERDRAG, startXRef.current + g.dx)),
+          Math.max(
+            0,
+            Math.min(REVEAL + OVERDRAG, startXRef.current + e.translationX),
+          ),
         );
-      },
-      onPanResponderRelease: (_, g) => {
+      })
+      .onEnd((e, success) => {
+        if (!success) {
+          return; // cancelled mid-drag — onFinalize snaps it shut
+        }
         const open =
-          g.vx > SWIPE_VELOCITY
+          e.velocityX > SWIPE_VELOCITY
             ? true
-            : g.vx < -SWIPE_VELOCITY
+            : e.velocityX < -SWIPE_VELOCITY
             ? false
-            : startXRef.current + g.dx > REVEAL / 2;
+            : startXRef.current + e.translationX > REVEAL / 2;
         settle(open);
-      },
-      onPanResponderTerminate: () => settle(false),
-    }),
-  ).current;
+      })
+      .onFinalize((_e, success) => {
+        // Interrupted mid-drag (e.g. by a navigation) — snap shut.
+        if (!success) {
+          settle(false);
+        }
+      });
+    return scrollRef ? gesture.blocksExternalGesture(scrollRef) : gesture;
+  }, [hasSwipeAction, scrollRef, settle, translateX]);
   // `'pill'` badge sits on the top edge (like the lobby host badge) so it never
   // steals row width from the name/tagline.
   const topPill =
@@ -262,9 +291,9 @@ export function GameTile({
           </Text>
         ) : null}
       </Animated.View>
-      <Animated.View {...pan.panHandlers} style={{transform: [{translateX}]}}>
-        {tile}
-      </Animated.View>
+      <GestureDetector gesture={pan}>
+        <Animated.View style={{transform: [{translateX}]}}>{tile}</Animated.View>
+      </GestureDetector>
     </View>
   );
 }

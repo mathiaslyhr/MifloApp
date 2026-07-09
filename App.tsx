@@ -8,7 +8,8 @@
  * @format
  */
 import React, {useEffect} from 'react';
-import {Alert, StatusBar} from 'react-native';
+import {Alert, StatusBar, StyleSheet} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
 import {RootNavigator} from './src/core/navigation';
@@ -57,17 +58,24 @@ function App(): React.JSX.Element {
 
   return (
     <ErrorBoundary>
-      <SafeAreaProvider>
-        <StatusBar barStyle="dark-content" />
-        <UpdateGate>
-          <NavigationContainer>
-            <RootNavigator />
-          </NavigationContainer>
-        </UpdateGate>
-        <ToastHost />
-      </SafeAreaProvider>
+      {/* Root for react-native-gesture-handler (the swipeable game tiles). */}
+      <GestureHandlerRootView style={styles.root}>
+        <SafeAreaProvider>
+          <StatusBar barStyle="dark-content" />
+          <UpdateGate>
+            <NavigationContainer>
+              <RootNavigator />
+            </NavigationContainer>
+          </UpdateGate>
+          <ToastHost />
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </ErrorBoundary>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {flex: 1},
+});
 
 export default App;

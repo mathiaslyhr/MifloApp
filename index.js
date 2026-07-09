@@ -2,6 +2,9 @@
  * @format
  */
 
+// Gesture-handler must be the first import so its native handlers register
+// before any view mounts (required for Release builds).
+import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
 import { AppRegistry } from 'react-native';
 import App from './App';

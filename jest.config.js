@@ -1,6 +1,11 @@
 module.exports = {
   preset: '@react-native/jest-preset',
-  setupFiles: ['./jest.setup.js'],
+  // gesture-handler's official mock first (its native module has no JS
+  // fallback), then our own global setup.
+  setupFiles: [
+    './node_modules/react-native-gesture-handler/jestSetup.js',
+    './jest.setup.js',
+  ],
   // The preset only transforms react-native* packages. A few deps ship ESM that
   // must be transpiled too (qrcode-svg for the QR card, the haptics module), so
   // widen the allow-list for those.

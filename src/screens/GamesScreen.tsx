@@ -1,5 +1,8 @@
-import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+// Gesture-handler's ScrollView, so the tiles' swipe-right pan and the vertical
+// scroll arbitrate natively (whichever wins cancels the other cleanly).
+import {ScrollView} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {
@@ -39,6 +42,9 @@ export function GamesScreen() {
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const [busy, setBusy] = useState(false);
+  // Handed to each tile so its swipe-right pan outranks the vertical scroll
+  // (the scroll waits until the pan has failed).
+  const scrollRef = useRef<ScrollView>(null);
 
   // Single-player games open straight to their screen; multiplayer games mint a
   // party locked to that game and hand off to the Lobby. Pass-and-play capable
@@ -82,6 +88,7 @@ export function GamesScreen() {
     // (the header scrolls away) and the shell nav owns the bottom inset.
     <Screen canvas edges={['left', 'right']}>
       <ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={[
           styles.list,
@@ -127,6 +134,7 @@ export function GamesScreen() {
               }
               secondaryAccessibilityLabel={t('games.localPlay')}
               secondaryLabel={t('games.oneDeviceShort')}
+              scrollRef={scrollRef}
             />
           ))}
         </View>
