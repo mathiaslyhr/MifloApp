@@ -1,0 +1,12 @@
+#!/bin/sh
+# OTA reminder: whenever a commit touches game content (players, clubs,
+# managers, trebles, lineups, Red Card questions, question strings), the
+# change is NOT live for users until it is published. Loud on purpose —
+# publishing is a one-liner and only works on committed data.
+if git diff-tree --no-commit-id --name-only -r HEAD | grep -qE 'src/data/football/|src/games/red-card/questions\.ts|src/core/i18n/(en|da)\.json'; then
+  echo ''
+  echo '📡 Game content changed — publish it over the air when ready:'
+  echo ''
+  echo '    npm run data:publish'
+  echo ''
+fi
