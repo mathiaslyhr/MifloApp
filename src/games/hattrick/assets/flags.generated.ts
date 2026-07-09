@@ -33,6 +33,7 @@ export const FLAG_IMAGES: Record<string, number> = {
   "Germany": require('./flags/de.png'),
   "Ghana": require('./flags/gh.png'),
   "Greece": require('./flags/gr.png'),
+  "Guinea": require('./flags/gn.png'),
   "Honduras": require('./flags/hn.png'),
   "Hungary": require('./flags/hu.png'),
   "Iran": require('./flags/ir.png'),

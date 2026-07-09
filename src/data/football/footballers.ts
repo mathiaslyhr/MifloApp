@@ -978,6 +978,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Azpilicueta, César',
+    name: 'César Azpilicueta',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    shirtNumbers: [28, 3],
+    clubs: [
+      {clubId: 'marseille', from: 2010, to: 2012},
+      {clubId: 'chelsea', from: 2012, to: 2023},
+      {clubId: 'atletico-madrid', from: 2023, to: 2025},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2021]},
+      {type: 'europa-league', count: 2, years: [2013, 2019]},
+      {type: 'league-title', count: 2, years: [2015, 2017]},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Bacca, Carlos',
     name: 'Carlos Bacca',
     nationality: ['Colombia'],
@@ -3269,6 +3287,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 4, years: [1989, 1990, 1991, 1992]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Diakhaby, Mouctar',
+    name: 'Mouctar Diakhaby',
+    nationality: ['France', 'Guinea'],
+    positions: ['DF'],
+    shirtNumbers: [12, 4],
+    clubs: [
+      {clubId: 'lyon', from: 2014, to: 2018},
+      {clubId: 'valencia', from: 2018},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Dias, Rúben',
@@ -8510,6 +8541,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 5, years: [2021, 2022, 2023, 2025, 2026]},
     ],
+  },
+  {
+    id: 'Mustafi, Shkodran',
+    name: 'Shkodran Mustafi',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    shirtNumbers: [20, 2],
+    clubs: [
+      {clubId: 'everton', from: 2009, to: 2012},
+      {clubId: 'sampdoria', from: 2012, to: 2014},
+      {clubId: 'valencia', from: 2014, to: 2016},
+      {clubId: 'arsenal', from: 2016, to: 2021},
+      {clubId: 'schalke', from: 2021, to: 2021},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2014]},
+    ],
+    tags: ['legends'],
   },
   {
     id: 'N\'Zonzi, Steven',
