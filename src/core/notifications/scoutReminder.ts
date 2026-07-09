@@ -53,6 +53,14 @@ export async function enableScoutReminder(): Promise<boolean> {
       repeatFrequency: RepeatFrequency.DAILY,
     },
   );
+  // Instant preview so turning it on shows exactly what the daily nudge looks
+  // like — confirmation and expectation-setting in one.
+  await notifee.displayNotification({
+    id: 'scout-daily-preview',
+    title: i18n.t('scout.reminderNotifTitle'),
+    body: i18n.t('scout.reminderNotifBody'),
+    ios: {foregroundPresentationOptions: {banner: true, list: true}},
+  });
   await AsyncStorage.setItem(PREF_KEY, 'on');
   return true;
 }

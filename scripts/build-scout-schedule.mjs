@@ -30,8 +30,13 @@ const EPOCH_KEY = '2026-01-01';
 const HORIZON_DAYS = 730;
 /** A scheduled player cannot reappear within this many days. */
 const RECENT_WINDOW = 300;
-/** Days ahead of today that stay frozen even when the pool changes. */
-const FREEZE_DAYS = 14;
+/**
+ * Days ahead of today that stay frozen even when the pool changes. Generous on
+ * purpose: two phones only share "today's player" when their bundled schedules
+ * agree, so the freeze must outlast realistic update lag between TestFlight/
+ * App Store builds (14 days proved too short — mixed builds diverged).
+ */
+const FREEZE_DAYS = 60;
 
 const dateKeyFor = date => {
   const y = date.getFullYear();
