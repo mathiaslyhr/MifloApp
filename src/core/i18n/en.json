@@ -200,7 +200,7 @@
       "hostAdvances": "The host reads the answers out loud"
     },
     "questions": {
-      "q1": "What would this player be worth in his prime?",
+      "q1": "What would this player be worth today if he was in his prime?",
       "q2": "Rate his career from 1 to 10.",
       "q3": "Describe his playing style in one word.",
       "q4": "Which position would suit him best today?",
@@ -214,12 +214,21 @@
       "q12": "Would he make a good manager one day?",
       "q13": "Rate his temper on the pitch from 1 to 10.",
       "q14": "Team player or solo star?",
-      "q15": "What would his transfer fee be if he were 21 today?",
       "q16": "Which league suits his style best?",
       "q17": "How good is he in the air, from 1 to 10?",
       "q18": "Would you buy his shirt?",
       "q19": "How many yellow cards would he pick up in a season?",
-      "q20": "Rate his goal celebrations from 1 to 10."
+      "q20": "Rate his goal celebrations from 1 to 10.",
+      "q21": "What would his highest FIFA rating be?",
+      "q22": "Rate his football brain from 1 to 10.",
+      "q23": "Rate his free kicks from 1 to 10.",
+      "q24": "Rate his dribbling in his prime from 1 to 10.",
+      "q25": "How much does he argue with the referee, from 1 to 10?",
+      "q26": "Would you trust him with a penalty in a final?",
+      "q27": "Rate his haircuts over the years from 1 to 10.",
+      "q28": "Which current player reminds you most of him?",
+      "q29": "What word would his teammates use to describe him?",
+      "q30": "Which national team would he improve the most?"
     },
     "vote": {
       "title": "Who should be sent off?",

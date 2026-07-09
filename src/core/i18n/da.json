@@ -200,7 +200,7 @@
       "hostAdvances": "Værten læser svarene højt"
     },
     "questions": {
-      "q1": "Hvad ville spilleren være værd på sit højeste?",
+      "q1": "Hvad ville spilleren være værd i dag, hvis han var på sit højeste?",
       "q2": "Giv hans karriere point fra 1 til 10.",
       "q3": "Beskriv hans spillestil med ét ord.",
       "q4": "Hvilken position ville passe ham bedst i dag?",
@@ -214,12 +214,21 @@
       "q12": "Ville han blive en god træner en dag?",
       "q13": "Giv hans temperament på banen point fra 1 til 10.",
       "q14": "Holdspiller eller solostjerne?",
-      "q15": "Hvad ville han koste, hvis han var 21 i dag?",
       "q16": "Hvilken liga passer bedst til hans stil?",
       "q17": "Hvor god er han i luften, fra 1 til 10?",
       "q18": "Ville du købe hans trøje?",
       "q19": "Hvor mange gule kort ville han få på en sæson?",
-      "q20": "Giv hans målfejringer point fra 1 til 10."
+      "q20": "Giv hans målfejringer point fra 1 til 10.",
+      "q21": "Hvad ville hans højeste FIFA-rating være?",
+      "q22": "Giv hans fodboldhjerne point fra 1 til 10.",
+      "q23": "Giv hans frispark point fra 1 til 10.",
+      "q24": "Giv hans driblinger på sit højeste point fra 1 til 10.",
+      "q25": "Hvor meget brokker han sig til dommeren, fra 1 til 10?",
+      "q26": "Ville du stole på ham til et straffespark i en finale?",
+      "q27": "Giv hans frisurer gennem tiden point fra 1 til 10.",
+      "q28": "Hvilken nuværende spiller minder dig mest om ham?",
+      "q29": "Hvilket ord ville hans holdkammerater beskrive ham med?",
+      "q30": "Hvilket landshold ville han forbedre mest?"
     },
     "vote": {
       "title": "Hvem skal sendes af banen?",

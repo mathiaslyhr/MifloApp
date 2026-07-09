@@ -11,7 +11,7 @@
  */
 import {shuffle, type Rng} from '../../data/football';
 import {applyRedemption, cleanAnswer, eligibleFootballerIds, tally} from './engine';
-import {buildQuestionIds} from './questions';
+import {buildQuestionIds, rememberQuestions} from './questions';
 import {MAX_ROUNDS, MIN_POOL, MIN_ROUNDS, SCORE} from './types';
 
 /**
@@ -57,6 +57,8 @@ export type LocalRedCardState = {
   rounds: number;
   /** Stable question ids, one per round (see `questions.ts`). */
   questionIds: string[];
+  /** Every question this session has asked (oldest first), across rematches. */
+  usedQuestionIds: string[];
   /** 1..rounds — one shared question per round. */
   round: number;
   /** The current round's answers, playerId -> text. */
@@ -108,7 +110,7 @@ export function createLocalRematch(
     state.rounds,
     rng,
     state.footballerId,
-    state.questionIds,
+    state.usedQuestionIds,
   );
 }
 
@@ -118,7 +120,7 @@ function dealHand(
   rounds: number,
   rng: Rng,
   avoidFootballerId?: string,
-  avoidQuestionIds: string[] = [],
+  usedQuestionIds: string[] = [],
 ): LocalRedCardState {
   const pool = eligibleFootballerIds();
   if (pool.length < MIN_POOL) {
@@ -128,13 +130,16 @@ function dealHand(
   const candidates = avoidFootballerId
     ? pool.filter(id => id !== avoidFootballerId)
     : pool;
+  // Prefer questions the session hasn't heard yet (see questions.ts).
+  const questionIds = buildQuestionIds(rounds, rng, usedQuestionIds);
   return {
     players,
     imposterId: players[Math.floor(rng() * players.length)].id,
     footballerId: candidates[Math.floor(rng() * candidates.length)],
     order: shuffle(players.map(p => p.id), rng),
     rounds,
-    questionIds: buildQuestionIds(rounds, rng, avoidQuestionIds),
+    questionIds,
+    usedQuestionIds: rememberQuestions(usedQuestionIds, questionIds),
     round: 1,
     answers: {},
     revealOrder: [],

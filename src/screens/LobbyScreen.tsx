@@ -43,7 +43,7 @@ import {ensureSession} from '../core/supabase/client';
 import {generateGrid, gridSignature} from '../games/hattrick/grid';
 import {createIndividualState} from '../games/hattrick/engine';
 import {buildFootballerPool} from '../games/red-card/engine';
-import {buildQuestionIds} from '../games/red-card/questions';
+import {takeSessionQuestions} from '../games/red-card/questions';
 import {RoundsPicker} from '../games/red-card/components';
 import {
   DEFAULT_ROUNDS,
@@ -275,7 +275,7 @@ export function LobbyScreen({route, navigation}: Props) {
             roomId,
             buildFootballerPool(),
             redCardRounds,
-            buildQuestionIds(redCardRounds),
+            takeSessionQuestions(roomId, redCardRounds),
           );
           inGameRef.current = true;
           return 'RedCard';

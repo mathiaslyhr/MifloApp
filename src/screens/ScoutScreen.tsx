@@ -16,7 +16,7 @@ import {
 import {haptics} from '../core/haptics';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FOOTBALLERS, getById, POSITION_LABELS, type Footballer} from '../data/football';
+import {FOOTBALLERS, getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';
@@ -41,6 +41,7 @@ import {
   saveStreak,
 } from '../games/scout/mysteryStorage';
 import {MysteryHelpModal} from '../games/scout/MysteryHelpModal';
+import {CellInfoModal, type CellInfo} from '../games/scout/CellInfoModal';
 import type {
   CellResult,
   ColumnKey,
@@ -93,6 +94,12 @@ export function ScoutScreen({navigation}: Props) {
   const [query, setQuery] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const [cellInfo, setCellInfo] = useState<CellInfo | null>(null);
+
+  function showCellInfo(info: CellInfo) {
+    haptics.tap();
+    setCellInfo(info);
+  }
 
   // Rehydrate today's puzzle (replaying stored guesses through the engine) and
   // the streak. No re-recording here — recordResult only runs on a live finish.
@@ -218,7 +225,9 @@ export function ScoutScreen({navigation}: Props) {
   const secretAttrs = secretPlayer
     ? deriveAttributes(secretPlayer, state.dateKey)
     : undefined;
-  const secretFlag = flagImage(secretPlayer?.nationality[0]);
+  const secretNation = secretPlayer?.nationality[0];
+  const secretClub = secretAttrs?.activeClubId ? getClub(secretAttrs.activeClubId) : undefined;
+  const secretFlag = flagImage(secretNation);
   const secretCrest = logoImage(secretAttrs?.activeClubId);
   const secretPosition =
     secretPlayer?.positions.map(p => POSITION_LABELS[p]).join(' · ') ?? '';
@@ -295,6 +304,7 @@ export function ScoutScreen({navigation}: Props) {
                         cell={cell}
                         player={player}
                         dateKey={state.dateKey}
+                        onInfo={showCellInfo}
                       />
                     ))}
                   </View>
@@ -319,11 +329,21 @@ export function ScoutScreen({navigation}: Props) {
                 {secretPlayer?.name ?? '?'}
               </Text>
               <View style={styles.answerMeta}>
-                {secretFlag != null ? (
-                  <Image source={secretFlag} resizeMode="contain" style={styles.answerFlag} />
+                {secretFlag != null && secretNation ? (
+                  <Pressable
+                    onPress={() => showCellInfo({image: secretFlag, label: secretNation})}
+                    accessibilityRole="button"
+                    accessibilityLabel={secretNation}>
+                    <Image source={secretFlag} resizeMode="contain" style={styles.answerFlag} />
+                  </Pressable>
                 ) : null}
-                {secretCrest != null ? (
-                  <Image source={secretCrest} resizeMode="contain" style={styles.answerCrest} />
+                {secretCrest != null && secretClub ? (
+                  <Pressable
+                    onPress={() => showCellInfo({image: secretCrest, label: secretClub.name})}
+                    accessibilityRole="button"
+                    accessibilityLabel={secretClub.name}>
+                    <Image source={secretCrest} resizeMode="contain" style={styles.answerCrest} />
+                  </Pressable>
                 ) : null}
                 {secretPosition ? (
                   <Text variant="secondary" color="secondary">
@@ -429,34 +449,49 @@ export function ScoutScreen({navigation}: Props) {
       </Modal>
 
       <MysteryHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
+      <CellInfoModal info={cellInfo} onClose={() => setCellInfo(null)} />
     </Screen>
   );
 }
 
-/** One feedback cell: coloured by status, showing the guessed player's value. */
+/**
+ * One feedback cell: coloured by status, showing the guessed player's value.
+ * Flag and crest cells are tappable and open [[CellInfoModal]] naming them.
+ */
 function Cell({
   cell,
   player,
   dateKey,
+  onInfo,
 }: {
   cell: CellResult;
   player: Footballer | undefined;
   dateKey: string;
+  onInfo?: (info: CellInfo) => void;
 }) {
   const attrs = player ? deriveAttributes(player, dateKey) : undefined;
   const bg = STATUS_BG[cell.status];
   const arrow = cell.direction === 'up' ? '↑' : cell.direction === 'down' ? '↓' : '';
 
   let content: React.ReactNode = null;
+  let info: CellInfo | null = null;
   if (cell.key === 'nationality') {
-    const flag = flagImage(player?.nationality[0]);
+    const nation = player?.nationality[0];
+    const flag = flagImage(nation);
+    if (nation) {
+      info = {image: flag ?? null, label: nation};
+    }
     content = flag != null ? (
       <Image source={flag} resizeMode="contain" style={styles.cellFlag} />
     ) : (
-      <CellText>{player?.nationality[0]?.slice(0, 3) ?? '—'}</CellText>
+      <CellText>{nation?.slice(0, 3) ?? '—'}</CellText>
     );
   } else if (cell.key === 'club') {
+    const club = attrs?.activeClubId ? getClub(attrs.activeClubId) : undefined;
     const crest = logoImage(attrs?.activeClubId);
+    if (club) {
+      info = {image: crest ?? null, label: club.name};
+    }
     content = crest != null ? (
       <Image source={crest} resizeMode="contain" style={styles.cellLogo} />
     ) : (
@@ -466,6 +501,18 @@ function Cell({
     content = <CellText>{`${cellValue(cell.key, attrs)}${arrow}`}</CellText>;
   }
 
+  if (info != null && onInfo) {
+    const pressInfo = info;
+    return (
+      <Pressable
+        style={[styles.cell, {backgroundColor: bg}]}
+        onPress={() => onInfo(pressInfo)}
+        accessibilityRole="button"
+        accessibilityLabel={pressInfo.label}>
+        {content}
+      </Pressable>
+    );
+  }
   return <View style={[styles.cell, {backgroundColor: bg}]}>{content}</View>;
 }
 

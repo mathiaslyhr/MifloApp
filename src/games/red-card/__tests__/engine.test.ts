@@ -6,7 +6,7 @@ import {
   eligibleFootballerIds,
   tally,
 } from '../engine';
-import {buildQuestionIds, QUESTION_IDS} from '../questions';
+import {buildQuestionIds, QUESTION_IDS, rememberQuestions} from '../questions';
 import {getById} from '../../../data/football';
 import {ANSWER_MAX_LEN, MIN_POOL, SCORE} from '../types';
 import type {ImposterState} from '../types';
@@ -114,16 +114,49 @@ describe('buildQuestionIds', () => {
     }
   });
 
-  it('never repeats an avoided id (the previous hand)', () => {
-    const previous = buildQuestionIds(4, rng);
-    const next = buildQuestionIds(4, rng, previous);
-    for (const id of next) {
-      expect(previous).not.toContain(id);
+  it('never repeats an already-asked question while unasked ones remain', () => {
+    let used: string[] = [];
+    const seen = new Set<string>();
+    // Deal hands until the pool is exhausted: no repeats anywhere along the way.
+    while (used.length + 4 <= QUESTION_IDS.length) {
+      const ids = buildQuestionIds(4, Math.random, used);
+      for (const id of ids) {
+        expect(seen.has(id)).toBe(false);
+        seen.add(id);
+      }
+      used = rememberQuestions(used, ids);
     }
+  });
+
+  it('recycles the longest-ago questions once the pool is exhausted', () => {
+    // Everything has been asked; the first-asked ids should come back first.
+    const used = [...QUESTION_IDS];
+    const ids = buildQuestionIds(3, rng, used);
+    expect(new Set(ids)).toEqual(new Set(used.slice(0, 3)));
+  });
+
+  it('tops a hand up with the oldest questions when only some are fresh', () => {
+    // One fresh question left; a 3-round hand adds the two oldest asked.
+    const used = QUESTION_IDS.slice(1);
+    const ids = buildQuestionIds(3, rng, [...used]);
+    expect(new Set(ids)).toEqual(
+      new Set([QUESTION_IDS[0], used[0], used[1]]),
+    );
   });
 
   it('is deterministic for a seeded rng', () => {
     expect(buildQuestionIds(3, () => 0.7)).toEqual(buildQuestionIds(3, () => 0.7));
+  });
+});
+
+describe('rememberQuestions', () => {
+  it('appends new picks and moves recycled ones to the newest end', () => {
+    expect(rememberQuestions(['q1', 'q2', 'q3'], ['q4'])).toEqual([
+      'q1', 'q2', 'q3', 'q4',
+    ]);
+    expect(rememberQuestions(['q1', 'q2', 'q3'], ['q1', 'q4'])).toEqual([
+      'q2', 'q3', 'q1', 'q4',
+    ]);
   });
 });
 

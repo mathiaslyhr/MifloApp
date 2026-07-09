@@ -304,4 +304,17 @@ describe('createLocalRematch', () => {
     }
     expect(next.players.some(p => p.id === next.imposterId)).toBe(true);
   });
+
+  it('accumulates asked questions across rematches so none repeat', () => {
+    let s = createLocalGame(NAMES, 3, seq([0.5, 0.1, 0.8]));
+    const seen = new Set<string>(s.questionIds);
+    for (let hand = 0; hand < 5; hand++) {
+      s = createLocalRematch(s, seq([0.3, 0.6, 0.9]));
+      for (const id of s.questionIds) {
+        expect(seen.has(id)).toBe(false);
+        seen.add(id);
+      }
+      expect(s.usedQuestionIds).toHaveLength(seen.size);
+    }
+  });
 });

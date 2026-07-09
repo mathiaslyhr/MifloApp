@@ -56,7 +56,10 @@ import {
   nameOf,
   standings,
 } from '../games/red-card/engine';
-import {buildQuestionIds} from '../games/red-card/questions';
+import {
+  noteSessionQuestions,
+  takeSessionQuestions,
+} from '../games/red-card/questions';
 import {ANSWER_MAX_LEN} from '../games/red-card/types';
 import type {ImposterState} from '../games/red-card/types';
 
@@ -235,12 +238,14 @@ export function RedCardScreen({route, navigation}: Props) {
       return;
     }
     try {
-      // Fresh questions, skipping the ones this hand just used.
+      // Make sure the current hand is in the party's ask history even if the
+      // app restarted mid-session, then deal questions it hasn't heard yet.
+      noteSessionQuestions(roomId, state.questionIds);
       await restartRedCardGame(
         roomId,
         buildFootballerPool(),
         state.rounds,
-        buildQuestionIds(state.rounds, Math.random, state.questionIds),
+        takeSessionQuestions(roomId, state.rounds),
       );
     } catch {
       toast.error(t('redCard.newGameError'));
