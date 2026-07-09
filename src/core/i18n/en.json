@@ -299,6 +299,8 @@
     "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
     "reminderNotifTitle": "Miflo",
     "reminderNotifBody": "Today's new player has dropped.",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Your {{days}}-day streak is on the line.",
     "title": "Scout",
     "back": "Back",
     "loading": "Loading…",

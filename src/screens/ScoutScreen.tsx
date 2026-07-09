@@ -22,6 +22,7 @@ import {
   markScoutReminderOffered,
   shouldOfferScoutReminder,
 } from '../core/notifications/scoutReminder';
+import {syncStreakSaver} from '../games/scout/streakSaver';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';
@@ -223,9 +224,9 @@ export function ScoutScreen({navigation}: Props) {
       setStreak(updated);
       // History data is still recorded (the archive button is removed for
       // now). One toast covers both writes failing.
-      Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))]).catch(
-        saveFailed,
-      );
+      Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
+        .then(() => syncStreakSaver())
+        .catch(saveFailed);
     } else {
       haptics.tap();
     }

@@ -21,6 +21,7 @@ import {ensureSession} from './src/core/supabase/client';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
+import {syncStreakSaver} from './src/games/scout/streakSaver';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -42,6 +43,8 @@ function App(): React.JSX.Element {
     // haptics-on are the synchronous defaults until these resolve).
     loadStoredLanguage().catch(() => {});
     loadHapticsPreference().catch(() => {});
+    // Schedule/cancel tonight's streak-saver nudge for the current state.
+    syncStreakSaver();
   }, []);
 
   // Surface uncaught JS errors (event handlers, effects, async) that an error

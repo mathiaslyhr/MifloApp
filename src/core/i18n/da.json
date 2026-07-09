@@ -299,6 +299,8 @@
     "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
     "reminderNotifTitle": "Miflo",
     "reminderNotifBody": "Dagens nye spiller er landet.",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Din stime på {{days}} dage er på spil.",
     "title": "Scout",
     "back": "Tilbage",
     "loading": "Indlæser…",
