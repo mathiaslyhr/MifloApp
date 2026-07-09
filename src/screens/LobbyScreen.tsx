@@ -20,6 +20,7 @@ import {
   GlassTag,
   NameSheet,
   Screen,
+  Skeleton,
   Text,
   TopStatusFade,
   toast,
@@ -30,7 +31,6 @@ import {GAMES, isBuiltGame} from './gamesCatalog';
 import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
-  fetchPlayers,
   kickPlayer,
   leaveRoom,
   renamePlayer,
@@ -109,8 +109,6 @@ export function LobbyScreen({route, navigation}: Props) {
       },
       notifyStatus,
     );
-    // Prime the roster once in case the realtime channel is slow to attach.
-    fetchPlayers(roomId).then(setPlayers).catch(() => {});
     return () => {
       unsubPlayers();
       unsubRoom();
@@ -353,6 +351,15 @@ export function LobbyScreen({route, navigation}: Props) {
         {/* Live name list (Kahoot-style). Tap your own name to rename; the host
             taps another name to remove them. */}
         <View style={styles.roster}>
+          {players.length === 0 ? (
+            // Ghost pills while the roster primes over realtime.
+            <View
+              style={styles.roster}
+              accessibilityLabel={t('lobby.waitingFriends')}>
+              <Skeleton width={110} height={40} radius={999} />
+              <Skeleton width={88} height={40} radius={999} />
+            </View>
+          ) : null}
           {players.map(p => {
             const isMe = p.userId === myUserId;
             const actionable = isMe || isHost;

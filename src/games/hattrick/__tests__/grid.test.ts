@@ -1,5 +1,6 @@
-import {generateGrid, hasDisjointAssignment} from '../grid';
+import {candidatePool, generateGrid, hasDisjointAssignment} from '../grid';
 import {intersection} from '../../../data/football';
+import {bundledSnapshot, hydrate} from '../../../data/football/store';
 
 describe('hasDisjointAssignment', () => {
   it('rejects pools that only look solvable via a shared player', () => {
@@ -79,5 +80,24 @@ describe('generateGrid', () => {
     }
     // Comfortably under 20% of grids should breach the cap via fallback.
     expect(overCap).toBeLessThan(runs * 0.2);
+  });
+});
+
+describe('candidatePool', () => {
+  afterEach(() => {
+    hydrate(bundledSnapshot());
+  });
+
+  it('reuses the built catalog across calls (game starts stay cheap)', () => {
+    expect(candidatePool()).toBe(candidatePool());
+  });
+
+  it('rebuilds after an OTA hydrate so new data reaches the grid', () => {
+    const before = candidatePool();
+    hydrate(bundledSnapshot());
+    const after = candidatePool();
+    expect(after).not.toBe(before);
+    // And grids still generate from the rebuilt catalog.
+    expect(generateGrid().cols).toHaveLength(3);
   });
 });

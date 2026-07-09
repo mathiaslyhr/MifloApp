@@ -19,6 +19,7 @@ import {
   GlassTag,
   HowToPlayModal,
   Screen,
+  Skeleton,
   Text,
   TextField,
   toast,
@@ -183,10 +184,14 @@ export function RedCardScreen({route, navigation}: Props) {
   if (!state) {
     return (
       <Screen canvas edges={['left', 'right', 'bottom']}>
-        <View style={styles.loading}>
-          <Text variant="body" color="secondary">
-            {t('redCard.loading')}
-          </Text>
+        {/* Ghost round layout while the room state primes over realtime. */}
+        <View style={styles.loading} accessibilityLabel={t('redCard.loading')}>
+          <View style={styles.loadingStack}>
+            <Skeleton width="60%" height={22} />
+            <Skeleton width="100%" height={120} />
+            <Skeleton width="100%" height={52} />
+            <Skeleton width="100%" height={52} />
+          </View>
         </View>
         <FloatingBar edge="top" style={styles.chromeBar}>
           <View style={styles.chromeRow}>
@@ -347,9 +352,12 @@ export function RedCardScreen({route, navigation}: Props) {
             tintColor="rgba(255,255,255,0.6)"
             style={styles.roleCard}>
             {role == null ? (
-              <Text variant="body" color="secondary" align="center">
-                {t('redCard.role.loading')}
-              </Text>
+              <View
+                style={styles.roleLoading}
+                accessibilityLabel={t('redCard.role.loading')}>
+                <Skeleton width="50%" height={18} radius={9} />
+                <Skeleton width="100%" height={64} />
+              </View>
             ) : role.role === 'imposter' ? (
               <>
                 <Text variant="title" align="center" style={styles.imposterTitle}>
@@ -718,6 +726,8 @@ function HelpModal({visible, onClose}: {visible: boolean; onClose: () => void}) 
 const styles = StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  loadingStack: {width: '100%', gap: 12},
+  roleLoading: {gap: 12, alignItems: 'center'},
   // Scroll-away wordmark row.
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
   // Pinned floating corner buttons (back left, help right).

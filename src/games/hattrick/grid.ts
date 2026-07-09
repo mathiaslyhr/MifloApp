@@ -11,6 +11,7 @@
  */
 import {
   CLUBS,
+  derivedFromData,
   FOOTBALLERS,
   getById,
   getClub,
@@ -308,6 +309,16 @@ function buildCandidates(): Candidate[] {
     );
 }
 
+/**
+ * The candidate catalog, built once and reused — scanning all footballers
+ * against every criterion is the expensive part of grid generation, and it
+ * only changes when the dataset does (OTA hydrate bumps the generation, so
+ * the memo rebuilds on first use after new data lands). The search below
+ * never mutates the shared candidates: `shuffle` copies and the id sets are
+ * read-only.
+ */
+export const candidatePool = derivedFromData(buildCandidates);
+
 function intersectionSize(a: Set<string>, b: Set<string>): number {
   const [small, big] = a.size < b.size ? [a, b] : [b, a];
   let n = 0;
@@ -415,7 +426,7 @@ export function generateGrid(
   rng: Rng = Math.random,
   opts: {avoid?: readonly string[]} = {},
 ): Grid {
-  const pool = buildCandidates();
+  const pool = candidatePool();
   const avoid = new Set(opts.avoid ?? []);
 
   const attempt = (minPer: number): Grid | null => {

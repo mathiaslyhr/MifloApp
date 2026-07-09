@@ -16,6 +16,7 @@ import {
   GlassCard,
   PressableScale,
   Screen,
+  Skeleton,
   Text,
   toast,
 } from '../../core/ui';
@@ -146,13 +147,18 @@ export function HattrickGameView({
   }, [nowTs, state, actingUserId, onCommit]);
 
   if (!state) {
+    // Ghost board while the room state primes over realtime.
     return (
       <Screen canvas>
         <Header onBack={onBack} />
-        <View style={styles.loading}>
-          <Text variant="body" color="secondary">
-            {t('hattrick.loading')}
-          </Text>
+        <View
+          style={styles.loading}
+          accessibilityLabel={t('hattrick.loading')}>
+          <View style={styles.loadingBoard}>
+            {Array.from({length: 9}, (_, i) => (
+              <Skeleton key={i} width="31%" height={96} />
+            ))}
+          </View>
         </View>
       </Screen>
     );
@@ -657,6 +663,13 @@ function TieOverlay({
 
 const styles = StyleSheet.create({
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  loadingBoard: {
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 10,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

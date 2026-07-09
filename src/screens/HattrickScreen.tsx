@@ -13,6 +13,7 @@ import {
   subscribeRoom,
 } from '../core/rooms/roomService';
 import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {useOptimisticRoomState} from '../core/rooms/useOptimisticRoomState';
 import {ensureSession} from '../core/supabase/client';
 import {HattrickGameView} from '../games/hattrick/HattrickGameView';
 import {createRematchState} from '../games/hattrick/engine';
@@ -29,7 +30,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Hattrick'>;
 export function HattrickScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
-  const [state, setState] = useState<GridState | null>(null);
+  // My own moves paint immediately; the Realtime echo stays authoritative.
+  const {state, applyServer, applyOptimistic} =
+    useOptimisticRoomState<GridState>();
   const [hostId, setHostId] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const leftRef = useRef(false);
@@ -48,7 +51,7 @@ export function HattrickScreen({route, navigation}: Props) {
           }
           return;
         }
-        setState(room.gameState as GridState);
+        applyServer(room.gameState as GridState);
       },
       // Host left the party entirely (no host, no party) → back to the menu,
       // popping straight past the now-dead lobby.
@@ -61,7 +64,7 @@ export function HattrickScreen({route, navigation}: Props) {
       createConnectionNotifier(),
     );
     return unsub;
-  }, [roomId, navigation]);
+  }, [roomId, navigation, applyServer]);
 
   const isHost = !!myUserId && myUserId === hostId;
 
@@ -99,7 +102,11 @@ export function HattrickScreen({route, navigation}: Props) {
     <HattrickGameView
       state={state}
       perspective={{kind: 'online', myUserId}}
-      onCommit={next => playMove(roomId, next).catch(notifyNetworkError)}
+      onCommit={next =>
+        applyOptimistic(next, () => playMove(roomId, next)).catch(
+          notifyNetworkError,
+        )
+      }
       onProposeTie={() =>
         proposeTie(roomId).catch(() => toast.error(t('hattrick.proposeError')))
       }

@@ -394,12 +394,48 @@ export type ChannelStatus =
   | 'CLOSED';
 
 /**
- * Live player roster for a room — fires on joins and score updates. Calls back
- * with the full, freshly-fetched list on every change. Returns an unsubscribe.
+ * Apply one realtime `players` change to an in-memory roster, preserving
+ * fetchPlayers' join-time ordering. Returns the next roster, or null when the
+ * payload can't be applied (caller should refetch). Pure and exported for
+ * tests; DELETE payloads only carry the primary key, which is enough.
+ */
+export function applyRosterChange(
+  roster: readonly RoomPlayer[],
+  change: {eventType?: string; new?: any; old?: any},
+): RoomPlayer[] | null {
+  if (change.eventType === 'INSERT' || change.eventType === 'UPDATE') {
+    if (!change.new?.id) {
+      return null;
+    }
+    const incoming = mapPlayer(change.new);
+    const next = roster.filter(p => p.id !== incoming.id);
+    next.push(incoming);
+    // ISO timestamps sort lexicographically; id tie-break keeps order stable.
+    return next.sort((a, b) =>
+      a.joinedAt === b.joinedAt
+        ? a.id.localeCompare(b.id)
+        : a.joinedAt < b.joinedAt
+          ? -1
+          : 1,
+    );
+  }
+  if (change.eventType === 'DELETE') {
+    if (!change.old?.id) {
+      return null;
+    }
+    return roster.filter(p => p.id !== change.old.id);
+  }
+  return null;
+}
+
+/**
+ * Live player roster for a room — fires on joins, leaves, and score updates.
+ * Calls back with the full roster. Returns an unsubscribe.
  *
- * `onStatus` observes channel health. Realtime-js rejoins dropped channels on
- * its own; every (re-)`SUBSCRIBED` refetches the roster so changes missed
- * during an outage are recovered.
+ * Changes are applied from the realtime payload itself (no refetch per
+ * change); the full fetch runs only to prime the list and on every
+ * (re-)`SUBSCRIBED`, so changes missed during an outage are recovered.
+ * `onStatus` observes channel health.
  */
 export function subscribePlayers(
   roomId: string,
@@ -409,15 +445,29 @@ export function subscribePlayers(
   if (!supabase) {
     return () => {};
   }
+  let roster: RoomPlayer[] = [];
   const refresh = () => {
-    fetchPlayers(roomId).then(cb).catch(() => {});
+    fetchPlayers(roomId)
+      .then(players => {
+        roster = players;
+        cb(roster);
+      })
+      .catch(() => {});
   };
   const channel = supabase
     .channel(`players:${roomId}:${++channelSeq}`)
     .on(
       'postgres_changes',
       {event: '*', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}`},
-      refresh,
+      payload => {
+        const next = applyRosterChange(roster, payload as any);
+        if (next) {
+          roster = next;
+          cb(roster);
+        } else {
+          refresh();
+        }
+      },
     )
     .subscribe((status, err) => {
       if (status === 'SUBSCRIBED') {
@@ -425,7 +475,7 @@ export function subscribePlayers(
       }
       onStatus?.(status as ChannelStatus, err);
     });
-  // Prime with the current roster so callers don't wait for the first change.
+  // Prime with the current roster so callers don't wait for the handshake.
   refresh();
   return () => {
     supabase?.removeChannel(channel);
