@@ -72,13 +72,7 @@
       "duel": "1v1",
       "party": "3+"
     },
-    "playMode": {
-      "title": "Hvordan vil I spille?",
-      "local": "På denne telefon",
-      "localSub": "Send én telefon rundt, virker offline",
-      "online": "Online med venner",
-      "onlineSub": "Opret et rum og inviter med en kode"
-    },
+    "localPlay": "Spil på denne telefon",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Fodboldquiz × tre på stribe",

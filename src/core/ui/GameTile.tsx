@@ -37,6 +37,14 @@ type Props = {
    *   (dark) scrim — e.g. the game-picker popup, which has no card behind it.
    */
   surface?: 'glass' | 'floating';
+  /**
+   * Optional secondary action rendered as a small circle button before the
+   * chevron (e.g. "play on one phone" on games that support pass-and-play).
+   * The tile's own tap stays the primary action; this is a quieter side door.
+   */
+  SecondaryIcon?: LucideIcon;
+  onSecondaryPress?: () => void;
+  secondaryAccessibilityLabel?: string;
 };
 
 /**
@@ -57,6 +65,9 @@ export function GameTile({
   meta,
   badgeVariant = 'pill',
   surface = 'glass',
+  SecondaryIcon,
+  onSecondaryPress,
+  secondaryAccessibilityLabel,
 }: Props) {
   // `'pill'` badge sits on the top edge (like the lobby host badge) so it never
   // steals row width from the name/tagline.
@@ -126,6 +137,14 @@ export function GameTile({
           </Text>
         ) : null}
       </View>
+      {SecondaryIcon && onSecondaryPress && !disabled && !badge ? (
+        <CircleButton
+          size={32}
+          accessibilityLabel={secondaryAccessibilityLabel ?? ''}
+          onPress={onSecondaryPress}>
+          <SecondaryIcon size={16} color={colors.ink} strokeWidth={2} />
+        </CircleButton>
+      ) : null}
       {trailing ? <View style={styles.trailing}>{trailing}</View> : null}
     </PressableScale>
   );

@@ -72,13 +72,7 @@
       "duel": "1v1",
       "party": "3+"
     },
-    "playMode": {
-      "title": "How do you want to play?",
-      "local": "On this phone",
-      "localSub": "Pass one phone around, works offline",
-      "online": "Online with friends",
-      "onlineSub": "Create a party and invite with a code"
-    },
+    "localPlay": "Play on this phone",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Football trivia × three in a row",

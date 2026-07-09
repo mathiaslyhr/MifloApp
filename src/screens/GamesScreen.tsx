@@ -12,10 +12,10 @@ import {
 } from '../core/ui';
 import {spacing} from '../theme';
 import {useAppNavigation} from '../core/navigation';
+import {Smartphone} from 'lucide-react-native';
 import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
 import {randomFootballName} from '../core/identity/funnyName';
 import {GAMES, GameType} from './gamesCatalog';
-import {PlayModeSheet} from './PlayModeSheet';
 
 /** Roomless pass-and-play routes for the games that support "On this phone". */
 const LOCAL_ROUTES = {
@@ -38,13 +38,11 @@ export function GamesScreen() {
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const [busy, setBusy] = useState(false);
-  // Game awaiting a "this phone / online" choice in the mode sheet, if any.
-  const [chooserGame, setChooserGame] = useState<GameType | null>(null);
 
-  // Single-player games open straight to their screen; pass-and-play capable
-  // games ask "on this phone or online?" first (the local path never touches
-  // the network, so it works in flight mode); other multiplayer games mint a
-  // party locked to that game and hand off to the Lobby.
+  // Single-player games open straight to their screen; multiplayer games mint a
+  // party locked to that game and hand off to the Lobby. Pass-and-play capable
+  // games additionally carry a small phone button on the tile (see below) as a
+  // quiet side door — tapping the tile itself always goes online.
   async function handleSelect(gameType: GameType) {
     if (busy) {
       return;
@@ -55,14 +53,6 @@ export function GamesScreen() {
       }
       return;
     }
-    if (GAMES.find(g => g.gameType === gameType)?.localPlay) {
-      setChooserGame(gameType);
-      return;
-    }
-    await createOnlineParty(gameType);
-  }
-
-  async function createOnlineParty(gameType: GameType) {
     setBusy(true);
     try {
       const room = await createRoom(gameType, [], 0, randomFootballName());
@@ -78,9 +68,9 @@ export function GamesScreen() {
     }
   }
 
+  // The tile's phone button: straight into pass-and-play, no room, no network.
   function startLocal(gameType: GameType) {
     const route = LOCAL_ROUTES[gameType as keyof typeof LOCAL_ROUTES];
-    setChooserGame(null);
     if (route) {
       navigation.navigate(route);
     }
@@ -120,6 +110,11 @@ export function GamesScreen() {
               badge={game.available ? undefined : t('games.comingSoon')}
               badgeVariant="text"
               onPress={() => handleSelect(game.gameType)}
+              SecondaryIcon={game.localPlay ? Smartphone : undefined}
+              onSecondaryPress={
+                game.localPlay ? () => startLocal(game.gameType) : undefined
+              }
+              secondaryAccessibilityLabel={t('games.localPlay')}
             />
           ))}
         </View>
@@ -128,20 +123,6 @@ export function GamesScreen() {
       {/* Seamless frosted fade behind the status bar — content dissolves under
           it (no hard edge) as it scrolls up. */}
       <TopStatusFade />
-
-      {/* "On this phone / online" chooser for pass-and-play capable games. */}
-      <PlayModeSheet
-        visible={chooserGame !== null}
-        onLocal={() => chooserGame && startLocal(chooserGame)}
-        onOnline={() => {
-          const gameType = chooserGame;
-          setChooserGame(null);
-          if (gameType) {
-            createOnlineParty(gameType);
-          }
-        }}
-        onClose={() => setChooserGame(null)}
-      />
     </Screen>
   );
 }
