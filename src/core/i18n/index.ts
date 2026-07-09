@@ -84,15 +84,15 @@ export async function loadStoredLanguage(): Promise<void> {
   }
 }
 
-/** Persist + apply a language preference (from the Settings picker). */
+/**
+ * Persist + apply a language preference (from the Settings picker). The
+ * language switches first so it always applies for this session; a failed
+ * write rejects so the caller can tell the user it won't survive a relaunch.
+ */
 export async function setLanguagePreference(pref: LanguagePreference): Promise<void> {
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, pref);
-  } catch {
-    // Non-fatal — the change still applies for this session.
-  }
   const effective = resolveLanguage(pref);
   await i18n.changeLanguage(effective);
+  await AsyncStorage.setItem(STORAGE_KEY, pref);
 }
 
 export default i18n;

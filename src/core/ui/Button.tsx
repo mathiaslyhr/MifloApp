@@ -19,6 +19,13 @@ type Props = {
   /** Stretch to fill the container width (default true — Home stacks full-width). */
   fullWidth?: boolean;
   disabled?: boolean;
+  /**
+   * When set, a disabled button keeps its greyed look but stays tappable and
+   * routes presses here instead of `onPress` — so the tap can explain *why*
+   * the action is unavailable (toast/haptic) rather than dying silently.
+   * The caller owns the feedback; no confirm haptic or press-scale fires.
+   */
+  onDisabledPress?: () => void;
   style?: StyleProp<ViewStyle>;
   accessibilityHint?: string;
 };
@@ -37,6 +44,7 @@ export function Button({
   variant = 'primary',
   fullWidth = true,
   disabled = false,
+  onDisabledPress,
   style,
   accessibilityHint,
 }: Props) {
@@ -53,10 +61,10 @@ export function Button({
 
   return (
     <Pressable
-      onPress={handlePress}
-      onPressIn={press.onPressIn}
-      onPressOut={press.onPressOut}
-      disabled={disabled}
+      onPress={disabled ? onDisabledPress : handlePress}
+      onPressIn={disabled ? undefined : press.onPressIn}
+      onPressOut={disabled ? undefined : press.onPressOut}
+      disabled={disabled && !onDisabledPress}
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}

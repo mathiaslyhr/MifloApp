@@ -115,11 +115,13 @@ export function ScoutScreen({navigation}: Props) {
         }
       }
       if (!pinned) {
+        // Silent on failure — the player took no action; a failed pin only
+        // matters if a guess follows, and that save warns on its own.
         saveDailyProgress({
           dateKey,
           guessedIds: progress?.guessedIds ?? [],
           secretId: secret.id,
-        });
+        }).catch(() => {});
       }
       if (alive) {
         setState(s);
@@ -162,11 +164,14 @@ export function ScoutScreen({navigation}: Props) {
     setState(next);
     setQuery('');
     setPickerOpen(false);
+    // The game keeps playing in-session either way; the toast warns that this
+    // guess won't be there after a relaunch.
+    const saveFailed = () => toast.error(t('scout.errorSave'));
     saveDailyProgress({
       dateKey,
       guessedIds: next.guesses.map(g => g.footballerId),
       secretId: next.secretId,
-    });
+    }).catch(saveFailed);
 
     if (isFinished(next)) {
       const won = next.status === 'won';
@@ -177,9 +182,11 @@ export function ScoutScreen({navigation}: Props) {
       }
       const updated = recordResult(streak, dateKey, won);
       setStreak(updated);
-      saveStreak(updated);
-      // History data is still recorded (the archive button is removed for now).
-      recordHistory(historyEntryFor(next));
+      // History data is still recorded (the archive button is removed for
+      // now). One toast covers both writes failing.
+      Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))]).catch(
+        saveFailed,
+      );
     } else {
       haptics.tap();
     }

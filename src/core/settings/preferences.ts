@@ -18,14 +18,14 @@ export async function getHapticsPreference(): Promise<boolean> {
   }
 }
 
-/** Persist + apply the haptics preference. */
+/**
+ * Persist + apply the haptics preference. The change always applies for this
+ * session; a failed write rejects so the caller can tell the user it won't
+ * survive a relaunch.
+ */
 export async function setHapticsPreference(enabled: boolean): Promise<void> {
   setHapticsEnabled(enabled);
-  try {
-    await AsyncStorage.setItem(HAPTICS_KEY, enabled ? 'on' : 'off');
-  } catch {
-    // Non-fatal — the change still applies for this session.
-  }
+  await AsyncStorage.setItem(HAPTICS_KEY, enabled ? 'on' : 'off');
 }
 
 /** Apply the saved haptics preference to the engine on boot. */

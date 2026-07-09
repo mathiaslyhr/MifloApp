@@ -18,7 +18,9 @@ import {
   Screen,
   Text,
   TopStatusFade,
+  toast,
 } from '../core/ui';
+import {haptics} from '../core/haptics';
 import {
   APP_VERSION,
   FAQ_URL,
@@ -45,6 +47,14 @@ type Props = {
 export function MenuScreen({onSelectItem}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+
+  // External rows (FAQ/Privacy/Report a bug): say so if the link won't open.
+  function openLink(url: string) {
+    Linking.openURL(url).catch(() => {
+      haptics.error();
+      toast.error(t('menu.errorLink'));
+    });
+  }
 
   return (
     // Drop top/bottom safe-area edges — the scroll content owns the top inset
@@ -98,19 +108,19 @@ export function MenuScreen({onSelectItem}: Props) {
             label={t('menu.faq')}
             Icon={BookOpen}
             kind="link"
-            onPress={() => Linking.openURL(FAQ_URL).catch(() => {})}
+            onPress={() => openLink(FAQ_URL)}
           />
           <MenuRow
             label={t('menu.privacy')}
             Icon={Shield}
             kind="link"
-            onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
+            onPress={() => openLink(PRIVACY_POLICY_URL)}
           />
           <MenuRow
             label={t('menu.reportBug')}
             Icon={Bug}
             kind="link"
-            onPress={() => Linking.openURL(FEEDBACK_URL).catch(() => {})}
+            onPress={() => openLink(FEEDBACK_URL)}
           />
         </MenuGroup>
 

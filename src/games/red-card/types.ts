@@ -53,12 +53,8 @@ export type ImposterRole =
 /** How many times the ask order goes around before the vote. */
 export const ROUNDS = 2;
 
-/**
- * Fewest players for a meaningful hand (1 imposter + ≥2 detectives to vote).
- * TEMP: lowered to 2 for two-device testing (phone + simulator). REVERT TO 3
- * before committing — a 2-player hand has a degenerate, always-caught vote.
- */
-export const MIN_PLAYERS = 2;
+/** Fewest players for a meaningful hand (1 imposter + ≥2 detectives to vote). */
+export const MIN_PLAYERS = 3;
 
 /**
  * The host ships the full pool of eligible footballer ids and the server

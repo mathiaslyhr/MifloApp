@@ -1,7 +1,8 @@
 /**
- * Local persistence for the daily puzzle + streak, following the thin
- * AsyncStorage pattern in core/settings/preferences.ts (try/catch, non-fatal).
- * No Supabase — single-player state never leaves the device.
+ * Local persistence for the daily puzzle + streak. Loaders fail soft (defaults
+ * on a broken read); writers reject on failure so callers can warn the player
+ * that progress won't survive a relaunch. No Supabase — single-player state
+ * never leaves the device.
  *
  * Only the guessed ids are stored; the screen replays them through the engine on
  * load, so the coloured rows are recomputed and stay correct even if the compare
@@ -45,11 +46,7 @@ export async function loadDailyProgress(
 }
 
 export async function saveDailyProgress(progress: DailyProgress): Promise<void> {
-  try {
-    await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-  } catch {
-    // Non-fatal — the puzzle still plays for this session.
-  }
+  await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
 }
 
 export async function loadStreak(): Promise<StreakState> {
@@ -62,11 +59,7 @@ export async function loadStreak(): Promise<StreakState> {
 }
 
 export async function saveStreak(streak: StreakState): Promise<void> {
-  try {
-    await AsyncStorage.setItem(STREAK_KEY, JSON.stringify(streak));
-  } catch {
-    // Non-fatal.
-  }
+  await AsyncStorage.setItem(STREAK_KEY, JSON.stringify(streak));
 }
 
 /** The full past-results log (keyed by dateKey), or an empty log. */
@@ -82,10 +75,6 @@ export async function loadHistory(): Promise<HistoryLog> {
 /** Record one finished day into the log and persist it. Returns the new log. */
 export async function recordHistory(entry: HistoryEntry): Promise<HistoryLog> {
   const log = upsertHistory(await loadHistory(), entry);
-  try {
-    await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(log));
-  } catch {
-    // Non-fatal.
-  }
+  await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(log));
   return log;
 }

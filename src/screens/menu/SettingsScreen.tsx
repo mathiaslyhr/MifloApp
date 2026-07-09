@@ -3,7 +3,7 @@ import {StyleSheet, Switch} from 'react-native';
 import {Check} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {MenuGroup, MenuRow, Text} from '../../core/ui';
+import {MenuGroup, MenuRow, Text, toast} from '../../core/ui';
 import {colors, spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
@@ -43,14 +43,25 @@ export function SettingsScreen({navigation}: Props) {
     da: t('settings.languageDa'),
   };
 
+  // Both changes apply in-session even when the write fails — the toast warns
+  // that the choice won't survive a relaunch. No haptic on purpose: a buzz
+  // right after switching haptics off would contradict the toggle.
   async function pickLanguage(pref: LanguagePreference) {
     setLang(pref);
-    await setLanguagePreference(pref);
+    try {
+      await setLanguagePreference(pref);
+    } catch {
+      toast.error(t('settings.errorSave'));
+    }
   }
 
   async function toggleHaptics(value: boolean) {
     setHaptics(value);
-    await setHapticsPreference(value);
+    try {
+      await setHapticsPreference(value);
+    } catch {
+      toast.error(t('settings.errorSave'));
+    }
   }
 
   return (

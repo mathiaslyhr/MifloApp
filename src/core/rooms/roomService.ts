@@ -18,6 +18,27 @@ export class BackendUnavailableError extends Error {
   }
 }
 
+/**
+ * True when an error smells like "the request never reached the server", so
+ * screens can say "check your connection" instead of blaming the input.
+ * Covered shapes: RN fetch rejects with `TypeError: Network request failed`
+ * (postgrest-js converts that to `{message: 'TypeError: Network request
+ * failed', code: ''}`); auth-js throws `AuthRetryableFetchError` with
+ * `status: 0` when `ensureSession` can't reach the server.
+ */
+export function isNetworkError(err: unknown): boolean {
+  const e = err as {name?: string; message?: string; status?: number};
+  if (e?.name === 'AuthRetryableFetchError' || e?.status === 0) {
+    return true;
+  }
+  const msg = String(e?.message ?? '');
+  return (
+    msg.includes('Network request failed') ||
+    msg.includes('Failed to fetch') ||
+    msg.startsWith('AbortError')
+  );
+}
+
 // Unique per subscription so two live channels for the same room never collide
 // in supabase-js's topic-keyed registry (which returns the existing channel on
 // a duplicate topic and would reject a second postgres_changes listener —
@@ -334,12 +355,28 @@ export async function fetchPlayers(roomId: string): Promise<RoomPlayer[]> {
 }
 
 /**
+ * Realtime channel health, forwarded to screens so they can tell the user when
+ * live updates drop out. `CLOSED` also fires on a normal unsubscribe, so
+ * listeners should ignore it.
+ */
+export type ChannelStatus =
+  | 'SUBSCRIBED'
+  | 'CHANNEL_ERROR'
+  | 'TIMED_OUT'
+  | 'CLOSED';
+
+/**
  * Live player roster for a room — fires on joins and score updates. Calls back
  * with the full, freshly-fetched list on every change. Returns an unsubscribe.
+ *
+ * `onStatus` observes channel health. Realtime-js rejoins dropped channels on
+ * its own; every (re-)`SUBSCRIBED` refetches the roster so changes missed
+ * during an outage are recovered.
  */
 export function subscribePlayers(
   roomId: string,
   cb: (players: RoomPlayer[]) => void,
+  onStatus?: (status: ChannelStatus, err?: Error) => void,
 ): () => void {
   if (!supabase) {
     return () => {};
@@ -354,7 +391,12 @@ export function subscribePlayers(
       {event: '*', schema: 'public', table: 'players', filter: `room_id=eq.${roomId}`},
       refresh,
     )
-    .subscribe();
+    .subscribe((status, err) => {
+      if (status === 'SUBSCRIBED') {
+        refresh();
+      }
+      onStatus?.(status as ChannelStatus, err);
+    });
   // Prime with the current roster so callers don't wait for the first change.
   refresh();
   return () => {
@@ -369,15 +411,33 @@ export function subscribePlayers(
  *
  * `onClosed` fires when the room row is deleted — i.e. the host left and the
  * party is over ("no host, no party"). Guests use it to return to the menu.
+ *
+ * `onStatus` observes channel health. Every (re-)`SUBSCRIBED` refetches the
+ * row so updates missed during an outage are recovered — including a deleted
+ * room, which can't replay as an event and instead surfaces via `onClosed`.
  */
 export function subscribeRoom(
   roomId: string,
   cb: (room: Room) => void,
   onClosed?: () => void,
+  onStatus?: (status: ChannelStatus, err?: Error) => void,
 ): () => void {
   if (!supabase) {
     return () => {};
   }
+  // Deliver the current row (postgres_changes only fires on change) — used to
+  // prime on mount and to catch up after a reconnect.
+  const refresh = () => {
+    fetchRoom(roomId)
+      .then(room => {
+        if (room) {
+          cb(room);
+        } else {
+          onClosed?.();
+        }
+      })
+      .catch(() => {});
+  };
   const channel = supabase
     .channel(`room:${roomId}:${++channelSeq}`)
     .on(
@@ -392,15 +452,13 @@ export function subscribeRoom(
       {event: 'DELETE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
       () => onClosed?.(),
     )
-    .subscribe();
-  // Deliver the current row immediately (postgres_changes only fires on change).
-  fetchRoom(roomId)
-    .then(room => {
-      if (room) {
-        cb(room);
+    .subscribe((status, err) => {
+      if (status === 'SUBSCRIBED') {
+        refresh();
       }
-    })
-    .catch(() => {});
+      onStatus?.(status as ChannelStatus, err);
+    });
+  refresh();
   return () => {
     supabase?.removeChannel(channel);
   };

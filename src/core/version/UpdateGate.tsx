@@ -1,7 +1,8 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {AppState, Linking, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Button, Screen, Text} from '../ui';
+import {Button, Screen, Text, toast} from '../ui';
+import {haptics} from '../haptics';
 import {spacing} from '../../theme';
 import {APP_STORE_URL} from '../config';
 import {isUpdateRequired} from './versionGate';
@@ -51,7 +52,12 @@ export function UpdateGate({children}: Props) {
         <Button
           label={t('update.action')}
           variant="primary"
-          onPress={() => Linking.openURL(APP_STORE_URL).catch(() => {})}
+          onPress={() =>
+            Linking.openURL(APP_STORE_URL).catch(() => {
+              haptics.error();
+              toast.error(t('menu.errorLink'));
+            })
+          }
         />
       </View>
     </Screen>

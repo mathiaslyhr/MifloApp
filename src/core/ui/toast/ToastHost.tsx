@@ -1,10 +1,11 @@
 /**
  * ToastHost — the app-wide overlay that renders the toast stack. Mounted once at
- * the app root (App.tsx, inside NavigationContainer). Pinned to the top edge,
+ * the app root (App.tsx, inside SafeAreaProvider as UpdateGate's sibling, so
+ * toasts also overlay the update wall). Pinned to the top edge,
  * safe-area aware, `pointerEvents="box-none"` so it never blocks the screen
  * beneath it (mirrors the FloatingBar chrome pattern).
  *
- * Cards enter with a soft fade + drop and auto-dismiss on their own timer, then
+ * Pills enter with a soft fade + drop and auto-dismiss on their own timer, then
  * fade out before removing themselves from the store. Honors Reduce Motion →
  * opacity-only (matches usePressScale).
  */
@@ -17,6 +18,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {Check, Info, X} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {colors, radii, spacing} from '../../../theme';
 import {Text} from '../Text';
@@ -25,12 +27,20 @@ import {Toast, ToastTone, useToastStore} from './toastStore';
 const ENTER_EASING = Easing.bezier(0.34, 1.25, 0.64, 1);
 const ENTER_MS = 220;
 const EXIT_MS = 160;
+const CHIP_SIZE = 24;
+const CHIP_ICON = 14;
 
-/** Left-edge accent per tone. Neutral leans on plain glass. */
-const TONE_ACCENT: Record<ToastTone, string> = {
-  neutral: colors.primary,
-  success: colors.success,
-  error: colors.error,
+/**
+ * Leading icon chip per tone: a lucide glyph in a soft tinted circle, so the
+ * meaning reads without color (and without relying on red/green alone).
+ */
+const TONE_CHIP: Record<
+  ToastTone,
+  {Icon: typeof Info; color: string; tint: string}
+> = {
+  neutral: {Icon: Info, color: colors.primary, tint: colors.toastTintNeutral},
+  success: {Icon: Check, color: colors.success, tint: colors.toastTintSuccess},
+  error: {Icon: X, color: colors.error, tint: colors.toastTintError},
 };
 
 export function ToastHost() {
@@ -101,6 +111,8 @@ function ToastCard({toast}: {toast: Toast}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const {Icon, color, tint} = TONE_CHIP[toast.tone];
+
   return (
     <Animated.View
       style={[styles.card, {opacity, transform: [{translateY}]}]}
@@ -110,7 +122,9 @@ function ToastCard({toast}: {toast: Toast}) {
         accessibilityRole="alert"
         accessibilityLabel={toast.message}
         style={styles.pressable}>
-        <View style={[styles.accent, {backgroundColor: TONE_ACCENT[toast.tone]}]} />
+        <View style={[styles.chip, {backgroundColor: tint}]}>
+          <Icon size={CHIP_ICON} color={color} strokeWidth={2.5} />
+        </View>
         <Text variant="secondary" color="primary" style={styles.message}>
           {toast.message}
         </Text>
@@ -131,7 +145,8 @@ const styles = StyleSheet.create({
   card: {
     maxWidth: 420,
     width: '92%',
-    borderRadius: radii.card,
+    // Fully round — toasts speak the same pill language as buttons and tags.
+    borderRadius: radii.pill,
     backgroundColor: colors.glass,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.glassRim,
@@ -147,12 +162,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: spacing.md,
+    paddingLeft: spacing.md,
     paddingRight: spacing.lg,
   },
-  accent: {
-    width: 4,
-    alignSelf: 'stretch',
-    marginRight: spacing.md,
+  chip: {
+    width: CHIP_SIZE,
+    height: CHIP_SIZE,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.sm,
   },
   message: {flex: 1},
 });

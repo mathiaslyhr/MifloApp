@@ -64,6 +64,11 @@ export const colors = {
   success: '#32C36C',
   error: '#F0544A',
 
+  /** Toast icon-chip fills — each tone mixed to 16% over white (ToastHost). */
+  toastTintNeutral: '#E6E6FE',
+  toastTintSuccess: '#DEF5E8',
+  toastTintError: '#FDE4E2',
+
   /** 5-stop countdown ring: dark green → light green → yellow → orange → red. */
   timer: ['#32C36C', '#7ED99A', '#F5C451', '#F2913D', '#F0544A'] as const,
 

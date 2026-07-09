@@ -6,7 +6,11 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, CircleButton, Screen, Text, TextField} from '../core/ui';
 import {colors, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {joinRoom, BackendUnavailableError} from '../core/rooms/roomService';
+import {
+  joinRoom,
+  BackendUnavailableError,
+  isNetworkError,
+} from '../core/rooms/roomService';
 import {randomFootballName} from '../core/identity/funnyName';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
@@ -37,9 +41,13 @@ export function JoinScreen({navigation}: Props) {
       const room = await joinRoom(trimmed, randomFootballName());
       navigation.replace('Lobby', {roomId: room.id});
     } catch (err) {
+      // Blame the code only when the server actually rejected it — a request
+      // that never got through shows a connection message instead.
       setError(
         err instanceof BackendUnavailableError
           ? t('join.errorUnavailable')
+          : isNetworkError(err)
+          ? t('join.errorNetwork')
           : t('join.errorBadCode'),
       );
       setBusy(false);

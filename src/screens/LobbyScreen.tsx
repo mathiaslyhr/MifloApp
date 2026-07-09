@@ -21,7 +21,10 @@ import {
   Screen,
   Text,
   TopStatusFade,
+  toast,
 } from '../core/ui';
+import {haptics} from '../core/haptics';
+import {Sentry, isSentryEnabled} from '../core/observability/sentry';
 import {GAMES, isBuiltGame} from './gamesCatalog';
 import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
@@ -35,6 +38,7 @@ import {
   subscribePlayers,
   subscribeRoom,
 } from '../core/rooms/roomService';
+import {createConnectionNotifier} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {generateGrid, gridSignature} from '../games/hattrick/grid';
 import {createIndividualState} from '../games/hattrick/engine';
@@ -81,14 +85,21 @@ export function LobbyScreen({route, navigation}: Props) {
     ensureSession()
       .then(setMyUserId)
       .catch(() => {});
-    const unsubPlayers = subscribePlayers(roomId, setPlayers);
+    // One notifier for both channels, so a single outage toasts once.
+    const notifyStatus = createConnectionNotifier();
+    const unsubPlayers = subscribePlayers(roomId, setPlayers, notifyStatus);
     // Host left → the room is deleted; no host, no party. Return to the menu.
-    const unsubRoom = subscribeRoom(roomId, setRoom, () => {
-      if (!closedRef.current) {
-        closedRef.current = true;
-        navigation.popToTop();
-      }
-    });
+    const unsubRoom = subscribeRoom(
+      roomId,
+      setRoom,
+      () => {
+        if (!closedRef.current) {
+          closedRef.current = true;
+          navigation.popToTop();
+        }
+      },
+      notifyStatus,
+    );
     // Prime the roster once in case the realtime channel is slow to attach.
     fetchPlayers(roomId).then(setPlayers).catch(() => {});
     return () => {
@@ -203,6 +214,11 @@ export function LobbyScreen({route, navigation}: Props) {
   // or free to pick (came from Home, where the room is created as `'unset'`).
   const locked = room ? isBuiltGame(room.gameType) : false;
 
+  // Fewest players the start button accepts: a locked Red Card party needs its
+  // own minimum; everything else (including free-pick) starts at 2.
+  const minPlayers =
+    locked && room?.gameType === 'red-card' ? IMPOSTER_MIN : 2;
+
   // Human title for a game type, via the presentation catalog.
   function gameTitle(gameType: string): string {
     const entry = GAMES.find(g => g.gameType === gameType);
@@ -243,10 +259,8 @@ export function LobbyScreen({route, navigation}: Props) {
           // only ships the candidate footballer pool.
           if (players.length < IMPOSTER_MIN) {
             setStarting(false);
-            Alert.alert(
-              t('common.miflo'),
-              t('lobby.needPlayers', {count: IMPOSTER_MIN}),
-            );
+            haptics.warning();
+            toast.neutral(t('lobby.needPlayers', {count: IMPOSTER_MIN}));
             return undefined;
           }
           await startRedCardGame(roomId, buildFootballerPool());
@@ -258,16 +272,12 @@ export function LobbyScreen({route, navigation}: Props) {
       }
     } catch (err) {
       setStarting(false);
-      // TEMP DEBUG: surface the real Supabase/PostgREST error while diagnosing
-      // the imposter start failure. Revert to the friendly message before commit.
-      const e = err as {message?: string; code?: string; details?: string; hint?: string};
-      console.warn('startGame failed', e);
-      Alert.alert(
-        'Start error (debug)',
-        [e?.code && `code: ${e.code}`, e?.message, e?.details, e?.hint]
-          .filter(Boolean)
-          .join('\n\n') || String(err),
-      );
+      console.warn('startGame failed', err);
+      if (isSentryEnabled) {
+        Sentry.captureException(err);
+      }
+      haptics.error();
+      toast.error(t('lobby.errorStart'));
     }
   }
 
@@ -385,7 +395,14 @@ export function LobbyScreen({route, navigation}: Props) {
                 : t('lobby.pickGame')
             }
             variant="primary"
-            disabled={players.length < 2 || starting}
+            disabled={players.length < minPlayers || starting}
+            onDisabledPress={() => {
+              if (starting) {
+                return;
+              }
+              haptics.warning();
+              toast.neutral(t('lobby.needPlayers', {count: minPlayers}));
+            }}
             onPress={async () => {
               if (locked && room) {
                 const target = await startGame(room.gameType);
