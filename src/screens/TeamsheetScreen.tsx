@@ -624,14 +624,14 @@ function PlayerToken({
             {assists > 1 ? <Text style={styles.badgeCount}>{assists}</Text> : null}
           </View>
         ) : null}
-        {player.redCard ? (
-          <View style={[styles.badge, styles.badgeMidLeft]}>
-            <View style={[styles.cardIcon, styles.cardRed]} />
-          </View>
-        ) : null}
-        {player.yellowCard ? (
-          <View style={[styles.badge, styles.badgeMidRight]}>
-            <View style={[styles.cardIcon, styles.cardYellow]} />
+        {player.redCard || player.yellowCard ? (
+          <View style={[styles.badge, styles.badgeMid]}>
+            <View
+              style={[
+                styles.cardIcon,
+                player.redCard ? styles.cardRed : styles.cardYellow,
+              ]}
+            />
           </View>
         ) : null}
       </View>
@@ -701,6 +701,9 @@ function Countdown() {
 const TOKEN_WIDTH = 62;
 const CIRCLE = 50;
 const BADGE = 16;
+/** Offset that puts a corner badge's centre exactly on the circle outline
+ * at the 45° point: r − r/√2 − badge/2. */
+const BADGE_ON_RIM = CIRCLE / 2 - CIRCLE / (2 * Math.SQRT2) - BADGE / 2;
 
 const styles = StyleSheet.create({
   flex: {flex: 1},
@@ -785,13 +788,13 @@ const styles = StyleSheet.create({
     borderColor: colors.glassRim,
   },
   badgeWide: {paddingHorizontal: 3},
-  badgeTopLeft: {top: -3, left: -3},
-  badgeTopRight: {top: -3, right: -3},
-  badgeBottomLeft: {bottom: -3, left: -3},
-  badgeBottomRight: {bottom: -3, right: -3},
-  // Cards sit on the rim's waist so all four corner clues stay available.
-  badgeMidLeft: {top: CIRCLE / 2 - BADGE / 2, left: -6},
-  badgeMidRight: {top: CIRCLE / 2 - BADGE / 2, right: -6},
+  // Badge centres sit exactly on the circle outline: corners at the rim's
+  // 45° points, the card badge at its waist (180°).
+  badgeTopLeft: {top: BADGE_ON_RIM, left: BADGE_ON_RIM},
+  badgeTopRight: {top: BADGE_ON_RIM, right: BADGE_ON_RIM},
+  badgeBottomLeft: {bottom: BADGE_ON_RIM, left: BADGE_ON_RIM},
+  badgeBottomRight: {bottom: BADGE_ON_RIM, right: BADGE_ON_RIM},
+  badgeMid: {top: CIRCLE / 2 - BADGE / 2, left: -BADGE / 2},
   cardIcon: {width: 6, height: 9, borderRadius: 1.5},
   cardYellow: {backgroundColor: '#F2C230'},
   cardRed: {backgroundColor: colors.error},

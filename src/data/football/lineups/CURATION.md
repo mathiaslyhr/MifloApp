@@ -27,15 +27,16 @@ available.
 - **Both finalists** of one match may be separate entries (France 2018 and
   Croatia 2018); the schedule builder keeps them off consecutive days.
 - **`subbedOff`**: true when the starter was taken off during the match
-  (swap-arrows badge). Curated best-effort on well-remembered matches only —
-  absence means "unknown or played the whole match", never a fact. A red card
-  is NOT `subbedOff` (Gabriel Jesus 2019 has `redCard`, not `subbedOff`).
-- **`redCard` / `yellowCard`**: card badges, same best-effort policy as
-  `subbedOff` — absence means "no card or unknown", never a fact. A second
-  yellow is recorded as `redCard` only (Desailly 1998, Heitinga 2010). Only
-  the famous, verified reds are curated so far (Lehmann 2006, Drogba 2008,
-  Zidane 2006, Desailly 1998, Heitinga 2010, Gabriel Jesus 2019); yellows
-  await a proper match-report pass.
+  (swap-arrows badge). VERIFIED July 2026 against the Wikipedia Details
+  boxes for every post-1990 pool lineup, so within those entries absence IS
+  a fact (played the whole match). Pre-1990 entries remain unverified. A
+  red card is NOT `subbedOff` (Gabriel Jesus 2019 has `redCard` only).
+- **`redCard` / `yellowCard`**: card badges, VERIFIED July 2026 against the
+  Wikipedia Details boxes for every post-1990 pool lineup (starters only —
+  substitutes' cards cannot show). A second yellow is recorded as `redCard`
+  only (Desailly 1998, Heitinga 2010, Gabriel Jesus 2019). Both card flags
+  render in the SAME badge slot on the circle's left waist; red wins if
+  both are ever set.
 - **Team sheet pool cutoff**: only `year >= 1990` (`TEAMSHEET_MIN_YEAR`)
   enters the daily pool. Older XIs stay curated here for possible future use.
 
