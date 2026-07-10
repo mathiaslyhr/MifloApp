@@ -6,12 +6,28 @@ import {
   deltasOf,
   explanationFor,
   hasAnswered,
+  missingNames,
   standings,
   topicKeyFor,
 } from '../engine';
 import {fractionRemaining, scoreAnswer} from '../scoring';
 import {QUESTION_DURATION_MS} from '../types';
-import type {OffsideState} from '../types';
+import type {Criterion} from '../../../data/football';
+import type {OffsideRound, OffsideState} from '../types';
+
+/** A round whose outlier is always "Michail Antonio" at index 1. */
+function roundWith(criterion: Criterion): OffsideRound {
+  return {
+    cards: [
+      {footballerId: 'a', name: 'Kyogo Furuhashi'},
+      {footballerId: 'b', name: 'Michail Antonio'},
+      {footballerId: 'c', name: 'Matt O’Riley'},
+      {footballerId: 'd', name: 'Reo Hatate'},
+    ],
+    outlierIndex: 1,
+    criterion,
+  };
+}
 
 function fixtureState(overrides: Partial<OffsideState> = {}): OffsideState {
   return {
@@ -38,53 +54,85 @@ function fixtureState(overrides: Partial<OffsideState> = {}): OffsideState {
 }
 
 describe('explanationFor', () => {
-  it('maps each emitted honour subtype to its own key', () => {
+  it('maps each emitted honour subtype to its own key, naming the outlier', () => {
     for (const honour of [
       'champions-league',
       'world-cup',
       'ballon-dor',
       'european-championship',
     ] as const) {
-      expect(explanationFor({kind: 'honour', honour})).toEqual({
+      expect(explanationFor(roundWith({kind: 'honour', honour}))).toEqual({
         key: `offside.explanation.honour.${honour}`,
+        params: {name: 'Michail Antonio'},
       });
     }
   });
 
-  it('interpolates the country for nationality rounds', () => {
-    expect(explanationFor({kind: 'nationality', country: 'Brazil'})).toEqual({
+  it('interpolates the outlier and country for nationality rounds', () => {
+    expect(
+      explanationFor(roundWith({kind: 'nationality', country: 'Brazil'})),
+    ).toEqual({
       key: 'offside.explanation.nationality',
-      params: {country: 'Brazil'},
+      params: {name: 'Michail Antonio', country: 'Brazil'},
     });
   });
 
   it('resolves the club name for club rounds', () => {
-    expect(explanationFor({kind: 'club', clubId: 'man-utd'})).toEqual({
+    expect(explanationFor(roundWith({kind: 'club', clubId: 'man-utd'}))).toEqual({
       key: 'offside.explanation.club',
-      params: {club: 'Manchester United'},
+      params: {name: 'Michail Antonio', club: 'Manchester United'},
     });
   });
 
   it('falls back to the raw id for an unknown club', () => {
-    expect(explanationFor({kind: 'club', clubId: 'nowhere-fc'})).toEqual({
+    expect(
+      explanationFor(roundWith({kind: 'club', clubId: 'nowhere-fc'})),
+    ).toEqual({
       key: 'offside.explanation.club',
-      params: {club: 'nowhere-fc'},
+      params: {name: 'Michail Antonio', club: 'nowhere-fc'},
     });
   });
 
   it('maps each position to its own key', () => {
-    expect(explanationFor({kind: 'position', position: 'GK'})).toEqual({
+    expect(
+      explanationFor(roundWith({kind: 'position', position: 'GK'})),
+    ).toEqual({
       key: 'offside.explanation.position.GK',
+      params: {name: 'Michail Antonio'},
     });
-    expect(explanationFor({kind: 'position', position: 'FW'})).toEqual({
+    expect(
+      explanationFor(roundWith({kind: 'position', position: 'FW'})),
+    ).toEqual({
       key: 'offside.explanation.position.FW',
+      params: {name: 'Michail Antonio'},
     });
   });
 
   it('never crashes on a criterion the generator does not emit', () => {
-    expect(explanationFor({kind: 'treble'})).toEqual({
+    expect(explanationFor(roundWith({kind: 'treble'}))).toEqual({
       key: 'offside.explanation.generic',
+      params: {name: 'Michail Antonio'},
     });
+  });
+});
+
+describe('missingNames', () => {
+  it('lists players who have not answered yet, in roster order', () => {
+    expect(missingNames(fixtureState())).toEqual(['Carla']);
+  });
+
+  it('is empty once everyone has answered', () => {
+    const state = fixtureState();
+    state.answers.u3 = {option: 0, points: 500};
+    expect(missingNames(state)).toEqual([]);
+  });
+
+  it('lists everyone at the start of a round', () => {
+    expect(missingNames(fixtureState({answers: {}}))).toEqual([
+      'Anna',
+      'Bo',
+      'Carla',
+    ]);
   });
 });
 

@@ -17,9 +17,11 @@
 -- host-paced transitions get their own guarded RPCs because each new question
 -- needs a deadline stamped from the SERVER clock.
 --
--- Phases: 'question' (everyone races; the last present player's submit — or
--- the host's post-deadline force_offside_reveal — resolves the round) →
--- 'reveal' (host advances via advance_offside_round) → ... → 'standings'.
+-- Phases (Kahoot rhythm): 'question' (everyone races; the last present
+-- player's submit — or the host's post-deadline force_offside_reveal —
+-- resolves the round) → 'reveal' (the answer) → 'scoreboard' (the leaderboard
+-- as its own beat) → next question ... → 'standings'. The host paces both
+-- post-question steps via advance_offside_round.
 --
 -- The 20-second window is mirrored client-side as QUESTION_DURATION_MS in
 -- src/games/offside/types.ts; change both together.
@@ -330,9 +332,10 @@ begin
 end;
 $$;
 
--- ── Host moves on from a reveal: next question (fresh server-clock deadline)
---    or, after the last round, the final standings. Wrong-phase calls return
---    silently so a double tap can't skip a question. ─────────────────────────
+-- ── Host moves the game on, one beat per call: reveal → scoreboard, then
+--    scoreboard → next question (fresh server-clock deadline) or, after the
+--    last round, the final standings. Wrong-phase calls return silently so a
+--    double tap can't skip a beat. ──────────────────────────────────────────
 
 create or replace function public.advance_offside_round(p_room_id uuid)
 returns void
@@ -352,11 +355,15 @@ begin
   if v_state is null then
     raise exception 'Only the host can advance the game';
   end if;
-  if v_state->>'gameType' <> 'offside' or v_state->>'phase' <> 'reveal' then
+  if v_state->>'gameType' <> 'offside'
+     or v_state->>'phase' not in ('reveal', 'scoreboard') then
     return; -- double tap or stale call: ignore
   end if;
 
-  if (v_state->>'round')::int < (v_state->>'rounds')::int then
+  if v_state->>'phase' = 'reveal' then
+    -- Kahoot beat: the answer first, the leaderboard as its own screen next.
+    v_state := jsonb_set(v_state, '{phase}', to_jsonb('scoreboard'::text));
+  elsif (v_state->>'round')::int < (v_state->>'rounds')::int then
     v_state := jsonb_set(v_state, '{round}', to_jsonb((v_state->>'round')::int + 1));
     v_state := jsonb_set(v_state, '{phase}', to_jsonb('question'::text));
     v_state := jsonb_set(v_state, '{answers}', '{}'::jsonb);

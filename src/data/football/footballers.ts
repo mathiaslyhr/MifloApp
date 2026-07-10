@@ -11037,8 +11037,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['MF'],
     born: '1994-10-18',
     shirtNumbers: [7, 8],
+    // Pre-Villa years were St Mirren + Hibernian (no crests bundled). Celtic
+    // bid for him in 2018 but he NEVER played there.
     clubs: [
-      {clubId: 'celtic', from: 2015, to: 2016},
       {clubId: 'aston-villa', from: 2018},
     ],
     honours: [],
@@ -12675,11 +12676,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2001-04-12',
     shirtNumbers: [9, 38],
     clubs: [
-      {clubId: 'celtic', from: 2023, to: 2025},
-      {clubId: 'genk', from: 2025},
+      {clubId: 'celtic', from: 2023, to: 2024},
+      {clubId: 'genk', from: 2024, to: 2026},
+      {clubId: 'besiktas', from: 2026},
     ],
     honours: [
-      {type: 'league-title', count: 2, years: [2024, 2025]},
+      {type: 'league-title', count: 2, years: [2023, 2024]},
     ],
     tags: ['current-stars', 'wordle'],
   },

@@ -334,7 +334,7 @@ export function TeamsheetScreen({navigation}: Props) {
       ? t(compI18nKey, {year: lineup.year})
       : `${lineup.competition} ${lineup.year}`;
   const scoreTail = match
-    ? ` ${match.goalsFor} – ${match.goalsAgainst} ${match.opponent}` +
+    ? ` – ${match.goalsAgainst} ${match.opponent}` +
       (match.pensFor !== undefined
         ? ` · ${t('teamsheet.pens', {for: match.pensFor, against: match.pensAgainst})}`
         : match.afterExtraTime
@@ -377,7 +377,7 @@ export function TeamsheetScreen({navigation}: Props) {
           <Text variant="caption" color="muted" align="center">
             {finished ? `${competitionLine} · ` : null}
             <Text variant="caption" style={styles.scoreTeam}>
-              {lineup.team}
+              {match ? `${lineup.team} ${match.goalsFor}` : lineup.team}
             </Text>
             {scoreTail}
           </Text>
@@ -797,7 +797,7 @@ const styles = StyleSheet.create({
     maxWidth: TOKEN_WIDTH + 6,
   },
   tokenNameRevealed: {color: colors.textTertiary},
-  scoreTeam: {fontFamily: fonts.medium, color: colors.ink},
+  scoreTeam: {fontFamily: fonts.medium, color: colors.primary},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
   // Type-ahead card floating above the field: whole-dataset search, so it
   // helps spelling without leaking who is on today's sheet.

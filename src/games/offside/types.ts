@@ -11,7 +11,11 @@
  */
 import type {Criterion} from '../../data/football';
 
-export type OffsidePhase = 'question' | 'reveal' | 'standings';
+/**
+ * Kahoot rhythm: answer reveal first, then the leaderboard as its own beat,
+ * then the next question (or the final standings after the last round).
+ */
+export type OffsidePhase = 'question' | 'reveal' | 'scoreboard' | 'standings';
 
 export type OffsidePlayer = {userId: string; name: string};
 

@@ -35,6 +35,7 @@ import {
   deltasOf,
   explanationFor,
   hasAnswered,
+  missingNames,
   standings,
   topicKeyFor,
 } from '../games/offside/engine';
@@ -233,6 +234,8 @@ export function OffsideScreen({route, navigation}: Props) {
               isHost={isHost}
               onAdvance={advance}
             />
+          ) : state.phase === 'scoreboard' ? (
+            <ScoreboardPhase state={state} isHost={isHost} onAdvance={advance} />
           ) : (
             <StandingsPhase
               state={state}
@@ -300,6 +303,7 @@ function QuestionPhase({
   const [localPick, setLocalPick] = useState<number | null>(null);
   const [timedOut, setTimedOut] = useState(false);
   const round = state.deck[state.round - 1];
+  const missing = missingNames(state);
   const submitted = (!!myUserId && hasAnswered(state, myUserId)) || localPick != null;
   // What answered means for the reveal-mode grid: my confirmed pick, or the
   // optimistic one while the submit is in flight.
@@ -371,6 +375,10 @@ function QuestionPhase({
         <Text variant="secondary" color="secondary" align="center">
           {timedOut && myOption == null
             ? t('offside.question.timeUp')
+            : missing.length > 0
+            ? t('offside.question.waitingNames', {
+                names: nameList(missing, t('offside.question.and')),
+              })
             : t('offside.question.waiting', {
                 count: state.answeredCount,
                 total: state.players.length,
@@ -385,7 +393,15 @@ function QuestionPhase({
   );
 }
 
-/** The answer, the hidden link, your points, and the running scoreboard. */
+/** "Anna", "Anna and Bo", "Anna, Bo and Carla" — the and-word is localized. */
+function nameList(names: string[], andWord: string): string {
+  if (names.length <= 1) {
+    return names[0] ?? '';
+  }
+  return `${names.slice(0, -1).join(', ')} ${andWord} ${names[names.length - 1]}`;
+}
+
+/** The answer and the hidden link; the leaderboard follows as its own beat. */
 function RevealPhase({
   state,
   myUserId,
@@ -404,8 +420,7 @@ function RevealPhase({
   }
   const mine = myUserId != null ? state.answers[myUserId] : undefined;
   const correct = mine?.option != null && mine.option === round.outlierIndex;
-  const explanation = explanationFor(round.criterion);
-  const lastRound = state.round >= state.rounds;
+  const explanation = explanationFor(round);
   return (
     <View style={styles.phase}>
       <GlassTag tint="light" style={styles.roundPill}>
@@ -438,6 +453,41 @@ function RevealPhase({
       <Text variant="secondary" color="secondary" align="center">
         {t(explanation.key, explanation.params)}
       </Text>
+
+      {isHost ? (
+        <Button
+          label={t('offside.reveal.showScoreboard')}
+          variant="primary"
+          onPress={onAdvance}
+        />
+      ) : (
+        <Text variant="secondary" color="secondary" align="center">
+          {t('offside.reveal.hostAdvances')}
+        </Text>
+      )}
+    </View>
+  );
+}
+
+/** The Kahoot beat: the leaderboard alone on screen between rounds. */
+function ScoreboardPhase({
+  state,
+  isHost,
+  onAdvance,
+}: {
+  state: OffsideState;
+  isHost: boolean;
+  onAdvance: () => void;
+}) {
+  const {t} = useTranslation();
+  const lastRound = state.round >= state.rounds;
+  return (
+    <View style={styles.phase}>
+      <GlassTag tint="light" style={styles.roundPill}>
+        <Text variant="caption" color="muted" style={styles.roundText}>
+          {t('offside.round', {round: state.round, total: state.rounds})}
+        </Text>
+      </GlassTag>
 
       <Scoreboard rows={standings(state)} deltas={deltasOf(state)} />
 
