@@ -85,4 +85,5 @@ export const FLAG_IMAGES: Record<string, number> = {
   "Uzbekistan": require('./flags/uz.png'),
   "Venezuela": require('./flags/ve.png'),
   "Wales": require('./flags/gb-wls.png'),
+  "Zimbabwe": require('./flags/zw.png'),
 };

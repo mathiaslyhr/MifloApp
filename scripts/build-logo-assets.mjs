@@ -79,6 +79,7 @@ const CLUB_SLUG = {
   // WC 2026 batch: UEFA
   hoffenheim: 'tsg-hoffenheim', 'union-berlin': 'union-berlin', mainz: 'mainz-05',
   'az-alkmaar': 'az-alkmaar', lecce: 'lecce', sampdoria: 'uc-sampdoria',
+  'hellas-verona': 'hellas-verona',
   'sheffield-united': 'sheffield-united', salzburg: 'red-bull-salzburg',
   'dinamo-zagreb': 'gnk-dinamo-zagreb', midtjylland: 'fc-midtjylland', copenhagen: 'fc-copenhagen',
   shakhtar: 'shakhtar-donetsk', 'dynamo-kyiv': 'dynamo-kyiv', ferencvaros: 'ferencvaros-tc',

@@ -129,7 +129,10 @@ describe('club + shape integrity', () => {
         date.getUTCFullYear() === y &&
         date.getUTCMonth() === mo - 1 &&
         date.getUTCDate() === d;
-      if (!real || y < 1930 || y > 2012) {
+      // 1890 floor: the Top Bins answer legends reach back to the 1890s
+      // (Harry Chambers, Joe Spence); they are retired so the Scout Age
+      // column never surfaces them as a daily answer.
+      if (!real || y < 1890 || y > 2012) {
         invalid.push(`${f.id}: ${f.born}`);
       }
     }

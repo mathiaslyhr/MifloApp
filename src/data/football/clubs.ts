@@ -164,6 +164,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'az-alkmaar', name: 'AZ Alkmaar', country: 'Netherlands', league: 'eredivisie'},
   {id: 'lecce', name: 'Lecce', country: 'Italy', league: 'serie-a'},
   {id: 'sampdoria', name: 'Sampdoria', country: 'Italy', league: 'serie-a'},
+  {id: 'hellas-verona', name: 'Hellas Verona', country: 'Italy', league: 'serie-a'},
   {id: 'sheffield-united', name: 'Sheffield United', country: 'England', league: 'championship'},
   {id: 'salzburg', name: 'Red Bull Salzburg', country: 'Austria', league: 'austrian-bundesliga'},
   {id: 'dinamo-zagreb', name: 'Dinamo Zagreb', country: 'Croatia', league: 'croatian-hnl'},

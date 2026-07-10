@@ -75,6 +75,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "gremio": require('./logos/gremio.png'),
   "guadalajara": require('./logos/guadalajara.png'),
   "hamburg": require('./logos/hamburg.png'),
+  "hellas-verona": require('./logos/hellas-verona.png'),
   "hertha-berlin": require('./logos/hertha-berlin.png'),
   "hoffenheim": require('./logos/hoffenheim.png'),
   "inter": require('./logos/inter.png'),
