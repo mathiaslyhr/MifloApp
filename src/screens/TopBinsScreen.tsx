@@ -33,8 +33,9 @@ import {
 } from '../core/notifications/scoutReminder';
 import {colors, fonts, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {getById} from '../data/football';
+import {FOOTBALLERS, getById, type Footballer} from '../data/football';
 import {flagImage} from '../games/hattrick/criterionIcon';
+import {fold, searchPlayers} from '../games/hattrick/playerSearch';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyListFor} from '../games/tenball/dailyList';
 import {
@@ -45,6 +46,7 @@ import {
   giveUp,
   historyEntryFor,
   isFinished,
+  matchGuess,
   missCount,
   recordResult,
   STREAK_MISS_LIMIT,
@@ -73,6 +75,8 @@ export function TopBinsScreen({navigation}: Props) {
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
   const [input, setInput] = useState('');
   const [showHelp, setShowHelp] = useState(false);
+  const boardRef = useRef<ScrollView>(null);
+  const slotYs = useRef<Record<number, number>>({});
 
   // One-time reminder offer, shown the moment a board is finished — shared
   // with Scout (same asked/pref keys), so whichever daily game the player
@@ -169,11 +173,10 @@ export function TopBinsScreen({navigation}: Props) {
       .catch(() => toast.error(t('tenball.errorSave')));
   }
 
-  function submitGuess() {
+  function submitText(text: string) {
     if (!state || !list || isFinished(state)) {
       return;
     }
-    const text = input;
     setInput('');
     const {state: next, outcome} = applyGuess(state, list, text);
     if (outcome === 'already-found') {
@@ -190,6 +193,19 @@ export function TopBinsScreen({navigation}: Props) {
     }
     setState(next);
     persist(next, false);
+    if (outcome === 'hit') {
+      // Bring the slot the guess just filled into view — rank 10 lives below
+      // the fold, and seeing the row flip IS the payoff.
+      const rank = next.guesses[next.guesses.length - 1]?.rank;
+      if (rank !== undefined) {
+        requestAnimationFrame(() => {
+          boardRef.current?.scrollTo({
+            y: Math.max(0, (slotYs.current[rank] ?? 0) - 96),
+            animated: true,
+          });
+        });
+      }
+    }
     if (next.status === 'won') {
       haptics.success();
       finishDay(next, false);
@@ -200,6 +216,33 @@ export function TopBinsScreen({navigation}: Props) {
       toast.neutral(t('tenball.missToast'));
     }
   }
+
+  function submitGuess() {
+    submitText(input);
+  }
+
+  /**
+   * A tapped suggestion submits the best-matching spelling of that player —
+   * display name first, then nicknames/full name — so a correct player never
+   * lands as a miss just because the list's alias uses another variant.
+   */
+  function submitSuggestion(player: Footballer) {
+    if (!list) {
+      return;
+    }
+    const candidates = [player.name, ...(player.nicknames ?? []), player.fullName ?? ''];
+    const best = candidates.find(
+      c => c.length > 0 && matchGuess(list, fold(c)) !== undefined,
+    );
+    submitText(best ?? player.name);
+  }
+
+  const suggestions = useMemo(() => {
+    if (!state || isFinished(state) || input.trim().length === 0) {
+      return [];
+    }
+    return searchPlayers(FOOTBALLERS, input, [], 5);
+  }, [input, state]);
 
   function confirmGiveUp() {
     if (!state || isFinished(state)) {
@@ -300,9 +343,11 @@ export function TopBinsScreen({navigation}: Props) {
           ) : null}
 
           <ScrollView
+            ref={boardRef}
             style={styles.board}
             contentContainerStyle={styles.boardContent}
             keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
             showsVerticalScrollIndicator={false}>
             {list.entries.map(entry => {
               const earned = found.has(entry.rank);
@@ -313,6 +358,9 @@ export function TopBinsScreen({navigation}: Props) {
               return (
                 <View
                   key={entry.rank}
+                  onLayout={e => {
+                    slotYs.current[entry.rank] = e.nativeEvent.layout.y;
+                  }}
                   style={[styles.slot, shown && !earned && styles.slotRevealed]}>
                   <View style={[styles.rankBadge, earned && styles.rankBadgeEarned]}>
                     <Text style={[styles.rankText, earned && styles.rankTextEarned]}>
@@ -358,11 +406,34 @@ export function TopBinsScreen({navigation}: Props) {
             </View>
           ) : (
             <View style={styles.inputPanel}>
+              {suggestions.length > 0 ? (
+                <View style={styles.suggestions}>
+                  {suggestions.map(f => {
+                    const flag = flagImage(f.nationality[0]);
+                    return (
+                      <Pressable
+                        key={f.id}
+                        style={styles.suggestionRow}
+                        onPress={() => submitSuggestion(f)}
+                        accessibilityRole="button"
+                        accessibilityLabel={f.name}>
+                        {flag != null ? (
+                          <Image source={flag} resizeMode="contain" style={styles.slotFlag} />
+                        ) : null}
+                        <Text variant="body" numberOfLines={1} style={styles.suggestionName}>
+                          {f.name}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              ) : null}
               <TextField
                 value={input}
                 onChangeText={setInput}
                 placeholder={t('tenball.inputPlaceholder')}
                 autoCapitalize="words"
+                autoFocus
                 returnKeyType="go"
                 submitBehavior="submit"
                 onSubmitEditing={submitGuess}
@@ -500,13 +571,33 @@ const styles = StyleSheet.create({
     borderColor: colors.glassRim,
   },
   rankBadgeEarned: {backgroundColor: colors.ink, borderColor: colors.ink},
-  rankText: {fontFamily: fonts.medium, fontSize: 13, color: colors.muted},
+  // Explicit tight lineHeight: without it the themed body lineHeight (24)
+  // pushes the digit off-centre inside the 26pt circle.
+  rankText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: colors.muted},
   rankTextEarned: {color: colors.onInk},
   slotFlag: {width: 22, height: 16, borderRadius: 2},
   slotName: {flex: 1},
   slotNameRevealed: {color: colors.textSecondary},
   slotBlank: {flex: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
+  // Type-ahead card floating above the field: whole-dataset search, so it
+  // helps spelling without leaking who is on today's list.
+  suggestions: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.card,
+    borderWidth: 1,
+    borderColor: colors.glassRim,
+    paddingHorizontal: spacing.md,
+  },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    minHeight: 40,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.divider,
+  },
+  suggestionName: {flex: 1},
   giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},

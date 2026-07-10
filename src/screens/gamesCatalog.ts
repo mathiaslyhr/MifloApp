@@ -1,3 +1,4 @@
+import {createElement} from 'react';
 import {
   ClipboardList,
   Flag,
@@ -10,7 +11,16 @@ import {
   Ticket,
   UserSearch,
   type LucideIcon,
+  type LucideProps,
 } from 'lucide-react-native';
+
+/** A referee's card is a solid block, not an outline — fill it with the same
+ * colour the tile passes as the stroke. */
+const CardIcon = ((props: LucideProps) =>
+  createElement(RectangleVertical, {
+    ...props,
+    fill: (props.color as string) ?? 'currentColor',
+  })) as LucideIcon;
 
 /**
  * Presentation catalog for the Games hub — the user-facing display metadata
@@ -88,7 +98,7 @@ export const GAMES: GameEntry[] = [
   {
     gameType: 'red-card',
     i18nKey: 'redCard',
-    Icon: RectangleVertical,
+    Icon: CardIcon,
     category: 'party',
     available: true,
     localPlay: true,

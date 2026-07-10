@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  Keyboard,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 import {colors, screenPadding} from '../../theme';
 import {MeshBackground} from './MeshBackground';
@@ -37,15 +44,23 @@ export function Screen({
       ) : (
         <View style={[StyleSheet.absoluteFill, {backgroundColor: background}]} />
       )}
-      <SafeAreaView
-        edges={edges}
-        style={[
-          styles.safe,
-          padded && {paddingHorizontal: screenPadding},
-          style,
-        ]}>
-        {children}
-      </SafeAreaView>
+      {/* A tap on anything that isn't itself tappable dismisses the keyboard —
+          buttons and fields claim their own touches first, so this only
+          catches taps on dead space. */}
+      <TouchableWithoutFeedback
+        onPress={Keyboard.dismiss}
+        accessible={false}
+        importantForAccessibility="no">
+        <SafeAreaView
+          edges={edges}
+          style={[
+            styles.safe,
+            padded && {paddingHorizontal: screenPadding},
+            style,
+          ]}>
+          {children}
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </View>
   );
 }
