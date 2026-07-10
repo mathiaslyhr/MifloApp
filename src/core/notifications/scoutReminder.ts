@@ -1,11 +1,14 @@
 /**
- * Local daily reminder for the Scout puzzle — the only notification the app
- * sends. Scheduled fully on-device (no push infrastructure, nothing leaves the
- * phone): a repeating 09:00 nudge that today's player has dropped.
+ * Local daily reminder for the daily games (Scout + Top Bins). Scheduled
+ * fully on-device (no push infrastructure, nothing leaves the phone): a
+ * repeating 09:00 nudge that today's games have dropped.
  *
- * The opt-in prompt is offered ONCE, right after the user finishes their first
- * Scout puzzle (see ScoutScreen) — that's the moment the reminder is worth
- * something to them. A Settings toggle covers changed minds either way.
+ * The opt-in prompt is offered ONCE, right after the user finishes their
+ * first daily puzzle (Scout or Top Bins) — that's the moment the reminder is
+ * worth something to them. A Settings toggle covers changed minds either way.
+ *
+ * Module/key names still say "scout" — they predate Top Bins and the pref key
+ * is persisted on devices, so they stay (same policy as the imposter ids).
  */
 import notifee, {
   AuthorizationStatus,
@@ -16,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../i18n';
 import {dateKeyFor} from '../../games/scout/dailySeed';
 import {loadDailyProgress} from '../../games/scout/mysteryStorage';
+import {loadDailyProgress as loadTenballProgress} from '../../games/tenball/storage';
 
 const PREF_KEY = 'app.scoutReminder';
 const ASKED_KEY = 'app.scoutReminderAsked';
@@ -36,19 +40,28 @@ function nextReminderTimestamp(skipToday: boolean): number {
 /**
  * Re-anchor the repeating 09:00 trigger to the next morning that actually
  * needs a nudge — local notifications can't be conditional at delivery, so a
- * day the user already solved is skipped by moving the anchor to tomorrow.
- * Reactive like syncStreakSaver: call on launch, on puzzle solve, and when
- * the toggle flips. No-op while the reminder is off.
+ * day where EVERY daily game is already finished is skipped by moving the
+ * anchor to tomorrow. Reactive like the streak savers: call on launch, on
+ * puzzle finish, and when the toggle flips. No-op while the reminder is off.
  */
 export async function syncScoutReminder(): Promise<void> {
   try {
     if (!(await getScoutReminderPreference())) {
       return;
     }
-    const progress = await loadDailyProgress(dateKeyFor(new Date()));
-    const solvedToday =
-      progress?.secretId != null &&
-      progress.guessedIds.includes(progress.secretId);
+    const today = dateKeyFor(new Date());
+    const [scout, tenball] = await Promise.all([
+      loadDailyProgress(today),
+      loadTenballProgress(today),
+    ]);
+    const scoutDone =
+      scout?.secretId != null && scout.guessedIds.includes(scout.secretId);
+    const tenballDone =
+      tenball != null &&
+      (tenball.gaveUp ||
+        new Set(tenball.guesses.map(g => g.rank).filter(r => r !== undefined))
+          .size === 10);
+    const solvedToday = scoutDone && tenballDone;
     await notifee.createTriggerNotification(
       {
         id: NOTIFICATION_ID,

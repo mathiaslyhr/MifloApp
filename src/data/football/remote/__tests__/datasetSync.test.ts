@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../../../../core/i18n';
 import {currentRouteName} from '../../../../core/navigation/navigationRef';
 import {hashDateKey} from '../../../../games/scout/dailySeed';
+import {dailyListIdFor} from '../../../../games/tenball/dailyList';
+import {getListById} from '../../../../games/tenball/lists';
 import {getById} from '../../index';
 import {bundledSnapshot, hydrate, type ContentPack} from '../../store';
 import {
@@ -38,6 +40,16 @@ function testPack(): ContentPack {
     ids: pack.redCardQuestions!.ids,
     i18n: {
       en: Object.fromEntries(pack.redCardQuestions!.ids.map(id => [id, 'Q?'])),
+    },
+  };
+  pack.tenball = {
+    ...pack.tenball!,
+    i18n: {
+      en: {
+        lists: Object.fromEntries(
+          pack.tenball!.lists.map(l => [l.id, {title: 'List?'}]),
+        ),
+      },
     },
   };
   return pack;
@@ -119,6 +131,31 @@ describe('validateContentPack', () => {
     badQuestions.redCardQuestions.ids = [...badQuestions.redCardQuestions.ids, 'q999'];
     expect(validateContentPack(badQuestions)).not.toBeNull();
   });
+
+  it('accepts a pack published before Top Bins existed (no tenball section)', () => {
+    const pack = JSON.parse(serialize(testPack()).body);
+    delete pack.tenball;
+    expect(validateContentPack(pack)).toBeNull();
+  });
+
+  it('rejects a malformed tenball section', () => {
+    const base = () => JSON.parse(serialize(testPack()).body);
+
+    const shortList = base();
+    shortList.tenball.lists[0] = {
+      ...shortList.tenball.lists[0],
+      entries: shortList.tenball.lists[0].entries.slice(0, 9),
+    };
+    expect(validateContentPack(shortList)).not.toBeNull();
+
+    const badSchedule = base();
+    badSchedule.tenball.schedule['2099-01-01'] = 'ghost-list';
+    expect(validateContentPack(badSchedule)).not.toBeNull();
+
+    const noTitle = base();
+    noTitle.tenball.i18n = {en: {lists: {}}};
+    expect(validateContentPack(noTitle)).not.toBeNull();
+  });
 });
 
 describe('checkForUpdate', () => {
@@ -149,6 +186,39 @@ describe('checkForUpdate', () => {
     await checkForUpdate();
 
     expect(i18n.t('redCard.questions.q999')).toBe('Brand new OTA question?');
+  });
+
+  it('applies tenball lists, schedule, and title strings from a pack', async () => {
+    const pack = testPack();
+    const otaList = {
+      id: 'ota-test-list',
+      entries: Array.from({length: 10}, (_, i) => ({
+        rank: i + 1,
+        name: `OTA Player ${i + 1}`,
+        value: `${i + 1}`,
+        aliases: [`ota player ${i + 1}`],
+      })),
+    };
+    pack.tenball = {
+      lists: [...pack.tenball!.lists, otaList],
+      schedule: {...pack.tenball!.schedule, '2099-01-01': 'ota-test-list'},
+      i18n: {
+        en: {
+          lists: {
+            ...(pack.tenball!.i18n!.en as {lists: object}).lists,
+            'ota-test-list': {title: 'Brand new OTA list'},
+          },
+        },
+      },
+    };
+    const {body, manifest} = serialize(pack);
+    respondWith(manifest, body);
+
+    await checkForUpdate();
+
+    expect(getListById('ota-test-list')?.entries).toHaveLength(10);
+    expect(dailyListIdFor('2099-01-01')).toBe('ota-test-list');
+    expect(i18n.t('tenball.lists.ota-test-list.title')).toBe('Brand new OTA list');
   });
 
   it('sends the stored ETag and stops at a 304', async () => {

@@ -24,6 +24,7 @@ export type RootStackParamList = {
   HattrickLocal: undefined;
   RedCardLocal: undefined;
   Scout: undefined;
+  TopBins: undefined;
   Profile: undefined;
   Settings: undefined;
   HowToPlay: undefined;

@@ -41,6 +41,8 @@ export function Text({
 }: Props) {
   return (
     <RNText
+      // Cap Dynamic Type: past ~1.2x the glass layouts clip instead of helping.
+      maxFontSizeMultiplier={1.2}
       style={[
         typeScale[variant],
         {color: COLOR_MAP[color]},

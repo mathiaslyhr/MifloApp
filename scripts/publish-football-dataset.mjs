@@ -34,14 +34,18 @@ const fail = message => {
   process.exit(1);
 };
 
-// ---- 1. Regenerate the Scout schedule, then refuse uncommitted data --------
+// ---- 1. Regenerate the frozen schedules, then refuse uncommitted data ------
 console.log('Regenerating Scout schedule…');
 execSync('npm run --silent scout:schedule', {cwd: root, stdio: 'inherit'});
+console.log('Regenerating Top Bins schedule…');
+execSync('npm run --silent tenball:schedule', {cwd: root, stdio: 'inherit'});
 
 const WATCHED = [
   'src/data/football',
   'src/games/scout/schedule.generated.ts',
   'src/games/red-card/questions.ts',
+  'src/games/tenball/lists.ts',
+  'src/games/tenball/schedule.generated.ts',
   'src/core/i18n/en.json',
   'src/core/i18n/da.json',
 ];
@@ -61,7 +65,7 @@ if (!DRY_RUN) {
 // ---- 2. Validate via the data test suites ----------------------------------
 console.log('Running data integrity tests…');
 try {
-  execSync('npx jest src/data/football src/games/scout src/games/red-card --silent', {
+  execSync('npx jest src/data/football src/games/scout src/games/red-card src/games/tenball --silent', {
     cwd: root,
     stdio: 'inherit',
   });
@@ -76,6 +80,10 @@ const {DAILY_SECRETS, POOL_SIGNATURE} = require(
 );
 const {hashDateKey} = require(resolve(root, 'src/games/scout/dailySeed.ts'));
 const {QUESTION_IDS} = require(resolve(root, 'src/games/red-card/questions.ts'));
+const {BUNDLED_LISTS} = require(resolve(root, 'src/games/tenball/lists.ts'));
+const {TENBALL_SCHEDULE} = require(
+  resolve(root, 'src/games/tenball/schedule.generated.ts'),
+);
 const en = require(resolve(root, 'src/core/i18n/en.json'));
 const da = require(resolve(root, 'src/core/i18n/da.json'));
 
@@ -110,6 +118,29 @@ for (const id of QUESTION_IDS) {
     console.warn(`  warning: Red Card question '${id}' has no Danish text.`);
   }
 }
+const listIds = new Set(BUNDLED_LISTS.map(l => l.id));
+for (const list of BUNDLED_LISTS) {
+  for (const entry of list.entries) {
+    if (entry.footballerId && !playerIds.has(entry.footballerId)) {
+      fail(`tenball list ${list.id} references unknown footballer '${entry.footballerId}'.`);
+    }
+  }
+}
+for (const [dateKey, id] of Object.entries(TENBALL_SCHEDULE)) {
+  if (!listIds.has(id)) {
+    fail(`Top Bins schedule ${dateKey} references unknown list '${id}'.`);
+  }
+}
+const enLists = en.tenball?.lists ?? {};
+const daLists = da.tenball?.lists ?? {};
+for (const id of listIds) {
+  if (!enLists[id]?.title) {
+    fail(`Top Bins list '${id}' has no English title in en.json.`);
+  }
+  if (!daLists[id]?.title) {
+    console.warn(`  warning: Top Bins list '${id}' has no Danish title.`);
+  }
+}
 
 // ---- 5. Build the content-addressed pack ------------------------------------
 const sections = {
@@ -122,6 +153,11 @@ const sections = {
   redCardQuestions: {
     ids: [...QUESTION_IDS],
     i18n: {en: enQuestions, da: daQuestions},
+  },
+  tenball: {
+    lists: BUNDLED_LISTS,
+    schedule: TENBALL_SCHEDULE,
+    i18n: {en: {lists: enLists}, da: {lists: daLists}},
   },
 };
 const version = createHash('sha256')
@@ -143,7 +179,8 @@ console.log(
   `Pack ${version}: ${football.FOOTBALLERS.length} footballers, ` +
     `${football.CLUBS.length} clubs, ${football.MANAGERS.length} managers, ` +
     `${Object.keys(DAILY_SECRETS).length} scheduled days, ` +
-    `${QUESTION_IDS.length} Red Card questions (${(body.length / 1024).toFixed(0)} KB).`,
+    `${QUESTION_IDS.length} Red Card questions, ` +
+    `${BUNDLED_LISTS.length} Top Bins lists (${(body.length / 1024).toFixed(0)} KB).`,
 );
 
 if (DRY_RUN) {

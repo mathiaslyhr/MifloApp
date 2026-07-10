@@ -57,6 +57,8 @@ export function GamesScreen() {
     if (GAMES.find(g => g.gameType === gameType)?.single) {
       if (gameType === 'scout') {
         navigation.navigate('Scout');
+      } else if (gameType === 'tenball') {
+        navigation.navigate('TopBins');
       }
       return;
     }

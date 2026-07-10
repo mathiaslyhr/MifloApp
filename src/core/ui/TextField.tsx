@@ -13,6 +13,8 @@ type Props = {
   /** Fires on the keyboard return key (e.g. confirm the prompt). */
   onSubmitEditing?: () => void;
   returnKeyType?: 'done' | 'go' | 'next';
+  /** `'submit'` keeps the keyboard up after return (rapid-fire inputs). */
+  submitBehavior?: 'blurAndSubmit' | 'submit';
   /** Grow to a multi-line box (e.g. a feedback message). */
   multiline?: boolean;
   accessibilityLabel?: string;
@@ -34,6 +36,7 @@ export function TextField({
   autoCapitalize = 'sentences',
   onSubmitEditing,
   returnKeyType = 'done',
+  submitBehavior,
   multiline = false,
   accessibilityLabel,
   style,
@@ -54,6 +57,7 @@ export function TextField({
       onBlur={() => setFocused(false)}
       onSubmitEditing={onSubmitEditing}
       returnKeyType={returnKeyType}
+      submitBehavior={submitBehavior}
       accessibilityLabel={accessibilityLabel}
       style={[
         styles.field,

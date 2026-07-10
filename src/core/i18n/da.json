@@ -77,7 +77,7 @@
     "oneDeviceShort": "1 enhed",
     "hattrick": {
       "title": "Hattrick",
-      "tagline": "Fodboldquiz × tre på stribe",
+      "tagline": "Quiz × tre på stribe",
       "howToPlay": {
         "rules": [
           "På din tur nævner du en fodboldspiller, der passer til både rækken og kolonnen i en celle.",
@@ -89,7 +89,7 @@
     },
     "redCard": {
       "title": "Red Card",
-      "tagline": "Én af jer bluffer. Send ham af banen.",
+      "tagline": "Én af jer bluffer",
       "howToPlay": {
         "rules": [
           "Alle undtagen snyderen får den samme fodboldspiller.",
@@ -101,7 +101,7 @@
     },
     "scout": {
       "title": "Scout",
-      "tagline": "Gæt dagens spiller, hold din stime",
+      "tagline": "Gæt dagens spiller",
       "howToPlay": {
         "rules": [
           "Gæt dagens fodboldspiller. Du har uendelige gæt, men klar den på 10 eller færre for at beholde din stime.",
@@ -110,13 +110,24 @@
         ]
       }
     },
-    "tenball": {"title": "Top Bins", "tagline": "Find de 10 bedste svar"},
+    "tenball": {
+      "title": "Top Bins",
+      "tagline": "Find de 10 bedste svar",
+      "howToPlay": {
+        "rules": [
+          "Nævn alle spillere i dagens top 10. Skriv et navn og send.",
+          "Forkerte gæt tæller som forbiere, men du kan ikke tabe. Bliv ved, til hele tavlen er fundet.",
+          "Klar den med 10 eller færre forbiere for at beholde din stime.",
+          "En ny liste kommer hver dag, den samme for alle."
+        ]
+      }
+    },
     "heatmap": {"title": "Possession", "tagline": "Erobr banen felt for felt"},
-    "matchday": {"title": "Matchday", "tagline": "Kryds dit kort af — første fulde række vinder"},
-    "journeyman": {"title": "Journeyman", "tagline": "Følg klubberne, gæt spilleren"},
-    "teamsheet": {"title": "Teamsheet", "tagline": "Udfyld de manglende navne i berømte XI'er"},
-    "offside": {"title": "Offside", "tagline": "Fire spillere. Én hører ikke til."},
-    "cultHero": {"title": "Cult Hero", "tagline": "Det mest obskure rigtige svar vinder"}
+    "matchday": {"title": "Matchday", "tagline": "Første fulde række vinder"},
+    "journeyman": {"title": "Journeyman", "tagline": "Gæt spilleren på klubberne"},
+    "teamsheet": {"title": "Teamsheet", "tagline": "Udfyld berømte XI'er"},
+    "offside": {"title": "Offside", "tagline": "Find den der stikker ud"},
+    "cultHero": {"title": "Cult Hero", "tagline": "Det sjældneste svar vinder"}
   },
   "menu": {
     "title": "Menu",
@@ -293,14 +304,14 @@
   },
   "scout": {
     "reminderTitle": "Daglig påmindelse?",
-    "reminderPrompt": "Vil du have et prik, når morgendagens spiller lander?",
+    "reminderPrompt": "Vil du have et prik, når dagens nye spil lander?",
     "reminderYes": "Påmind mig",
     "reminderNo": "Ikke nu",
     "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "En ny spiller er landet i Scout.",
+    "reminderNotifBody": "Dagens spiller i Scout og Top Bins-listen er klar.",
     "streakNotifTitle": "Miflo",
-    "streakNotifBody": "Din stime på {{days}} dage er på spil.",
+    "streakNotifBody": "Din Scout-stime på {{days}} dage er på spil.",
     "title": "Scout",
     "back": "Tilbage",
     "loading": "Indlæser…",
@@ -346,6 +357,87 @@
       "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
     }
   },
+  "tenball": {
+    "title": "Top Bins",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Din Top Bins-stime på {{days}} dage er på spil.",
+    "back": "Tilbage",
+    "loading": "Indlæser…",
+    "instruction": "Nævn hele top 10",
+    "progress": "{{found}} af 10 fundet",
+    "missCount": "{{count}} forbier",
+    "missCount_plural": "{{count}} forbiere",
+    "inputPlaceholder": "Skriv en spiller",
+    "missToast": "Ikke i top 10",
+    "alreadyFound": "Allerede på tavlen",
+    "alreadyTried": "Det har du allerede prøvet",
+    "errorSave": "Kunne ikke gemme din fremgang.",
+    "giveUp": "Giv op",
+    "giveUpTitle": "Vis hele listen?",
+    "giveUpMessage": "Resten af listen bliver vist, og din stime nulstilles.",
+    "giveUpConfirm": "Vis listen",
+    "giveUpCancel": "Gæt videre",
+    "won": "Du fandt alle 10!",
+    "wonNoStreak": "Alle 10 fundet. 10 eller færre forbiere beholder din stime næste gang.",
+    "revealedTitle": "Hele listen",
+    "misses": "Forbiere",
+    "streakCurrent": "Nuværende stime",
+    "streakBest": "Bedste stime",
+    "streakWarning": "Klar den med 10 eller færre forbiere for at beholde din stime",
+    "streakGone": "Din stime er væk for i dag, men gæt videre",
+    "share": "Del resultat",
+    "shareCaption": "Spil Top Bins på Miflo",
+    "comeBackIn": "Kom tilbage om",
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Nævn alle spillere i dagens top 10. Skriv et navn og send. Forkerte gæt tæller kun som forbiere, du kan aldrig tabe.",
+      "streak": "Klar den med 10 eller færre forbiere for at beholde din stime. Giver du op, nulstilles den.",
+      "daily": "En ny liste kommer hver dag, den samme for alle."
+    },
+    "lists": {
+      "most-ballon-dor": {"title": "Flest Ballon d'Or-titler"},
+      "wc-top-scorers": {"title": "Flest VM-mål nogensinde"},
+      "wc-most-matches": {"title": "Flest VM-kampe nogensinde"},
+      "pl-top-scorers": {"title": "Flest mål i Premier League"},
+      "pl-most-appearances": {"title": "Flest kampe i Premier League"},
+      "pl-most-assists": {"title": "Flest assister i Premier League"},
+      "ucl-top-scorers": {"title": "Flest mål i Champions League"},
+      "record-transfers": {"title": "Dyreste transfers nogensinde"},
+      "intl-goals-men": {"title": "Flest A-landskampsmål (herrer)"},
+      "serie-a-top-scorers": {"title": "Flest mål i Serie A"},
+      "dk-most-caps": {"title": "Flest landskampe for Danmark"},
+      "dk-top-scorers": {"title": "Flest mål for Danmark"},
+      "last-10-ballon-dor": {"title": "De sidste 10 forskellige Ballon d'Or-vindere"},
+      "last-10-wc-golden-ball": {"title": "De sidste 10 forskellige vindere af VM's Golden Ball"},
+      "last-10-wc-golden-boot": {"title": "De sidste 10 VM-topscorere"},
+      "last-10-cl-winners": {"title": "De sidste 10 forskellige Champions League-vindere"},
+      "last-10-cl-managers": {"title": "De sidste 10 forskellige trænere, der vandt Champions League"},
+      "last-10-europa-winners": {"title": "De sidste 10 forskellige Europa League-vindere"},
+      "last-10-fa-cup-winners": {"title": "De sidste 10 forskellige FA Cup-vindere"},
+      "last-10-english-champions": {"title": "De sidste 10 forskellige engelske mestre"},
+      "last-10-pl-managers": {"title": "De sidste 10 forskellige trænere, der vandt Premier League"},
+      "last-10-serie-a-champions": {"title": "De sidste 10 forskellige Serie A-mestre"},
+      "last-10-pl-golden-boot": {"title": "De sidste 10 forskellige Premier League-topscorere"},
+      "last-10-pfa-poty": {"title": "De sidste 10 forskellige PFA Årets Spiller"},
+      "last-10-cl-final-cities": {"title": "De sidste 10 byer med Champions League-finalen"},
+      "last-10-superliga-champions": {"title": "De sidste 10 forskellige danske mestre"},
+      "last-10-african-poty": {"title": "De sidste 10 forskellige Årets Fodboldspiller i Afrika"},
+      "cl-titles-clubs": {"title": "Klubber med flest Champions League-titler"},
+      "english-titles-clubs": {"title": "Klubber med flest engelske mesterskaber"},
+      "serie-a-titles-clubs": {"title": "Klubber med flest italienske mesterskaber"},
+      "german-titles-clubs": {"title": "Klubber med flest tyske mesterskaber"},
+      "fa-cups-clubs": {"title": "Klubber med flest FA Cup-titler"},
+      "euro-titles-nations": {"title": "Lande med flest EM-titler"},
+      "pl-goals-season": {"title": "Flest mål i én Premier League-sæson"},
+      "wc-goals-tournament": {"title": "Flest mål ved én VM-slutrunde"},
+      "man-united-top-scorers": {"title": "Flest mål for Manchester United"},
+      "liverpool-top-scorers": {"title": "Flest mål for Liverpool"},
+      "real-madrid-top-scorers": {"title": "Flest mål for Real Madrid"},
+      "arsenal-top-scorers": {"title": "Flest mål for Arsenal"},
+      "man-united-appearances": {"title": "Flest kampe for Manchester United"},
+      "liverpool-appearances": {"title": "Flest kampe for Liverpool"}
+    }
+  },
   "legend": {
     "title": "Sådan fungerer gitteret",
     "intro": "Nævn en fodboldspiller, der passer til både rækken og kolonnen i en celle. Her er, hvad hver akse i dette gitter betyder.",
@@ -377,8 +469,8 @@
     "languageDa": "Dansk",
     "haptics": "Haptisk feedback",
     "hapticsDesc": "Vibrationer ved tryk og vigtige øjeblikke.",
-    "scoutReminder": "Scout-påmindelse",
-    "scoutReminderDesc": "Et dagligt prik, når den nye spiller lander.",
+    "scoutReminder": "Daglig påmindelse",
+    "scoutReminderDesc": "Et dagligt prik, når de nye spil lander.",
     "errorSave": "Kunne ikke gemme dine indstillinger."
   },
   "stats": {

@@ -5,10 +5,10 @@ import {
   Grid3x3,
   Hexagon,
   ListOrdered,
+  RectangleVertical,
   Route,
   Ticket,
   UserSearch,
-  VenetianMask,
   type LucideIcon,
 } from 'lucide-react-native';
 
@@ -88,7 +88,7 @@ export const GAMES: GameEntry[] = [
   {
     gameType: 'red-card',
     i18nKey: 'redCard',
-    Icon: VenetianMask,
+    Icon: RectangleVertical,
     category: 'party',
     available: true,
     localPlay: true,
@@ -98,7 +98,8 @@ export const GAMES: GameEntry[] = [
     i18nKey: 'tenball',
     Icon: ListOrdered,
     category: 'solo',
-    available: false,
+    available: true,
+    single: true,
   },
   {
     gameType: 'heatmap',

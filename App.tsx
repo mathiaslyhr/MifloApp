@@ -27,6 +27,7 @@ import {ensureSession} from './src/core/supabase/client';
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
 import {syncStreakSaver} from './src/games/scout/streakSaver';
+import {syncTenballStreakSaver} from './src/games/tenball/streakSaver';
 import {syncScoutReminder} from './src/core/notifications/scoutReminder';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
@@ -49,9 +50,10 @@ function App(): React.JSX.Element {
     // haptics-on are the synchronous defaults until these resolve).
     loadStoredLanguage().catch(() => {});
     loadHapticsPreference().catch(() => {});
-    // Schedule/cancel tonight's streak-saver nudge and re-anchor the 09:00
-    // reminder (skips mornings whose puzzle is already solved).
+    // Schedule/cancel tonight's streak-saver nudges and re-anchor the 09:00
+    // reminder (skips mornings where every daily game is already finished).
     syncStreakSaver();
+    syncTenballStreakSaver();
     syncScoutReminder().catch(() => {});
     // OTA game content: apply the cached pack, then poll for a newer one on
     // launch + every foreground. Fails silently — bundled data always works.

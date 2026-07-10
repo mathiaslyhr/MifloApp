@@ -1,0 +1,166 @@
+// Generate/extend the frozen Top Bins daily schedule (schedule.generated.ts).
+//
+// Same model as build-scout-schedule.mjs, over the curated list pool instead
+// of the footballer pool: an explicit dateKey -> list id map committed to the
+// repo (and shipped in the OTA pack), so every device agrees on the day's
+// list even while packs with new lists roll out. Rolling freeze: every date
+// up to today+FREEZE_DAYS is permanent; beyond that, dates reshuffle whenever
+// the list pool changes so new lists enter the rotation quickly. Manual run:
+//
+//   npm run tenball:schedule
+//
+// Assignment: seeded Fisher–Yates permutations of the list pool, walked one
+// list per day, skipping anything scheduled in the previous RECENT_WINDOW
+// days so a list never repeats back-to-back across any seam.
+import {existsSync, readFileSync, writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {root} from './_load-football.mjs';
+import {createRequire} from 'node:module';
+
+const require = createRequire(import.meta.url);
+const {hashDateKey, seededRng} = require(resolve(root, 'src/games/scout/dailySeed.ts'));
+const {shuffle} = require(resolve(root, 'src/data/football/repository.ts'));
+const {BUNDLED_LISTS} = require(resolve(root, 'src/games/tenball/lists.ts'));
+
+const OUT = resolve(root, 'src/games/tenball/schedule.generated.ts');
+const EPOCH_KEY = '2026-07-01';
+/** How far past today the schedule must reach (days). */
+const HORIZON_DAYS = 180;
+/** Days ahead of today that stay frozen even when the pool changes. */
+const FREEZE_DAYS = 60;
+
+const dateKeyFor = date => {
+  const y = date.getFullYear();
+  const m = `${date.getMonth() + 1}`.padStart(2, '0');
+  const d = `${date.getDate()}`.padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+const nextDateKey = key => {
+  const [y, m, d] = key.split('-').map(Number);
+  const date = new Date(y, m - 1, d, 12); // noon dodges DST edges
+  date.setDate(date.getDate() + 1);
+  return dateKeyFor(date);
+};
+
+// ---- Load current state ----------------------------------------------------
+const poolIds = BUNDLED_LISTS.map(l => l.id).sort();
+if (poolIds.length < 2) {
+  throw new Error('tenball schedule needs at least 2 lists');
+}
+/** A list cannot reappear within this many days (bounded by the pool size). */
+const RECENT_WINDOW = Math.min(poolIds.length - 1, 7);
+
+const validIds = new Set(poolIds);
+const existing = new Map();
+let previousSignature;
+if (existsSync(OUT)) {
+  const source = readFileSync(OUT, 'utf8');
+  previousSignature = Number(source.match(/POOL_SIGNATURE = (\d+)/)?.[1]);
+  for (const line of source.split('\n')) {
+    const m = line.match(/^  '(\d{4}-\d{2}-\d{2})': '([^']*)',$/);
+    if (m) {
+      existing.set(m[1], m[2]);
+    }
+  }
+}
+
+const horizon = new Date();
+horizon.setDate(horizon.getDate() + HORIZON_DAYS);
+const horizonKey = dateKeyFor(horizon);
+
+const allDates = [];
+for (let key = EPOCH_KEY; key <= horizonKey; key = nextDateKey(key)) {
+  allDates.push(key);
+}
+
+// ---- Deterministic id stream for new dates ---------------------------------
+const signature = hashDateKey(poolIds.join('|'));
+const poolChanged = previousSignature !== signature;
+const freezeEnd = new Date();
+freezeEnd.setDate(freezeEnd.getDate() + FREEZE_DAYS);
+const freezeEndKey = dateKeyFor(freezeEnd);
+const anchor = poolChanged
+  ? nextDateKey(freezeEndKey)
+  : allDates.find(k => !validIds.has(existing.get(k) ?? '')) ?? horizonKey;
+let cycle = 0;
+let perm = [];
+let permIdx = 0;
+function nextFreshId(recentSet) {
+  for (;;) {
+    while (permIdx < perm.length) {
+      const id = perm[permIdx++];
+      if (!recentSet.has(id)) {
+        return id;
+      }
+    }
+    perm = shuffle(poolIds, seededRng(hashDateKey(`tenball#${anchor}#${cycle++}`)));
+    permIdx = 0;
+  }
+}
+
+// ---- Assemble: keep frozen entries verbatim, regenerate the rest -----------
+const schedule = new Map();
+const recentQueue = [];
+const recentSet = new Set();
+const remember = id => {
+  recentQueue.push(id);
+  recentSet.add(id);
+  if (recentQueue.length > RECENT_WINDOW) {
+    recentSet.delete(recentQueue.shift());
+  }
+};
+
+let kept = 0;
+let added = 0;
+let replaced = 0;
+let reshuffled = 0;
+for (const key of allDates) {
+  const current = existing.get(key);
+  const frozen = key <= freezeEndKey || !poolChanged;
+  if (current !== undefined && validIds.has(current) && frozen) {
+    schedule.set(key, current);
+    remember(current);
+    kept++;
+    continue;
+  }
+  if (current === undefined) {
+    added++;
+  } else if (!validIds.has(current)) {
+    console.warn(`⚠ ${key}: '${current}' is no longer a bundled list — reassigning`);
+    replaced++;
+  } else {
+    reshuffled++;
+  }
+  const id = nextFreshId(recentSet);
+  schedule.set(key, id);
+  remember(id);
+}
+
+// ---- Write ------------------------------------------------------------------
+const lines = [...schedule.entries()].map(([k, id]) => `  '${k}': '${id}',`);
+writeFileSync(
+  OUT,
+  `/**
+ * AUTO-GENERATED by scripts/build-tenball-schedule.mjs — do not edit by hand.
+ *
+ * The frozen Top Bins daily schedule: dateKey -> curated list id. This file
+ * (and the OTA pack copy of it) is the source of truth for the day's list, so
+ * every user on any app version sees the same top 10. Rolling freeze: past
+ * days and the near future never change; days beyond the freeze reshuffle
+ * when the list pool changes so new lists enter the rotation quickly.
+ * Regenerated via \`npm run tenball:schedule\`.
+ */
+
+/** Fingerprint of the list pool at generation time. */
+export const POOL_SIGNATURE = ${signature};
+
+export const TENBALL_SCHEDULE: Record<string, string> = {
+${lines.join('\n')}
+};
+`,
+);
+console.log(
+  `✓ ${schedule.size} days (${EPOCH_KEY} → ${horizonKey}) — kept ${kept}, added ${added}, ` +
+    `reshuffled ${reshuffled}${replaced ? `, replaced ${replaced}` : ''}` +
+    `${poolChanged ? ` (pool changed; frozen through ${freezeEndKey})` : ' (pool unchanged)'}`,
+);

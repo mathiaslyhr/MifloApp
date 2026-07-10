@@ -11,6 +11,7 @@
     "data:publish": "node --env-file-if-exists=.env scripts/publish-football-dataset.mjs",
     "prepare": "git config core.hooksPath scripts/git-hooks",
     "scout:schedule": "node scripts/build-scout-schedule.mjs",
+    "tenball:schedule": "node scripts/build-tenball-schedule.mjs",
     "icons": "node scripts/generate-app-icon.mjs",
     "ios": "react-native run-ios",
     "ios:sim": "react-native run-ios --simulator \"iPhone 17 Pro\"",

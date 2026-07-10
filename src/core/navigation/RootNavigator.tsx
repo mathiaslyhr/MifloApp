@@ -14,6 +14,7 @@ import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
 import {RedCardLocalScreen} from '../../screens/RedCardLocalScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
+import {TopBinsScreen} from '../../screens/TopBinsScreen';
 import {ProfileScreen} from '../../screens/menu/ProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
@@ -53,10 +54,15 @@ export function RootNavigator() {
         component={RedCardLocalScreen}
         options={{gestureEnabled: false}}
       />
-      {/* Single-player daily puzzle; leave via the header back button. */}
+      {/* Single-player daily puzzles; leave via the header back button. */}
       <Stack.Screen
         name="Scout"
         component={ScoutScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="TopBins"
+        component={TopBinsScreen}
         options={{gestureEnabled: false}}
       />
       <Stack.Screen name="Profile" component={ProfileScreen} />

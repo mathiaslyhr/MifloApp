@@ -75,6 +75,16 @@ function applyPack(pack: ContentPack, version: string): void {
       }
     }
   }
+  const tenballStrings = pack.tenball?.i18n;
+  if (tenballStrings) {
+    for (const lang of ['en', 'da'] as const) {
+      const block = tenballStrings[lang];
+      if (block) {
+        // `block` is the `{lists: {...}}` subtree, merged under `tenball`.
+        i18n.addResourceBundle(lang, 'translation', {tenball: block}, true, true);
+      }
+    }
+  }
   appliedVersion = version;
   pending = null;
 }
@@ -182,6 +192,53 @@ export function validateContentPack(payload: unknown): string | null {
   for (const id of questions.ids) {
     if (typeof english?.[id] !== 'string') {
       return `Red Card question '${id}' has no English text`;
+    }
+  }
+
+  // Optional section: packs published before Top Bins existed must stay valid
+  // on this binary (rejecting them would throw away ALL cached OTA data).
+  const tenball = p.tenball;
+  if (tenball !== undefined) {
+    if (!Array.isArray(tenball.lists) || tenball.lists.length === 0) {
+      return 'tenball lists missing';
+    }
+    const listIds = new Set<string>();
+    for (const list of tenball.lists) {
+      if (
+        typeof list?.id !== 'string' ||
+        !Array.isArray(list.entries) ||
+        list.entries.length !== 10
+      ) {
+        return `malformed tenball list '${String(list?.id)}'`;
+      }
+      for (const entry of list.entries) {
+        if (
+          typeof entry?.rank !== 'number' ||
+          typeof entry.name !== 'string' ||
+          typeof entry.value !== 'string' ||
+          !Array.isArray(entry.aliases) ||
+          entry.aliases.length === 0
+        ) {
+          return `malformed entry in tenball list '${list.id}'`;
+        }
+      }
+      listIds.add(list.id);
+    }
+    if (typeof tenball.schedule !== 'object' || tenball.schedule === null) {
+      return 'tenball schedule missing';
+    }
+    for (const [dateKey, id] of Object.entries(tenball.schedule)) {
+      if (!listIds.has(id)) {
+        return `tenball schedule ${dateKey} references unknown list '${id}'`;
+      }
+    }
+    const enLists = (
+      tenball.i18n?.en as {lists?: Record<string, {title?: unknown}>} | undefined
+    )?.lists;
+    for (const id of listIds) {
+      if (typeof enLists?.[id]?.title !== 'string') {
+        return `tenball list '${id}' has no English title`;
+      }
     }
   }
 

@@ -77,7 +77,7 @@
     "oneDeviceShort": "1 device",
     "hattrick": {
       "title": "Hattrick",
-      "tagline": "Football trivia × three in a row",
+      "tagline": "Trivia × three in a row",
       "howToPlay": {
         "rules": [
           "On your turn, name a footballer who fits both the row and the column of a cell.",
@@ -89,7 +89,7 @@
     },
     "redCard": {
       "title": "Red Card",
-      "tagline": "One of you is faking it. Send them off.",
+      "tagline": "One of you is faking it",
       "howToPlay": {
         "rules": [
           "Everyone but the faker is given the same footballer.",
@@ -101,7 +101,7 @@
     },
     "scout": {
       "title": "Scout",
-      "tagline": "Guess today's player, keep your streak",
+      "tagline": "Guess today's player",
       "howToPlay": {
         "rules": [
           "Guess the daily footballer. Guesses are unlimited, but solve it in 10 or fewer to keep your streak.",
@@ -110,13 +110,24 @@
         ]
       }
     },
-    "tenball": {"title": "Top Bins", "tagline": "Find the top 10 answers"},
-    "heatmap": {"title": "Possession", "tagline": "Claim the pitch, square by square"},
-    "matchday": {"title": "Matchday", "tagline": "Tick off your card — first full row wins"},
-    "journeyman": {"title": "Journeyman", "tagline": "Trace the clubs, name the player"},
-    "teamsheet": {"title": "Teamsheet", "tagline": "Fill in the famous lineup's missing names"},
-    "offside": {"title": "Offside", "tagline": "Four players. One doesn't belong."},
-    "cultHero": {"title": "Cult Hero", "tagline": "The most obscure right answer wins"}
+    "tenball": {
+      "title": "Top Bins",
+      "tagline": "Find the top 10 answers",
+      "howToPlay": {
+        "rules": [
+          "Name every player in the day's top 10 list. Type a name and submit.",
+          "Wrong guesses count as misses, but you can't lose. Keep going until the board is full.",
+          "Finish with 10 or fewer misses to keep your streak.",
+          "A new list drops every day, the same for everyone."
+        ]
+      }
+    },
+    "heatmap": {"title": "Possession", "tagline": "Claim the pitch"},
+    "matchday": {"title": "Matchday", "tagline": "First full row wins"},
+    "journeyman": {"title": "Journeyman", "tagline": "Guess who from the clubs"},
+    "teamsheet": {"title": "Teamsheet", "tagline": "Complete famous lineups"},
+    "offside": {"title": "Offside", "tagline": "Spot the odd one out"},
+    "cultHero": {"title": "Cult Hero", "tagline": "The rarest answer wins"}
   },
   "menu": {
     "title": "Menu",
@@ -293,14 +304,14 @@
   },
   "scout": {
     "reminderTitle": "Daily reminder?",
-    "reminderPrompt": "Want a nudge when tomorrow's player drops?",
+    "reminderPrompt": "Want a nudge when the new daily games drop?",
     "reminderYes": "Remind me",
     "reminderNo": "Not now",
     "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "A new player in Scout has dropped.",
+    "reminderNotifBody": "Today's Scout player and Top Bins list are ready.",
     "streakNotifTitle": "Miflo",
-    "streakNotifBody": "Your {{days}}-day streak is on the line.",
+    "streakNotifBody": "Your {{days}}-day Scout streak is on the line.",
     "title": "Scout",
     "back": "Back",
     "loading": "Loading…",
@@ -346,6 +357,87 @@
       "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     }
   },
+  "tenball": {
+    "title": "Top Bins",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Your {{days}}-day Top Bins streak is on the line.",
+    "back": "Back",
+    "loading": "Loading…",
+    "instruction": "Name the top 10",
+    "progress": "{{found}} of 10 found",
+    "missCount": "{{count}} miss",
+    "missCount_plural": "{{count}} misses",
+    "inputPlaceholder": "Type a player",
+    "missToast": "Not in the top 10",
+    "alreadyFound": "Already on the board",
+    "alreadyTried": "You already tried that",
+    "errorSave": "Couldn't save your progress.",
+    "giveUp": "Give up",
+    "giveUpTitle": "Reveal the board?",
+    "giveUpMessage": "The rest of the list will be shown and your streak resets.",
+    "giveUpConfirm": "Reveal",
+    "giveUpCancel": "Keep guessing",
+    "won": "You found all 10!",
+    "wonNoStreak": "All 10 found. 10 or fewer misses keeps your streak next time.",
+    "revealedTitle": "The full list",
+    "misses": "Misses",
+    "streakCurrent": "Current streak",
+    "streakBest": "Best streak",
+    "streakWarning": "Finish with 10 or fewer misses to keep your streak",
+    "streakGone": "Your streak is gone for today, but keep going",
+    "share": "Share result",
+    "shareCaption": "Play Top Bins on Miflo",
+    "comeBackIn": "Come back in",
+    "help": {
+      "title": "How to play",
+      "rule": "Name every player in the day's top 10. Type a name and hit return. Wrong guesses just count as misses, you can never lose the board.",
+      "streak": "Finish with 10 or fewer misses to keep your streak. Giving up resets it.",
+      "daily": "A new list drops every day, the same for everyone."
+    },
+    "lists": {
+      "most-ballon-dor": {"title": "Most Ballon d'Or wins"},
+      "wc-top-scorers": {"title": "World Cup all-time top scorers"},
+      "wc-most-matches": {"title": "Most World Cup matches played"},
+      "pl-top-scorers": {"title": "Premier League all-time top scorers"},
+      "pl-most-appearances": {"title": "Most Premier League appearances"},
+      "pl-most-assists": {"title": "Most Premier League assists"},
+      "ucl-top-scorers": {"title": "Champions League all-time top scorers"},
+      "record-transfers": {"title": "Most expensive transfers ever"},
+      "intl-goals-men": {"title": "Most international goals (men)"},
+      "serie-a-top-scorers": {"title": "Serie A all-time top scorers"},
+      "dk-most-caps": {"title": "Most caps for Denmark"},
+      "dk-top-scorers": {"title": "Denmark's all-time top scorers"},
+      "last-10-ballon-dor": {"title": "The last 10 different Ballon d'Or winners"},
+      "last-10-wc-golden-ball": {"title": "The last 10 different World Cup Golden Ball winners"},
+      "last-10-wc-golden-boot": {"title": "The last 10 World Cup top scorers"},
+      "last-10-cl-winners": {"title": "The last 10 different Champions League winners"},
+      "last-10-cl-managers": {"title": "The last 10 different Champions League winning managers"},
+      "last-10-europa-winners": {"title": "The last 10 different Europa League winners"},
+      "last-10-fa-cup-winners": {"title": "The last 10 different FA Cup winners"},
+      "last-10-english-champions": {"title": "The last 10 different English champions"},
+      "last-10-pl-managers": {"title": "The last 10 different Premier League winning managers"},
+      "last-10-serie-a-champions": {"title": "The last 10 different Serie A champions"},
+      "last-10-pl-golden-boot": {"title": "The last 10 different Premier League top scorers"},
+      "last-10-pfa-poty": {"title": "The last 10 different PFA Players of the Year"},
+      "last-10-cl-final-cities": {"title": "The last 10 Champions League final cities"},
+      "last-10-superliga-champions": {"title": "The last 10 different Danish champions"},
+      "last-10-african-poty": {"title": "The last 10 different African Footballers of the Year"},
+      "cl-titles-clubs": {"title": "Clubs with most Champions League titles"},
+      "english-titles-clubs": {"title": "Clubs with most English league titles"},
+      "serie-a-titles-clubs": {"title": "Clubs with most Italian league titles"},
+      "german-titles-clubs": {"title": "Clubs with most German league titles"},
+      "fa-cups-clubs": {"title": "Clubs with most FA Cups"},
+      "euro-titles-nations": {"title": "Countries with most European Championships"},
+      "pl-goals-season": {"title": "Most goals in one Premier League season"},
+      "wc-goals-tournament": {"title": "Most goals at a single World Cup"},
+      "man-united-top-scorers": {"title": "Manchester United's all-time top scorers"},
+      "liverpool-top-scorers": {"title": "Liverpool's all-time top scorers"},
+      "real-madrid-top-scorers": {"title": "Real Madrid's all-time top scorers"},
+      "arsenal-top-scorers": {"title": "Arsenal's all-time top scorers"},
+      "man-united-appearances": {"title": "Most appearances for Manchester United"},
+      "liverpool-appearances": {"title": "Most appearances for Liverpool"}
+    }
+  },
   "legend": {
     "title": "How the grid works",
     "intro": "Name a footballer who matches both the row and the column of a cell. Here's what each axis on this grid means.",
@@ -377,8 +469,8 @@
     "languageDa": "Dansk",
     "haptics": "Haptic feedback",
     "hapticsDesc": "Vibrations on taps and key moments.",
-    "scoutReminder": "Scout reminder",
-    "scoutReminderDesc": "A daily nudge when the new player drops.",
+    "scoutReminder": "Daily reminder",
+    "scoutReminderDesc": "A daily nudge when the new games drop.",
     "errorSave": "Couldn't save your settings."
   },
   "stats": {

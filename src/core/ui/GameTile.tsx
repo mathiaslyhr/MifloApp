@@ -241,7 +241,11 @@ export function GameTile({
           {title}
         </Text>
         {tagline ? (
-          <Text variant="secondary" color="secondary" numberOfLines={1}>
+          <Text
+            variant="secondary"
+            color="secondary"
+            numberOfLines={1}
+            style={styles.taglineText}>
             {tagline}
           </Text>
         ) : null}
@@ -374,5 +378,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.card - 4,
   },
   body: {flex: 1, gap: 2},
-  titleText: {flexShrink: 1},
+  // One step under the section/secondary scale so full taglines fit one line.
+  titleText: {flexShrink: 1, fontSize: 16, lineHeight: 20},
+  taglineText: {fontSize: 13, lineHeight: 17},
 });

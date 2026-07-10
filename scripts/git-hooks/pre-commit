@@ -8,3 +8,10 @@ if git diff --cached --name-only | grep -qE 'src/data/football/(footballers|club
   npm run --silent scout:schedule || exit 1
   git add src/games/scout/schedule.generated.ts
 fi
+# Same for Top Bins: a commit touching the curated lists extends/reshuffles
+# the frozen list schedule so the repo always records what a publish ships.
+if git diff --cached --name-only | grep -qE 'src/games/tenball/lists\.ts'; then
+  echo 'Top Bins lists changed — updating Top Bins schedule'
+  npm run --silent tenball:schedule || exit 1
+  git add src/games/tenball/schedule.generated.ts
+fi

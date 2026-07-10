@@ -1,8 +1,8 @@
 /**
- * The 09:00 Scout reminder must skip a day the user has already solved —
- * local notifications can't be conditional at delivery, so syncScoutReminder
- * re-anchors the repeating trigger reactively (launch, solve, toggle), the
- * same model as the streak saver.
+ * The 09:00 daily reminder must skip a day where EVERY daily game (Scout +
+ * Top Bins) is already finished — local notifications can't be conditional at
+ * delivery, so syncScoutReminder re-anchors the repeating trigger reactively
+ * (launch, finish, toggle), the same model as the streak savers.
  */
 import notifee from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -41,12 +41,51 @@ test('before 09:00 on an unsolved day, anchors to today 09:00', async () => {
   expect(scheduledTimestamp()).toBe(new Date(2026, 6, 10, 9, 0).getTime());
 });
 
-test('before 09:00 on a day already solved, skips to tomorrow 09:00', async () => {
+test('before 09:00 with only Scout solved, still anchors to today (Top Bins is waiting)', async () => {
   jest.setSystemTime(new Date(2026, 6, 10, 8, 0));
   await AsyncStorage.setItem('app.scoutReminder', 'on');
   await AsyncStorage.setItem(
     'mystery.progress',
     JSON.stringify({dateKey: '2026-07-10', secretId: 'X', guessedIds: ['X']}),
+  );
+
+  await syncScoutReminder();
+
+  expect(scheduledTimestamp()).toBe(new Date(2026, 6, 10, 9, 0).getTime());
+});
+
+test('before 09:00 with every daily game finished, skips to tomorrow 09:00', async () => {
+  jest.setSystemTime(new Date(2026, 6, 10, 8, 0));
+  await AsyncStorage.setItem('app.scoutReminder', 'on');
+  await AsyncStorage.setItem(
+    'mystery.progress',
+    JSON.stringify({dateKey: '2026-07-10', secretId: 'X', guessedIds: ['X']}),
+  );
+  await AsyncStorage.setItem(
+    'tenball.progress',
+    JSON.stringify({
+      dateKey: '2026-07-10',
+      listId: 'l',
+      guesses: Array.from({length: 10}, (_, i) => ({text: `p${i}`, rank: i + 1})),
+      gaveUp: false,
+    }),
+  );
+
+  await syncScoutReminder();
+
+  expect(scheduledTimestamp()).toBe(new Date(2026, 6, 11, 9, 0).getTime());
+});
+
+test('a given-up Top Bins board counts as finished for the skip', async () => {
+  jest.setSystemTime(new Date(2026, 6, 10, 8, 0));
+  await AsyncStorage.setItem('app.scoutReminder', 'on');
+  await AsyncStorage.setItem(
+    'mystery.progress',
+    JSON.stringify({dateKey: '2026-07-10', secretId: 'X', guessedIds: ['X']}),
+  );
+  await AsyncStorage.setItem(
+    'tenball.progress',
+    JSON.stringify({dateKey: '2026-07-10', listId: 'l', guesses: [], gaveUp: true}),
   );
 
   await syncScoutReminder();
