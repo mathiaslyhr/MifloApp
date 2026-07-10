@@ -49,6 +49,7 @@ import {flagImage} from '../games/hattrick/criterionIcon';
 import {fold, searchPlayers} from '../games/hattrick/playerSearch';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyLineupFor} from '../games/teamsheet/dailySeed';
+import {formationRows, positionLabels} from '../games/teamsheet/positions';
 import {
   applyGuess,
   createInitialState,
@@ -74,16 +75,6 @@ import {TeamsheetHelpModal} from '../games/teamsheet/TeamsheetHelpModal';
 import type {StreakState, TeamsheetState} from '../games/teamsheet/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Teamsheet'>;
-
-/** "4-2-3-1" -> [1, 4, 2, 3, 1]: the GK row plus one row per formation line.
- * Row order matches the players array (GK first, defence next). */
-function formationRows(formation: string): number[] {
-  const rows = formation
-    .split('-')
-    .map(n => parseInt(n, 10))
-    .filter(n => Number.isFinite(n) && n > 0);
-  return [1, ...rows];
-}
 
 /** Short name for a token: the surname, initialled when two players share it. */
 function tokenName(lineup: FamousLineup, player: LineupPlayer): string {
@@ -154,7 +145,12 @@ export function TeamsheetScreen({navigation}: Props) {
         loadDailyProgress(dateKey),
         loadStreak(),
       ]);
-      const pinned = progress ? getLineupById(progress.lineupId) : undefined;
+      // The pin protects an in-progress game from a mid-day OTA swap; a day
+      // that was merely opened (no guesses, no give-up) re-draws freely so a
+      // fresher schedule can take over.
+      const played =
+        progress != null && (progress.guesses.length > 0 || progress.gaveUp);
+      const pinned = played ? getLineupById(progress!.lineupId) : undefined;
       const lineup = pinned ?? dailyLineupFor(dateKey);
       let s = createInitialState(dateKey, lineup.id);
       if (progress) {
@@ -349,6 +345,7 @@ export function TeamsheetScreen({navigation}: Props) {
     : lineup.team;
 
   const rows = formationRows(lineup.formation);
+  const labels = positionLabels(lineup.formation);
   let nextSlot = 0;
 
   return (
@@ -403,6 +400,8 @@ export function TeamsheetScreen({navigation}: Props) {
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="none"
             showsVerticalScrollIndicator={false}>
+            {/* Tapping the pitch background clears the targeted spot. */}
+            <Pressable onPress={() => setSelected(null)} style={styles.pitch}>
             {rows.map((count, rowIdx) => {
               const start = nextSlot;
               nextSlot += count;
@@ -415,6 +414,7 @@ export function TeamsheetScreen({navigation}: Props) {
                         key={slot}
                         lineup={lineup}
                         player={player}
+                        label={labels[slot]}
                         earned={found.has(slot)}
                         shown={found.has(slot) || finished}
                         selectedToken={selected === slot}
@@ -425,6 +425,7 @@ export function TeamsheetScreen({navigation}: Props) {
                 </View>
               );
             })}
+            </Pressable>
           </ScrollView>
 
           {finished ? (
@@ -526,6 +527,7 @@ export function TeamsheetScreen({navigation}: Props) {
 function PlayerToken({
   lineup,
   player,
+  label,
   earned,
   shown,
   selectedToken,
@@ -533,6 +535,7 @@ function PlayerToken({
 }: {
   lineup: FamousLineup;
   player: LineupPlayer;
+  label: string;
   earned: boolean;
   shown: boolean;
   selectedToken: boolean;
@@ -545,8 +548,11 @@ function PlayerToken({
       onPress={onPress}
       disabled={shown}
       accessibilityRole="button"
-      accessibilityLabel={`${player.shirt}`}
+      accessibilityLabel={`${label} ${player.shirt}`}
       style={styles.token}>
+      <Text style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
+        {label}
+      </Text>
       <View
         style={[
           styles.circle,
@@ -574,7 +580,7 @@ function PlayerToken({
         ) : null}
         {assists > 0 ? (
           <View style={[styles.badge, styles.badgeBottomRight, assists > 1 && styles.badgeWide]}>
-            <Footprints size={9} color={colors.muted} strokeWidth={2.25} />
+            <Footprints size={9} color={colors.ink} strokeWidth={2.25} />
             {assists > 1 ? <Text style={styles.badgeCount}>{assists}</Text> : null}
           </View>
         ) : null}
@@ -664,7 +670,7 @@ const styles = StyleSheet.create({
   body: {flex: 1},
   matchTitle: {marginBottom: spacing.xs},
   board: {flex: 1, marginTop: spacing.md},
-  boardContent: {gap: spacing.md, paddingBottom: spacing.sm},
+  boardContent: {paddingBottom: spacing.sm},
   // One formation line: GK alone up top, then defence down to attack. Fixed
   // token sizes and centred rows keep 1/2/3/4/5-man lines visually identical.
   formationRow: {
@@ -672,7 +678,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
+  pitch: {gap: spacing.md},
   token: {width: TOKEN_WIDTH, alignItems: 'center', gap: 3},
+  posLabel: {
+    fontFamily: fonts.medium,
+    fontSize: 9,
+    lineHeight: 11,
+    letterSpacing: 0.5,
+    color: colors.textTertiary,
+  },
+  posLabelSelected: {color: colors.primary},
   // The player circle: shirt number where the face would be. Glass while
   // hidden, brand purple once earned, primary ring while targeted.
   circle: {

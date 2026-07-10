@@ -95,22 +95,6 @@ export const GAMES: GameEntry[] = [
     daily: true,
   },
   {
-    gameType: 'hattrick',
-    i18nKey: 'hattrick',
-    Icon: Grid3x3,
-    category: 'duel',
-    available: true,
-    localPlay: true,
-  },
-  {
-    gameType: 'red-card',
-    i18nKey: 'redCard',
-    Icon: CardIcon,
-    category: 'party',
-    available: true,
-    localPlay: true,
-  },
-  {
     gameType: 'tenball',
     i18nKey: 'tenball',
     Icon: ListOrdered,
@@ -129,6 +113,23 @@ export const GAMES: GameEntry[] = [
     daily: true,
   },
   {
+    gameType: 'teamsheet',
+    i18nKey: 'teamsheet',
+    Icon: ClipboardList,
+    category: 'solo',
+    available: true,
+    single: true,
+    daily: true,
+  },
+  {
+    gameType: 'hattrick',
+    i18nKey: 'hattrick',
+    Icon: Grid3x3,
+    category: 'duel',
+    available: true,
+    localPlay: true,
+  },
+  {
     gameType: 'offside',
     i18nKey: 'offside',
     Icon: Flag,
@@ -143,6 +144,14 @@ export const GAMES: GameEntry[] = [
     available: true,
   },
   {
+    gameType: 'red-card',
+    i18nKey: 'redCard',
+    Icon: CardIcon,
+    category: 'party',
+    available: true,
+    localPlay: true,
+  },
+  {
     gameType: 'heatmap',
     i18nKey: 'heatmap',
     Icon: Hexagon,
@@ -155,15 +164,6 @@ export const GAMES: GameEntry[] = [
     Icon: Ticket,
     category: 'party',
     available: false,
-  },
-  {
-    gameType: 'teamsheet',
-    i18nKey: 'teamsheet',
-    Icon: ClipboardList,
-    category: 'solo',
-    available: true,
-    single: true,
-    daily: true,
   },
 ];
 
