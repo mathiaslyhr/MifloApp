@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.glassRim,
   },
-  rankBadgeEarned: {backgroundColor: colors.ink, borderColor: colors.ink},
+  rankBadgeEarned: {backgroundColor: colors.primary, borderColor: colors.primary},
   // Explicit tight lineHeight: without it the themed body lineHeight (24)
   // pushes the digit off-centre inside the 26pt circle.
   rankText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: colors.muted},
