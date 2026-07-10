@@ -8460,6 +8460,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Kluivert, Justin',
+    name: 'Justin Kluivert',
+    nationality: ['Netherlands'],
+    positions: ['FW'],
+    born: '1999-05-05',
+    clubs: [
+      {clubId: 'ajax', from: 2016, to: 2018},
+      {clubId: 'roma', from: 2018, to: 2023},
+      {clubId: 'rb-leipzig', from: 2020, to: 2021, loan: true},
+      {clubId: 'nice', from: 2021, to: 2022, loan: true},
+      {clubId: 'valencia', from: 2022, to: 2023, loan: true},
+      {clubId: 'bournemouth', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Kluivert, Patrick',
     name: 'Patrick Kluivert',
     nationality: ['Netherlands'],
