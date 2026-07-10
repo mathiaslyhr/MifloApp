@@ -166,7 +166,7 @@
       "tagline": "Det sjældneste svar vinder",
       "howToPlay": {
         "rules": [
-          "Hver runde viser én opgave, fx at nævne en spiller der har spillet for en bestemt klub.",
+          "Hver runde stiller ét spørgsmål, fx at nævne en spiller der har spillet for en bestemt klub.",
           "Alle vælger i hemmelighed en rigtig fodboldspiller på samme tid.",
           "Sjældne svar giver mange point, kendte svar giver få, og et forkert svar giver ingenting.",
           "Flest point efter alle runder vinder."
@@ -415,11 +415,11 @@
     "loading": "Indlæser…",
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Hver runde viser én opgave, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
+      "rule": "Hver runde stiller ét spørgsmål, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
     },
     "round": "Runde {{round}} af {{total}}",
     "roundsPicker": {
-      "label": "Opgaver i spillet"
+      "label": "Spørgsmål i spillet"
     },
     "prompt": {
       "club": "Nævn en spiller der har spillet for {{club}}",
@@ -440,18 +440,24 @@
       "pick": "Vælg en fodboldspiller",
       "picked": "Dit svar",
       "change": "Skift svar",
-      "waiting": "{{count}} af {{total}} har svaret"
+      "waitingOne": "Venter på, at 1 spiller svarer…",
+      "waitingMany": "Venter på, at {{count}} spillere svarer…"
     },
     "results": {
       "pill": "Svarene",
+      "answerBy": "Svar fra {{name}}",
       "progress": "{{index}} af {{total}}",
       "next": "Næste svar",
-      "nextRound": "Næste opgave",
-      "toFinal": "Se stillingen",
+      "nextRound": "Næste spørgsmål",
+      "toLeaderboard": "Vis stillingen",
+      "toFinal": "Se slutstillingen",
       "hostAdvances": "Værten afslører svarene",
       "invalid": "Forkert svar",
       "points": "+{{score}}",
       "rarity": "Sjældnere end {{score}}% af de mulige svar"
+    },
+    "leaderboard": {
+      "title": "Stilling"
     },
     "final": {
       "title": "Slutfløjt",

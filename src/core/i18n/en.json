@@ -166,7 +166,7 @@
       "tagline": "The rarest answer wins",
       "howToPlay": {
         "rules": [
-          "Every round shows one prompt, like naming a player who played for a certain club.",
+          "Every round asks one question, like naming a player who played for a certain club.",
           "Everyone secretly picks a real footballer at the same time.",
           "Rare picks score big, famous picks score little, and a wrong answer scores nothing.",
           "Highest total after all rounds wins."
@@ -415,11 +415,11 @@
     "loading": "Loading…",
     "help": {
       "title": "How to play",
-      "rule": "Every round shows one prompt and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
+      "rule": "Every round asks one question and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
     },
     "round": "Round {{round}} of {{total}}",
     "roundsPicker": {
-      "label": "Prompts this game"
+      "label": "Questions this game"
     },
     "prompt": {
       "club": "Name a player who has played for {{club}}",
@@ -440,18 +440,24 @@
       "pick": "Pick a footballer",
       "picked": "Your answer",
       "change": "Change answer",
-      "waiting": "{{count}} of {{total}} have answered"
+      "waitingOne": "Waiting for 1 player to answer…",
+      "waitingMany": "Waiting for {{count}} players to answer…"
     },
     "results": {
       "pill": "The answers",
+      "answerBy": "{{name}}'s answer",
       "progress": "{{index}} of {{total}}",
       "next": "Next answer",
-      "nextRound": "Next prompt",
+      "nextRound": "Next question",
+      "toLeaderboard": "Show the leaderboard",
       "toFinal": "See the standings",
       "hostAdvances": "The host reveals the answers",
       "invalid": "Wrong answer",
       "points": "+{{score}}",
       "rarity": "Rarer than {{score}}% of the possible answers"
+    },
+    "leaderboard": {
+      "title": "Leaderboard"
     },
     "final": {
       "title": "Full time",
