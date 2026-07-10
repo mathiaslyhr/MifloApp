@@ -48,6 +48,12 @@ export type LineupPlayer = {
   /** Was substituted off during the match (swap-arrows badge). Optional and
    * curated best-effort; absent just means no badge. */
   subbedOff?: boolean;
+  /** Booked in this match (yellow-card badge). Same best-effort policy as
+   * `subbedOff`: absence means "no card or unknown", never a fact. */
+  yellowCard?: boolean;
+  /** Sent off in this match (red-card badge). A second yellow is recorded as
+   * `redCard` only — the dismissal is the fact worth showing. */
+  redCard?: boolean;
 };
 
 /**

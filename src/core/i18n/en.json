@@ -481,6 +481,7 @@
     "reminderNotifBody": "Today's daily games are ready.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Your {{days}}-day Scout streak is on the line.",
+    "streaksNotifBody": "You have {{count}} streaks on the line.",
     "title": "Scout",
     "back": "Back",
     "loading": "Loading…",
@@ -605,7 +606,7 @@
     "help": {
       "title": "How to play",
       "rule": "Fill in the day's famous starting XI. Type a name and hit return, or tap a shirt first to aim at that exact spot. Aiming at the wrong spot counts as a miss.",
-      "clues": "Every shirt shows its number. A ball means they scored in the match, a boot means an assist, C is the captain, and the swap arrows mean they were substituted.",
+      "clues": "Every shirt shows its number. A ball means they scored in the match, a boot means an assist, C is the captain, the swap arrows mean they were substituted, and a yellow or red card means they were booked or sent off.",
       "streak": "Wrong guesses count as misses, but you can't lose. Finish with 5 or fewer to keep your streak.",
       "daily": "A new team sheet drops every day, the same for everyone."
     },

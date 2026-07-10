@@ -26,11 +26,8 @@ import {ensureSession} from './src/core/supabase/client';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
-import {syncJourneymanStreakSaver} from './src/games/journeyman/streakSaver';
-import {syncStreakSaver} from './src/games/scout/streakSaver';
-import {syncTeamsheetStreakSaver} from './src/games/teamsheet/streakSaver';
-import {syncTenballStreakSaver} from './src/games/tenball/streakSaver';
 import {syncScoutReminder} from './src/core/notifications/scoutReminder';
+import {syncStreakSaver} from './src/core/notifications/streakSaver';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -52,12 +49,9 @@ function App(): React.JSX.Element {
     // haptics-on are the synchronous defaults until these resolve).
     loadStoredLanguage().catch(() => {});
     loadHapticsPreference().catch(() => {});
-    // Schedule/cancel tonight's streak-saver nudges and re-anchor the 09:00
+    // Schedule/cancel tonight's streak-saver nudge and re-anchor the 09:00
     // reminder (skips mornings where every daily game is already finished).
     syncStreakSaver();
-    syncTenballStreakSaver();
-    syncJourneymanStreakSaver();
-    syncTeamsheetStreakSaver();
     syncScoutReminder().catch(() => {});
     // OTA game content: apply the cached pack, then poll for a newer one on
     // launch + every foreground. Fails silently — bundled data always works.

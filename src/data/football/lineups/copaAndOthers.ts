@@ -10,7 +10,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     team: 'Chile',
     competition: 'Copa América Final',
     year: 2015,
-    formation: '4-3-3',
+    formation: '3-4-1-2',
     kit: {body: '#D52B1E', number: '#F4F4F6'},
     match: {
       competitionKey: 'copaFinal',
@@ -23,16 +23,18 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     },
     players: [
       {name: 'Claudio Bravo', position: 'GK', shirt: 1, captain: true},
-      {name: 'Mauricio Isla', position: 'DF', shirt: 4},
-      {name: 'Gary Medel', position: 'DF', shirt: 17},
-      {name: 'Gonzalo Jara', position: 'DF', shirt: 18},
-      {name: 'Jean Beausejour', position: 'DF', shirt: 15},
+      // Jara was suspended for the final (Cavani incident); Francisco Silva
+      // slotted into the back three.
+      {name: 'Francisco Silva', position: 'MF', shirt: 5},
       {name: 'Marcelo Díaz', position: 'MF', shirt: 21, aliases: ['Diaz']},
+      {name: 'Gary Medel', position: 'DF', shirt: 17},
+      {name: 'Mauricio Isla', position: 'DF', shirt: 4},
       {name: 'Charles Aránguiz', position: 'MF', shirt: 20, aliases: ['Aranguiz']},
       {name: 'Arturo Vidal', position: 'MF', shirt: 8},
-      {name: 'Alexis Sánchez', position: 'FW', shirt: 7, aliases: ['Alexis']},
-      {name: 'Eduardo Vargas', position: 'FW', shirt: 11},
+      {name: 'Jean Beausejour', position: 'DF', shirt: 15},
       {name: 'Jorge Valdivia', position: 'MF', shirt: 10},
+      {name: 'Eduardo Vargas', position: 'FW', shirt: 11},
+      {name: 'Alexis Sánchez', position: 'FW', shirt: 7, aliases: ['Alexis']},
     ],
   },
   {
@@ -56,9 +58,9 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
       {name: 'Alex Sandro', position: 'DF', shirt: 6},
       {name: 'Casemiro', position: 'MF', shirt: 5},
       {name: 'Arthur', position: 'MF', shirt: 8},
-      {name: 'Everton', position: 'FW', shirt: 22, aliases: ['Everton Cebolinha'], goals: 1},
+      {name: 'Gabriel Jesus', position: 'FW', shirt: 9, goals: 1, assists: 1, redCard: true},
       {name: 'Philippe Coutinho', position: 'MF', shirt: 11},
-      {name: 'Gabriel Jesus', position: 'FW', shirt: 9, goals: 1, assists: 1},
+      {name: 'Everton', position: 'FW', shirt: 22, aliases: ['Everton Cebolinha'], goals: 1},
       {name: 'Roberto Firmino', position: 'FW', shirt: 20, assists: 1},
     ],
   },
@@ -94,7 +96,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     team: 'Manchester United',
     competition: 'Europa League Final',
     year: 2017,
-    formation: '4-3-3',
+    formation: '4-1-4-1',
     kit: {body: '#DA291C', number: '#F4F4F6'},
     match: {
       competitionKey: 'europaFinal',
@@ -105,13 +107,15 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     players: [
       {name: 'Sergio Romero', position: 'GK', shirt: 20},
       {name: 'Antonio Valencia', position: 'DF', shirt: 25, captain: true},
-      {name: 'Eric Bailly', position: 'DF', shirt: 3},
+      // Bailly was suspended for the final (red card in the semi); Smalling
+      // partnered Blind.
+      {name: 'Chris Smalling', position: 'DF', shirt: 12},
       {name: 'Daley Blind', position: 'DF', shirt: 17},
       {name: 'Matteo Darmian', position: 'DF', shirt: 36},
-      {name: 'Marouane Fellaini', position: 'MF', shirt: 27},
       {name: 'Ander Herrera', position: 'MF', shirt: 21},
-      {name: 'Paul Pogba', position: 'MF', shirt: 6, goals: 1},
       {name: 'Juan Mata', position: 'MF', shirt: 8},
+      {name: 'Marouane Fellaini', position: 'MF', shirt: 27},
+      {name: 'Paul Pogba', position: 'MF', shirt: 6, goals: 1},
       {name: 'Henrikh Mkhitaryan', position: 'FW', shirt: 22, goals: 1},
       {name: 'Marcus Rashford', position: 'FW', shirt: 19},
     ],

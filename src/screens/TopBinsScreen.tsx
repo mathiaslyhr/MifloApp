@@ -57,7 +57,7 @@ import {
   saveDailyProgress,
   saveStreak,
 } from '../games/tenball/storage';
-import {syncTenballStreakSaver} from '../games/tenball/streakSaver';
+import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {TenballHelpModal} from '../games/tenball/TenballHelpModal';
 import type {StreakState, TenballState} from '../games/tenball/types';
 
@@ -166,7 +166,7 @@ export function TopBinsScreen({navigation}: Props) {
     Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
       // Finished: drop tonight's rescue nudge and, if Scout is done too,
       // skip tomorrow-morning's "new games" ping past today.
-      .then(() => Promise.all([syncTenballStreakSaver(), syncScoutReminder()]))
+      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('tenball.errorSave')));
   }
 

@@ -55,7 +55,7 @@ import {
   saveDailyProgress,
   saveStreak,
 } from '../games/journeyman/storage';
-import {syncJourneymanStreakSaver} from '../games/journeyman/streakSaver';
+import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {JourneymanHelpModal} from '../games/journeyman/JourneymanHelpModal';
 import type {
   HintKey,
@@ -187,7 +187,7 @@ export function JourneymanScreen({navigation}: Props) {
     Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
       // Finished: drop tonight's rescue nudge and, if the other dailies are
       // done too, skip tomorrow-morning's "new games" ping past today.
-      .then(() => Promise.all([syncJourneymanStreakSaver(), syncScoutReminder()]))
+      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('journeyman.errorSave')));
   }
 

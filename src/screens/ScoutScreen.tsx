@@ -23,7 +23,7 @@ import {
   shouldOfferScoutReminder,
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
-import {syncStreakSaver} from '../games/scout/streakSaver';
+import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';

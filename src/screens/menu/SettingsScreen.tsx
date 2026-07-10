@@ -22,10 +22,7 @@ import {
   enableScoutReminder,
   getScoutReminderPreference,
 } from '../../core/notifications/scoutReminder';
-import {syncJourneymanStreakSaver} from '../../games/journeyman/streakSaver';
-import {syncStreakSaver} from '../../games/scout/streakSaver';
-import {syncTeamsheetStreakSaver} from '../../games/teamsheet/streakSaver';
-import {syncTenballStreakSaver} from '../../games/tenball/streakSaver';
+import {syncStreakSaver} from '../../core/notifications/streakSaver';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -90,12 +87,7 @@ export function SettingsScreen({navigation}: Props) {
       } else {
         await disableScoutReminder();
       }
-      await Promise.all([
-        syncStreakSaver(),
-        syncTenballStreakSaver(),
-        syncJourneymanStreakSaver(),
-        syncTeamsheetStreakSaver(),
-      ]);
+      await syncStreakSaver();
     } catch {
       setReminder(!value);
       toast.error(t('settings.errorSave'));

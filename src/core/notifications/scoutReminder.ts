@@ -1,10 +1,14 @@
 /**
  * Local daily reminder for ALL the daily games (currently Scout, Top Bins,
- * Journeyman and Team sheet — a new daily just adds its progress loader to
- * `solvedToday` below and its own streak saver). Scheduled fully on-device
- * (no push infrastructure, nothing leaves the phone): a repeating 09:00
- * nudge that today's games have dropped, skipped on mornings where every
- * daily is already finished.
+ * Journeyman and Team sheet — a new daily just registers in
+ * `dailyStatus.ts`). Scheduled fully on-device (no push infrastructure,
+ * nothing leaves the phone): a 09:00 nudge that today's games have dropped,
+ * skipped on mornings where every daily is already finished.
+ *
+ * The nudge is a rolling window of 14 one-shot triggers rather than a
+ * repeating one, so a lapsed user isn't pinged forever: every sync (launch,
+ * puzzle finish, toggle) re-anchors the full window, and someone who stops
+ * opening the app goes quiet after two unanswered weeks until they return.
  *
  * The opt-in prompt is offered ONCE, right after the user finishes their
  * first daily puzzle — whichever daily game that happens to be gets to ask.
@@ -14,22 +18,25 @@
  * the pref key is persisted on devices, so they stay (same policy as the
  * imposter ids).
  */
-import notifee, {
-  AuthorizationStatus,
-  RepeatFrequency,
-  TriggerType,
-} from '@notifee/react-native';
+import notifee, {AuthorizationStatus, TriggerType} from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../i18n';
-import {loadDailyProgress as loadJourneymanProgress} from '../../games/journeyman/storage';
 import {dateKeyFor} from '../../games/scout/dailySeed';
-import {loadDailyProgress} from '../../games/scout/mysteryStorage';
-import {loadDailyProgress as loadTeamsheetProgress} from '../../games/teamsheet/storage';
-import {loadDailyProgress as loadTenballProgress} from '../../games/tenball/storage';
+import {loadDailyStatuses} from './dailyStatus';
 
 const PREF_KEY = 'app.scoutReminder';
 const ASKED_KEY = 'app.scoutReminderAsked';
-const NOTIFICATION_ID = 'scout-daily';
+
+/** Mornings scheduled ahead before a lapsed user's reminders go quiet. */
+const WINDOW_DAYS = 14;
+const WINDOW_IDS = Array.from(
+  {length: WINDOW_DAYS},
+  (_, day) => `scout-daily-${day}`,
+);
+/** Id of the pre-window repeating trigger; devices that scheduled it before
+ * the 14-day window shipped still have it pending, so it must keep being
+ * cancelled or they would be pinged twice each morning. */
+const LEGACY_NOTIFICATION_ID = 'scout-daily';
 
 /** Local hour the nudge lands — when people look at phones, not midnight. */
 const REMINDER_HOUR = 9;
@@ -44,53 +51,36 @@ function nextReminderTimestamp(skipToday: boolean): number {
 }
 
 /**
- * Re-anchor the repeating 09:00 trigger to the next morning that actually
- * needs a nudge — local notifications can't be conditional at delivery, so a
- * day where EVERY daily game is already finished is skipped by moving the
- * anchor to tomorrow. Reactive like the streak savers: call on launch, on
- * puzzle finish, and when the toggle flips. No-op while the reminder is off.
+ * Re-anchor the 14-day window of 09:00 triggers to the next morning that
+ * actually needs a nudge — local notifications can't be conditional at
+ * delivery, so a day where EVERY daily game is already finished is skipped by
+ * starting the window tomorrow. Reactive like the streak saver: call on
+ * launch, on puzzle finish, and when the toggle flips. No-op while the
+ * reminder is off.
  */
 export async function syncScoutReminder(): Promise<void> {
   try {
     if (!(await getScoutReminderPreference())) {
       return;
     }
-    const today = dateKeyFor(new Date());
-    const [scout, tenball, journeyman, teamsheet] = await Promise.all([
-      loadDailyProgress(today),
-      loadTenballProgress(today),
-      loadJourneymanProgress(today),
-      loadTeamsheetProgress(today),
-    ]);
-    const scoutDone =
-      scout?.secretId != null && scout.guessedIds.includes(scout.secretId);
-    const tenballDone =
-      tenball != null &&
-      (tenball.gaveUp ||
-        new Set(tenball.guesses.map(g => g.rank).filter(r => r !== undefined))
-          .size === 10);
-    const journeymanDone =
-      journeyman != null &&
-      (journeyman.gaveUp ||
-        (journeyman.secretId != null &&
-          journeyman.guessedIds.includes(journeyman.secretId)));
-    const teamsheetDone =
-      teamsheet != null &&
-      (teamsheet.gaveUp ||
-        new Set(teamsheet.guesses.map(g => g.slot).filter(s => s !== undefined))
-          .size === 11);
-    const solvedToday = scoutDone && tenballDone && journeymanDone && teamsheetDone;
-    await notifee.createTriggerNotification(
-      {
-        id: NOTIFICATION_ID,
-        title: i18n.t('scout.reminderNotifTitle'),
-        body: i18n.t('scout.reminderNotifBody'),
-      },
-      {
-        type: TriggerType.TIMESTAMP,
-        timestamp: nextReminderTimestamp(solvedToday),
-        repeatFrequency: RepeatFrequency.DAILY,
-      },
+    const statuses = await loadDailyStatuses(dateKeyFor(new Date()));
+    const solvedToday = statuses.every(s => s.finishedToday);
+    const first = nextReminderTimestamp(solvedToday);
+    await notifee.cancelTriggerNotification(LEGACY_NOTIFICATION_ID);
+    await Promise.all(
+      WINDOW_IDS.map((id, day) => {
+        // setDate (not day * 24h) so the nudge stays at 09:00 across DST.
+        const at = new Date(first);
+        at.setDate(at.getDate() + day);
+        return notifee.createTriggerNotification(
+          {
+            id,
+            title: i18n.t('scout.reminderNotifTitle'),
+            body: i18n.t('scout.reminderNotifBody'),
+          },
+          {type: TriggerType.TIMESTAMP, timestamp: at.getTime()},
+        );
+      }),
     );
   } catch {
     // Scheduling hiccups must never affect gameplay.
@@ -121,7 +111,10 @@ export async function enableScoutReminder(): Promise<boolean> {
 }
 
 export async function disableScoutReminder(): Promise<void> {
-  await notifee.cancelTriggerNotification(NOTIFICATION_ID);
+  await notifee.cancelTriggerNotifications([
+    LEGACY_NOTIFICATION_ID,
+    ...WINDOW_IDS,
+  ]);
   await AsyncStorage.setItem(PREF_KEY, 'off');
 }
 

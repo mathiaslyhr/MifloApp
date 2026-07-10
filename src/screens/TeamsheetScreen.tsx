@@ -70,7 +70,7 @@ import {
   saveDailyProgress,
   saveStreak,
 } from '../games/teamsheet/storage';
-import {syncTeamsheetStreakSaver} from '../games/teamsheet/streakSaver';
+import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {TeamsheetHelpModal} from '../games/teamsheet/TeamsheetHelpModal';
 import type {StreakState, TeamsheetState} from '../games/teamsheet/types';
 
@@ -196,7 +196,7 @@ export function TeamsheetScreen({navigation}: Props) {
     Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
       // Finished: drop tonight's rescue nudge and, if the other dailies are
       // done too, skip tomorrow-morning's "new games" ping past today.
-      .then(() => Promise.all([syncTeamsheetStreakSaver(), syncScoutReminder()]))
+      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('teamsheet.errorSave')));
   }
 
@@ -530,7 +530,8 @@ export function TeamsheetScreen({navigation}: Props) {
  * One spot on the formation board: a circle with the shirt number where a
  * broadcast graphic would put the face, the name underneath once found, and
  * mini clue badges overlaid on the circle rim — ball(s) for goals, a boot
- * for an assist, C for the captain, swap arrows when they were subbed off.
+ * for an assist, C for the captain, swap arrows when they were subbed off,
+ * and a yellow/red card when they were booked or sent off.
  * Every token is the same fixed size so all formation lines look identical.
  * Tapping an unfound token targets it (strict positional mode).
  */
@@ -623,6 +624,16 @@ function PlayerToken({
             {assists > 1 ? <Text style={styles.badgeCount}>{assists}</Text> : null}
           </View>
         ) : null}
+        {player.redCard ? (
+          <View style={[styles.badge, styles.badgeMidLeft]}>
+            <View style={[styles.cardIcon, styles.cardRed]} />
+          </View>
+        ) : null}
+        {player.yellowCard ? (
+          <View style={[styles.badge, styles.badgeMidRight]}>
+            <View style={[styles.cardIcon, styles.cardYellow]} />
+          </View>
+        ) : null}
       </View>
       <Text style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
         {label}
@@ -711,7 +722,10 @@ const styles = StyleSheet.create({
   // One formation line: GK alone up top, then defence down to attack. Fixed
   // token sizes and centred rows keep 1/2/3/4/5-man lines visually identical.
   formationRow: {
-    flexDirection: 'row',
+    // Data lists each line right to left (RB first, CURATION.md) and the
+    // board attacks up the screen, so rows render reversed to put the right
+    // back on the viewer's right.
+    flexDirection: 'row-reverse',
     justifyContent: 'center',
     gap: 6,
   },
@@ -775,6 +789,12 @@ const styles = StyleSheet.create({
   badgeTopRight: {top: -3, right: -3},
   badgeBottomLeft: {bottom: -3, left: -3},
   badgeBottomRight: {bottom: -3, right: -3},
+  // Cards sit on the rim's waist so all four corner clues stay available.
+  badgeMidLeft: {top: CIRCLE / 2 - BADGE / 2, left: -6},
+  badgeMidRight: {top: CIRCLE / 2 - BADGE / 2, right: -6},
+  cardIcon: {width: 6, height: 9, borderRadius: 1.5},
+  cardYellow: {backgroundColor: '#F2C230'},
+  cardRed: {backgroundColor: colors.error},
   badgeCount: {
     fontFamily: fonts.medium,
     fontSize: 8,

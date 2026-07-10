@@ -481,6 +481,7 @@
     "reminderNotifBody": "Dagens daglige spil er klar.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Din Scout-stime på {{days}} dage er på spil.",
+    "streaksNotifBody": "Du har {{count}} stimer på spil.",
     "title": "Scout",
     "back": "Tilbage",
     "loading": "Indlæser…",
@@ -605,7 +606,7 @@
     "help": {
       "title": "Sådan spiller du",
       "rule": "Udfyld dagens berømte startopstilling. Skriv et navn og tryk retur, eller tryk på en trøje først for at sigte efter netop den plads. Rammer du forkert plads, tæller det som en forbier.",
-      "clues": "Hver trøje viser sit nummer. En bold betyder mål i kampen, en støvle betyder assist, C er anføreren, og skiftepilene betyder at spilleren blev skiftet ud.",
+      "clues": "Hver trøje viser sit nummer. En bold betyder mål i kampen, en støvle betyder assist, C er anføreren, skiftepilene betyder at spilleren blev skiftet ud, og et gult eller rødt kort betyder at spilleren fik kort.",
       "streak": "Forkerte gæt tæller som forbiere, men du kan ikke tabe. Afslut med 5 eller færre for at beholde din stime.",
       "daily": "Et nyt holdkort kommer hver dag, det samme for alle."
     },

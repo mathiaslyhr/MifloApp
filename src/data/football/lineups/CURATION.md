@@ -29,7 +29,13 @@ available.
 - **`subbedOff`**: true when the starter was taken off during the match
   (swap-arrows badge). Curated best-effort on well-remembered matches only —
   absence means "unknown or played the whole match", never a fact. A red card
-  is NOT `subbedOff` (Gabriel Jesus 2019 has neither).
+  is NOT `subbedOff` (Gabriel Jesus 2019 has `redCard`, not `subbedOff`).
+- **`redCard` / `yellowCard`**: card badges, same best-effort policy as
+  `subbedOff` — absence means "no card or unknown", never a fact. A second
+  yellow is recorded as `redCard` only (Desailly 1998, Heitinga 2010). Only
+  the famous, verified reds are curated so far (Lehmann 2006, Drogba 2008,
+  Zidane 2006, Desailly 1998, Heitinga 2010, Gabriel Jesus 2019); yellows
+  await a proper match-report pass.
 - **Team sheet pool cutoff**: only `year >= 1990` (`TEAMSHEET_MIN_YEAR`)
   enters the daily pool. Older XIs stay curated here for possible future use.
 
@@ -49,6 +55,12 @@ apostrophes, so:
   distinguishing aliases (enforced by the token-uniqueness test).
 
 ## Fact-check flags
+
+July 2026: formations and within-row player ORDER (sides) were verified
+against the Wikipedia Details boxes for every contested post-1990 entry
+(~25 entries corrected, incl. two wrong players: Bailly→Smalling in
+mu-2017, Jara→Francisco Silva in chile-2015). The flags below are about
+shirt numbers / assists / captains and still stand where listed.
 
 Entries whose shirt numbers, assists or captain still need a second pass
 against the match report (all curated from memory, July 2026). Highest
