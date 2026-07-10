@@ -25,25 +25,31 @@ type Props = {
  * A single-line text field. An opaque white fill with a hairline border, fully
  * rounded (pill/capsule), so it reads identically on any background — the
  * lavender canvas and white cards alike. The border lifts to the brand color on
- * focus. Every input in the app routes through this component.
+ * focus. Every input in the app routes through this component. Forwards its
+ * ref to the underlying TextInput so callers can focus it programmatically
+ * (e.g. tapping a Team sheet spot opens the keyboard).
  */
-export function TextField({
-  value,
-  onChangeText,
-  placeholder,
-  autoFocus = false,
-  maxLength,
-  autoCapitalize = 'sentences',
-  onSubmitEditing,
-  returnKeyType = 'done',
-  submitBehavior,
-  multiline = false,
-  accessibilityLabel,
-  style,
-}: Props) {
+export const TextField = React.forwardRef<TextInput, Props>(function TextFieldInner(
+  {
+    value,
+    onChangeText,
+    placeholder,
+    autoFocus = false,
+    maxLength,
+    autoCapitalize = 'sentences',
+    onSubmitEditing,
+    returnKeyType = 'done',
+    submitBehavior,
+    multiline = false,
+    accessibilityLabel,
+    style,
+  }: Props,
+  ref: React.Ref<TextInput>,
+) {
   const [focused, setFocused] = useState(false);
   return (
     <TextInput
+      ref={ref}
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
@@ -67,7 +73,7 @@ export function TextField({
       ]}
     />
   );
-}
+});
 
 const styles = StyleSheet.create({
   field: {

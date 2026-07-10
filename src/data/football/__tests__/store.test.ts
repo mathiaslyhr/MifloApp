@@ -16,7 +16,9 @@ import {
   TREBLE_WINNER_IDS,
 } from '../index';
 import {bundledSnapshot, derivedFromData, generation, hydrate} from '../store';
+import {dailySecretFor as journeymanSecretFor} from '../../../games/journeyman/dailySeed';
 import {dailySecretFor} from '../../../games/scout/dailySeed';
+import {dailyLineupIdFor} from '../../../games/teamsheet/dailySeed';
 import {suggestNames} from '../../../games/missing-xi/matching';
 import {buildQuestionIds} from '../../../games/red-card/questions';
 
@@ -94,6 +96,50 @@ test('hydrate replaces the Scout schedule: dailySecretFor honours new entries', 
   });
 
   expect(dailySecretFor('2099-12-31').id).toBe('Rodrygo');
+});
+
+test('hydrate replaces the Journeyman schedule and restores it from the snapshot', () => {
+  const snapshot = bundledSnapshot();
+  hydrate({
+    journeymanSchedule: {
+      dailySecrets: {
+        ...snapshot.journeymanSchedule!.dailySecrets,
+        '2099-12-31': 'Rodrygo',
+      },
+    },
+  });
+  expect(journeymanSecretFor('2099-12-31').id).toBe('Rodrygo');
+
+  // A pack without the section keeps the current schedule (fail open)…
+  hydrate({});
+  expect(journeymanSecretFor('2099-12-31').id).toBe('Rodrygo');
+
+  // …and the bundled snapshot round-trips it back out.
+  hydrate(bundledSnapshot());
+  expect(
+    bundledSnapshot().journeymanSchedule!.dailySecrets['2099-12-31'],
+  ).toBeUndefined();
+});
+
+test('hydrate replaces the Team sheet schedule and restores it from the snapshot', () => {
+  const snapshot = bundledSnapshot();
+  const anyLineupId = snapshot.famousLineups![0].id;
+  hydrate({
+    teamsheetSchedule: {
+      schedule: {...snapshot.teamsheetSchedule!.schedule, '2099-12-31': anyLineupId},
+    },
+  });
+  expect(dailyLineupIdFor('2099-12-31')).toBe(anyLineupId);
+
+  // A pack without the section keeps the current schedule (fail open)…
+  hydrate({});
+  expect(dailyLineupIdFor('2099-12-31')).toBe(anyLineupId);
+
+  // …and the bundled snapshot round-trips it back out.
+  hydrate(bundledSnapshot());
+  expect(
+    bundledSnapshot().teamsheetSchedule!.schedule['2099-12-31'],
+  ).toBeUndefined();
 });
 
 test('missing-xi suggestions pick up a renamed player after hydrate', () => {

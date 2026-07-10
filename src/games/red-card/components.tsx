@@ -43,23 +43,34 @@ export function PlayerGrid({
   );
 }
 
-/** How many question rounds this hand runs — a row of small glass tags. */
+/**
+ * How many rounds a game runs — a row of small glass tags. Born in Red Card,
+ * whose range and label stay the defaults; other games (Cult Hero) pass their
+ * own.
+ */
 export function RoundsPicker({
   value,
   onChange,
+  min = MIN_ROUNDS,
+  max = MAX_ROUNDS,
+  label,
 }: {
   value: number;
   onChange: (rounds: number) => void;
+  min?: number;
+  max?: number;
+  label?: string;
 }) {
   const {t} = useTranslation();
+  const resolvedLabel = label ?? t('redCard.roundsPicker.label');
   const options = [];
-  for (let n = MIN_ROUNDS; n <= MAX_ROUNDS; n++) {
+  for (let n = min; n <= max; n++) {
     options.push(n);
   }
   return (
     <View style={styles.roundsPicker}>
       <Text variant="caption" color="muted" style={styles.roundsLabel}>
-        {t('redCard.roundsPicker.label')}
+        {resolvedLabel}
       </Text>
       <View style={styles.roundsRow}>
         {options.map(n => (
@@ -70,7 +81,7 @@ export function RoundsPicker({
             accent={value === n}
             onPress={() => onChange(n)}
             accessibilityRole="button"
-            accessibilityLabel={`${t('redCard.roundsPicker.label')}: ${n}`}>
+            accessibilityLabel={`${resolvedLabel}: ${n}`}>
             <Text variant="body" style={styles.roundsValue}>
               {n}
             </Text>
@@ -132,16 +143,19 @@ export function AnswerRevealBlock({
 export function Scoreboard({
   rows,
   deltas,
+  title,
 }: {
   /** Players sorted by running score (desc). */
   rows: {userId: string; name: string; score: number}[];
   deltas: Record<string, number>;
+  /** Defaults to Red Card's label; other games pass their own. */
+  title?: string;
 }) {
   const {t} = useTranslation();
   return (
     <GlassCard style={styles.listCard}>
       <Text variant="label" style={styles.listTitle}>
-        {t('redCard.reveal.scoreboard')}
+        {title ?? t('redCard.reveal.scoreboard')}
       </Text>
       {rows.map((row, i) => {
         const d = deltas[row.userId] ?? 0;

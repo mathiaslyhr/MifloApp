@@ -7,6 +7,11 @@ if git diff --cached --name-only | grep -qE 'src/data/football/(footballers|club
   echo 'football data changed — updating Scout schedule'
   npm run --silent scout:schedule || exit 1
   git add src/games/scout/schedule.generated.ts
+  # Journeyman's pool derives from the same dataset (and skips Scout's daily
+  # pick), so its schedule must follow Scout's in the same commit.
+  echo 'football data changed — updating Journeyman schedule'
+  npm run --silent journeyman:schedule || exit 1
+  git add src/games/journeyman/schedule.generated.ts
 fi
 # Same for Top Bins: a commit touching the curated lists extends/reshuffles
 # the frozen list schedule so the repo always records what a publish ships.
@@ -14,4 +19,10 @@ if git diff --cached --name-only | grep -qE 'src/games/tenball/lists\.ts'; then
   echo 'Top Bins lists changed — updating Top Bins schedule'
   npm run --silent tenball:schedule || exit 1
   git add src/games/tenball/schedule.generated.ts
+fi
+# Same for Team sheet: its pool is the enriched famous lineups.
+if git diff --cached --name-only | grep -qE 'src/data/football/(famousLineups\.ts|lineups/)'; then
+  echo 'famous lineups changed — updating Team sheet schedule'
+  npm run --silent teamsheet:schedule || exit 1
+  git add src/games/teamsheet/schedule.generated.ts
 fi

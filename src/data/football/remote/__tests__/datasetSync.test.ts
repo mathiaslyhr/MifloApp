@@ -138,6 +138,24 @@ describe('validateContentPack', () => {
     expect(validateContentPack(pack)).toBeNull();
   });
 
+  it('accepts a pack published before Journeyman existed (no journeymanSchedule)', () => {
+    const pack = JSON.parse(serialize(testPack()).body);
+    delete pack.journeymanSchedule;
+    expect(validateContentPack(pack)).toBeNull();
+  });
+
+  it('rejects a malformed journeymanSchedule section', () => {
+    const base = () => JSON.parse(serialize(testPack()).body);
+
+    const badShape = base();
+    badShape.journeymanSchedule = {dailySecrets: null};
+    expect(validateContentPack(badShape)).not.toBeNull();
+
+    const badId = base();
+    badId.journeymanSchedule.dailySecrets['2099-01-01'] = 'Ghost, Player';
+    expect(validateContentPack(badId)).not.toBeNull();
+  });
+
   it('rejects a malformed tenball section', () => {
     const base = () => JSON.parse(serialize(testPack()).body);
 

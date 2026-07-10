@@ -35,6 +35,8 @@ import {
   leaveRoom,
   renamePlayer,
   startBoardGame,
+  startCultHeroGame,
+  startOffsideGame,
   startRedCardGame,
   subscribePlayers,
   subscribeRoom,
@@ -50,12 +52,22 @@ import {
   DEFAULT_ROUNDS,
   MIN_PLAYERS as IMPOSTER_MIN,
 } from '../games/red-card/types';
+import {buildRounds} from '../games/offside/questions';
+import {RoundsPicker as OffsideRoundsPicker} from '../games/offside/components';
+import {DEFAULT_ROUNDS as OFFSIDE_DEFAULT_ROUNDS} from '../games/offside/types';
+import {buildPromptPayloads} from '../games/cult-hero/famePrior';
+import {takeSessionPrompts} from '../games/cult-hero/prompts';
+import {
+  DEFAULT_ROUNDS as CULT_HERO_DEFAULT_ROUNDS,
+  MAX_ROUNDS as CULT_HERO_MAX_ROUNDS,
+  MIN_ROUNDS as CULT_HERO_MIN_ROUNDS,
+} from '../games/cult-hero/types';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
 
 /** The live-game screens the host jumps into once a round is built. */
-export type GameRoute = 'Hattrick' | 'RedCard';
+export type GameRoute = 'Hattrick' | 'RedCard' | 'Offside' | 'CultHero';
 
 /**
  * Lobby — where players gather after a party is created. Shows the party code and
@@ -74,6 +86,10 @@ export function LobbyScreen({route, navigation}: Props) {
   // Host-picked Red Card question rounds (the selector only shows for a locked
   // Red Card party; a free-pick party starts with the default).
   const [redCardRounds, setRedCardRounds] = useState(DEFAULT_ROUNDS);
+  // Host-picked Offside round count (same locked-party rule as Red Card's).
+  const [offsideRounds, setOffsideRounds] = useState(OFFSIDE_DEFAULT_ROUNDS);
+  // Host-picked Cult Hero prompt count (same locked-party rule).
+  const [cultHeroRounds, setCultHeroRounds] = useState(CULT_HERO_DEFAULT_ROUNDS);
   const insets = useSafeAreaInsets();
   // Measured height of the floating bottom bar, so scroll content clears it.
   const [botH, setBotH] = useState(0);
@@ -141,6 +157,16 @@ export function LobbyScreen({route, navigation}: Props) {
         inGameRef.current = true;
         navigation.navigate('RedCard', {roomId});
       }
+    } else if (room.status === 'in_progress' && room.gameType === 'offside') {
+      if (!inGameRef.current) {
+        inGameRef.current = true;
+        navigation.navigate('Offside', {roomId});
+      }
+    } else if (room.status === 'in_progress' && room.gameType === 'cult-hero') {
+      if (!inGameRef.current) {
+        inGameRef.current = true;
+        navigation.navigate('CultHero', {roomId});
+      }
     } else if (room.status === 'lobby') {
       inGameRef.current = false;
       setStarting(false);
@@ -175,6 +201,10 @@ export function LobbyScreen({route, navigation}: Props) {
       navigation.navigate('Hattrick', {roomId});
     } else if (room?.gameType === 'red-card') {
       navigation.navigate('RedCard', {roomId});
+    } else if (room?.gameType === 'offside') {
+      navigation.navigate('Offside', {roomId});
+    } else if (room?.gameType === 'cult-hero') {
+      navigation.navigate('CultHero', {roomId});
     }
   }
 
@@ -284,6 +314,28 @@ export function LobbyScreen({route, navigation}: Props) {
           inGameRef.current = true;
           return 'RedCard';
         }
+        case 'offside': {
+          // The host builds the deck; the generator never reuses a player, so a
+          // capped pool just means a shorter game — ship the actual length.
+          const deck = buildRounds(offsideRounds);
+          if (deck.length === 0) {
+            throw new Error('Offside deck came back empty');
+          }
+          await startOffsideGame(roomId, deck, deck.length);
+          inGameRef.current = true;
+          return 'Offside';
+        }
+        case 'cult-hero': {
+          // The host deals the prompts and ships each one's eligible players
+          // with fame priors; picks are collected and scored server-side.
+          await startCultHeroGame(
+            roomId,
+            cultHeroRounds,
+            buildPromptPayloads(takeSessionPrompts(roomId, cultHeroRounds)),
+          );
+          inGameRef.current = true;
+          return 'CultHero';
+        }
         default:
           throw new Error(`Unsupported game: ${gameType}`);
       }
@@ -303,8 +355,12 @@ export function LobbyScreen({route, navigation}: Props) {
   function enterGame(target: GameRoute) {
     if (target === 'Hattrick') {
       navigation.navigate('Hattrick', {roomId});
-    } else {
+    } else if (target === 'RedCard') {
       navigation.navigate('RedCard', {roomId});
+    } else if (target === 'Offside') {
+      navigation.navigate('Offside', {roomId});
+    } else {
+      navigation.navigate('CultHero', {roomId});
     }
   }
 
@@ -414,6 +470,25 @@ export function LobbyScreen({route, navigation}: Props) {
         {isHost && locked && room?.gameType === 'red-card' ? (
           <View style={styles.roundsPickerWrap}>
             <RoundsPicker value={redCardRounds} onChange={setRedCardRounds} />
+          </View>
+        ) : null}
+        {isHost && locked && room?.gameType === 'offside' ? (
+          <View style={styles.roundsPickerWrap}>
+            <OffsideRoundsPicker
+              value={offsideRounds}
+              onChange={setOffsideRounds}
+            />
+          </View>
+        ) : null}
+        {isHost && locked && room?.gameType === 'cult-hero' ? (
+          <View style={styles.roundsPickerWrap}>
+            <RoundsPicker
+              value={cultHeroRounds}
+              onChange={setCultHeroRounds}
+              min={CULT_HERO_MIN_ROUNDS}
+              max={CULT_HERO_MAX_ROUNDS}
+              label={t('cultHero.roundsPicker.label')}
+            />
           </View>
         ) : null}
         {isHost ? (

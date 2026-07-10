@@ -8,8 +8,9 @@
  * repository derives every category (leagues, honours, nationality, tags) from
  * each player's own data, so a player appears in every category they match.
  *
- * `id` is internal only (Map key in repository.ts, runtime question wiring); it
- * is never persisted, so the format is free to be human-friendly.
+ * `id` never shows in UI, but it IS persisted (Scout's OTA schedule, Cult
+ * Hero's global answer stats in Supabase), so ids are permanent: never rename
+ * or delete one — fix display names via the `name` field instead.
  *
  * Club spells reference clubs by id from clubs.ts (the single source of truth
  * for club name/country/league); add missing clubs there. Honours cover the
@@ -16345,8 +16346,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
-    id: 'Son Heung-min',
+    id: 'Son, Heung-min',
     name: 'Son Heung-min',
+    nicknames: ['Sonny'],
     nationality: ['South Korea'],
     positions: ['FW'],
     born: '1992-07-08',
@@ -16362,22 +16364,6 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'golden-boot', count: 1, years: [2022]},
     ],
     tags: ['current-stars'],
-  },
-  {
-    id: 'Son, Heung-min',
-    name: 'Heung-min Son',
-    nationality: ['South Korea'],
-    positions: ['FW'],
-    born: '1992-07-08',
-    shirtNumbers: [7],
-    clubs: [
-      {clubId: 'leverkusen', from: 2013, to: 2015},
-      {clubId: 'tottenham', from: 2015, to: 2025},
-      {clubId: 'lafc', from: 2025},
-    ],
-    honours: [
-      {type: 'europa-league', count: 1, years: [2025]},
-    ],
   },
   {
     id: 'Sørloth, Alexander',

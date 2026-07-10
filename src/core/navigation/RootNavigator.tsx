@@ -13,6 +13,10 @@ import {HattrickScreen} from '../../screens/HattrickScreen';
 import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
 import {RedCardLocalScreen} from '../../screens/RedCardLocalScreen';
+import {OffsideScreen} from '../../screens/OffsideScreen';
+import {CultHeroScreen} from '../../screens/CultHeroScreen';
+import {JourneymanScreen} from '../../screens/JourneymanScreen';
+import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
 import {TopBinsScreen} from '../../screens/TopBinsScreen';
 import {ProfileScreen} from '../../screens/menu/ProfileScreen';
@@ -43,6 +47,18 @@ export function RootNavigator() {
         component={RedCardScreen}
         options={{gestureEnabled: false}}
       />
+      {/* No swipe-back out of a live game; you leave via the result screen. */}
+      <Stack.Screen
+        name="Offside"
+        component={OffsideScreen}
+        options={{gestureEnabled: false}}
+      />
+      {/* No swipe-back out of a live game; you leave via the result screen. */}
+      <Stack.Screen
+        name="CultHero"
+        component={CultHeroScreen}
+        options={{gestureEnabled: false}}
+      />
       {/* Pass-and-play on one shared phone — roomless, fully offline. */}
       <Stack.Screen
         name="HattrickLocal"
@@ -63,6 +79,16 @@ export function RootNavigator() {
       <Stack.Screen
         name="TopBins"
         component={TopBinsScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="Journeyman"
+        component={JourneymanScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="Teamsheet"
+        component={TeamsheetScreen}
         options={{gestureEnabled: false}}
       />
       <Stack.Screen name="Profile" component={ProfileScreen} />

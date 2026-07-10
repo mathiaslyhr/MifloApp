@@ -20,8 +20,10 @@ import {bumpGeneration} from './generation';
 import {MANAGERS} from './managers';
 import {TREBLE_SQUADS, TREBLE_WINNER_IDS, type TrebleSquad} from './trebles';
 import type {Club, Footballer, Manager} from './types';
+import {JOURNEYMAN_SCHEDULE} from '../../games/journeyman/schedule.generated';
 import {QUESTION_POOL} from '../../games/red-card/questions';
 import {DAILY_SECRETS} from '../../games/scout/schedule.generated';
+import {TEAMSHEET_SCHEDULE} from '../../games/teamsheet/schedule.generated';
 import {LIST_POOL} from '../../games/tenball/lists';
 import {TENBALL_SCHEDULE} from '../../games/tenball/schedule.generated';
 import type {TenballList} from '../../games/tenball/types';
@@ -33,6 +35,7 @@ export type ContentPack = {
   trebleSquads?: TrebleSquad[];
   famousLineups?: FamousLineup[];
   scoutSchedule?: {dailySecrets: Record<string, string>; poolSignature?: number};
+  journeymanSchedule?: {dailySecrets: Record<string, string>; poolSignature?: number};
   redCardQuestions?: {ids: string[]; i18n?: Record<string, object>};
   /** Top Bins: curated lists + their daily schedule; titles travel as i18n. */
   tenball?: {
@@ -40,6 +43,8 @@ export type ContentPack = {
     schedule: Record<string, string>;
     i18n?: Record<string, object>;
   };
+  /** Team sheet daily schedule; the lineups themselves ride `famousLineups`. */
+  teamsheetSchedule?: {schedule: Record<string, string>; poolSignature?: number};
 };
 
 function replaceArray<T>(target: readonly T[], next: readonly T[]): void {
@@ -57,8 +62,10 @@ const BUNDLED: Required<Omit<ContentPack, 'redCardQuestions' | 'tenball'>> &
   trebleSquads: [...TREBLE_SQUADS],
   famousLineups: [...FAMOUS_LINEUPS],
   scoutSchedule: {dailySecrets: {...DAILY_SECRETS}},
+  journeymanSchedule: {dailySecrets: {...JOURNEYMAN_SCHEDULE}},
   redCardQuestions: {ids: [...QUESTION_POOL]},
   tenball: {lists: [...LIST_POOL], schedule: {...TENBALL_SCHEDULE}},
+  teamsheetSchedule: {schedule: {...TEAMSHEET_SCHEDULE}},
 };
 
 /** A fresh pack of the bundled data — hydrate(bundledSnapshot()) restores it. */
@@ -70,11 +77,13 @@ export function bundledSnapshot(): ContentPack {
     trebleSquads: [...BUNDLED.trebleSquads],
     famousLineups: [...BUNDLED.famousLineups],
     scoutSchedule: {dailySecrets: {...BUNDLED.scoutSchedule.dailySecrets}},
+    journeymanSchedule: {dailySecrets: {...BUNDLED.journeymanSchedule.dailySecrets}},
     redCardQuestions: {ids: [...BUNDLED.redCardQuestions!.ids]},
     tenball: {
       lists: [...BUNDLED.tenball!.lists],
       schedule: {...BUNDLED.tenball!.schedule},
     },
+    teamsheetSchedule: {schedule: {...BUNDLED.teamsheetSchedule.schedule}},
   };
 }
 
@@ -108,6 +117,12 @@ export function hydrate(pack: ContentPack): void {
     }
     Object.assign(DAILY_SECRETS, pack.scoutSchedule.dailySecrets);
   }
+  if (pack.journeymanSchedule) {
+    for (const key of Object.keys(JOURNEYMAN_SCHEDULE)) {
+      delete JOURNEYMAN_SCHEDULE[key];
+    }
+    Object.assign(JOURNEYMAN_SCHEDULE, pack.journeymanSchedule.dailySecrets);
+  }
   if (pack.redCardQuestions) {
     replaceArray(QUESTION_POOL, pack.redCardQuestions.ids);
   }
@@ -117,6 +132,12 @@ export function hydrate(pack: ContentPack): void {
       delete TENBALL_SCHEDULE[key];
     }
     Object.assign(TENBALL_SCHEDULE, pack.tenball.schedule);
+  }
+  if (pack.teamsheetSchedule) {
+    for (const key of Object.keys(TEAMSHEET_SCHEDULE)) {
+      delete TEAMSHEET_SCHEDULE[key];
+    }
+    Object.assign(TEAMSHEET_SCHEDULE, pack.teamsheetSchedule.schedule);
   }
   bumpGeneration();
 }

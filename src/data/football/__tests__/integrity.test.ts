@@ -52,6 +52,34 @@ describe('referential integrity', () => {
     expect(dupes).toEqual([]);
   });
 
+  it('no player appears twice under different ids', () => {
+    // 'Son Heung-min' vs 'Son, Heung-min' once slipped past the display-name
+    // check because the word order differed. Same person = same name tokens
+    // (accent-folded, order-insensitive) + same birthdate; the daily games
+    // must never be able to feature one player as two entries.
+    const person = (name: string, born: string) =>
+      `${name
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9 ]/g, ' ')
+        .split(/\s+/)
+        .filter(Boolean)
+        .sort()
+        .join(' ')}|${born}`;
+    const seen = new Map<string, string>();
+    const dupes: string[] = [];
+    for (const f of all()) {
+      const key = person(f.name, f.born);
+      const other = seen.get(key);
+      if (other !== undefined) {
+        dupes.push(`'${other}' and '${f.id}'`);
+      }
+      seen.set(key, f.id);
+    }
+    expect(dupes).toEqual([]);
+  });
+
   it('every referenced clubId exists in CLUBS', () => {
     for (const f of all()) {
       for (const spell of f.clubs) {

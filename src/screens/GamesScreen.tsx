@@ -59,6 +59,10 @@ export function GamesScreen() {
         navigation.navigate('Scout');
       } else if (gameType === 'tenball') {
         navigation.navigate('TopBins');
+      } else if (gameType === 'journeyman') {
+        navigation.navigate('Journeyman');
+      } else if (gameType === 'teamsheet') {
+        navigation.navigate('Teamsheet');
       }
       return;
     }
@@ -127,6 +131,7 @@ export function GamesScreen() {
               Icon={game.Icon}
               disabled={!game.available}
               meta={game.available ? t(`games.audience.${game.category}`) : undefined}
+              daily={game.available && game.daily ? t('games.daily') : undefined}
               badge={game.available ? undefined : t('games.comingSoon')}
               badgeVariant="text"
               onPress={() => handleSelect(game.gameType)}

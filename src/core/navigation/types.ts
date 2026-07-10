@@ -16,15 +16,21 @@ export type RootStackParamList = {
   // the game route to jump into (or undefined if the start was blocked/failed).
   GamePicker: {
     roomId: string;
-    onPick: (gameType: string) => Promise<'Hattrick' | 'RedCard' | undefined>;
+    onPick: (
+      gameType: string,
+    ) => Promise<'Hattrick' | 'RedCard' | 'Offside' | 'CultHero' | undefined>;
   };
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
+  Offside: {roomId: string};
+  CultHero: {roomId: string};
   // Pass-and-play on one shared phone — roomless, fully offline.
   HattrickLocal: undefined;
   RedCardLocal: undefined;
   Scout: undefined;
   TopBins: undefined;
+  Journeyman: undefined;
+  Teamsheet: undefined;
   Profile: undefined;
   Settings: undefined;
   HowToPlay: undefined;

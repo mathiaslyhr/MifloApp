@@ -6,7 +6,6 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  Share,
   StyleSheet,
   View,
 } from 'react-native';
@@ -15,7 +14,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
-  Button,
   CircleButton,
   FloatingBar,
   Screen,
@@ -52,7 +50,6 @@ import {
   STREAK_MISS_LIMIT,
 } from '../games/tenball/engine';
 import {getListById} from '../games/tenball/lists';
-import {buildShareText} from '../games/tenball/share';
 import {
   loadDailyProgress,
   loadStreak,
@@ -264,15 +261,6 @@ export function TopBinsScreen({navigation}: Props) {
     ]);
   }
 
-  function shareResult() {
-    if (!state || !isFinished(state)) {
-      return;
-    }
-    Share.share({message: `${buildShareText(state)}\n${t('tenball.shareCaption')}`}).catch(
-      () => {},
-    );
-  }
-
   if (!state || !list) {
     return (
       <Screen canvas edges={['left', 'right', 'bottom']}>
@@ -402,7 +390,6 @@ export function TopBinsScreen({navigation}: Props) {
                 <Stat label={t('tenball.streakBest')} value={streak.best} />
               </View>
               <Countdown />
-              <Button label={t('tenball.share')} onPress={shareResult} />
             </View>
           ) : (
             <View style={styles.inputPanel}>

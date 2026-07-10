@@ -40,6 +40,12 @@ type Props = {
    */
   meta?: string;
   /**
+   * "Daily" label rendered as a brand-purple pill (white rim + text) beside the
+   * `meta` pill on the tile's top edge — marks the once-a-day puzzle games.
+   * Ignored when a `badge` is present, like `meta`.
+   */
+  daily?: string;
+  /**
    * How the trailing `badge` renders:
    * - `'pill'` (default): off-white pill with purple text, matching the left
    *   icon badge — for the glassy Games hub on the rainbow canvas.
@@ -91,6 +97,7 @@ export function GameTile({
   disabled = false,
   badge,
   meta,
+  daily,
   badgeVariant = 'pill',
   surface = 'glass',
   SecondaryIcon,
@@ -190,6 +197,17 @@ export function GameTile({
       </View>
     ) : null;
 
+  // The `daily` pill rides the same top edge, right after the meta pill: brand
+  // purple with a white rim and white text, so the once-a-day games pop.
+  const dailyPill =
+    daily && !badge ? (
+      <View style={[styles.topPillBase, styles.dailyPill]}>
+        <Text variant="caption" style={[styles.metaText, styles.dailyText]}>
+          {daily}
+        </Text>
+      </View>
+    ) : null;
+
   // Trailing slot: a `'text'` badge, else the chevron on a tappable tile.
   let trailing: React.ReactNode = null;
   if (badge && badgeVariant === 'text') {
@@ -231,8 +249,11 @@ export function GameTile({
         surface === 'floating' && styles.cardFloating,
         disabled && styles.cardDisabled,
       ]}>
-      {topPill}
-      {metaPill}
+      <View style={styles.topPillRow} pointerEvents="none">
+        {topPill}
+        {metaPill}
+        {dailyPill}
+      </View>
       <View style={styles.badge}>
         <Icon size={22} color={colors.primary} strokeWidth={2} />
       </View>
@@ -344,16 +365,21 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   leadingLabel: {fontSize: 11, lineHeight: 13},
-  // Shared top-edge pill: an off-white chip straddling the tile's top border
-  // (like the lobby host badge). Left-anchored to line up with the title text
-  // below it: card padding + icon badge (44) + gap. Both the trailing-status
-  // `topPill` and the ambient `metaPill` ride here — they're mutually exclusive,
-  // so they share one slot and differ only in their text color.
-  topPillBase: {
+  // Top-edge pill row straddling the tile's top border (like the lobby host
+  // badge). Left-anchored to line up with the title text below it: card
+  // padding + icon badge (44) + gap. The trailing-status `topPill` and the
+  // ambient `metaPill` are mutually exclusive; the `dailyPill` sits beside the
+  // meta pill when both are present.
+  topPillRow: {
     position: 'absolute',
     top: -13,
     left: spacing.lg + 44 + spacing.md,
+    right: spacing.lg,
     zIndex: 2,
+    flexDirection: 'row',
+    gap: spacing.xs,
+  },
+  topPillBase: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
     borderRadius: radii.pill,
@@ -366,6 +392,9 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 3,
   },
+  // The "Daily" variant: brand purple, white rim, white text.
+  dailyPill: {backgroundColor: colors.primary, borderColor: colors.onInk},
+  dailyText: {color: colors.onInk},
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   metaText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   // Plain muted label (picker popup) — no background to clash with glass tiles.

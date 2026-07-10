@@ -37,15 +37,21 @@ const fail = message => {
 // ---- 1. Regenerate the frozen schedules, then refuse uncommitted data ------
 console.log('Regenerating Scout schedule…');
 execSync('npm run --silent scout:schedule', {cwd: root, stdio: 'inherit'});
+console.log('Regenerating Journeyman schedule…');
+execSync('npm run --silent journeyman:schedule', {cwd: root, stdio: 'inherit'});
 console.log('Regenerating Top Bins schedule…');
 execSync('npm run --silent tenball:schedule', {cwd: root, stdio: 'inherit'});
+console.log('Regenerating Team sheet schedule…');
+execSync('npm run --silent teamsheet:schedule', {cwd: root, stdio: 'inherit'});
 
 const WATCHED = [
   'src/data/football',
   'src/games/scout/schedule.generated.ts',
+  'src/games/journeyman/schedule.generated.ts',
   'src/games/red-card/questions.ts',
   'src/games/tenball/lists.ts',
   'src/games/tenball/schedule.generated.ts',
+  'src/games/teamsheet/schedule.generated.ts',
   'src/core/i18n/en.json',
   'src/core/i18n/da.json',
 ];
@@ -65,7 +71,7 @@ if (!DRY_RUN) {
 // ---- 2. Validate via the data test suites ----------------------------------
 console.log('Running data integrity tests…');
 try {
-  execSync('npx jest src/data/football src/games/scout src/games/red-card src/games/tenball --silent', {
+  execSync('npx jest src/data/football src/games/scout src/games/journeyman src/games/red-card src/games/tenball src/games/teamsheet --silent', {
     cwd: root,
     stdio: 'inherit',
   });
@@ -79,10 +85,16 @@ const {DAILY_SECRETS, POOL_SIGNATURE} = require(
   resolve(root, 'src/games/scout/schedule.generated.ts'),
 );
 const {hashDateKey} = require(resolve(root, 'src/games/scout/dailySeed.ts'));
+const {JOURNEYMAN_SCHEDULE, POOL_SIGNATURE: JOURNEYMAN_POOL_SIGNATURE} = require(
+  resolve(root, 'src/games/journeyman/schedule.generated.ts'),
+);
 const {QUESTION_IDS} = require(resolve(root, 'src/games/red-card/questions.ts'));
 const {BUNDLED_LISTS} = require(resolve(root, 'src/games/tenball/lists.ts'));
 const {TENBALL_SCHEDULE} = require(
   resolve(root, 'src/games/tenball/schedule.generated.ts'),
+);
+const {TEAMSHEET_SCHEDULE, POOL_SIGNATURE: TEAMSHEET_POOL_SIGNATURE} = require(
+  resolve(root, 'src/games/teamsheet/schedule.generated.ts'),
 );
 const en = require(resolve(root, 'src/core/i18n/en.json'));
 const da = require(resolve(root, 'src/core/i18n/da.json'));
@@ -92,6 +104,11 @@ const playerIds = new Set(football.FOOTBALLERS.map(f => f.id));
 for (const [dateKey, id] of Object.entries(DAILY_SECRETS)) {
   if (!playerIds.has(id)) {
     fail(`Scout schedule ${dateKey} references unknown footballer '${id}'.`);
+  }
+}
+for (const [dateKey, id] of Object.entries(JOURNEYMAN_SCHEDULE)) {
+  if (!playerIds.has(id)) {
+    fail(`Journeyman schedule ${dateKey} references unknown footballer '${id}'.`);
   }
 }
 for (const squad of football.TREBLE_SQUADS) {
@@ -141,6 +158,24 @@ for (const id of listIds) {
     console.warn(`  warning: Top Bins list '${id}' has no Danish title.`);
   }
 }
+const lineupIds = new Set(football.FAMOUS_LINEUPS.map(l => l.id));
+for (const [dateKey, id] of Object.entries(TEAMSHEET_SCHEDULE)) {
+  if (!lineupIds.has(id)) {
+    fail(`Team sheet schedule ${dateKey} references unknown lineup '${id}'.`);
+  }
+}
+for (const lineup of football.FAMOUS_LINEUPS) {
+  const key = lineup.match?.competitionKey;
+  if (!key) {
+    continue;
+  }
+  if (!en.teamsheet?.competitions?.[key]) {
+    fail(`Team sheet competition key '${key}' (${lineup.id}) has no English text in en.json.`);
+  }
+  if (!da.teamsheet?.competitions?.[key]) {
+    console.warn(`  warning: Team sheet competition key '${key}' has no Danish text.`);
+  }
+}
 
 // ---- 5. Build the content-addressed pack ------------------------------------
 const sections = {
@@ -150,6 +185,10 @@ const sections = {
   trebleSquads: football.TREBLE_SQUADS,
   famousLineups: football.FAMOUS_LINEUPS,
   scoutSchedule: {dailySecrets: DAILY_SECRETS, poolSignature: POOL_SIGNATURE},
+  journeymanSchedule: {
+    dailySecrets: JOURNEYMAN_SCHEDULE,
+    poolSignature: JOURNEYMAN_POOL_SIGNATURE,
+  },
   redCardQuestions: {
     ids: [...QUESTION_IDS],
     i18n: {en: enQuestions, da: daQuestions},
@@ -158,6 +197,10 @@ const sections = {
     lists: BUNDLED_LISTS,
     schedule: TENBALL_SCHEDULE,
     i18n: {en: {lists: enLists}, da: {lists: daLists}},
+  },
+  teamsheetSchedule: {
+    schedule: TEAMSHEET_SCHEDULE,
+    poolSignature: TEAMSHEET_POOL_SIGNATURE,
   },
 };
 const version = createHash('sha256')
@@ -178,9 +221,11 @@ const manifest = JSON.stringify({
 console.log(
   `Pack ${version}: ${football.FOOTBALLERS.length} footballers, ` +
     `${football.CLUBS.length} clubs, ${football.MANAGERS.length} managers, ` +
-    `${Object.keys(DAILY_SECRETS).length} scheduled days, ` +
+    `${Object.keys(DAILY_SECRETS).length} scheduled Scout days, ` +
+    `${Object.keys(JOURNEYMAN_SCHEDULE).length} Journeyman days, ` +
     `${QUESTION_IDS.length} Red Card questions, ` +
-    `${BUNDLED_LISTS.length} Top Bins lists (${(body.length / 1024).toFixed(0)} KB).`,
+    `${BUNDLED_LISTS.length} Top Bins lists, ` +
+    `${Object.keys(TEAMSHEET_SCHEDULE).length} Team sheet days (${(body.length / 1024).toFixed(0)} KB).`,
 );
 
 if (DRY_RUN) {

@@ -24,6 +24,7 @@ import {currentRouteName} from '../../../core/navigation/navigationRef';
 import {FLAG_IMAGES} from '../../../games/hattrick/assets/flags.generated';
 import {LOGO_IMAGES} from '../../../games/hattrick/assets/logos.generated';
 import {hashDateKey} from '../../../games/scout/dailySeed';
+import type {FamousLineup} from '../famousLineups';
 import {hydrate, type ContentPack} from '../store';
 import type {Club, Footballer} from '../types';
 
@@ -184,6 +185,23 @@ export function validateContentPack(payload: unknown): string | null {
     }
   }
 
+  // Optional section: packs published before Journeyman existed must stay
+  // valid on this binary (rejecting them would throw away ALL cached OTA data).
+  const journeyman = p.journeymanSchedule;
+  if (journeyman !== undefined) {
+    if (
+      typeof journeyman.dailySecrets !== 'object' ||
+      journeyman.dailySecrets === null
+    ) {
+      return 'journeymanSchedule malformed';
+    }
+    for (const [dateKey, id] of Object.entries(journeyman.dailySecrets)) {
+      if (!playerIds.has(id)) {
+        return `journeyman schedule ${dateKey} references unknown footballer '${id}'`;
+      }
+    }
+  }
+
   const questions = p.redCardQuestions;
   if (!Array.isArray(questions?.ids) || questions.ids.length === 0) {
     return 'redCardQuestions missing';
@@ -238,6 +256,23 @@ export function validateContentPack(payload: unknown): string | null {
     for (const id of listIds) {
       if (typeof enLists?.[id]?.title !== 'string') {
         return `tenball list '${id}' has no English title`;
+      }
+    }
+  }
+
+  // Optional section: packs published before Team sheet existed must stay
+  // valid on this binary (rejecting them would throw away ALL cached OTA data).
+  const teamsheet = p.teamsheetSchedule;
+  if (teamsheet !== undefined) {
+    if (typeof teamsheet.schedule !== 'object' || teamsheet.schedule === null) {
+      return 'teamsheetSchedule malformed';
+    }
+    const lineupIds = new Set(
+      (p.famousLineups as FamousLineup[]).map(l => l?.id),
+    );
+    for (const [dateKey, id] of Object.entries(teamsheet.schedule)) {
+      if (!lineupIds.has(id)) {
+        return `teamsheet schedule ${dateKey} references unknown lineup '${id}'`;
       }
     }
   }

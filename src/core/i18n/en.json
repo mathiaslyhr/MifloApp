@@ -71,8 +71,10 @@
     "audience": {
       "solo": "Solo",
       "duel": "1v1",
+      "group": "2+",
       "party": "3+"
     },
+    "daily": "Daily",
     "localPlay": "Play on this phone",
     "oneDeviceShort": "1 device",
     "hattrick": {
@@ -124,10 +126,53 @@
     },
     "heatmap": {"title": "Possession", "tagline": "Claim the pitch"},
     "matchday": {"title": "Matchday", "tagline": "First full row wins"},
-    "journeyman": {"title": "Journeyman", "tagline": "Guess who from the clubs"},
-    "teamsheet": {"title": "Teamsheet", "tagline": "Complete famous lineups"},
-    "offside": {"title": "Offside", "tagline": "Spot the odd one out"},
-    "cultHero": {"title": "Cult Hero", "tagline": "The rarest answer wins"}
+    "journeyman": {
+      "title": "Journeyman",
+      "tagline": "Guess who from the clubs",
+      "howToPlay": {
+        "rules": [
+          "Guess the daily footballer from their career path. Every club they played for is on the board from the start.",
+          "Guesses are unlimited. Each wrong guess unlocks a hint: nationality, then position, then age.",
+          "Solve it in 10 or fewer to keep your streak.",
+          "A new career drops every day, the same for everyone."
+        ]
+      }
+    },
+    "teamsheet": {
+      "title": "Team sheet",
+      "tagline": "Complete famous lineups",
+      "howToPlay": {
+        "rules": [
+          "Fill in the day's famous starting XI. Type a name and submit, or tap a shirt to aim at that exact spot.",
+          "Every shirt shows its number. A ball means a goal, a boot means an assist, C is the captain, and swap arrows mean they were substituted.",
+          "Wrong guesses count as misses, but you can't lose. Finish with 5 or fewer to keep your streak.",
+          "A new team sheet drops every day, the same for everyone."
+        ]
+      }
+    },
+    "offside": {
+      "title": "Offside",
+      "tagline": "Spot the odd one out",
+      "howToPlay": {
+        "rules": [
+          "Every round shows four footballers. Three share something hidden, like a club, a country or a trophy, and one does not.",
+          "Everyone races to tap the odd one out before the clock runs dry. The faster you are, the more points a correct pick earns.",
+          "After the last round the highest total wins."
+        ]
+      }
+    },
+    "cultHero": {
+      "title": "Cult Hero",
+      "tagline": "The rarest answer wins",
+      "howToPlay": {
+        "rules": [
+          "Every round shows one prompt, like naming a player who played for a certain club.",
+          "Everyone secretly picks a real footballer at the same time.",
+          "Rare picks score big, famous picks score little, and a wrong answer scores nothing.",
+          "Highest total after all rounds wins."
+        ]
+      }
+    }
   },
   "menu": {
     "title": "Menu",
@@ -302,6 +347,123 @@
       "exit": "Exit"
     }
   },
+  "offside": {
+    "title": "Offside",
+    "loading": "Loading the round…",
+    "backToLobby": "Back to lobby",
+    "round": "Round {{round}} of {{total}}",
+    "roundsPicker": {"label": "Rounds this game"},
+    "topic": {
+      "honours": "Honours",
+      "nationality": "Nationality",
+      "clubs": "Clubs",
+      "positions": "Positions",
+      "mixed": "Mixed"
+    },
+    "question": {
+      "prompt": "Who is the odd one out?",
+      "hint": "Three of them share a hidden link. Tap the one that does not fit, fast.",
+      "waiting": "Locked in. Waiting for the others, {{count}}/{{total}}.",
+      "timeUp": "Time is up. Waiting for the others."
+    },
+    "explanation": {
+      "honour": {
+        "champions-league": "Three of them won the Champions League.",
+        "world-cup": "Three of them won the World Cup.",
+        "ballon-dor": "Three of them won the Ballon d'Or.",
+        "european-championship": "Three of them won the European Championship."
+      },
+      "nationality": "Three of them represent {{country}}.",
+      "club": "Three of them played for {{club}}.",
+      "position": {
+        "GK": "Three of them are goalkeepers.",
+        "DF": "Three of them are defenders.",
+        "MF": "Three of them are midfielders.",
+        "FW": "Three of them are forwards."
+      },
+      "generic": "Three of them share a hidden link."
+    },
+    "reveal": {
+      "correct": "You spotted it",
+      "wrong": "That was not the one",
+      "noAnswer": "No answer this round",
+      "points": "+{{points}} points",
+      "scoreboard": "Scoreboard",
+      "next": "Next round",
+      "toStandings": "Final standings",
+      "hostAdvances": "The host starts the next round…"
+    },
+    "standings": {
+      "winner": "{{name}} won"
+    },
+    "playAgain": "Play again",
+    "waitingHost": "Waiting for the host…",
+    "errorAnswer": "Your answer did not go through. Try again.",
+    "newGameError": "Could not start a new game. Try again.",
+    "help": {
+      "title": "How to play",
+      "rule1": "Every round shows four footballers. Three share something hidden, like a club, a country or a trophy, and one does not.",
+      "rule2": "Everyone races to tap the odd one out before the clock runs dry. The faster you are, the more points a correct pick earns.",
+      "rule3": "After the last round the highest total wins."
+    }
+  },
+  "cultHero": {
+    "title": "Cult Hero",
+    "loading": "Loading…",
+    "help": {
+      "title": "How to play",
+      "rule": "Every round shows one prompt and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
+    },
+    "round": "Round {{round}} of {{total}}",
+    "roundsPicker": {
+      "label": "Prompts this game"
+    },
+    "prompt": {
+      "club": "Name a player who has played for {{club}}",
+      "nat": "Name a player from {{country}}",
+      "league": "Name a player who has played in {{league}}",
+      "honour": {
+        "champions-league": "Name a player who has won the Champions League",
+        "europa-league": "Name a player who has won the Europa League",
+        "world-cup": "Name a World Cup winner",
+        "european-championship": "Name a player who has won the Euros",
+        "copa-america": "Name a player who has won the Copa América",
+        "ballon-dor": "Name a Ballon d'Or winner",
+        "golden-boot": "Name a Golden Boot winner"
+      }
+    },
+    "answer": {
+      "hint": "The rarer your pick, the more points it scores. A wrong answer scores nothing.",
+      "pick": "Pick a footballer",
+      "picked": "Your answer",
+      "change": "Change answer",
+      "waiting": "{{count}} of {{total}} have answered"
+    },
+    "results": {
+      "pill": "The answers",
+      "progress": "{{index}} of {{total}}",
+      "next": "Next answer",
+      "nextRound": "Next prompt",
+      "toFinal": "See the standings",
+      "hostAdvances": "The host reveals the answers",
+      "invalid": "Wrong answer",
+      "points": "+{{score}}",
+      "rarity": "Rarer than {{score}}% of the possible answers"
+    },
+    "final": {
+      "title": "Full time",
+      "winner": "{{name}} won",
+      "scoreboard": "Scoreboard"
+    },
+    "playAgain": "Play again",
+    "backToLobby": "Back to lobby",
+    "waitingHost": "Waiting for the host…",
+    "searchPlaceholder": "Search a footballer",
+    "searchHint": "Start typing to search a footballer",
+    "noPlayers": "No players found",
+    "errorAnswer": "Couldn't send your answer. Try again.",
+    "newGameError": "Couldn't start a new game. Try again."
+  },
   "scout": {
     "reminderTitle": "Daily reminder?",
     "reminderPrompt": "Want a nudge when the new daily games drop?",
@@ -309,7 +471,7 @@
     "reminderNo": "Not now",
     "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "Today's Scout player and Top Bins list are ready.",
+    "reminderNotifBody": "Today's daily games are ready.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Your {{days}}-day Scout streak is on the line.",
     "title": "Scout",
@@ -333,8 +495,6 @@
     "streakBest": "Best streak",
     "streakWarning": "Solve it in 10 guesses or fewer to keep your streak",
     "streakGone": "Your streak is gone for today, but keep guessing",
-    "share": "Share result",
-    "shareCaption": "Play Scout on Miflo",
     "lockedUntilTomorrow": "Come back tomorrow for a new footballer",
     "comeBackIn": "Come back in",
     "columns": {
@@ -355,6 +515,102 @@
       "played": "Played",
       "notPlayed": "Not played",
       "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    }
+  },
+  "journeyman": {
+    "title": "Journeyman",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Your {{days}}-day Journeyman streak is on the line.",
+    "back": "Back",
+    "loading": "Loading…",
+    "instruction": "Whose career is this?",
+    "guessCount": "{{count}} guess used",
+    "guessCount_plural": "{{count}} guesses used",
+    "searchPlaceholder": "Search a footballer",
+    "searchHint": "Start typing to guess a footballer",
+    "noPlayers": "No players found",
+    "alreadyGuessed": "You already guessed that player",
+    "errorSave": "Couldn't save your progress.",
+    "giveUp": "Give up",
+    "giveUpTitle": "Reveal the answer?",
+    "giveUpMessage": "Today's player will be shown and your streak resets.",
+    "giveUpConfirm": "Reveal",
+    "giveUpCancel": "Keep guessing",
+    "won": "Got it in {{count}}!",
+    "wonNoStreak": "Got it in {{count}}. 10 or fewer keeps your streak next time.",
+    "revealedTitle": "The answer is out",
+    "answerLabel": "The answer",
+    "answerAge": "Age {{value}}",
+    "guessesUsed": "Guesses",
+    "streakCurrent": "Current streak",
+    "streakBest": "Best streak",
+    "streakWarning": "Solve it in 10 guesses or fewer to keep your streak",
+    "streakGone": "Your streak is gone for today, but keep guessing",
+    "comeBackIn": "Come back in",
+    "years": "{{from}}-{{to}}",
+    "yearsNow": "{{from}}-now",
+    "loan": "Loan",
+    "hints": {
+      "nationality": "Nation",
+      "position": "Position",
+      "age": "Age"
+    },
+    "help": {
+      "title": "How to play",
+      "rule": "Guess the day's footballer from their career path. Every club spell is on the board from the start, oldest first.",
+      "hints": "Guesses are unlimited. Each wrong guess unlocks a hint: nationality first, then position, then age.",
+      "streak": "Solve it in 10 guesses or fewer to keep your streak. Giving up resets it.",
+      "daily": "A new career drops every day, the same for everyone."
+    }
+  },
+  "teamsheet": {
+    "title": "Team sheet",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Your {{days}}-day Team sheet streak is on the line.",
+    "back": "Back",
+    "loading": "Loading…",
+    "progress": "{{found}} of 11 found",
+    "missCount": "{{count}} miss",
+    "missCount_plural": "{{count}} misses",
+    "inputPlaceholder": "Type a player",
+    "targetPlaceholder": "Number {{shirt}}?",
+    "missToast": "Not in this XI",
+    "wrongSlotToast": "On the sheet, but not in that spot",
+    "alreadyFound": "Already on the sheet",
+    "alreadyTried": "You already tried that",
+    "errorSave": "Couldn't save your progress.",
+    "giveUp": "Give up",
+    "giveUpTitle": "Reveal the team sheet?",
+    "giveUpMessage": "The remaining players will be shown and your streak resets.",
+    "giveUpConfirm": "Reveal",
+    "giveUpCancel": "Keep guessing",
+    "won": "You named all 11!",
+    "wonNoStreak": "All 11 named. 5 or fewer misses keeps your streak next time.",
+    "revealedTitle": "The full team sheet",
+    "misses": "Misses",
+    "streakCurrent": "Current streak",
+    "streakBest": "Best streak",
+    "streakWarning": "Finish with 5 or fewer misses to keep your streak",
+    "streakGone": "Your streak is gone for today, but keep going",
+    "comeBackIn": "Come back in",
+    "aet": "after extra time",
+    "pens": "{{for}}–{{against}} on penalties",
+    "help": {
+      "title": "How to play",
+      "rule": "Fill in the day's famous starting XI. Type a name and hit return, or tap a shirt first to aim at that exact spot. Aiming at the wrong spot counts as a miss.",
+      "clues": "Every shirt shows its number. A ball means they scored in the match, a boot means an assist, C is the captain, and the swap arrows mean they were substituted.",
+      "streak": "Wrong guesses count as misses, but you can't lose. Finish with 5 or fewer to keep your streak.",
+      "daily": "A new team sheet drops every day, the same for everyone."
+    },
+    "competitions": {
+      "worldCupFinal": "World Cup Final {{year}}",
+      "euroFinal": "Euro Final {{year}}",
+      "uclFinal": "Champions League Final {{year}}",
+      "europeanCupFinal": "European Cup Final {{year}}",
+      "europaFinal": "Europa League Final {{year}}",
+      "copaFinal": "Copa América Final {{year}}",
+      "cupFinal": "Cup Final {{year}}",
+      "leagueMatch": "League classic {{year}}"
     }
   },
   "tenball": {
@@ -385,8 +641,6 @@
     "streakBest": "Best streak",
     "streakWarning": "Finish with 10 or fewer misses to keep your streak",
     "streakGone": "Your streak is gone for today, but keep going",
-    "share": "Share result",
-    "shareCaption": "Play Top Bins on Miflo",
     "comeBackIn": "Come back in",
     "help": {
       "title": "How to play",

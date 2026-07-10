@@ -71,8 +71,10 @@
     "audience": {
       "solo": "Solo",
       "duel": "1v1",
+      "group": "2+",
       "party": "3+"
     },
+    "daily": "Daglig",
     "localPlay": "Spil på denne telefon",
     "oneDeviceShort": "1 enhed",
     "hattrick": {
@@ -124,10 +126,53 @@
     },
     "heatmap": {"title": "Possession", "tagline": "Erobr banen felt for felt"},
     "matchday": {"title": "Matchday", "tagline": "Første fulde række vinder"},
-    "journeyman": {"title": "Journeyman", "tagline": "Gæt spilleren på klubberne"},
-    "teamsheet": {"title": "Teamsheet", "tagline": "Udfyld berømte XI'er"},
-    "offside": {"title": "Offside", "tagline": "Find den der stikker ud"},
-    "cultHero": {"title": "Cult Hero", "tagline": "Det sjældneste svar vinder"}
+    "journeyman": {
+      "title": "Journeyman",
+      "tagline": "Gæt spilleren på klubberne",
+      "howToPlay": {
+        "rules": [
+          "Gæt dagens fodboldspiller ud fra karrieren. Alle klubber spilleren har spillet for, vises fra start.",
+          "Du har uendelige gæt. Hvert forkert gæt låser et hint op: nationalitet, så position, så alder.",
+          "Klar den på 10 eller færre for at beholde din stime.",
+          "En ny karriere kommer hver dag, den samme for alle."
+        ]
+      }
+    },
+    "teamsheet": {
+      "title": "Team sheet",
+      "tagline": "Udfyld berømte XI'er",
+      "howToPlay": {
+        "rules": [
+          "Udfyld dagens berømte startopstilling. Skriv et navn og send, eller tryk på en trøje for at sigte efter netop den plads.",
+          "Hver trøje viser sit nummer. En bold betyder mål, en støvle betyder assist, C er anføreren, og skiftepile betyder at spilleren blev skiftet ud.",
+          "Forkerte gæt tæller som forbiere, men du kan ikke tabe. Afslut med 5 eller færre for at beholde din stime.",
+          "Et nyt holdkort kommer hver dag, det samme for alle."
+        ]
+      }
+    },
+    "offside": {
+      "title": "Offside",
+      "tagline": "Find den der stikker ud",
+      "howToPlay": {
+        "rules": [
+          "Hver runde viser fire fodboldspillere. Tre af dem har noget skjult til fælles, fx en klub, et land eller et trofæ, og én har det ikke.",
+          "Alle kapper om at trykke på den der stikker ud, før tiden løber ud. Jo hurtigere du er, jo flere point giver et rigtigt svar.",
+          "Efter sidste runde vinder den højeste score."
+        ]
+      }
+    },
+    "cultHero": {
+      "title": "Cult Hero",
+      "tagline": "Det sjældneste svar vinder",
+      "howToPlay": {
+        "rules": [
+          "Hver runde viser én opgave, fx at nævne en spiller der har spillet for en bestemt klub.",
+          "Alle vælger i hemmelighed en rigtig fodboldspiller på samme tid.",
+          "Sjældne svar giver mange point, kendte svar giver få, og et forkert svar giver ingenting.",
+          "Flest point efter alle runder vinder."
+        ]
+      }
+    }
   },
   "menu": {
     "title": "Menu",
@@ -302,6 +347,123 @@
       "exit": "Afslut"
     }
   },
+  "offside": {
+    "title": "Offside",
+    "loading": "Indlæser runden…",
+    "backToLobby": "Tilbage til rummet",
+    "round": "Runde {{round}} af {{total}}",
+    "roundsPicker": {"label": "Runder i spillet"},
+    "topic": {
+      "honours": "Titler",
+      "nationality": "Nationalitet",
+      "clubs": "Klubber",
+      "positions": "Positioner",
+      "mixed": "Blandet"
+    },
+    "question": {
+      "prompt": "Hvem stikker ud?",
+      "hint": "Tre af dem har noget skjult til fælles. Tryk hurtigt på den der ikke passer ind.",
+      "waiting": "Svar afgivet. Venter på de andre, {{count}}/{{total}}.",
+      "timeUp": "Tiden er gået. Venter på de andre."
+    },
+    "explanation": {
+      "honour": {
+        "champions-league": "Tre af dem har vundet Champions League.",
+        "world-cup": "Tre af dem har vundet VM.",
+        "ballon-dor": "Tre af dem har vundet Ballon d'Or.",
+        "european-championship": "Tre af dem har vundet EM."
+      },
+      "nationality": "Tre af dem repræsenterer {{country}}.",
+      "club": "Tre af dem har spillet for {{club}}.",
+      "position": {
+        "GK": "Tre af dem er målmænd.",
+        "DF": "Tre af dem er forsvarsspillere.",
+        "MF": "Tre af dem er midtbanespillere.",
+        "FW": "Tre af dem er angribere."
+      },
+      "generic": "Tre af dem har noget skjult til fælles."
+    },
+    "reveal": {
+      "correct": "Du så den",
+      "wrong": "Det var ikke den",
+      "noAnswer": "Intet svar i denne runde",
+      "points": "+{{points}} point",
+      "scoreboard": "Stillingen",
+      "next": "Næste runde",
+      "toStandings": "Slutstillingen",
+      "hostAdvances": "Værten starter næste runde…"
+    },
+    "standings": {
+      "winner": "{{name}} vandt"
+    },
+    "playAgain": "Spil igen",
+    "waitingHost": "Venter på værten…",
+    "errorAnswer": "Dit svar kom ikke igennem. Prøv igen.",
+    "newGameError": "Kunne ikke starte et nyt spil. Prøv igen.",
+    "help": {
+      "title": "Sådan spiller du",
+      "rule1": "Hver runde viser fire fodboldspillere. Tre har noget skjult til fælles, fx en klub, et land eller et trofæ, og en har ikke.",
+      "rule2": "Alle kapper om at trykke på den der stikker ud, før uret løber tørt. Jo hurtigere du er, jo flere point giver et rigtigt svar.",
+      "rule3": "Efter sidste runde vinder den højeste score."
+    }
+  },
+  "cultHero": {
+    "title": "Cult Hero",
+    "loading": "Indlæser…",
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Hver runde viser én opgave, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
+    },
+    "round": "Runde {{round}} af {{total}}",
+    "roundsPicker": {
+      "label": "Opgaver i spillet"
+    },
+    "prompt": {
+      "club": "Nævn en spiller der har spillet for {{club}}",
+      "nat": "Nævn en spiller fra {{country}}",
+      "league": "Nævn en spiller der har spillet i {{league}}",
+      "honour": {
+        "champions-league": "Nævn en spiller der har vundet Champions League",
+        "europa-league": "Nævn en spiller der har vundet Europa League",
+        "world-cup": "Nævn en spiller der har vundet VM",
+        "european-championship": "Nævn en spiller der har vundet EM",
+        "copa-america": "Nævn en spiller der har vundet Copa América",
+        "ballon-dor": "Nævn en spiller der har vundet Ballon d'Or",
+        "golden-boot": "Nævn en spiller der har vundet en Golden Boot"
+      }
+    },
+    "answer": {
+      "hint": "Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting.",
+      "pick": "Vælg en fodboldspiller",
+      "picked": "Dit svar",
+      "change": "Skift svar",
+      "waiting": "{{count}} af {{total}} har svaret"
+    },
+    "results": {
+      "pill": "Svarene",
+      "progress": "{{index}} af {{total}}",
+      "next": "Næste svar",
+      "nextRound": "Næste opgave",
+      "toFinal": "Se stillingen",
+      "hostAdvances": "Værten afslører svarene",
+      "invalid": "Forkert svar",
+      "points": "+{{score}}",
+      "rarity": "Sjældnere end {{score}}% af de mulige svar"
+    },
+    "final": {
+      "title": "Slutfløjt",
+      "winner": "{{name}} vandt",
+      "scoreboard": "Stilling"
+    },
+    "playAgain": "Spil igen",
+    "backToLobby": "Tilbage til rummet",
+    "waitingHost": "Venter på værten…",
+    "searchPlaceholder": "Søg efter en fodboldspiller",
+    "searchHint": "Begynd at skrive for at søge efter en spiller",
+    "noPlayers": "Ingen spillere fundet",
+    "errorAnswer": "Kunne ikke sende dit svar. Prøv igen.",
+    "newGameError": "Kunne ikke starte et nyt spil. Prøv igen."
+  },
   "scout": {
     "reminderTitle": "Daglig påmindelse?",
     "reminderPrompt": "Vil du have et prik, når dagens nye spil lander?",
@@ -309,7 +471,7 @@
     "reminderNo": "Ikke nu",
     "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "Dagens spiller i Scout og Top Bins-listen er klar.",
+    "reminderNotifBody": "Dagens daglige spil er klar.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Din Scout-stime på {{days}} dage er på spil.",
     "title": "Scout",
@@ -333,8 +495,6 @@
     "streakBest": "Bedste stime",
     "streakWarning": "Klar den på 10 eller færre gæt for at beholde din stime",
     "streakGone": "Din stime er tabt i dag, men gæt videre",
-    "share": "Del resultat",
-    "shareCaption": "Spil Scout på Miflo",
     "lockedUntilTomorrow": "Kom tilbage i morgen for en ny spiller",
     "comeBackIn": "Kom tilbage om",
     "columns": {
@@ -355,6 +515,102 @@
       "played": "Spillet",
       "notPlayed": "Ikke spillet",
       "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
+    }
+  },
+  "journeyman": {
+    "title": "Journeyman",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Din Journeyman-stime på {{days}} dage er på spil.",
+    "back": "Tilbage",
+    "loading": "Indlæser…",
+    "instruction": "Hvis karriere er det her?",
+    "guessCount": "{{count}} gæt brugt",
+    "guessCount_plural": "{{count}} gæt brugt",
+    "searchPlaceholder": "Søg efter en fodboldspiller",
+    "searchHint": "Skriv for at gætte en fodboldspiller",
+    "noPlayers": "Ingen spillere fundet",
+    "alreadyGuessed": "Du har allerede gættet på den spiller",
+    "errorSave": "Kunne ikke gemme din fremgang.",
+    "giveUp": "Giv op",
+    "giveUpTitle": "Afslør svaret?",
+    "giveUpMessage": "Dagens spiller bliver vist, og din stime nulstilles.",
+    "giveUpConfirm": "Afslør",
+    "giveUpCancel": "Gæt videre",
+    "won": "Du fik den i {{count}}!",
+    "wonNoStreak": "Du fik den i {{count}}. 10 eller færre beholder din stime næste gang.",
+    "revealedTitle": "Svaret er afsløret",
+    "answerLabel": "Svaret",
+    "answerAge": "Alder {{value}}",
+    "guessesUsed": "Gæt",
+    "streakCurrent": "Nuværende stime",
+    "streakBest": "Bedste stime",
+    "streakWarning": "Løs den med 10 gæt eller færre for at beholde din stime",
+    "streakGone": "Din stime er væk for i dag, men gæt videre",
+    "comeBackIn": "Kom tilbage om",
+    "years": "{{from}}-{{to}}",
+    "yearsNow": "{{from}}-nu",
+    "loan": "Leje",
+    "hints": {
+      "nationality": "Nation",
+      "position": "Position",
+      "age": "Alder"
+    },
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Gæt dagens fodboldspiller ud fra karrieren. Alle klubophold vises fra start, ældste først.",
+      "hints": "Du har uendelige gæt. Hvert forkert gæt låser et hint op: først nationalitet, så position, så alder.",
+      "streak": "Løs den med 10 gæt eller færre for at beholde din stime. Giver du op, nulstilles den.",
+      "daily": "En ny karriere kommer hver dag, den samme for alle."
+    }
+  },
+  "teamsheet": {
+    "title": "Team sheet",
+    "streakNotifTitle": "Miflo",
+    "streakNotifBody": "Din Team sheet-stime på {{days}} dage er på spil.",
+    "back": "Tilbage",
+    "loading": "Indlæser…",
+    "progress": "{{found}} af 11 fundet",
+    "missCount": "{{count}} forbier",
+    "missCount_plural": "{{count}} forbiere",
+    "inputPlaceholder": "Skriv en spiller",
+    "targetPlaceholder": "Nummer {{shirt}}?",
+    "missToast": "Ikke med i startopstillingen",
+    "wrongSlotToast": "Med på holdkortet, men ikke på den plads",
+    "alreadyFound": "Allerede på holdkortet",
+    "alreadyTried": "Det har du allerede prøvet",
+    "errorSave": "Kunne ikke gemme din fremgang.",
+    "giveUp": "Giv op",
+    "giveUpTitle": "Afslør holdkortet?",
+    "giveUpMessage": "Resten af spillerne bliver vist, og din stime nulstilles.",
+    "giveUpConfirm": "Afslør",
+    "giveUpCancel": "Gæt videre",
+    "won": "Du fandt alle 11!",
+    "wonNoStreak": "Alle 11 fundet. 5 eller færre forbiere beholder din stime næste gang.",
+    "revealedTitle": "Hele holdkortet",
+    "misses": "Forbiere",
+    "streakCurrent": "Nuværende stime",
+    "streakBest": "Bedste stime",
+    "streakWarning": "Afslut med 5 eller færre forbiere for at beholde din stime",
+    "streakGone": "Din stime er væk for i dag, men gæt videre",
+    "comeBackIn": "Kom tilbage om",
+    "aet": "efter forlænget spilletid",
+    "pens": "{{for}}–{{against}} efter straffe",
+    "help": {
+      "title": "Sådan spiller du",
+      "rule": "Udfyld dagens berømte startopstilling. Skriv et navn og tryk retur, eller tryk på en trøje først for at sigte efter netop den plads. Rammer du forkert plads, tæller det som en forbier.",
+      "clues": "Hver trøje viser sit nummer. En bold betyder mål i kampen, en støvle betyder assist, C er anføreren, og skiftepilene betyder at spilleren blev skiftet ud.",
+      "streak": "Forkerte gæt tæller som forbiere, men du kan ikke tabe. Afslut med 5 eller færre for at beholde din stime.",
+      "daily": "Et nyt holdkort kommer hver dag, det samme for alle."
+    },
+    "competitions": {
+      "worldCupFinal": "VM-finalen {{year}}",
+      "euroFinal": "EM-finalen {{year}}",
+      "uclFinal": "Champions League-finalen {{year}}",
+      "europeanCupFinal": "Europa Cup-finalen {{year}}",
+      "europaFinal": "Europa League-finalen {{year}}",
+      "copaFinal": "Copa América-finalen {{year}}",
+      "cupFinal": "Pokalfinalen {{year}}",
+      "leagueMatch": "Ligaklassiker {{year}}"
     }
   },
   "tenball": {
@@ -385,8 +641,6 @@
     "streakBest": "Bedste stime",
     "streakWarning": "Klar den med 10 eller færre forbiere for at beholde din stime",
     "streakGone": "Din stime er væk for i dag, men gæt videre",
-    "share": "Del resultat",
-    "shareCaption": "Spil Top Bins på Miflo",
     "comeBackIn": "Kom tilbage om",
     "help": {
       "title": "Sådan spiller du",

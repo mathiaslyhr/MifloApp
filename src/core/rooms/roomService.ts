@@ -334,6 +334,98 @@ export async function redCardGuess(
   }
 }
 
+// ── Offside ──────────────────────────────────────────────────────
+// No secrets: the host builds the deck client-side and the whole game state is
+// broadcast. The server verifies each answer against the stored deck and owns
+// the score totals; see supabase/migrations/0017_offside.sql.
+
+/**
+ * Host starts a game: ships the host-built deck (see
+ * src/games/offside/questions.ts). `rounds` must equal the deck length — the
+ * generator can return fewer rounds than asked when the pool caps out.
+ */
+export async function startOffsideGame(
+  roomId: string,
+  deck: unknown[],
+  rounds: number,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('start_offside_game', {
+    p_room_id: roomId,
+    p_deck: deck,
+    p_rounds: rounds,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host plays again from the standings: fresh deck, everyone back to zero. */
+export async function restartOffsideGame(
+  roomId: string,
+  deck: unknown[],
+  rounds: number,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('restart_offside_game', {
+    p_room_id: roomId,
+    p_deck: deck,
+    p_rounds: rounds,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Submit the caller's pick for round `round` (null = the timer ran out).
+ * `points` is the client-computed speed score; the server re-verifies the pick
+ * against the deck and clamps the range. Stale or duplicate submits are
+ * silently ignored server-side, so timeout auto-submits never race the reveal.
+ */
+export async function submitOffsideAnswer(
+  roomId: string,
+  round: number,
+  option: number | null,
+  points: number,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('submit_offside_answer', {
+    p_room_id: roomId,
+    p_round: round,
+    p_option: option,
+    p_points: points,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Host resolves a question whose deadline has passed with answers still
+ * missing (someone left or backgrounded). Idempotent once resolved.
+ */
+export async function forceOffsideReveal(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('force_offside_reveal', {
+    p_room_id: roomId,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host moves on from a reveal: next question, or standings after the last. */
+export async function advanceOffsideRound(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('advance_offside_round', {
+    p_room_id: roomId,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
 /** Host returns the party to the lobby (Back to lobby). */
 export async function returnToLobby(roomId: string): Promise<void> {
   const client = await requireClient();
@@ -582,6 +674,67 @@ export async function setPhase(
     p_phase: phase,
     p_index: index,
     p_deadline: new Date(deadlineTs).toISOString(),
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+// ── Cult Hero ────────────────────────────────────────────────────
+// Picks stay hidden and rarity is scored SERVER-SIDE against the global answer
+// stats; see supabase/migrations/0018_cult_hero.sql.
+
+/**
+ * Host starts a game: `prompts` is the host-built payload of prompt keys with
+ * their eligible footballer ids + fame-prior pseudo-counts (see
+ * src/games/cult-hero/famePrior.ts), one entry per round.
+ */
+export async function startCultHeroGame(
+  roomId: string,
+  rounds: number,
+  prompts: unknown[],
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('start_cult_hero_game', {
+    p_room_id: roomId,
+    p_rounds: rounds,
+    p_prompts: prompts,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** Host plays again (Play again) — fresh prompts, running scores preserved. */
+export async function restartCultHeroGame(
+  roomId: string,
+  rounds: number,
+  prompts: unknown[],
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('restart_cult_hero_game', {
+    p_room_id: roomId,
+    p_rounds: rounds,
+    p_prompts: prompts,
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Submit (or, until the round resolves, safely resubmit) the caller's pick for
+ * the current prompt. The server hides picks until everyone is in, then scores
+ * the round and publishes the results into the broadcast state.
+ */
+export async function submitCultHeroAnswer(
+  roomId: string,
+  footballerId: string,
+): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('submit_cult_hero_answer', {
+    p_room_id: roomId,
+    p_footballer_id: footballerId,
   });
   if (error) {
     throw error;

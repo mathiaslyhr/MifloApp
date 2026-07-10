@@ -46,6 +46,10 @@ export function GamePickerScreen({route, navigation}: Props) {
       navigation.replace('Hattrick', {roomId});
     } else if (target === 'RedCard') {
       navigation.replace('RedCard', {roomId});
+    } else if (target === 'Offside') {
+      navigation.replace('Offside', {roomId});
+    } else if (target === 'CultHero') {
+      navigation.replace('CultHero', {roomId});
     } else {
       setBusy(false);
       navigation.goBack();

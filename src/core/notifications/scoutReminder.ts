@@ -1,14 +1,18 @@
 /**
- * Local daily reminder for the daily games (Scout + Top Bins). Scheduled
- * fully on-device (no push infrastructure, nothing leaves the phone): a
- * repeating 09:00 nudge that today's games have dropped.
+ * Local daily reminder for ALL the daily games (currently Scout, Top Bins,
+ * Journeyman and Team sheet — a new daily just adds its progress loader to
+ * `solvedToday` below and its own streak saver). Scheduled fully on-device
+ * (no push infrastructure, nothing leaves the phone): a repeating 09:00
+ * nudge that today's games have dropped, skipped on mornings where every
+ * daily is already finished.
  *
  * The opt-in prompt is offered ONCE, right after the user finishes their
- * first daily puzzle (Scout or Top Bins) — that's the moment the reminder is
- * worth something to them. A Settings toggle covers changed minds either way.
+ * first daily puzzle — whichever daily game that happens to be gets to ask.
+ * A Settings toggle covers changed minds either way.
  *
- * Module/key names still say "scout" — they predate Top Bins and the pref key
- * is persisted on devices, so they stay (same policy as the imposter ids).
+ * Module/key names still say "scout" — they predate the other dailies and
+ * the pref key is persisted on devices, so they stay (same policy as the
+ * imposter ids).
  */
 import notifee, {
   AuthorizationStatus,
@@ -17,8 +21,10 @@ import notifee, {
 } from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../i18n';
+import {loadDailyProgress as loadJourneymanProgress} from '../../games/journeyman/storage';
 import {dateKeyFor} from '../../games/scout/dailySeed';
 import {loadDailyProgress} from '../../games/scout/mysteryStorage';
+import {loadDailyProgress as loadTeamsheetProgress} from '../../games/teamsheet/storage';
 import {loadDailyProgress as loadTenballProgress} from '../../games/tenball/storage';
 
 const PREF_KEY = 'app.scoutReminder';
@@ -50,9 +56,11 @@ export async function syncScoutReminder(): Promise<void> {
       return;
     }
     const today = dateKeyFor(new Date());
-    const [scout, tenball] = await Promise.all([
+    const [scout, tenball, journeyman, teamsheet] = await Promise.all([
       loadDailyProgress(today),
       loadTenballProgress(today),
+      loadJourneymanProgress(today),
+      loadTeamsheetProgress(today),
     ]);
     const scoutDone =
       scout?.secretId != null && scout.guessedIds.includes(scout.secretId);
@@ -61,7 +69,17 @@ export async function syncScoutReminder(): Promise<void> {
       (tenball.gaveUp ||
         new Set(tenball.guesses.map(g => g.rank).filter(r => r !== undefined))
           .size === 10);
-    const solvedToday = scoutDone && tenballDone;
+    const journeymanDone =
+      journeyman != null &&
+      (journeyman.gaveUp ||
+        (journeyman.secretId != null &&
+          journeyman.guessedIds.includes(journeyman.secretId)));
+    const teamsheetDone =
+      teamsheet != null &&
+      (teamsheet.gaveUp ||
+        new Set(teamsheet.guesses.map(g => g.slot).filter(s => s !== undefined))
+          .size === 11);
+    const solvedToday = scoutDone && tenballDone && journeymanDone && teamsheetDone;
     await notifee.createTriggerNotification(
       {
         id: NOTIFICATION_ID,

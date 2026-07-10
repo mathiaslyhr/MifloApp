@@ -1,7 +1,8 @@
 /**
  * @format
  */
-import {FAMOUS_LINEUPS, getById} from '..';
+import {COMPETITION_KEYS, FAMOUS_LINEUPS, getById, isTeamsheetLineup} from '..';
+import {fold} from '../../../games/hattrick/playerSearch';
 import type {Position} from '../types';
 
 const POSITIONS: Position[] = ['GK', 'DF', 'MF', 'FW'];
@@ -51,6 +52,125 @@ describe('famous lineups integrity', () => {
           expect(getById(player.footballerId)).toBeDefined();
         }
       }
+    }
+  });
+});
+
+/**
+ * Team sheet enrichment integrity — runs over the eligible subset only, so
+ * unenriched legacy entries stay valid while the pool grows.
+ */
+describe('teamsheet lineups', () => {
+  const ELIGIBLE = FAMOUS_LINEUPS.filter(isTeamsheetLineup);
+
+  it('has an eligible pool', () => {
+    expect(ELIGIBLE.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it('a lineup with match context is fully enriched', () => {
+    // `match` present but a missing shirt/captain means a half-done entry —
+    // it would silently drop out of the pool, so fail loudly instead. Checked
+    // directly (not via isTeamsheetLineup) so pre-1990 entries, which are
+    // enriched but year-gated out of the pool, stay covered.
+    for (const lineup of FAMOUS_LINEUPS) {
+      if (lineup.match) {
+        const enriched =
+          lineup.players.length === 11 &&
+          lineup.players.every(p => p.shirt !== undefined) &&
+          lineup.players.filter(p => p.captain).length === 1;
+        expect({id: lineup.id, enriched}).toEqual({id: lineup.id, enriched: true});
+      }
+    }
+  });
+
+  it('the goalkeeper leads the players array', () => {
+    for (const lineup of ELIGIBLE) {
+      expect(lineup.players[0].position).toBe('GK');
+    }
+  });
+
+  it('shirt numbers are unique within the XI and in 1-99', () => {
+    for (const lineup of ELIGIBLE) {
+      const shirts = lineup.players.map(p => p.shirt!);
+      expect(new Set(shirts).size).toBe(11);
+      for (const shirt of shirts) {
+        expect(shirt).toBeGreaterThanOrEqual(1);
+        expect(shirt).toBeLessThanOrEqual(99);
+      }
+    }
+  });
+
+  it('goals and assists balance against the score', () => {
+    for (const lineup of ELIGIBLE) {
+      const {goalsFor, oppOwnGoals = 0} = lineup.match!;
+      const goals = lineup.players.reduce((n, p) => n + (p.goals ?? 0), 0);
+      const assists = lineup.players.reduce((n, p) => n + (p.assists ?? 0), 0);
+      // Subs may account for the rest; the XI can never exceed the score.
+      expect(goals + oppOwnGoals).toBeLessThanOrEqual(goalsFor);
+      expect(assists).toBeLessThanOrEqual(goalsFor);
+    }
+  });
+
+  it('shootout fields come in pairs and only after a draw', () => {
+    for (const lineup of ELIGIBLE) {
+      const {goalsFor, goalsAgainst, pensFor, pensAgainst} = lineup.match!;
+      expect(pensFor === undefined).toBe(pensAgainst === undefined);
+      if (pensFor !== undefined) {
+        expect(goalsFor).toBe(goalsAgainst);
+      }
+    }
+  });
+
+  it('match context is coherent', () => {
+    for (const lineup of ELIGIBLE) {
+      const match = lineup.match!;
+      expect(COMPETITION_KEYS).toContain(match.competitionKey);
+      expect(match.opponent.trim().length).toBeGreaterThan(0);
+      expect(match.opponent).not.toBe(lineup.team);
+      expect(match.goalsFor).toBeGreaterThanOrEqual(0);
+      expect(match.goalsAgainst).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('no accepted answer token maps to two players in one XI', () => {
+    // Mirrors the engine's acceptedTokens rules: full name + aliases always;
+    // the bare surname only when unique. A collision would make a typed guess
+    // ambiguous between two slots.
+    for (const lineup of ELIGIBLE) {
+      const owners = new Map<string, number>();
+      const claim = (token: string, slot: number) => {
+        const existing = owners.get(token);
+        expect({id: lineup.id, token, clash: existing ?? slot}).toEqual({
+          id: lineup.id,
+          token,
+          clash: slot,
+        });
+        owners.set(token, slot);
+      };
+      const surnames = lineup.players.map(p => {
+        const tokens = fold(p.name).split(/\s+/);
+        return tokens[tokens.length - 1];
+      });
+      lineup.players.forEach((player, slot) => {
+        claim(fold(player.name), slot);
+        for (const alias of player.aliases ?? []) {
+          claim(fold(alias), slot);
+        }
+      });
+      lineup.players.forEach((player, slot) => {
+        const surname = surnames[slot];
+        if (surnames.filter(s => s === surname).length === 1) {
+          const existing = owners.get(surname);
+          // A unique surname may coincide with its own player's tokens only.
+          if (existing !== undefined) {
+            expect({id: lineup.id, surname, owner: existing}).toEqual({
+              id: lineup.id,
+              surname,
+              owner: slot,
+            });
+          }
+        }
+      });
     }
   });
 });

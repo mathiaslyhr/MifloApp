@@ -48,9 +48,10 @@ export type GameType =
  * chip on each tile in the Games hub (label resolved via `games.audience.*`):
  * - `solo` — best played alone.
  * - `duel` — head-to-head, two players (1v1).
+ * - `group` — two or more; works head-to-head AND as a party.
  * - `party` — a group of three or more.
  */
-export type GameCategory = 'solo' | 'duel' | 'party';
+export type GameCategory = 'solo' | 'duel' | 'group' | 'party';
 
 export type GameEntry = {
   gameType: GameType;
@@ -71,6 +72,11 @@ export type GameEntry = {
    * Tapping the tile opens a mode chooser: "On this phone" vs online.
    */
   localPlay?: boolean;
+  /**
+   * A once-a-day puzzle (same for everyone, streaks). The hub tile shows a
+   * "Daily" pill next to the audience pill.
+   */
+  daily?: boolean;
 };
 
 /**
@@ -86,6 +92,7 @@ export const GAMES: GameEntry[] = [
     category: 'solo',
     available: true,
     single: true,
+    daily: true,
   },
   {
     gameType: 'hattrick',
@@ -110,6 +117,30 @@ export const GAMES: GameEntry[] = [
     category: 'solo',
     available: true,
     single: true,
+    daily: true,
+  },
+  {
+    gameType: 'journeyman',
+    i18nKey: 'journeyman',
+    Icon: Route,
+    category: 'solo',
+    available: true,
+    single: true,
+    daily: true,
+  },
+  {
+    gameType: 'offside',
+    i18nKey: 'offside',
+    Icon: Flag,
+    category: 'group',
+    available: true,
+  },
+  {
+    gameType: 'cult-hero',
+    i18nKey: 'cultHero',
+    Icon: Gem,
+    category: 'group',
+    available: true,
   },
   {
     gameType: 'heatmap',
@@ -126,32 +157,13 @@ export const GAMES: GameEntry[] = [
     available: false,
   },
   {
-    gameType: 'journeyman',
-    i18nKey: 'journeyman',
-    Icon: Route,
-    category: 'solo',
-    available: false,
-  },
-  {
     gameType: 'teamsheet',
     i18nKey: 'teamsheet',
     Icon: ClipboardList,
-    category: 'party',
-    available: false,
-  },
-  {
-    gameType: 'offside',
-    i18nKey: 'offside',
-    Icon: Flag,
-    category: 'party',
-    available: false,
-  },
-  {
-    gameType: 'cult-hero',
-    i18nKey: 'cultHero',
-    Icon: Gem,
-    category: 'party',
-    available: false,
+    category: 'solo',
+    available: true,
+    single: true,
+    daily: true,
   },
 ];
 
