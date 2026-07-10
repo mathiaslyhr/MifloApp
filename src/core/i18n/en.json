@@ -364,24 +364,26 @@
       "prompt": "Who is the odd one out?",
       "hint": "Three of them share a hidden link. Tap the one that does not fit, fast.",
       "waiting": "Locked in. Waiting for the others, {{count}}/{{total}}.",
+      "waitingNames": "Locked in. Waiting for {{names}}…",
+      "and": "and",
       "timeUp": "Time is up. Waiting for the others."
     },
     "explanation": {
       "honour": {
-        "champions-league": "Three of them won the Champions League.",
-        "world-cup": "Three of them won the World Cup.",
-        "ballon-dor": "Three of them won the Ballon d'Or.",
-        "european-championship": "Three of them won the European Championship."
+        "champions-league": "{{name}} never won the Champions League. The other three all did.",
+        "world-cup": "{{name}} never won the World Cup. The other three all did.",
+        "ballon-dor": "{{name}} never won the Ballon d'Or. The other three all did.",
+        "european-championship": "{{name}} never won the European Championship. The other three all did."
       },
-      "nationality": "Three of them represent {{country}}.",
-      "club": "Three of them played for {{club}}.",
+      "nationality": "{{name}} does not represent {{country}}. The other three do.",
+      "club": "{{name}} never played for {{club}}. The other three did.",
       "position": {
-        "GK": "Three of them are goalkeepers.",
-        "DF": "Three of them are defenders.",
-        "MF": "Three of them are midfielders.",
-        "FW": "Three of them are forwards."
+        "GK": "{{name}} is not a goalkeeper. The other three are.",
+        "DF": "{{name}} is not a defender. The other three are.",
+        "MF": "{{name}} is not a midfielder. The other three are.",
+        "FW": "{{name}} is not a forward. The other three are."
       },
-      "generic": "Three of them share a hidden link."
+      "generic": "{{name}} does not share the hidden link the other three have."
     },
     "reveal": {
       "correct": "You spotted it",
@@ -389,9 +391,10 @@
       "noAnswer": "No answer this round",
       "points": "+{{points}} points",
       "scoreboard": "Scoreboard",
+      "showScoreboard": "Show the scoreboard",
       "next": "Next round",
       "toStandings": "Final standings",
-      "hostAdvances": "The host starts the next round…"
+      "hostAdvances": "The host moves the game on…"
     },
     "standings": {
       "winner": "{{name}} won"

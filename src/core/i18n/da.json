@@ -364,24 +364,26 @@
       "prompt": "Hvem stikker ud?",
       "hint": "Tre af dem har noget skjult til fælles. Tryk hurtigt på den der ikke passer ind.",
       "waiting": "Svar afgivet. Venter på de andre, {{count}}/{{total}}.",
+      "waitingNames": "Svar afgivet. Venter på {{names}}…",
+      "and": "og",
       "timeUp": "Tiden er gået. Venter på de andre."
     },
     "explanation": {
       "honour": {
-        "champions-league": "Tre af dem har vundet Champions League.",
-        "world-cup": "Tre af dem har vundet VM.",
-        "ballon-dor": "Tre af dem har vundet Ballon d'Or.",
-        "european-championship": "Tre af dem har vundet EM."
+        "champions-league": "{{name}} har aldrig vundet Champions League. De tre andre har.",
+        "world-cup": "{{name}} har aldrig vundet VM. De tre andre har.",
+        "ballon-dor": "{{name}} har aldrig vundet Ballon d'Or. De tre andre har.",
+        "european-championship": "{{name}} har aldrig vundet EM. De tre andre har."
       },
-      "nationality": "Tre af dem repræsenterer {{country}}.",
-      "club": "Tre af dem har spillet for {{club}}.",
+      "nationality": "{{name}} repræsenterer ikke {{country}}. De tre andre gør.",
+      "club": "{{name}} har aldrig spillet for {{club}}. De tre andre har.",
       "position": {
-        "GK": "Tre af dem er målmænd.",
-        "DF": "Tre af dem er forsvarsspillere.",
-        "MF": "Tre af dem er midtbanespillere.",
-        "FW": "Tre af dem er angribere."
+        "GK": "{{name}} er ikke målmand. De tre andre er.",
+        "DF": "{{name}} er ikke forsvarsspiller. De tre andre er.",
+        "MF": "{{name}} er ikke midtbanespiller. De tre andre er.",
+        "FW": "{{name}} er ikke angriber. De tre andre er."
       },
-      "generic": "Tre af dem har noget skjult til fælles."
+      "generic": "{{name}} deler ikke det skjulte fællestræk, som de tre andre har."
     },
     "reveal": {
       "correct": "Du så den",
@@ -389,9 +391,10 @@
       "noAnswer": "Intet svar i denne runde",
       "points": "+{{points}} point",
       "scoreboard": "Stillingen",
+      "showScoreboard": "Vis stillingen",
       "next": "Næste runde",
       "toStandings": "Slutstillingen",
-      "hostAdvances": "Værten starter næste runde…"
+      "hostAdvances": "Værten går videre…"
     },
     "standings": {
       "winner": "{{name}} vandt"
