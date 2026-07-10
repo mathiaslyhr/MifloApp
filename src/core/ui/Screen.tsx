@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   Keyboard,
   StyleProp,
   StyleSheet,
-  TouchableWithoutFeedback,
+  TextInput,
   View,
   ViewStyle,
 } from 'react-native';
@@ -24,10 +24,18 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
+/** A stationary press: fingers that move further/longer are scrolls, not taps. */
+const TAP_SLOP = 8;
+const TAP_MS = 300;
+
 /**
  * Base screen wrapper: safe-area inset, background (solid or rainbow canvas),
- * and default side padding. Canvas screens (Home, Games, Menu, Join, Lobby,
- * Podium) pass `canvas`; gameplay/detail screens stay on a solid background.
+ * default side padding, and tap-anywhere keyboard dismissal.
+ *
+ * The dismissal listens to the bubbled touch events only — it never enters
+ * responder negotiation (a wrapping Touchable steals the gesture and kills
+ * ScrollView panning). A short, stationary tap while typing closes the
+ * keyboard unless it landed on the focused input itself (cursor moves stay).
  */
 export function Screen({
   children,
@@ -37,30 +45,54 @@ export function Screen({
   padded = true,
   style,
 }: Props) {
+  const touchStart = useRef({x: 0, y: 0, at: 0});
   return (
-    <View style={styles.root}>
+    <View
+      style={styles.root}
+      onTouchStart={e => {
+        touchStart.current = {
+          x: e.nativeEvent.pageX,
+          y: e.nativeEvent.pageY,
+          at: Date.now(),
+        };
+      }}
+      onTouchEnd={e => {
+        const focused = TextInput.State.currentlyFocusedInput();
+        if (!focused) {
+          return;
+        }
+        const {pageX, pageY} = e.nativeEvent;
+        const {x, y, at} = touchStart.current;
+        const stationary =
+          Math.abs(pageX - x) < TAP_SLOP &&
+          Math.abs(pageY - y) < TAP_SLOP &&
+          Date.now() - at < TAP_MS;
+        if (!stationary) {
+          return;
+        }
+        // Taps on the focused field itself move the cursor, not the keyboard.
+        focused.measureInWindow((ix, iy, iw, ih) => {
+          const insideInput =
+            pageX >= ix && pageX <= ix + iw && pageY >= iy && pageY <= iy + ih;
+          if (!insideInput) {
+            Keyboard.dismiss();
+          }
+        });
+      }}>
       {canvas ? (
         <MeshBackground />
       ) : (
         <View style={[StyleSheet.absoluteFill, {backgroundColor: background}]} />
       )}
-      {/* A tap on anything that isn't itself tappable dismisses the keyboard —
-          buttons and fields claim their own touches first, so this only
-          catches taps on dead space. */}
-      <TouchableWithoutFeedback
-        onPress={Keyboard.dismiss}
-        accessible={false}
-        importantForAccessibility="no">
-        <SafeAreaView
-          edges={edges}
-          style={[
-            styles.safe,
-            padded && {paddingHorizontal: screenPadding},
-            style,
-          ]}>
-          {children}
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+      <SafeAreaView
+        edges={edges}
+        style={[
+          styles.safe,
+          padded && {paddingHorizontal: screenPadding},
+          style,
+        ]}>
+        {children}
+      </SafeAreaView>
     </View>
   );
 }
