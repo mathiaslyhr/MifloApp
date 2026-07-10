@@ -10727,6 +10727,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'world-cup', count: 1, years: [2022]},
       {type: 'copa-america', count: 2, years: [2021, 2024]},
+      {type: 'europa-league', count: 1, years: [2026]},
     ],
   },
   {
