@@ -28,7 +28,7 @@ import {
 import {createConnectionNotifier} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
-import {Scoreboard} from '../games/red-card/components';
+import {Scoreboard} from '../games/offside/components';
 import {
   PickedAnswerCard,
   PromptBlock,
@@ -197,6 +197,12 @@ export function CultHeroScreen({route, navigation}: Props) {
               isHost={isHost}
               onAdvance={advanceReveal}
             />
+          ) : state.phase === 'leaderboard' ? (
+            <LeaderboardPhase
+              state={state}
+              isHost={isHost}
+              onAdvance={advanceReveal}
+            />
           ) : (
             <FinalPhase
               state={state}
@@ -274,6 +280,8 @@ function AnsweringPhase({
     t,
     i18n.language,
   );
+  // Who's holding the round up (yourself included until the server counts you).
+  const remaining = Math.max(state.players.length - state.answeredCount, 1);
 
   return (
     <View style={styles.phase}>
@@ -283,10 +291,9 @@ function AnsweringPhase({
         <>
           <PickedAnswerCard footballerId={picked} />
           <Text variant="secondary" color="secondary" align="center">
-            {t('cultHero.answer.waiting', {
-              count: state.answeredCount,
-              total: state.players.length,
-            })}
+            {remaining === 1
+              ? t('cultHero.answer.waitingOne')
+              : t('cultHero.answer.waitingMany', {count: remaining})}
           </Text>
           <Button
             label={t('cultHero.answer.change')}
@@ -345,7 +352,7 @@ function RoundRevealPhase({
   const label = !isLastResult
     ? t('cultHero.results.next')
     : state.round < state.rounds
-    ? t('cultHero.results.nextRound')
+    ? t('cultHero.results.toLeaderboard')
     : t('cultHero.results.toFinal');
   return (
     <View style={styles.phase}>
@@ -372,6 +379,49 @@ function RoundRevealPhase({
   );
 }
 
+/**
+ * Kahoot beat between questions: the running standings with this round's
+ * points, host moves the table on to the next question. The last round skips
+ * this (the final standings ARE the leaderboard).
+ */
+function LeaderboardPhase({
+  state,
+  isHost,
+  onAdvance,
+}: {
+  state: CultHeroState;
+  isHost: boolean;
+  onAdvance: () => void;
+}) {
+  const {t} = useTranslation();
+  const board = standings(state);
+  const deltas: Record<string, number> = {};
+  for (const result of state.results ?? []) {
+    deltas[result.userId] = result.score;
+  }
+  return (
+    <View style={styles.phase}>
+      <PromptBlock
+        round={state.round}
+        total={state.rounds}
+        text={t('cultHero.leaderboard.title')}
+      />
+      <Scoreboard rows={board} deltas={deltas} />
+      {isHost ? (
+        <Button
+          label={t('cultHero.results.nextRound')}
+          variant="primary"
+          onPress={onAdvance}
+        />
+      ) : (
+        <Text variant="secondary" color="secondary" align="center">
+          {t('cultHero.waitingHost')}
+        </Text>
+      )}
+    </View>
+  );
+}
+
 function FinalPhase({
   state,
   isHost,
@@ -392,20 +442,13 @@ function FinalPhase({
   }
   return (
     <View style={styles.phase}>
-      <Text variant="wordmark" align="center" style={styles.headline}>
-        {t('cultHero.final.title')}
-      </Text>
       {board.length > 0 ? (
-        <Text variant="section" align="center" style={styles.winner}>
+        <Text variant="wordmark" align="center" style={styles.headline}>
           {t('cultHero.final.winner', {name: board[0].name})}
         </Text>
       ) : null}
 
-      <Scoreboard
-        rows={board}
-        deltas={deltas}
-        title={t('cultHero.final.scoreboard')}
-      />
+      <Scoreboard rows={board} deltas={deltas} />
 
       {isHost ? (
         <View style={styles.resultActions}>
@@ -453,7 +496,6 @@ const styles = StyleSheet.create({
   phaseWrapTop: {justifyContent: 'flex-start'},
   phase: {gap: spacing.lg, alignItems: 'stretch'},
   headline: {color: colors.ink},
-  winner: {color: colors.primary},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
   waiting: {marginTop: spacing.md},
 });

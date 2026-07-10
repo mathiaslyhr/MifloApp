@@ -143,19 +143,16 @@ export function AnswerRevealBlock({
 export function Scoreboard({
   rows,
   deltas,
-  title,
 }: {
   /** Players sorted by running score (desc). */
   rows: {userId: string; name: string; score: number}[];
   deltas: Record<string, number>;
-  /** Defaults to Red Card's label; other games pass their own. */
-  title?: string;
 }) {
   const {t} = useTranslation();
   return (
     <GlassCard style={styles.listCard}>
       <Text variant="label" style={styles.listTitle}>
-        {title ?? t('redCard.reveal.scoreboard')}
+        {t('redCard.reveal.scoreboard')}
       </Text>
       {rows.map((row, i) => {
         const d = deltas[row.userId] ?? 0;

@@ -46,13 +46,31 @@ export function computeScores(
 }
 
 /**
- * The host pages the one-by-one result reveal: next result, then either the
- * next round's prompt or — after the final round — the standings. Ships via
- * `play_move`; the server handed the host the turn when the round resolved,
- * and moving on returns the turn to null so the state locks again. The final
- * phase keeps `results` so the standings can show the last round's deltas.
+ * The host pages the game forward: next result, then the round's leaderboard
+ * (Kahoot-style standings between questions), then the next question — or,
+ * after the final round, straight into the final standings (which already ARE
+ * the leaderboard, so it never shows twice). Ships via `play_move`; the server
+ * handed the host the turn when the round resolved, the host keeps it through
+ * the leaderboard, and moving into the next question returns it to null so
+ * the state locks again. `results` stay through 'leaderboard' and 'final' so
+ * the round's deltas can show.
  */
 export function advanceRoundReveal(state: CultHeroState): CultHeroState {
+  if (state.phase === 'leaderboard') {
+    if (state.round < state.rounds) {
+      const rest = {...state};
+      delete rest.results;
+      return {
+        ...rest,
+        phase: 'answering',
+        round: state.round + 1,
+        answeredCount: 0,
+        revealIndex: 0,
+        turnUserId: null,
+      };
+    }
+    return {...state, phase: 'final', turnUserId: null};
+  }
   if (state.phase !== 'roundReveal' || !state.results) {
     return state;
   }
@@ -60,16 +78,7 @@ export function advanceRoundReveal(state: CultHeroState): CultHeroState {
     return {...state, revealIndex: state.revealIndex + 1};
   }
   if (state.round < state.rounds) {
-    const rest = {...state};
-    delete rest.results;
-    return {
-      ...rest,
-      phase: 'answering',
-      round: state.round + 1,
-      answeredCount: 0,
-      revealIndex: 0,
-      turnUserId: null,
-    };
+    return {...state, phase: 'leaderboard'};
   }
   return {...state, phase: 'final', turnUserId: null};
 }

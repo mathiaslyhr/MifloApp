@@ -15,7 +15,7 @@
  * version each one runs.
  */
 
-export type CultHeroPhase = 'answering' | 'roundReveal' | 'final';
+export type CultHeroPhase = 'answering' | 'roundReveal' | 'leaderboard' | 'final';
 
 export type CultHeroPlayer = {userId: string; name: string};
 
@@ -40,7 +40,8 @@ export type CultHeroState = {
   promptKeys: string[];
   /**
    * Gates `play_move`: null while answering (nobody can write the state), the
-   * host's id during roundReveal (only the host pages the results).
+   * host's id from the round's resolve through the leaderboard (only the host
+   * pages the results and moves the game on).
    */
   turnUserId: string | null;
   players: CultHeroPlayer[];
@@ -49,7 +50,7 @@ export type CultHeroState = {
   /**
    * This round's scored answers, most-picked first so the reveal builds up to
    * the rarest. Present from the resolve until the next round starts (kept
-   * through 'final' so the last round's deltas can show).
+   * through 'leaderboard' and 'final' so the round's deltas can show).
    */
   results?: CultHeroResult[];
   /** Which result is on screen during roundReveal (0-based). */

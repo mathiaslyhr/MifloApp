@@ -22,8 +22,9 @@
 -- submit_cult_hero_answer while game_state.turnUserId is null, which keeps the
 -- generic play_move RPC (0012) locked. 'roundReveal' is host-paced: the
 -- resolving submit sets turnUserId to the host, who pages through the scored
--- results via play_move (see advanceRoundReveal in the app), into the next
--- round or the final standings.
+-- results via play_move (see advanceRoundReveal in the app) — into the round's
+-- leaderboard, then the next question, or the final standings after the last
+-- round.
 
 -- ── Global rarity stats: how often each footballer has been answered for each
 --    prompt, across all rooms and forever. Only VALID picks are logged. ───────

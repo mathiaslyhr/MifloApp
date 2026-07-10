@@ -460,9 +460,7 @@
       "title": "Leaderboard"
     },
     "final": {
-      "title": "Full time",
-      "winner": "{{name}} won",
-      "scoreboard": "Scoreboard"
+      "winner": "{{name}} won"
     },
     "playAgain": "Play again",
     "backToLobby": "Back to lobby",

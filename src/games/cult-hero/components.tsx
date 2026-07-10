@@ -31,7 +31,7 @@ export function FootballerLine({footballerId}: {footballerId: string}) {
   );
 }
 
-/** Round pill + the localized prompt, the header of every phase. */
+/** Round pill + the localized question, the header of every phase. */
 export function PromptBlock({
   round,
   total,
@@ -40,8 +40,9 @@ export function PromptBlock({
 }: {
   round: number;
   total: number;
-  text: string;
-  /** De-emphasise the prompt (the reveal, where the results are the star). */
+  /** Omit for phases where something else is the star (the leaderboard). */
+  text?: string;
+  /** De-emphasise the question (the reveal, where the results are the star). */
   muted?: boolean;
 }) {
   const {t} = useTranslation();
@@ -52,7 +53,7 @@ export function PromptBlock({
           {t('cultHero.round', {round, total})}
         </Text>
       </GlassTag>
-      {muted ? (
+      {text === undefined ? null : muted ? (
         <Text variant="secondary" color="secondary" align="center">
           {text}
         </Text>
@@ -102,7 +103,7 @@ export function ResultRevealCard({
     <>
       <GlassCard style={styles.card}>
         <Text variant="caption" color="muted" align="center" style={styles.cardLabel}>
-          {name}
+          {t('cultHero.results.answerBy', {name})}
         </Text>
         <FootballerLine footballerId={result.footballerId} />
         {result.valid ? (

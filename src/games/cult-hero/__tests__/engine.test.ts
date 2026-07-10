@@ -110,8 +110,17 @@ describe('advanceRoundReveal', () => {
     expect(next.phase).toBe('roundReveal');
   });
 
-  it('rolls past the last result into the next round', () => {
+  it('rolls past the last result into the round leaderboard, host keeping the turn', () => {
     const next = advanceRoundReveal(revealState({revealIndex: 1}));
+    expect(next.phase).toBe('leaderboard');
+    expect(next.turnUserId).toBe('a');
+    expect(next.results).toEqual(results);
+  });
+
+  it('rolls from the leaderboard into the next round', () => {
+    const next = advanceRoundReveal(
+      revealState({phase: 'leaderboard', revealIndex: 1}),
+    );
     expect(next.phase).toBe('answering');
     expect(next.round).toBe(2);
     expect(next.answeredCount).toBe(0);
@@ -120,11 +129,19 @@ describe('advanceRoundReveal', () => {
     expect(next.results).toBeUndefined();
   });
 
-  it('rolls past the final round into the final standings, keeping results', () => {
+  it('rolls past the final round straight into the final standings, keeping results', () => {
     const next = advanceRoundReveal(revealState({round: 3, revealIndex: 1}));
     expect(next.phase).toBe('final');
     expect(next.turnUserId).toBeNull();
     expect(next.results).toEqual(results);
+  });
+
+  it('rolls a final-round leaderboard into the final standings (defensive)', () => {
+    const next = advanceRoundReveal(
+      revealState({phase: 'leaderboard', round: 3, revealIndex: 1}),
+    );
+    expect(next.phase).toBe('final');
+    expect(next.turnUserId).toBeNull();
   });
 });
 

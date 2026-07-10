@@ -460,9 +460,7 @@
       "title": "Stilling"
     },
     "final": {
-      "title": "Slutfløjt",
-      "winner": "{{name}} vandt",
-      "scoreboard": "Stilling"
+      "winner": "{{name}} vandt"
     },
     "playAgain": "Spil igen",
     "backToLobby": "Tilbage til rummet",
