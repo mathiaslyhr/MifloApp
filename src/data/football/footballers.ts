@@ -1699,6 +1699,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Benatia, Medhi',
+    name: 'Medhi Benatia',
+    // Officially spelt "Medhi"; the common "Mehdi" stays searchable.
+    nicknames: ['Mehdi Benatia'],
+    nationality: ['Morocco'],
+    positions: ['DF'],
+    born: '1987-04-17',
+    clubs: [
+      {clubId: 'udinese', from: 2010, to: 2013},
+      {clubId: 'roma', from: 2013, to: 2014},
+      {clubId: 'bayern', from: 2014, to: 2016},
+      {clubId: 'juventus', from: 2016, to: 2019},
+      {clubId: 'al-duhail', from: 2019, to: 2021},
+    ],
+    honours: [
+      {type: 'league-title', count: 5, years: [2015, 2016, 2017, 2018, 2020]},
+      {type: 'domestic-cup', count: 3, years: [2016, 2017, 2018]},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Bender, Lars',
     name: 'Lars Bender',
     nationality: ['Germany'],
@@ -5411,6 +5432,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Gabriel Paulista',
+    name: 'Gabriel Paulista',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    born: '1990-11-26',
+    clubs: [
+      {clubId: 'villarreal', from: 2013, to: 2015},
+      {clubId: 'arsenal', from: 2015, to: 2017},
+      {clubId: 'valencia', from: 2017, to: 2023},
+      {clubId: 'atletico-madrid', from: 2023, to: 2024},
+      {clubId: 'besiktas', from: 2024, to: 2025},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2019]},
+    ],
+  },
+  {
     id: 'Gakpo, Cody',
     name: 'Cody Gakpo',
     nationality: ['Netherlands'],
@@ -8666,6 +8704,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'europa-league', count: 1, years: [2017]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Lino, Samuel',
+    name: 'Samuel Lino',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    born: '1999-12-23',
+    clubs: [
+      {clubId: 'atletico-madrid', from: 2022, to: 2026},
+      {clubId: 'valencia', from: 2022, to: 2023, loan: true},
+      {clubId: 'flamengo', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Litmanen, Jari',

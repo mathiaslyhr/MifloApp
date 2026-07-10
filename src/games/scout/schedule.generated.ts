@@ -933,4 +933,5 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-06': 'Undav, Deniz',
   '2028-07-07': 'Almirón, Miguel',
   '2028-07-08': 'Cristante, Bryan',
+  '2028-07-09': 'Torres, Ferran',
 };
