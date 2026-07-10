@@ -155,7 +155,11 @@ export function RoundsPicker({
   );
 }
 
-/** Reveal scoreboard — this round's delta + running total, leader crowned. */
+/**
+ * Kahoot-style leaderboard: one glass pill per player (rank, name, this
+ * round's +delta, running total), leader crowned. The list lives in the
+ * screen's ScrollView, so a 12-player party simply scrolls with the page.
+ */
 export function Scoreboard({
   rows,
   deltas,
@@ -164,17 +168,16 @@ export function Scoreboard({
   rows: {userId: string; name: string; score: number}[];
   deltas: Record<string, number>;
 }) {
-  const {t} = useTranslation();
   return (
-    <GlassCard style={styles.listCard}>
-      <Text variant="label" style={styles.listTitle}>
-        {t('offside.reveal.scoreboard')}
-      </Text>
+    <View style={styles.board}>
       {rows.map((row, i) => {
         const d = deltas[row.userId] ?? 0;
         return (
-          <View key={row.userId} style={styles.listRow}>
+          <GlassCard key={row.userId} radius="pill" style={styles.playerPill}>
             <View style={styles.scoreNameCol}>
+              <Text variant="caption" color="muted" style={styles.rank}>
+                {i + 1}
+              </Text>
               {i === 0 ? (
                 <Crown size={14} color={colors.primary} strokeWidth={2} />
               ) : null}
@@ -197,10 +200,10 @@ export function Scoreboard({
                 {row.score}
               </Text>
             </View>
-          </View>
+          </GlassCard>
         );
       })}
-    </GlassCard>
+    </View>
   );
 }
 
@@ -235,17 +238,16 @@ const styles = StyleSheet.create({
   roundsLabel: {letterSpacing: 1},
   roundsRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.sm},
   roundsValue: {color: colors.ink},
-  listCard: {
-    gap: spacing.xs,
-    padding: spacing.md,
-  },
-  listTitle: {fontFamily: fonts.regular, marginBottom: spacing.xs},
-  listRow: {
+  board: {gap: spacing.sm},
+  playerPill: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
+  // Fixed rank column so every name starts at the same x.
+  rank: {width: 18},
   points: {fontFamily: fonts.regular, color: colors.ink},
   leaderName: {fontFamily: fonts.regular},
   leaderScore: {color: colors.primary},

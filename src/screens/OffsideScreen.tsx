@@ -488,6 +488,9 @@ function ScoreboardPhase({
           {t('offside.round', {round: state.round, total: state.rounds})}
         </Text>
       </GlassTag>
+      <Text variant="section" align="center" style={styles.headline}>
+        {t('offside.reveal.scoreboard')}
+      </Text>
 
       <Scoreboard rows={standings(state)} deltas={deltasOf(state)} />
 
