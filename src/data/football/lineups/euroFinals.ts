@@ -10,6 +10,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 1992,
     formation: '5-3-2',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Germany',
@@ -36,6 +37,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2012,
     formation: '4-3-3',
+    kit: {body: '#C60B1E', number: '#F7D117'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Italy',
@@ -114,6 +116,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2000,
     formation: '4-2-3-1',
+    kit: {body: '#21304E', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Italy',
@@ -141,6 +144,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2000,
     formation: '3-5-2',
+    kit: {body: '#1B62A8', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'France',
@@ -168,6 +172,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2004,
     formation: '4-3-3',
+    kit: {body: '#0D5EAF', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Portugal',
@@ -194,6 +199,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2008,
     formation: '4-4-2',
+    kit: {body: '#C60B1E', number: '#F7D117'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Germany',
@@ -220,6 +226,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2008,
     formation: '4-5-1',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Spain',
@@ -246,6 +253,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2012,
     formation: '4-1-3-2',
+    kit: {body: '#1B62A8', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Spain',
@@ -272,6 +280,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2016,
     formation: '4-1-3-2',
+    kit: {body: '#9A1B32', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'France',
@@ -299,6 +308,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2016,
     formation: '4-2-3-1',
+    kit: {body: '#21304E', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Portugal',
@@ -326,6 +336,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2021,
     formation: '4-3-3',
+    kit: {body: '#1B62A8', number: '#F4F4F6'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'England',
@@ -355,6 +366,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2021,
     formation: '3-4-2-1',
+    kit: {body: '#F4F4F6', number: '#232B4A'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Italy',
@@ -384,6 +396,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2024,
     formation: '4-2-3-1',
+    kit: {body: '#C60B1E', number: '#F7D117'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'England',
@@ -410,6 +423,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
     competition: 'European Championship Final',
     year: 2024,
     formation: '3-4-2-1',
+    kit: {body: '#F4F4F6', number: '#232B4A'},
     match: {
       competitionKey: 'euroFinal',
       opponent: 'Spain',

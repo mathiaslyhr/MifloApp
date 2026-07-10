@@ -333,14 +333,14 @@ export function TeamsheetScreen({navigation}: Props) {
     match && i18n.exists(compI18nKey)
       ? t(compI18nKey, {year: lineup.year})
       : `${lineup.competition} ${lineup.year}`;
-  const scoreLine = match
-    ? `${lineup.team} ${match.goalsFor} – ${match.goalsAgainst} ${match.opponent}` +
+  const scoreTail = match
+    ? ` ${match.goalsFor} – ${match.goalsAgainst} ${match.opponent}` +
       (match.pensFor !== undefined
         ? ` · ${t('teamsheet.pens', {for: match.pensFor, against: match.pensAgainst})}`
         : match.afterExtraTime
           ? ` · ${t('teamsheet.aet')}`
           : '')
-    : lineup.team;
+    : '';
 
   const rows = formationRows(lineup.formation);
   const labels = positionLabels(lineup.formation);
@@ -370,11 +370,16 @@ export function TeamsheetScreen({navigation}: Props) {
                   ? t('teamsheet.won')
                   : t('teamsheet.wonNoStreak')
                 : t('teamsheet.revealedTitle')
-              : t('teamsheet.nameTeam', {team: lineup.team})}
+              : competitionLine}
           </Text>
-          {/* Whose XI you are naming leads; the match context sits beneath. */}
+          {/* The team whose XI you are naming carries the weight in the
+              score line; once finished the competition joins it down here. */}
           <Text variant="caption" color="muted" align="center">
-            {`${competitionLine} · ${scoreLine}`}
+            {finished ? `${competitionLine} · ` : null}
+            <Text variant="caption" style={styles.scoreTeam}>
+              {lineup.team}
+            </Text>
+            {scoreTail}
           </Text>
           {!finished ? (
             <Text variant="caption" color="muted" align="center">
@@ -419,6 +424,7 @@ export function TeamsheetScreen({navigation}: Props) {
                         lineup={lineup}
                         player={player}
                         label={labels[slot]}
+                        isGk={slot === 0}
                         tight={count >= 5}
                         earned={found.has(slot)}
                         shown={found.has(slot) || finished}
@@ -528,10 +534,15 @@ export function TeamsheetScreen({navigation}: Props) {
  * Every token is the same fixed size so all formation lines look identical.
  * Tapping an unfound token targets it (strict positional mode).
  */
+/** Keepers wear their own shirt; a neutral dark stands in until a lineup
+ * carries a curated `gkBody`. */
+const GK_NEUTRAL = {body: '#4B5563', number: '#F4F4F6'};
+
 function PlayerToken({
   lineup,
   player,
   label,
+  isGk,
   tight,
   earned,
   shown,
@@ -541,6 +552,7 @@ function PlayerToken({
   lineup: FamousLineup;
   player: LineupPlayer;
   label: string;
+  isGk: boolean;
   tight: boolean;
   earned: boolean;
   shown: boolean;
@@ -549,6 +561,15 @@ function PlayerToken({
 }) {
   const goals = player.goals ?? 0;
   const assists = player.assists ?? 0;
+  // The circle wears the shirt this team wore that day; lineups without a
+  // curated kit keep the brand-purple fill.
+  const kit = lineup.kit;
+  const shirtBody = kit ? (isGk ? kit.gkBody ?? GK_NEUTRAL.body : kit.body) : undefined;
+  const shirtNumber = kit
+    ? isGk
+      ? kit.gkNumber ?? GK_NEUTRAL.number
+      : kit.number
+    : undefined;
   return (
     <Pressable
       onPress={onPress}
@@ -564,10 +585,20 @@ function PlayerToken({
       <View
         style={[
           styles.circle,
+          shirtBody != null && {borderColor: shirtBody},
+          shown && [
+            styles.circleEarned,
+            shirtBody != null && {backgroundColor: shirtBody, borderColor: shirtBody},
+          ],
+          shown && !earned && styles.circleRevealed,
           selectedToken && styles.circleSelected,
-          earned && styles.circleEarned,
         ]}>
-        <Text style={[styles.shirtText, earned && styles.shirtTextEarned]}>
+        <Text
+          style={[
+            styles.shirtText,
+            shown && styles.shirtTextEarned,
+            shown && shirtNumber != null && {color: shirtNumber},
+          ]}>
           {player.shirt}
         </Text>
         {player.subbedOff ? (
@@ -712,6 +743,8 @@ const styles = StyleSheet.create({
   },
   circleSelected: {borderColor: colors.primary},
   circleEarned: {backgroundColor: colors.primary, borderColor: colors.primary},
+  // Revealed-by-surrender: the shirt shows, but faded — not earned.
+  circleRevealed: {opacity: 0.55},
   // Explicit tight lineHeight: without it the themed lineHeight pushes the
   // digits off-centre inside the circle.
   shirtText: {
@@ -764,6 +797,7 @@ const styles = StyleSheet.create({
     maxWidth: TOKEN_WIDTH + 6,
   },
   tokenNameRevealed: {color: colors.textTertiary},
+  scoreTeam: {fontFamily: fonts.medium, color: colors.ink},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
   // Type-ahead card floating above the field: whole-dataset search, so it
   // helps spelling without leaking who is on today's sheet.

@@ -102,3 +102,11 @@ priority first:
   the commonly cited record (UEFA/FIFA reports, Wikipedia).
 - ALL `subbedOff` flags (July 2026) — curated from memory across ~40
   lineups; verify against the match reports in the same pass.
+- ALL `kit` colours (July 2026) — the shirt each team wore THAT DAY, from
+  memory; stripes/checks approximated by dominant colour. Verify especially
+  the away-kit picks: spain-2010 (navy), argentina-2014 (dark blue),
+  juventus-1996 (blue), arsenal-2006 (yellow), greece-2004 (blue), the
+  Milan white-finals kits (1994/2005/2007), ajax-1995 (white home),
+  barcelona-1992 (orange), plus bayern-2012, chelsea-2012, mu-2017,
+  brazil-2019 and both Barcelona 2009/2011 home assumptions. No `gkBody`
+  is curated yet — keepers render neutral dark until that pass.

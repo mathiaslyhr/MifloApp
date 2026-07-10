@@ -10,6 +10,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2011,
     formation: '4-3-3',
+    kit: {body: '#A50044', number: '#EDBB00'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Manchester United',
@@ -36,6 +37,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2014,
     formation: '4-3-3',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Atlético Madrid',
@@ -63,6 +65,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1999,
     formation: '4-4-2',
+    kit: {body: '#DA291C', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Bayern Munich',
@@ -89,6 +92,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2007,
     formation: '4-3-1-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Liverpool',
@@ -115,6 +119,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2005,
     formation: '4-4-1-1',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'AC Milan',
@@ -144,6 +149,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2010,
     formation: '4-2-3-1',
+    kit: {body: '#16224E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Bayern Munich',
@@ -170,6 +176,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2013,
     formation: '4-2-3-1',
+    kit: {body: '#DC052D', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Borussia Dortmund',
@@ -196,6 +203,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2012,
     formation: '4-3-3',
+    kit: {body: '#034694', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Bayern Munich',
@@ -225,6 +233,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2022,
     formation: '4-3-3',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Liverpool',
@@ -251,6 +260,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2023,
     formation: '3-2-4-1',
+    kit: {body: '#6CABDD', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Inter Milan',
@@ -381,6 +391,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'European Cup Final',
     year: 1992,
     formation: '3-4-3',
+    kit: {body: '#F47B20', number: '#1A1A1A'},
     match: {
       competitionKey: 'europeanCupFinal',
       opponent: 'Sampdoria',
@@ -408,6 +419,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1993,
     formation: '4-3-3',
+    kit: {body: '#F4F4F6', number: '#2FAEE0'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'AC Milan',
@@ -434,6 +446,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1994,
     formation: '4-4-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Barcelona',
@@ -460,6 +473,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1995,
     formation: '3-3-1-3',
+    kit: {body: '#F4F4F6', number: '#D2122E'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'AC Milan',
@@ -486,6 +500,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1996,
     formation: '4-3-3',
+    kit: {body: '#1B3B6F', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Ajax',
@@ -515,6 +530,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1997,
     formation: '3-5-2',
+    kit: {body: '#FDE100', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Juventus',
@@ -541,6 +557,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 1998,
     formation: '4-3-3',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Juventus',
@@ -567,6 +584,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2002,
     formation: '4-4-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Bayer Leverkusen',
@@ -593,6 +611,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2006,
     formation: '4-3-3',
+    kit: {body: '#A50044', number: '#EDBB00'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Arsenal',
@@ -619,6 +638,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2006,
     formation: '4-5-1',
+    kit: {body: '#F7CE46', number: '#7D2C3B'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Barcelona',
@@ -645,6 +665,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2005,
     formation: '4-3-1-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Liverpool',
@@ -674,6 +695,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2007,
     formation: '4-4-1-1',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'AC Milan',
@@ -700,6 +722,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2008,
     formation: '4-3-3',
+    kit: {body: '#DA291C', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Chelsea',
@@ -729,6 +752,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2008,
     formation: '4-3-3',
+    kit: {body: '#034694', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Manchester United',
@@ -758,6 +782,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2009,
     formation: '4-3-3',
+    kit: {body: '#A50044', number: '#EDBB00'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Manchester United',
@@ -784,6 +809,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2009,
     formation: '4-3-3',
+    kit: {body: '#DA291C', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Barcelona',
@@ -810,6 +836,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2012,
     formation: '4-2-3-1',
+    kit: {body: '#DC052D', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Chelsea',
@@ -839,6 +866,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2015,
     formation: '4-3-3',
+    kit: {body: '#A50044', number: '#EDBB00'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Juventus',
@@ -865,6 +893,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2015,
     formation: '4-3-1-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Barcelona',
@@ -891,6 +920,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2016,
     formation: '4-3-3',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Atlético Madrid',
@@ -920,6 +950,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2016,
     formation: '4-4-2',
+    kit: {body: '#CB3524', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Real Madrid',
@@ -949,6 +980,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2017,
     formation: '4-3-1-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Juventus',
@@ -975,6 +1007,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2017,
     formation: '3-4-2-1',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Real Madrid',
@@ -1001,6 +1034,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2018,
     formation: '4-3-1-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Liverpool',
@@ -1027,6 +1061,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2018,
     formation: '4-3-3',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Real Madrid',
@@ -1053,6 +1088,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2019,
     formation: '4-3-3',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Tottenham Hotspur',
@@ -1079,6 +1115,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2019,
     formation: '4-2-3-1',
+    kit: {body: '#F4F4F6', number: '#131F53'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Liverpool',
@@ -1105,6 +1142,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2020,
     formation: '4-2-3-1',
+    kit: {body: '#DC052D', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Paris Saint-Germain',
@@ -1131,6 +1169,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2020,
     formation: '4-3-3',
+    kit: {body: '#004170', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Bayern Munich',
@@ -1157,6 +1196,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2021,
     formation: '3-4-2-1',
+    kit: {body: '#034694', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Manchester City',
@@ -1183,6 +1223,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2021,
     formation: '4-3-3',
+    kit: {body: '#6CABDD', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Chelsea',
@@ -1209,6 +1250,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2022,
     formation: '4-3-3',
+    kit: {body: '#C8102E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Real Madrid',
@@ -1235,6 +1277,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2023,
     formation: '3-5-2',
+    kit: {body: '#16224E', number: '#F4F4F6'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Manchester City',
@@ -1261,6 +1304,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2024,
     formation: '4-4-2',
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Borussia Dortmund',
@@ -1287,6 +1331,7 @@ export const UCL_FINALS: readonly FamousLineup[] = [
     competition: 'Champions League Final',
     year: 2024,
     formation: '4-2-3-1',
+    kit: {body: '#FDE100', number: '#1A1A1A'},
     match: {
       competitionKey: 'uclFinal',
       opponent: 'Real Madrid',

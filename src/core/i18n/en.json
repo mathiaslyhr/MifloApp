@@ -574,7 +574,6 @@
     "missCount_plural": "{{count}} misses",
     "inputPlaceholder": "Type a player",
     "targetPlaceholder": "Number {{shirt}}?",
-    "nameTeam": "Name the {{team}} XI",
     "missToast": "Not in this XI",
     "wrongSlotToast": "On the sheet, but not in that spot",
     "alreadyFound": "Already on the sheet",

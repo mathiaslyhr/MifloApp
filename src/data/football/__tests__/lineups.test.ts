@@ -121,6 +121,22 @@ describe('teamsheet lineups', () => {
     }
   });
 
+  it('kit colours are well-formed hex and present on every eligible lineup', () => {
+    const HEX = /^#[0-9A-F]{6}$/i;
+    for (const lineup of ELIGIBLE) {
+      expect({id: lineup.id, hasKit: lineup.kit !== undefined}).toEqual({
+        id: lineup.id,
+        hasKit: true,
+      });
+      const {body, number, gkBody, gkNumber} = lineup.kit!;
+      for (const colour of [body, number, gkBody, gkNumber]) {
+        if (colour !== undefined) {
+          expect(colour).toMatch(HEX);
+        }
+      }
+    }
+  });
+
   it('match context is coherent', () => {
     for (const lineup of ELIGIBLE) {
       const match = lineup.match!;

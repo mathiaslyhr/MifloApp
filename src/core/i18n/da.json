@@ -574,7 +574,6 @@
     "missCount_plural": "{{count}} forbiere",
     "inputPlaceholder": "Skriv en spiller",
     "targetPlaceholder": "Nummer {{shirt}}?",
-    "nameTeam": "Find de 11 fra {{team}}",
     "missToast": "Ikke med i startopstillingen",
     "wrongSlotToast": "Med på holdkortet, men ikke på den plads",
     "alreadyFound": "Allerede på holdkortet",

@@ -11,6 +11,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Copa América Final',
     year: 2015,
     formation: '4-3-3',
+    kit: {body: '#D52B1E', number: '#F4F4F6'},
     match: {
       competitionKey: 'copaFinal',
       opponent: 'Argentina',
@@ -40,6 +41,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Copa América Final',
     year: 2019,
     formation: '4-2-3-1',
+    kit: {body: '#FFDC02', number: '#1E7A34'},
     match: {
       competitionKey: 'copaFinal',
       opponent: 'Peru',
@@ -66,6 +68,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Copa América Final',
     year: 2021,
     formation: '4-3-3',
+    kit: {body: '#9DC6E8', number: '#1A1A1A'},
     match: {
       competitionKey: 'copaFinal',
       opponent: 'Brazil',
@@ -92,6 +95,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Europa League Final',
     year: 2017,
     formation: '4-3-3',
+    kit: {body: '#DA291C', number: '#F4F4F6'},
     match: {
       competitionKey: 'europaFinal',
       opponent: 'Ajax',
@@ -118,6 +122,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Europa League Final',
     year: 2018,
     formation: '4-4-2',
+    kit: {body: '#CB3524', number: '#F4F4F6'},
     match: {
       competitionKey: 'europaFinal',
       opponent: 'Marseille',
@@ -144,6 +149,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Europa League Final',
     year: 2019,
     formation: '4-3-3',
+    kit: {body: '#034694', number: '#F4F4F6'},
     match: {
       competitionKey: 'europaFinal',
       opponent: 'Arsenal',

@@ -83,6 +83,19 @@ export type FamousLineupMatch = {
   oppOwnGoals?: number;
 };
 
+/** The shirt this team actually wore that day, as flat colours (stripes and
+ * checks are approximated by their dominant colour). Drives the Team sheet
+ * token circles; entries without a kit fall back to the brand purple. */
+export type LineupKit = {
+  /** Outfield shirt colour, hex. */
+  body: string;
+  /** Number colour on that shirt, hex. */
+  number: string;
+  /** Keeper's shirt/number when known; a neutral dark is used otherwise. */
+  gkBody?: string;
+  gkNumber?: string;
+};
+
 export type FamousLineup = {
   id: string;
   team: string;
@@ -94,6 +107,7 @@ export type FamousLineup = {
   players: LineupPlayer[];
   /** Present (with full player enrichment) on Team sheet eligible entries. */
   match?: FamousLineupMatch;
+  kit?: LineupKit;
 };
 
 export const FAMOUS_LINEUPS: readonly FamousLineup[] = [
