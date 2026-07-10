@@ -398,13 +398,20 @@ export function TeamsheetScreen({navigation}: Props) {
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="none"
             showsVerticalScrollIndicator={false}>
-            {/* Tapping the pitch background clears the targeted spot. */}
+            {/* Tapping the pitch background clears the targeted spot. The
+                rows render attack first and GK last, broadcast style. */}
             <Pressable onPress={() => setSelected(null)} style={styles.pitch}>
-            {rows.map((count, rowIdx) => {
-              const start = nextSlot;
-              nextSlot += count;
-              return (
-                <View key={rowIdx} style={styles.formationRow}>
+            {rows
+              .map(count => {
+                const start = nextSlot;
+                nextSlot += count;
+                return {start, count};
+              })
+              .reverse()
+              .map(({start, count}) => (
+                <View
+                  key={start}
+                  style={[styles.formationRow, count >= 5 && styles.formationRowTight]}>
                   {lineup.players.slice(start, start + count).map((player, i) => {
                     const slot = start + i;
                     return (
@@ -413,6 +420,7 @@ export function TeamsheetScreen({navigation}: Props) {
                         lineup={lineup}
                         player={player}
                         label={labels[slot]}
+                        tight={count >= 5}
                         earned={found.has(slot)}
                         shown={found.has(slot) || finished}
                         selectedToken={selected === slot}
@@ -421,8 +429,7 @@ export function TeamsheetScreen({navigation}: Props) {
                     );
                   })}
                 </View>
-              );
-            })}
+              ))}
             </Pressable>
           </ScrollView>
 
@@ -526,6 +533,7 @@ function PlayerToken({
   lineup,
   player,
   label,
+  tight,
   earned,
   shown,
   selectedToken,
@@ -534,6 +542,7 @@ function PlayerToken({
   lineup: FamousLineup;
   player: LineupPlayer;
   label: string;
+  tight: boolean;
   earned: boolean;
   shown: boolean;
   selectedToken: boolean;
@@ -547,9 +556,11 @@ function PlayerToken({
       disabled={shown}
       accessibilityRole="button"
       accessibilityLabel={`${label} ${player.shirt}`}
-      style={styles.token}>
-      <Text style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
-        {label}
+      style={[styles.token, tight && styles.tokenTight]}>
+      <Text
+        numberOfLines={1}
+        style={[styles.tokenName, !earned && shown && styles.tokenNameRevealed]}>
+        {shown ? tokenName(lineup, player) : ' '}
       </Text>
       <View
         style={[
@@ -583,10 +594,8 @@ function PlayerToken({
           </View>
         ) : null}
       </View>
-      <Text
-        numberOfLines={1}
-        style={[styles.tokenName, !earned && shown && styles.tokenNameRevealed]}>
-        {shown ? tokenName(lineup, player) : ' '}
+      <Text style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
+        {label}
       </Text>
     </Pressable>
   );
@@ -676,8 +685,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 6,
   },
+  // Five-man lines trim the gap and the tokens' side padding (never the
+  // circle) so wide formations stay inside every screen width.
+  formationRowTight: {gap: 2},
   pitch: {gap: spacing.md},
   token: {width: TOKEN_WIDTH, alignItems: 'center', gap: 3},
+  tokenTight: {width: CIRCLE + 4},
   posLabel: {
     fontFamily: fonts.medium,
     fontSize: 9,
