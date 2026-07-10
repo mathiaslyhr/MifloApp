@@ -17030,6 +17030,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Vela, Carlos',
+    name: 'Carlos Vela',
+    nationality: ['Mexico'],
+    positions: ['FW'],
+    born: '1989-03-01',
+    clubs: [
+      {clubId: 'arsenal', from: 2006, to: 2012},
+      {clubId: 'west-brom', from: 2011, to: 2011, loan: true},
+      {clubId: 'real-sociedad', from: 2011, to: 2012, loan: true},
+      {clubId: 'real-sociedad', from: 2012, to: 2018},
+      {clubId: 'lafc', from: 2018, to: 2024},
+    ],
+    honours: [],
+    tags: ['legends'],
+  },
+  {
     id: 'Verbruggen, Bart',
     name: 'Bart Verbruggen',
     nationality: ['Netherlands'],
