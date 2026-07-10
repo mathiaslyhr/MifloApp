@@ -334,7 +334,7 @@ export function TeamsheetScreen({navigation}: Props) {
       ? t(compI18nKey, {year: lineup.year})
       : `${lineup.competition} ${lineup.year}`;
   const scoreLine = match
-    ? `${lineup.team} ${match.goalsFor}–${match.goalsAgainst} ${match.opponent}` +
+    ? `${lineup.team} ${match.goalsFor} – ${match.goalsAgainst} ${match.opponent}` +
       (match.pensFor !== undefined
         ? ` · ${t('teamsheet.pens', {for: match.pensFor, against: match.pensAgainst})}`
         : match.afterExtraTime
@@ -370,12 +370,11 @@ export function TeamsheetScreen({navigation}: Props) {
                   ? t('teamsheet.won')
                   : t('teamsheet.wonNoStreak')
                 : t('teamsheet.revealedTitle')
-              : competitionLine}
+              : t('teamsheet.nameTeam', {team: lineup.team})}
           </Text>
-          {/* While playing the score sets the scene; once finished the match
-              line moves down here so the payoff line can take over. */}
+          {/* Whose XI you are naming leads; the match context sits beneath. */}
           <Text variant="caption" color="muted" align="center">
-            {finished ? `${competitionLine} · ${scoreLine}` : scoreLine}
+            {`${competitionLine} · ${scoreLine}`}
           </Text>
           {!finished ? (
             <Text variant="caption" color="muted" align="center">
