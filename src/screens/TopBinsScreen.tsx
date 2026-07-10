@@ -433,7 +433,6 @@ export function TopBinsScreen({navigation}: Props) {
                 onChangeText={setInput}
                 placeholder={t('tenball.inputPlaceholder')}
                 autoCapitalize="words"
-                autoFocus
                 returnKeyType="go"
                 submitBehavior="submit"
                 onSubmitEditing={submitGuess}
