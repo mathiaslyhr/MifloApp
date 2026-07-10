@@ -12148,6 +12148,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Nartey, Noah',
+    name: 'Noah Nartey',
+    fullName: 'Noah Teye Nartey',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    born: '2005-10-05',
+    // Brøndby (2023-2026) omitted: the club isn't in clubs.ts and new crest
+    // art needs a real build (see CLAUDE.md), so only the Lyon spell ships.
+    clubs: [{clubId: 'lyon', from: 2026}],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Nasri, Samir',
     name: 'Samir Nasri',
     nationality: ['France'],
