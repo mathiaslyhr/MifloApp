@@ -21,6 +21,7 @@ import {
   enableScoutReminder,
   markScoutReminderOffered,
   shouldOfferScoutReminder,
+  syncScoutReminder,
 } from '../core/notifications/scoutReminder';
 import {syncStreakSaver} from '../games/scout/streakSaver';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
@@ -225,7 +226,9 @@ export function ScoutScreen({navigation}: Props) {
       // History data is still recorded (the archive button is removed for
       // now). One toast covers both writes failing.
       Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
-        .then(() => syncStreakSaver())
+        // Solved: drop tonight's rescue nudge and skip tomorrow-morning's
+        // "new player" ping past today.
+        .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
         .catch(saveFailed);
     } else {
       haptics.tap();
@@ -254,10 +257,10 @@ export function ScoutScreen({navigation}: Props) {
 
   const finished = isFinished(state);
   const guessesUsed = state.guesses.length;
-  // The streak survives only when the solve lands in under STREAK_GUESS_LIMIT
-  // guesses; once that many are spent, today can no longer keep it.
-  const streakStillAlive = guessesUsed < STREAK_GUESS_LIMIT - 1;
-  const keptStreak = guessesUsed < STREAK_GUESS_LIMIT;
+  // The streak survives when the solve lands within STREAK_GUESS_LIMIT guesses
+  // (10 or under); alive = the next guess could still be within the limit.
+  const streakStillAlive = guessesUsed < STREAK_GUESS_LIMIT;
+  const keptStreak = guessesUsed <= STREAK_GUESS_LIMIT;
   const secretPlayer = getById(state.secretId);
   // The answer reveal (shown once finished): flag + crest + position.
   const secretAttrs = secretPlayer

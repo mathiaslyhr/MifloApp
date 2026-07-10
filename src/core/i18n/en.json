@@ -104,7 +104,7 @@
       "tagline": "Guess today's player, keep your streak",
       "howToPlay": {
         "rules": [
-          "Guess the daily footballer. Guesses are unlimited, but solve it in under 10 to keep your streak.",
+          "Guess the daily footballer. Guesses are unlimited, but solve it in 10 or fewer to keep your streak.",
           "After each guess, every column turns green for a match, yellow if close, and grey if wrong.",
           "A new footballer drops every day, the same for everyone."
         ]
@@ -298,7 +298,7 @@
     "reminderNo": "Not now",
     "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "Today's new player has dropped.",
+    "reminderNotifBody": "A new player in Scout has dropped.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Your {{days}}-day streak is on the line.",
     "title": "Scout",
@@ -313,14 +313,14 @@
     "alreadyGuessed": "You already guessed that player",
     "errorSave": "Couldn't save your progress.",
     "won": "Got it in {{count}}!",
-    "wonNoStreak": "Got it in {{count}}. Under 10 keeps your streak next time.",
+    "wonNoStreak": "Got it in {{count}}. 10 or fewer keeps your streak next time.",
     "answerWas": "Today's footballer was {{name}}",
     "answerLabel": "The answer",
     "answerAge": "Age {{value}}",
     "guessesUsed": "Guesses",
     "streakCurrent": "Current streak",
     "streakBest": "Best streak",
-    "streakWarning": "Solve it in under 10 guesses to keep your streak",
+    "streakWarning": "Solve it in 10 guesses or fewer to keep your streak",
     "streakGone": "Your streak is gone for today, but keep guessing",
     "share": "Share result",
     "shareCaption": "Play Scout on Miflo",

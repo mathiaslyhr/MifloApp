@@ -104,7 +104,7 @@
       "tagline": "Gæt dagens spiller, hold din stime",
       "howToPlay": {
         "rules": [
-          "Gæt dagens fodboldspiller. Du har uendelige gæt, men klar den på under 10 for at beholde din stime.",
+          "Gæt dagens fodboldspiller. Du har uendelige gæt, men klar den på 10 eller færre for at beholde din stime.",
           "Efter hvert gæt bliver hver kolonne grøn ved match, gul hvis den er tæt på, og grå hvis den er forkert.",
           "En ny fodboldspiller kommer hver dag, den samme for alle."
         ]
@@ -298,7 +298,7 @@
     "reminderNo": "Ikke nu",
     "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
     "reminderNotifTitle": "Miflo",
-    "reminderNotifBody": "Dagens nye spiller er landet.",
+    "reminderNotifBody": "En ny spiller er landet i Scout.",
     "streakNotifTitle": "Miflo",
     "streakNotifBody": "Din stime på {{days}} dage er på spil.",
     "title": "Scout",
@@ -313,14 +313,14 @@
     "alreadyGuessed": "Du har allerede gættet den spiller",
     "errorSave": "Kunne ikke gemme din fremgang.",
     "won": "Klaret på {{count}}!",
-    "wonNoStreak": "Klaret på {{count}}. Under 10 beholder din stime næste gang.",
+    "wonNoStreak": "Klaret på {{count}}. 10 eller færre beholder din stime næste gang.",
     "answerWas": "Dagens spiller var {{name}}",
     "answerLabel": "Svaret",
     "answerAge": "{{value}} år",
     "guessesUsed": "Gæt",
     "streakCurrent": "Nuværende stime",
     "streakBest": "Bedste stime",
-    "streakWarning": "Klar den på under 10 gæt for at beholde din stime",
+    "streakWarning": "Klar den på 10 eller færre gæt for at beholde din stime",
     "streakGone": "Din stime er tabt i dag, men gæt videre",
     "share": "Del resultat",
     "shareCaption": "Spil Scout på Miflo",

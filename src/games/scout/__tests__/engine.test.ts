@@ -67,9 +67,18 @@ describe('recordResult', () => {
     expect(afterGap).toEqual({current: 1, best: 5, lastCompletedDateKey: '2026-07-07'});
   });
 
-  it('breaks the streak on a 10-guess solve without touching best', () => {
+  it('keeps the streak on a solve in exactly the limit (10 or under counts)', () => {
     const prior = {current: 3, best: 4, lastCompletedDateKey: '2026-07-06'};
     expect(recordResult(prior, '2026-07-07', STREAK_GUESS_LIMIT)).toEqual({
+      current: 4,
+      best: 4,
+      lastCompletedDateKey: '2026-07-07',
+    });
+  });
+
+  it('breaks the streak past the limit without touching best', () => {
+    const prior = {current: 3, best: 4, lastCompletedDateKey: '2026-07-06'};
+    expect(recordResult(prior, '2026-07-07', STREAK_GUESS_LIMIT + 1)).toEqual({
       current: 0,
       best: 4,
       lastCompletedDateKey: '2026-07-06',

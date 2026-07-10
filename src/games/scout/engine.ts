@@ -13,7 +13,7 @@ import type {
   StreakState,
 } from './types';
 
-/** Solve in fewer guesses than this to keep the streak (i.e. 1–9 keeps it). */
+/** Solve in this many guesses or fewer to keep the streak (10 counts too). */
 export const STREAK_GUESS_LIMIT = 10;
 
 /** A fresh puzzle for the given day and secret. */
@@ -51,17 +51,18 @@ export const EMPTY_STREAK: StreakState = {
 };
 
 /**
- * Fold a finished puzzle into the streak. A solve in under
- * [[STREAK_GUESS_LIMIT]] guesses the day after the last one extends the
- * streak; after a gap it restarts at 1; a solve that took 10+ guesses breaks
- * it. `best` never decreases. Pure — persistence lives in mysteryStorage.ts.
+ * Fold a finished puzzle into the streak. A solve within
+ * [[STREAK_GUESS_LIMIT]] guesses (10 or under) the day after the last one
+ * extends the streak; after a gap it restarts at 1; a solve that took 11+
+ * guesses breaks it. `best` never decreases. Pure — persistence lives in
+ * mysteryStorage.ts.
  */
 export function recordResult(
   streak: StreakState,
   dateKey: string,
   guessCount: number,
 ): StreakState {
-  if (guessCount >= STREAK_GUESS_LIMIT) {
+  if (guessCount > STREAK_GUESS_LIMIT) {
     return {...streak, current: 0};
   }
   const continues = streak.lastCompletedDateKey === previousDateKey(dateKey);
