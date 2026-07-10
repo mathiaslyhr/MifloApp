@@ -23,9 +23,10 @@ const HISTORY_KEY = 'teamsheet.history';
 export type DailyProgress = {
   dateKey: string;
   /**
-   * The lineup drawn when the day was first opened. Pins the puzzle: an OTA
-   * pack mid-day can reshuffle the fallback walk, and without the pin the
-   * sheet would silently swap under an in-progress game.
+   * The lineup these guesses were made against. The screen discards the
+   * whole progress when this no longer matches today's scheduled lineup —
+   * the frozen schedule is the source of truth, and replaying guesses
+   * against a different XI would corrupt the day.
    */
   lineupId: string;
   /** Raw guesses in order; `slot` is ignored on replay, `target` is not. */

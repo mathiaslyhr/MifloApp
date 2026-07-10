@@ -136,8 +136,11 @@ export function TeamsheetScreen({navigation}: Props) {
 
   // Rehydrate today's sheet (replaying stored guess texts, with their tapped
   // targets, through the engine) and the streak. No re-recording here —
-  // recordResult only runs on a live finish. The lineup drawn on first open
-  // is pinned so an OTA pack landing mid-day can never swap the puzzle.
+  // recordResult only runs on a live finish. The schedule is the single
+  // source of today's lineup: stored progress only counts when it belongs to
+  // that lineup, so if the day's assignment ever changes (a new schedule or
+  // pack), the day restarts fresh instead of replaying guesses against the
+  // wrong XI. The frozen schedule keeps this from ever firing in normal use.
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -145,30 +148,25 @@ export function TeamsheetScreen({navigation}: Props) {
         loadDailyProgress(dateKey),
         loadStreak(),
       ]);
-      // The pin protects an in-progress game from a mid-day OTA swap; a day
-      // that was merely opened (no guesses, no give-up) re-draws freely so a
-      // fresher schedule can take over.
-      const played =
-        progress != null && (progress.guesses.length > 0 || progress.gaveUp);
-      const pinned = played ? getLineupById(progress!.lineupId) : undefined;
-      const lineup = pinned ?? dailyLineupFor(dateKey);
+      const lineup = dailyLineupFor(dateKey);
+      const usable = progress?.lineupId === lineup.id ? progress : null;
       let s = createInitialState(dateKey, lineup.id);
-      if (progress) {
-        for (const guess of progress.guesses) {
+      if (usable) {
+        for (const guess of usable.guesses) {
           s = applyGuess(s, lineup, guess.text, guess.target).state;
         }
-        if (progress.gaveUp) {
+        if (usable.gaveUp) {
           s = giveUp(s);
         }
-      }
-      if (!pinned) {
-        // Silent on failure — the player took no action; a failed pin only
-        // matters if a guess follows, and that save warns on its own.
+      } else {
+        // Fresh day (or a stale lineup's progress being discarded). Silent on
+        // failure — a failed save only matters once a guess follows, and that
+        // save warns on its own.
         saveDailyProgress({
           dateKey,
           lineupId: lineup.id,
-          guesses: progress?.guesses ?? [],
-          gaveUp: progress?.gaveUp ?? false,
+          guesses: [],
+          gaveUp: false,
         }).catch(() => {});
       }
       if (alive) {
