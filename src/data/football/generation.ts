@@ -10,12 +10,29 @@
 
 let currentGeneration = 0;
 
+type Listener = () => void;
+const listeners = new Set<Listener>();
+
 export function generation(): number {
   return currentGeneration;
 }
 
 export function bumpGeneration(): void {
   currentGeneration++;
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+/**
+ * Subscribe to hydrate events (for useSyncExternalStore). Fires whenever an OTA
+ * pack replaces the in-memory dataset, so live-count UIs re-render on their own.
+ */
+export function subscribeGeneration(listener: Listener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 /** Memoize a dataset-derived value; recomputes on first read after a hydrate. */

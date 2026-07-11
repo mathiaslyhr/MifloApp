@@ -12123,12 +12123,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [3, 21],
     clubs: [
       {clubId: 'copenhagen', from: 2020, to: 2023},
-      {clubId: 'leicester', from: 2023, to: 2024},
-      {clubId: 'bologna', from: 2024},
+      {clubId: 'leicester', from: 2023},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2022], clubId: 'copenhagen'},
-      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'bologna'},
     ],
     tags: ['current-stars'],
   },
@@ -17943,7 +17941,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1994-06-15',
     shirtNumbers: [9],
     clubs: [
-      {clubId: 'rb-leipzig', from: 2013},
+      {clubId: 'rb-leipzig', from: 2013, to: 2025},
+      {clubId: 'hamburg', from: 2025},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2022, 2023], clubId: 'rb-leipzig'},

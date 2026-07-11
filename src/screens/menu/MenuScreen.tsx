@@ -6,7 +6,7 @@
  * page you came from.
  */
 import React from 'react';
-import {Linking, StyleSheet} from 'react-native';
+import {Linking, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BookOpen,
@@ -29,6 +29,7 @@ import {
 import {spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
+import {PlayerCountBadge} from './PlayerCountBadge';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Menu'>;
 
@@ -93,14 +94,17 @@ export function MenuScreen({navigation}: Props) {
         />
       </MenuGroup>
 
-      <Text variant="caption" color="muted" align="center" style={styles.footer}>
-        {t('menu.version', {version: APP_VERSION})}
-      </Text>
+      <View style={styles.footer}>
+        <PlayerCountBadge />
+        <Text variant="caption" color="muted" align="center">
+          {t('menu.version', {version: APP_VERSION})}
+        </Text>
+      </View>
     </MenuDetailScreen>
   );
 }
 
 const styles = StyleSheet.create({
   body: {gap: spacing.xl},
-  footer: {marginTop: spacing.sm},
+  footer: {marginTop: spacing.sm, alignItems: 'center', gap: spacing.xs},
 });

@@ -307,6 +307,7 @@
     "reportBug": "Report a bug",
     "oneDevice": "One device",
     "version": "Miflo v{{version}}",
+    "playerCount": "{{n}} players",
     "errorLink": "Couldn't open the link."
   },
   "hattrick": {
