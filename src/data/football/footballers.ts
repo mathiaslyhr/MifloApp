@@ -15796,7 +15796,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Louis Page',
     nationality: ['England'],
     positions: ['FW'],
-    born: '2007-01-01',
+    born: '2007-07-10',
     shirtNumbers: [],
     clubs: [
       {clubId: 'leicester', from: 2024},
