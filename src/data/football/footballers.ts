@@ -7965,6 +7965,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'chelsea', from: 2019, to: 2024},
       {clubId: 'crystal-palace', from: 2021, to: 2022, loan: true},
       {clubId: 'atletico-madrid', from: 2024},
+      {clubId: 'tottenham', from: 2025, loan: true},
     ],
     honours: [],
     tags: ['current-stars'],
