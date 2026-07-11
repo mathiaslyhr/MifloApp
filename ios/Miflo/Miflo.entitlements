@@ -2,9 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>aps-environment</key>
+	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:miflo.dk</string>
+		<!-- mode=developer: Xcode-installed builds fetch the AASA straight from
+		     miflo.dk (no Apple CDN lag while iterating). TestFlight/App Store
+		     builds ignore alternate modes and use Apple's CDN as normal. -->
+		<string>applinks:miflo.dk?mode=developer</string>
 	</array>
 </dict>
 </plist>

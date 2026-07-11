@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+// Gesture-handler's ScrollView, so in-page swipe gestures (e.g. the friend
+// rows' swipe-to-remove) can claim priority via blocksExternalGesture.
+import {ScrollView} from 'react-native-gesture-handler';
 import {ChevronLeft} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CircleButton, FloatingBar, Screen, Text, TopStatusFade} from '../../core/ui';
@@ -18,6 +15,8 @@ type Props = {
   children: React.ReactNode;
   /** Extra style for the scroll content (e.g. a `gap` between sections). */
   contentStyle?: StyleProp<ViewStyle>;
+  /** Exposes the scroll view to children's swipe gestures (SwipeReveal). */
+  scrollRef?: React.RefObject<ScrollView | null>;
 };
 
 /**
@@ -33,6 +32,7 @@ export function MenuDetailScreen({
   backLabel = 'Back',
   children,
   contentStyle,
+  scrollRef,
 }: Props) {
   const insets = useSafeAreaInsets();
 
@@ -41,6 +41,7 @@ export function MenuDetailScreen({
     // wordmark scrolls away; back stays pinned as a floating corner button.
     <Screen canvas edges={['left', 'right', 'bottom']}>
       <ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={[
           {

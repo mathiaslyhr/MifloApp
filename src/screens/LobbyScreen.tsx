@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft} from 'lucide-react-native';
+import {ChevronLeft, UserPlus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {JOIN_URL_BASE} from '../core/config';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -28,6 +28,7 @@ import {
 import {haptics} from '../core/haptics';
 import {Sentry, isSentryEnabled} from '../core/observability/sentry';
 import {GAMES, isBuiltGame} from './gamesCatalog';
+import {InviteFriendsSheet} from './lobby/InviteFriendsSheet';
 import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -90,6 +91,7 @@ export function LobbyScreen({route, navigation}: Props) {
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [myUserId, setMyUserId] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(false);
   const [starting, setStarting] = useState(false);
   // Host-picked Red Card question rounds (the selector only shows for a locked
   // Red Card party; a free-pick party starts with the default).
@@ -407,6 +409,21 @@ export function LobbyScreen({route, navigation}: Props) {
           </GlassCard>
         </Pressable>
 
+        {/* Targeted invites (a push straight to a friend's iPhone) — the code
+            pill above stays the generic anyone-share. */}
+        <View style={styles.inviteWrap}>
+          <GlassTag
+            size="sm"
+            onPress={() => setInviteOpen(true)}
+            accessibilityRole="button"
+            accessibilityLabel={t('lobby.inviteFriends')}>
+            <UserPlus size={16} color={colors.ink} strokeWidth={2} />
+            <Text variant="secondary" style={styles.inviteText}>
+              {t('lobby.inviteFriends')}
+            </Text>
+          </GlassTag>
+        </View>
+
         <Text variant="secondary" color="secondary" align="center">
           {players.length <= 1
             ? t('lobby.waitingFriends')
@@ -561,6 +578,17 @@ export function LobbyScreen({route, navigation}: Props) {
           under it as it scrolls up. */}
       <TopStatusFade />
 
+      <InviteFriendsSheet
+        visible={inviteOpen}
+        code={room?.code ?? null}
+        onClose={() => setInviteOpen(false)}
+        onShareFallback={() => {
+          setInviteOpen(false);
+          shareCode();
+        }}
+        initialInvitedId={route.params.invitedFriendId}
+      />
+
       <NameSheet
         visible={renameOpen}
         title={t('lobby.renameTitle')}
@@ -601,6 +629,9 @@ const styles = StyleSheet.create({
   },
   codeLabel: {letterSpacing: 1},
   code: {letterSpacing: 6},
+  // The invite pill hangs centered right under the code, quieter than it.
+  inviteWrap: {alignSelf: 'center', marginTop: -spacing.md},
+  inviteText: {color: colors.ink},
   roster: {
     flexDirection: 'row',
     flexWrap: 'wrap',

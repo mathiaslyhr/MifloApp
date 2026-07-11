@@ -8,13 +8,17 @@ import type {TFunction} from 'i18next';
 import {getLineupById} from '../../data/football';
 import {dailySecretFor as journeymanSecretFor} from '../../games/journeyman/dailySeed';
 import {dailySecretFor as scoutSecretFor} from '../../games/scout/dailySeed';
+import {dailyLineupIdFor} from '../../games/teamsheet/dailySeed';
+import {dailyListIdFor} from '../../games/tenball/dailyList';
 import type {DailyGame} from './dailyLog';
 
 /**
- * The display answer for one FINISHED day of one game, or null when it can't
- * be resolved (a lineup/list that left the OTA data, an empty pool). Callers
- * must only ask for finished days — asking for today's unfinished puzzle
- * would spoil it for the owner.
+ * The display answer for one CLOSED day of one game — a day is closed once
+ * the owner finished it or the calendar moved past it, and only then may a
+ * caller ask (asking for today's unfinished puzzle would spoil it). Played
+ * days pass the pinned `refId` from history; unplayed past days fall back to
+ * the committed schedule. Null when it can't be resolved (a lineup/list that
+ * left the OTA data, an empty pool).
  */
 export function dailyAnswerFor(
   game: DailyGame,
@@ -29,15 +33,13 @@ export function dailyAnswerFor(
       case 'journeyman':
         return journeymanSecretFor(dateKey).name;
       case 'tenball': {
-        if (!refId) {
-          return null;
-        }
+        const listId = refId ?? dailyListIdFor(dateKey);
         // List titles are i18n strings shipped with the list (OTA pack model).
-        const title = t(`tenball.lists.${refId}.title`, {defaultValue: ''});
+        const title = t(`tenball.lists.${listId}.title`, {defaultValue: ''});
         return title.length > 0 ? title : null;
       }
       case 'teamsheet': {
-        const lineup = refId ? getLineupById(refId) : undefined;
+        const lineup = getLineupById(refId ?? dailyLineupIdFor(dateKey));
         return lineup ? `${lineup.team} ${lineup.year}` : null;
       }
     }

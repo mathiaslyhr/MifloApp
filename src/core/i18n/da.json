@@ -35,6 +35,7 @@
   "lobby": {
     "title": "Rum",
     "leave": "Forlad rummet",
+    "inviteFriends": "Inviter venner",
     "shareCode": "Del rumkode",
     "code": "RUMKODE",
     "shareMessage": "Deltag i mit rum i Miflo! Koden er {{code}}, eller tryk for at deltage: {{link}}",
@@ -64,12 +65,39 @@
     "needPlayers": "Dette spil kræver mindst {{count}} spillere.",
     "needPlayersPick": "I skal være mindst {{count}} spillere for at vælge et spil."
   },
+  "invite": {
+    "title": "Inviter venner",
+    "invite": "Inviter",
+    "sending": "Sender…",
+    "invited": "Inviteret",
+    "sentToast": "Invitation sendt til {{name}}",
+    "unreachable": "Kan ikke få invitationer",
+    "unreachableToast": "{{name}} kan ikke få invitationer lige nu. Del koden i stedet.",
+    "shareInstead": "Del koden i stedet",
+    "noFriends": "Ingen venner endnu. Tilføj venner under Venner, og inviter dem herfra.",
+    "noProfile": "Sæt Venner op først. Vælg dit navn under Venner, og inviter herfra.",
+    "errorLoad": "Kunne ikke hente dine venner.",
+    "errorSend": "Kunne ikke sende invitationen. Prøv igen.",
+    "errorRoom": "Invitationer virker kun, mens rummet er åbent.",
+    "a11yInvite": "Inviter {{name}} til rummet"
+  },
   "tabs": {
     "home": "Hjem",
     "games": "Spil",
     "social": "Venner",
-    "log": "Log",
-    "menu": "Menu"
+    "profile": "Profil",
+    "a11yBadge": "nye venneanmodninger"
+  },
+  "profile": {
+    "title": "Profil",
+    "menuA11y": "Menu",
+    "friendsCount": "{{count}} ven",
+    "friendsCount_plural": "{{count}} venner",
+    "editNameTitle": "Skift dit navn",
+    "editNameA11y": "Skift dit navn",
+    "errorRename": "Kunne ikke skifte dit navn. Prøv igen.",
+    "friendsButton": "Venner",
+    "friendLogEmpty": "Ingen spil spillet endnu."
   },
   "games": {
     "title": "Spil",
@@ -184,7 +212,6 @@
     }
   },
   "dailyLog": {
-    "title": "Daglig log",
     "streaks": "Stimer",
     "history": "Historik",
     "today": "I dag",
@@ -219,35 +246,43 @@
     "create": "Opret profil",
     "errorCreate": "Kunne ikke oprette din profil. Prøv igen.",
     "yourCode": "Din vennekode",
-    "share": "Del",
-    "shareMessage": "Tilføj mig på Miflo! Min vennekode er {{code}}",
-    "addTitle": "Tilføj en ven",
-    "addPlaceholder": "Vennekode",
-    "add": "Tilføj",
+    "shareMessage": "Tilføj mig på Miflo! Min vennekode er {{code}}, eller tryk for at tilføje mig: {{link}}",
+    "searchA11y": "Søg efter venner",
+    "searchCloseA11y": "Luk søgning",
+    "searchPlaceholder": "Søg blandt venner eller indtast en kode",
+    "searchEmpty": "Ingen venner matcher din søgning.",
+    "sendRequestTo": "Send venneanmodning til {{code}}",
+    "requests": "Anmodninger",
+    "accept": "Acceptér",
+    "requestSent": "Anmodning sendt til {{name}}",
+    "requestAlreadySent": "Du har allerede sendt {{name}} en anmodning",
+    "requestPending": "Venter på {{name}}",
+    "alreadyFriends": "Du og {{name}} er allerede venner",
     "friendAdded": "Du og {{name}} er nu venner",
     "errorNotFound": "Ingen ven med den kode.",
     "errorSelf": "Det er din egen kode.",
-    "errorAdd": "Kunne ikke tilføje vennen. Prøv igen.",
+    "errorRequest": "Kunne ikke sende anmodningen. Prøv igen.",
+    "errorAccept": "Kunne ikke acceptere anmodningen. Prøv igen.",
     "unavailable": "Du skal have internetforbindelse for at se dine venner.",
-    "you": "Dig",
     "friends": "Venner",
     "empty": "Ingen venner endnu. Del din kode for at komme i gang.",
     "loadError": "Kunne ikke hente dine venner.",
     "removeTitle": "Fjern ven?",
     "removeBody": "Du og {{name}} kan ikke længere se hinandens resultater.",
+    "inviteToParty": "Inviter til et rum",
+    "a11yShareCode": "Del din vennekode",
+    "a11yDecline": "Afvis anmodning fra {{name}}",
     "a11yStreak": "{{count}} dages stime",
-    "a11yWeekDay": "{{date}}: klarede {{count}} af {{total}} spil",
     "a11yOnline": "Online nu",
+    "removeA11y": "Fjern {{name}}",
     "activeMinutes": "Aktiv for {{count}} min. siden",
     "activeHours": "Aktiv for {{count}} t. siden",
     "activeDays": "Aktiv for {{count}} d. siden"
   },
   "menu": {
     "title": "Menu",
-    "account": "Konto",
     "app": "App",
     "about": "Om",
-    "profile": "Profil",
     "howToPlay": "Sådan spiller du",
     "settings": "Indstillinger",
     "aboutMiflo": "Om Miflo",
@@ -502,9 +537,7 @@
       "rule": "Hver runde stiller ét spørgsmål, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
     },
     "round": "Runde {{round}} af {{total}}",
-    "roundsPicker": {
-      "label": "Spørgsmål i spillet"
-    },
+    "roundsPicker": {"label": "Spørgsmål i spillet"},
     "prompt": {
       "club": "Nævn en spiller der har spillet for {{club}}",
       "nat": "Nævn en spiller fra {{country}}",
@@ -831,11 +864,6 @@
     "scoutReminder": "Daglig påmindelse",
     "scoutReminderDesc": "Et dagligt prik, når de nye spil lander.",
     "errorSave": "Kunne ikke gemme dine indstillinger."
-  },
-  "stats": {
-    "title": "Statistik",
-    "comingSoon": "Kommer snart",
-    "comingSoonDesc": "Dine sejre, stimer og yndlingsspillere vil dukke op her."
   },
   "aboutPage": {
     "title": "Om Miflo",

@@ -22,6 +22,15 @@ type Props = {
 const RING_GAP = 3;
 const RING_STROKE = 2;
 
+/** Up to two initials from a display name — the one recipe every avatar uses. */
+export function initialsFor(name: string): string {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map(w => w[0]?.toUpperCase() ?? '')
+    .join('');
+}
+
 /** Round initials avatar (design.md — the app-mock Avatar atom). */
 export function Avatar({initials, tone = 'accent', size = 28, host = false}: Props) {
   const {bg, fg} = TONES[tone];

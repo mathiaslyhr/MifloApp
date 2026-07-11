@@ -28,8 +28,14 @@ import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
 import {syncScoutReminder} from './src/core/notifications/scoutReminder';
 import {syncStreakSaver} from './src/core/notifications/streakSaver';
+import {
+  flushPendingNavigation,
+  initPushInviteListeners,
+  syncPushToken,
+} from './src/core/notifications/pushInvites';
 import {flushOutbox} from './src/core/social/outbox';
 import {startPresenceHeartbeat} from './src/core/social/presence';
+import {startRequestsRefresh} from './src/core/social/requestsStore';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -39,7 +45,7 @@ import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
  */
 const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['https://miflo.dk', 'miflo://'],
-  config: {screens: {Join: 'join/:code'}},
+  config: {screens: {Join: 'join/:code', Tabs: 'add/:addCode'}},
 };
 
 function App(): React.JSX.Element {
@@ -64,6 +70,14 @@ function App(): React.JSX.Element {
     // Friends presence: beat "I'm here" while foregrounded (green dot / last
     // active on friends' tabs). Also a no-op before opting into Friends.
     startPresenceHeartbeat();
+    // Remote pushes: re-upload the APNs token when permission was already
+    // granted (never prompts) and listen for push taps (party invite → Join,
+    // friend request/accept → Friends tab).
+    syncPushToken();
+    // Friend requests: load them now and on every foreground, so the Friends
+    // tab badge is honest even if the push was dismissed. No-op pre-opt-in.
+    startRequestsRefresh();
+    return initPushInviteListeners();
   }, []);
 
   // Surface uncaught JS errors (event handlers, effects, async) that an error
@@ -102,6 +116,7 @@ function App(): React.JSX.Element {
             <NavigationContainer
               ref={navigationRef}
               linking={linking}
+              onReady={flushPendingNavigation}
               onStateChange={maybeApplyPending}>
               <RootNavigator />
             </NavigationContainer>

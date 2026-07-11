@@ -31,6 +31,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
+
+  // APNs registration callbacks, relayed to PushTokenModule (which owns the
+  // JS-facing promise) via NotificationCenter.
+  func application(
+    _ application: UIApplication,
+    didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+  ) {
+    let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+    NotificationCenter.default.post(name: .mifloApnsToken, object: token)
+  }
+
+  func application(
+    _ application: UIApplication,
+    didFailToRegisterForRemoteNotificationsWithError error: Error
+  ) {
+    NotificationCenter.default.post(name: .mifloApnsTokenError, object: error)
+  }
 }
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {

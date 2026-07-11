@@ -1,0 +1,153 @@
+/**
+ * The Instagram-style identity block shared by the own Profile tab and a
+ * friend's profile page: initials avatar on the left, then the name with the
+ * presence and friends lines stacked beside it, and a slot for actions below
+ * (the friend page puts its Friends/Invite buttons there). Sits directly on
+ * the rainbow mesh — no glass, no shadow — so it reads as the page's
+ * identity, not another card in the list.
+ */
+import React from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {Avatar, Text, initialsFor} from '../../core/ui';
+import {colors, fonts, spacing} from '../../theme';
+import type {Presence} from '../../core/social/presence';
+import {formatLastActive} from '../social/PersonCard';
+
+type Props = {
+  name: string;
+  /** Own page: accent (it's you). Friend page: soft — mirrors PersonCard. */
+  tone: 'accent' | 'soft';
+  /** Hidden while null (offline, stranger, or the RPC not deployed yet). */
+  friendCount: number | null;
+  /** Own page only — the friends line becomes a tap into the Friends tab. */
+  onPressFriends?: () => void;
+  /** Own page only — the name itself becomes the rename tap target. */
+  onEditName?: () => void;
+  /** Friend page only — the online dot on the avatar + "Active X ago" line. */
+  presence?: Presence;
+  /** The action row under the identity (friend page: Friends + Invite). */
+  children?: React.ReactNode;
+};
+
+export function ProfileHeader({
+  name,
+  tone,
+  friendCount,
+  onPressFriends,
+  onEditName,
+  presence,
+  children,
+}: Props) {
+  const {t} = useTranslation();
+  const activeLabel = presence ? formatLastActive(presence, t) : null;
+
+  const nameText = (
+    <Text style={styles.name} numberOfLines={1}>
+      {name}
+    </Text>
+  );
+
+  const friendsLabel =
+    friendCount === null ? null : t('profile.friendsCount', {count: friendCount});
+
+  const friendsText = friendsLabel ? (
+    <Text variant="secondary" color="secondary">
+      {friendsLabel}
+    </Text>
+  ) : null;
+
+  return (
+    <View style={styles.root}>
+      <View style={styles.identityRow}>
+        <View>
+          <Avatar initials={initialsFor(name)} tone={tone} size={72} />
+          {presence?.online ? (
+            <View
+              style={styles.onlineDot}
+              accessibilityLabel={t('social.a11yOnline')}
+            />
+          ) : null}
+        </View>
+
+        <View style={styles.info}>
+          {onEditName ? (
+            // The name itself is the (undecorated) tap target for renaming.
+            <Pressable
+              onPress={onEditName}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={t('profile.editNameA11y')}>
+              {nameText}
+            </Pressable>
+          ) : (
+            nameText
+          )}
+
+          {activeLabel ? (
+            <Text variant="caption" color="tertiary">
+              {activeLabel}
+            </Text>
+          ) : null}
+
+          {friendsLabel ? (
+            onPressFriends ? (
+              <Pressable
+                onPress={onPressFriends}
+                hitSlop={10}
+                accessibilityRole="button"
+                accessibilityLabel={friendsLabel}>
+                {friendsText}
+              </Pressable>
+            ) : (
+              friendsText
+            )
+          ) : null}
+        </View>
+      </View>
+
+      {children ? <View style={styles.actions}>{children}</View> : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: {
+    paddingTop: spacing.sm,
+  },
+  identityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.lg,
+  },
+  info: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  // The scale's cap (medium 20) — the same size the wordmark uses, because the
+  // name IS this page's headline.
+  name: {
+    fontFamily: fonts.medium,
+    fontSize: 20,
+    lineHeight: 24,
+    color: colors.ink,
+  },
+  // Same presence trick as PersonCard, scaled for the 72pt disc.
+  onlineDot: {
+    position: 'absolute',
+    right: 2,
+    bottom: 2,
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: colors.success,
+    borderWidth: 2.5,
+    borderColor: colors.surface,
+  },
+  actions: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    gap: spacing.sm,
+    marginTop: spacing.md,
+  },
+});

@@ -1,31 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useRequestsStore} from '../core/social/requestsStore';
 import {HomeScreen} from './HomeScreen';
 import {GamesScreen} from './GamesScreen';
 import {SocialScreen} from './SocialScreen';
-import {DailyLogScreen} from './DailyLogScreen';
-import {MenuScreen, type MenuItem} from './MenuScreen';
+import {ProfileScreen} from './ProfileScreen';
 import {FloatingBar, IslandTabBar, type TabId} from '../core/ui';
 import type {RootStackParamList} from '../core/navigation';
-
-/** Menu row → the detail route it opens (all param-less). */
-type DetailRoute = 'Profile' | 'Settings' | 'HowToPlay' | 'About' | 'OneDevice';
-const MENU_ROUTES: Record<MenuItem, DetailRoute> = {
-  profile: 'Profile',
-  settings: 'Settings',
-  howToPlay: 'HowToPlay',
-  about: 'About',
-  oneDevice: 'OneDevice',
-};
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
 
 /**
  * The tab shell — the stack's home route. A minimal, hand-rolled toggle between
- * Home, Games and Menu. All three stay mounted; we flip visibility instead of
- * swapping, so switching tabs never re-rasterizes a screen's rainbow mesh SVG (a
- * visible flash otherwise).
+ * Home, Games, Friends and Profile. All four stay mounted; we flip visibility
+ * instead of swapping, so switching tabs never re-rasterizes a screen's rainbow
+ * mesh SVG (a visible flash otherwise).
  *
  * Hidden pages are faded (`opacity: 0`), NOT `display: none`: Fabric culls
  * `display: none` subtrees — their native views are destroyed and recreated on
@@ -35,13 +25,26 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
  * design wanted all along). Touch and VoiceOver are gated separately via
  * `pointerEvents` / `accessibilityElementsHidden`.
  *
- * The blurred nav island lives here — one shared instance pinned over all three
+ * The blurred nav island lives here — one shared instance pinned over all four
  * pages, so content scrolls and blurs beneath it consistently (Instagram-style).
- * Menu rows push their detail screen on the root stack; Home's Create button
- * pushes the Lobby.
+ * Home's Create button pushes the Lobby; Profile's hamburger pushes the Menu.
  */
-export function TabsScreen({navigation}: Props) {
+export function TabsScreen({route}: Props) {
   const [tab, setTab] = useState<TabId>('home');
+  // Friend pushes deep-link into a tab: a tap navigates to Tabs with
+  // {tab, at} and this effect flips the local toggle. Keyed on the params
+  // object (`at` keeps repeat taps distinct) so every tap lands. An `addCode`
+  // (miflo.dk/add/CODE link) lands on Friends too — SocialScreen consumes it.
+  useEffect(() => {
+    if (route.params?.tab || route.params?.addCode) {
+      setTab(route.params.tab ?? 'social');
+    }
+  }, [route.params]);
+
+  // Badge the Friends tab while requests await an answer.
+  const hasIncoming = useRequestsStore(
+    s => (s.requests?.incoming.length ?? 0) > 0,
+  );
 
   const pageProps = (id: TabId) => ({
     style: [styles.page, tab !== id && styles.hidden],
@@ -62,22 +65,21 @@ export function TabsScreen({navigation}: Props) {
       <View {...pageProps('social')}>
         {/* Stays mounted like the others; isActive is its focus signal (it has
             no navigation focus of its own), used to refresh the friends feed. */}
-        <SocialScreen isActive={tab === 'social'} />
+        <SocialScreen isActive={tab === 'social'} addCode={route.params?.addCode} />
       </View>
-      <View {...pageProps('log')}>
+      <View {...pageProps('profile')}>
         {/* Same isActive pattern as Friends: the page stays mounted, so the
             flag is its focus signal, used to reload the daily archive. */}
-        <DailyLogScreen isActive={tab === 'log'} />
-      </View>
-      <View {...pageProps('menu')}>
-        <MenuScreen
-          onSelectItem={item => navigation.navigate(MENU_ROUTES[item])}
-        />
+        <ProfileScreen isActive={tab === 'profile'} />
       </View>
 
       {/* Shared blurred nav island, pinned over every tab page. */}
       <FloatingBar edge="bottom">
-        <IslandTabBar active={tab} onSelect={setTab} />
+        <IslandTabBar
+          active={tab}
+          onSelect={setTab}
+          badge={{social: hasIncoming}}
+        />
       </FloatingBar>
     </View>
   );

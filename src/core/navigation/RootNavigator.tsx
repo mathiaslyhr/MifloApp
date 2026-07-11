@@ -21,7 +21,8 @@ import {JourneymanScreen} from '../../screens/JourneymanScreen';
 import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
 import {TopBinsScreen} from '../../screens/TopBinsScreen';
-import {ProfileScreen} from '../../screens/menu/ProfileScreen';
+import {MenuScreen} from '../../screens/menu/MenuScreen';
+import {FriendProfileScreen} from '../../screens/profile/FriendProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
 import {AboutScreen} from '../../screens/menu/AboutScreen';
@@ -32,78 +33,30 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    // Swipe-back is off everywhere: every pushed page has an explicit back
+    // button, and edge swipes kept colliding with in-page gestures (game
+    // boards, swipe-reveal rows).
+    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
       <Stack.Screen name="Tabs" component={TabsScreen} />
       <Stack.Screen name="Join" component={JoinScreen} />
       <Stack.Screen name="Lobby" component={LobbyScreen} />
       <Stack.Screen name="GamePicker" component={GamePickerScreen} />
-      {/* No swipe-back out of a live game; you leave via the result screen. */}
-      <Stack.Screen
-        name="Hattrick"
-        component={HattrickScreen}
-        options={{gestureEnabled: false}}
-      />
-      {/* No swipe-back out of a live game; you leave via the result screen. */}
-      <Stack.Screen
-        name="RedCard"
-        component={RedCardScreen}
-        options={{gestureEnabled: false}}
-      />
-      {/* No swipe-back out of a live game; you leave via the result screen. */}
-      <Stack.Screen
-        name="Offside"
-        component={OffsideScreen}
-        options={{gestureEnabled: false}}
-      />
-      {/* No swipe-back out of a live game; you leave via the result screen. */}
-      <Stack.Screen
-        name="CultHero"
-        component={CultHeroScreen}
-        options={{gestureEnabled: false}}
-      />
+      <Stack.Screen name="Hattrick" component={HattrickScreen} />
+      <Stack.Screen name="RedCard" component={RedCardScreen} />
+      <Stack.Screen name="Offside" component={OffsideScreen} />
+      <Stack.Screen name="CultHero" component={CultHeroScreen} />
       {/* Pass-and-play on one shared phone — roomless, fully offline. */}
-      <Stack.Screen
-        name="HattrickLocal"
-        component={HattrickLocalScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="RedCardLocal"
-        component={RedCardLocalScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="OffsideLocal"
-        component={OffsideLocalScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="CultHeroLocal"
-        component={CultHeroLocalScreen}
-        options={{gestureEnabled: false}}
-      />
+      <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} />
+      <Stack.Screen name="RedCardLocal" component={RedCardLocalScreen} />
+      <Stack.Screen name="OffsideLocal" component={OffsideLocalScreen} />
+      <Stack.Screen name="CultHeroLocal" component={CultHeroLocalScreen} />
       {/* Single-player daily puzzles; leave via the header back button. */}
-      <Stack.Screen
-        name="Scout"
-        component={ScoutScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="TopBins"
-        component={TopBinsScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="Journeyman"
-        component={JourneymanScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen
-        name="Teamsheet"
-        component={TeamsheetScreen}
-        options={{gestureEnabled: false}}
-      />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Scout" component={ScoutScreen} />
+      <Stack.Screen name="TopBins" component={TopBinsScreen} />
+      <Stack.Screen name="Journeyman" component={JourneymanScreen} />
+      <Stack.Screen name="Teamsheet" component={TeamsheetScreen} />
+      <Stack.Screen name="Menu" component={MenuScreen} />
+      <Stack.Screen name="FriendProfile" component={FriendProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
       <Stack.Screen name="About" component={AboutScreen} />

@@ -12,6 +12,8 @@
 		55030255F46145A2AC2DBEB1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 869A07BAA2D84499BD3A0C34 /* README.md */; };
 		5645A763B422B250BF7BC474 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
+		7617F1022CA45674006654EE /* PushTokenModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7617F1002CA45674006654EE /* PushTokenModule.swift */; };
+		7617F1032CA45674006654EE /* PushTokenModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7617F1012CA45674006654EE /* PushTokenModule.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9D208949CE454AF097E45622 /* Satoshi-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0BEB1E227309487AB45C7B04 /* Satoshi-Regular.otf */; };
 		F76848A3BBE844D8A6E3E109 /* Satoshi-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 792BF3FD15BC4E7F908C05A8 /* Satoshi-Medium.otf */; };
@@ -27,6 +29,8 @@
 		5709B34CF0A7D63546082F79 /* Pods-Miflo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Miflo.release.xcconfig"; path = "Target Support Files/Pods-Miflo/Pods-Miflo.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Miflo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Miflo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Miflo/AppDelegate.swift; sourceTree = "<group>"; };
+		7617F1002CA45674006654EE /* PushTokenModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PushTokenModule.swift; path = Miflo/PushTokenModule.swift; sourceTree = "<group>"; };
+		7617F1012CA45674006654EE /* PushTokenModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PushTokenModule.m; path = Miflo/PushTokenModule.m; sourceTree = "<group>"; };
 		792BF3FD15BC4E7F908C05A8 /* Satoshi-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-Medium.otf"; path = "../assets/fonts/Satoshi-Medium.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Miflo/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		869A07BAA2D84499BD3A0C34 /* README.md */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = README.md; path = ../assets/fonts/README.md; sourceTree = "<group>"; };
@@ -50,6 +54,8 @@
 			children = (
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
+				7617F1002CA45674006654EE /* PushTokenModule.swift */,
+				7617F1012CA45674006654EE /* PushTokenModule.m */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
@@ -282,6 +288,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				7617F1022CA45674006654EE /* PushTokenModule.swift in Sources */,
+				7617F1032CA45674006654EE /* PushTokenModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,7 +304,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Miflo/Miflo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = U326NK67AQ;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Miflo/Info.plist;
@@ -329,7 +337,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Miflo/Miflo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = U326NK67AQ;
 				INFOPLIST_FILE = Miflo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;

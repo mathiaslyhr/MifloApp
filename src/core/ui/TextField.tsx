@@ -12,7 +12,7 @@ type Props = {
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   /** Fires on the keyboard return key (e.g. confirm the prompt). */
   onSubmitEditing?: () => void;
-  returnKeyType?: 'done' | 'go' | 'next';
+  returnKeyType?: 'done' | 'go' | 'next' | 'search';
   /** `'submit'` keeps the keyboard up after return (rapid-fire inputs). */
   submitBehavior?: 'blurAndSubmit' | 'submit';
   /** Grow to a multi-line box (e.g. a feedback message). */

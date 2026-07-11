@@ -38,3 +38,35 @@ export type FriendFeed = {
   profile: SocialProfile;
   results: PublishedResult[];
 };
+
+/**
+ * What sending a friend request actually did. Adding is ask-then-accept, but
+ * the server folds the quiet cases into one call: a fresh request
+ * (`requested`), the counterpart had already asked us so both requests fused
+ * into a friendship (`autoAccepted`), or nothing changed (`alreadyRequested`,
+ * `alreadyFriends`).
+ */
+export type SendRequestOutcome =
+  | 'requested'
+  | 'autoAccepted'
+  | 'alreadyFriends'
+  | 'alreadyRequested';
+
+export type SendRequestResult = {
+  outcome: SendRequestOutcome;
+  /** The profile behind the code — for toasts and follow-up pushes. */
+  friend: SocialProfile;
+};
+
+/** One pending request joined with the counterpart's profile. */
+export type FriendRequest = {
+  profile: SocialProfile;
+  /** Server timestamp (ISO) — newest requests sort first. */
+  createdAt: string;
+};
+
+/** The caller's pending requests, split by direction. */
+export type FriendRequests = {
+  incoming: FriendRequest[];
+  outgoing: FriendRequest[];
+};

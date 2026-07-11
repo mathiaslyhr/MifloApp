@@ -35,6 +35,7 @@
   "lobby": {
     "title": "Party",
     "leave": "Leave party",
+    "inviteFriends": "Invite friends",
     "shareCode": "Share party code",
     "code": "PARTY CODE",
     "shareMessage": "Join my Miflo party! The code is {{code}}, or tap to join: {{link}}",
@@ -64,12 +65,39 @@
     "needPlayers": "This game needs at least {{count}} players.",
     "needPlayersPick": "You need at least {{count}} players to pick a game."
   },
+  "invite": {
+    "title": "Invite friends",
+    "invite": "Invite",
+    "sending": "Sending…",
+    "invited": "Invited",
+    "sentToast": "Invite sent to {{name}}",
+    "unreachable": "Can't get invites",
+    "unreachableToast": "{{name}} can't get invites right now. Share the code instead.",
+    "shareInstead": "Share the code instead",
+    "noFriends": "No friends yet. Add friends on the Friends tab, then invite them from here.",
+    "noProfile": "Set up Friends first. Pick your name on the Friends tab, then invite from here.",
+    "errorLoad": "Couldn't load your friends.",
+    "errorSend": "Couldn't send the invite. Try again.",
+    "errorRoom": "Invites only work while the party is in the lobby.",
+    "a11yInvite": "Invite {{name}} to the party"
+  },
   "tabs": {
     "home": "Home",
     "games": "Games",
     "social": "Friends",
-    "log": "Log",
-    "menu": "Menu"
+    "profile": "Profile",
+    "a11yBadge": "new friend requests"
+  },
+  "profile": {
+    "title": "Profile",
+    "menuA11y": "Menu",
+    "friendsCount": "{{count}} friend",
+    "friendsCount_plural": "{{count}} friends",
+    "editNameTitle": "Change your name",
+    "editNameA11y": "Change your name",
+    "errorRename": "Couldn't change your name. Try again.",
+    "friendsButton": "Friends",
+    "friendLogEmpty": "No games played yet."
   },
   "games": {
     "title": "Games",
@@ -184,7 +212,6 @@
     }
   },
   "dailyLog": {
-    "title": "Daily log",
     "streaks": "Streaks",
     "history": "History",
     "today": "Today",
@@ -219,35 +246,43 @@
     "create": "Create profile",
     "errorCreate": "Couldn't create your profile. Try again.",
     "yourCode": "Your friend code",
-    "share": "Share",
-    "shareMessage": "Add me on Miflo! My friend code is {{code}}",
-    "addTitle": "Add a friend",
-    "addPlaceholder": "Friend code",
-    "add": "Add",
+    "shareMessage": "Add me on Miflo! My friend code is {{code}}, or tap to add me: {{link}}",
+    "searchA11y": "Search friends",
+    "searchCloseA11y": "Close search",
+    "searchPlaceholder": "Search friends or enter a code",
+    "searchEmpty": "No friends match your search.",
+    "sendRequestTo": "Send friend request to {{code}}",
+    "requests": "Requests",
+    "accept": "Accept",
+    "requestSent": "Request sent to {{name}}",
+    "requestAlreadySent": "You already sent {{name}} a request",
+    "requestPending": "Waiting for {{name}}",
+    "alreadyFriends": "You and {{name}} are already friends",
     "friendAdded": "You and {{name}} are now friends",
     "errorNotFound": "No friend with that code.",
     "errorSelf": "That is your own code.",
-    "errorAdd": "Couldn't add the friend. Try again.",
+    "errorRequest": "Couldn't send the request. Try again.",
+    "errorAccept": "Couldn't accept the request. Try again.",
     "unavailable": "You need an internet connection to see your friends.",
-    "you": "You",
     "friends": "Friends",
     "empty": "No friends yet. Share your code to get started.",
     "loadError": "Couldn't load your friends.",
     "removeTitle": "Remove friend?",
     "removeBody": "You and {{name}} will no longer see each other's results.",
+    "inviteToParty": "Invite to a party",
+    "a11yShareCode": "Share your friend code",
+    "a11yDecline": "Decline request from {{name}}",
     "a11yStreak": "{{count}} day streak",
-    "a11yWeekDay": "{{date}}: finished {{count}} of {{total}} games",
     "a11yOnline": "Online now",
+    "removeA11y": "Remove {{name}}",
     "activeMinutes": "Active {{count}} min ago",
     "activeHours": "Active {{count}}h ago",
     "activeDays": "Active {{count}}d ago"
   },
   "menu": {
     "title": "Menu",
-    "account": "Account",
     "app": "App",
     "about": "About",
-    "profile": "Profile",
     "howToPlay": "How to play",
     "settings": "Settings",
     "aboutMiflo": "About Miflo",
@@ -502,9 +537,7 @@
       "rule": "Every round asks one question and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
     },
     "round": "Round {{round}} of {{total}}",
-    "roundsPicker": {
-      "label": "Questions this game"
-    },
+    "roundsPicker": {"label": "Questions this game"},
     "prompt": {
       "club": "Name a player who has played for {{club}}",
       "nat": "Name a player from {{country}}",
@@ -831,11 +864,6 @@
     "scoutReminder": "Daily reminder",
     "scoutReminderDesc": "A daily nudge when the new games drop.",
     "errorSave": "Couldn't save your settings."
-  },
-  "stats": {
-    "title": "Stats",
-    "comingSoon": "Coming soon",
-    "comingSoonDesc": "Your wins, streaks and favourite players will show up here."
   },
   "aboutPage": {
     "title": "About Miflo",

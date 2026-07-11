@@ -32,7 +32,7 @@ export function NameSheet({
   confirmLabel,
   onConfirm,
   onCancel,
-  maxLength = 20,
+  maxLength = 15,
 }: Props) {
   const [value, setValue] = useState(initialValue);
 

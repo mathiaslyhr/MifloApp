@@ -10,9 +10,18 @@
  * session: losing it (reinstall) orphans the profile — accepted for v1.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../i18n';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
-import type {FriendFeed, PublishedResult, SocialProfile} from './types';
+import {partitionRequests, type FriendRequestRow} from './requests';
+import type {
+  FriendFeed,
+  FriendRequests,
+  PublishedResult,
+  SendRequestOutcome,
+  SendRequestResult,
+  SocialProfile,
+} from './types';
 
 const PROFILE_KEY = 'social.profile';
 
@@ -116,20 +125,110 @@ export async function setDisplayName(name: string): Promise<void> {
   }
 }
 
+/** The server's jsonb status strings → our camelCase outcomes. */
+const OUTCOME_BY_STATUS: Record<string, SendRequestOutcome> = {
+  requested: 'requested',
+  auto_accepted: 'autoAccepted',
+  already_friends: 'alreadyFriends',
+  already_requested: 'alreadyRequested',
+};
+
 /**
- * Add a friend by their code — instantly mutual, idempotent. Throws with the
+ * Ask to be friends with whoever owns `code`. Never instant anymore: the
+ * server either files a pending request or, when the counterpart had already
+ * asked us, fuses both into a friendship (`autoAccepted`). Throws with the
  * server's message on a bad code; classify with the helpers below.
  */
-export async function addFriend(code: string): Promise<SocialProfile> {
+export async function sendFriendRequest(code: string): Promise<SendRequestResult> {
   const {client} = await requireClient();
-  const {data, error} = await client.rpc('add_friend', {p_code: code});
+  const {data, error} = await client.rpc('send_friend_request', {p_code: code});
   if (error) {
     throw error;
   }
-  return mapProfile(Array.isArray(data) ? data[0] : data);
+  const row = (Array.isArray(data) ? data[0] : data) as {status: string};
+  return {
+    outcome: OUTCOME_BY_STATUS[row.status] ?? 'requested',
+    friend: mapProfile(row),
+  };
 }
 
-/** True when addFriend failed because no profile carries that code. */
+/**
+ * My pending requests, both directions, counterpart profiles attached
+ * (the widened profiles_select from 0024 lets both ends read each other).
+ */
+export async function fetchFriendRequests(): Promise<FriendRequests> {
+  const {client, uid} = await requireClient();
+  const {data, error} = await client
+    .from('friend_requests')
+    .select('requester, addressee, created_at');
+  if (error) {
+    throw error;
+  }
+  const rows: FriendRequestRow[] = (data ?? []).map(row => ({
+    requester: row.requester,
+    addressee: row.addressee,
+    createdAt: row.created_at,
+  }));
+  if (rows.length === 0) {
+    return {incoming: [], outgoing: []};
+  }
+  const counterpartIds = [
+    ...new Set(rows.map(r => (r.addressee === uid ? r.requester : r.addressee))),
+  ];
+  const {data: profileRows, error: profilesError} = await client
+    .from('profiles')
+    .select('*')
+    .in('user_id', counterpartIds);
+  if (profilesError) {
+    throw profilesError;
+  }
+  return partitionRequests(rows, (profileRows ?? []).map(mapProfile), uid);
+}
+
+/** Accept the pending request from `userId` — the friendship exists after. */
+export async function acceptFriendRequest(userId: string): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.rpc('accept_friend_request', {p_user_id: userId});
+  if (error) {
+    throw error;
+  }
+}
+
+/** Decline the pending request from `userId`. Quiet: they are never told. */
+export async function declineFriendRequest(userId: string): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.rpc('decline_friend_request', {p_user_id: userId});
+  if (error) {
+    throw error;
+  }
+}
+
+export type FriendPushKind = 'friend_request' | 'request_accepted';
+
+/**
+ * Ring the counterpart's doorbell after a successful request/accept RPC. The
+ * Edge Function re-verifies the state server-side, so this is safe to call
+ * fire-and-forget (`.catch(() => {})`) — the Requests section is the source
+ * of truth, the push is best-effort.
+ */
+export async function sendFriendPush(
+  kind: FriendPushKind,
+  toUserId: string,
+): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.functions.invoke('send-friend-push', {
+    body: {
+      kind,
+      toUserId,
+      lang: i18n.language?.startsWith('da') ? 'da' : 'en',
+    },
+  });
+  if (error) {
+    throw error;
+  }
+}
+
+/** True when sendFriendRequest failed because no profile carries that code. */
 export function isUnknownCodeError(err: unknown): boolean {
   return String((err as Error)?.message ?? '').includes('Friend code not found');
 }
@@ -154,6 +253,46 @@ export async function removeFriend(userId: string): Promise<void> {
   if (error) {
     throw error;
   }
+}
+
+/**
+ * How many friends `userId` has — your own count or a friend's (the profile
+ * pages' header line). Null when unknown: a stranger, the RPC not deployed
+ * yet (0025), or a network failure — the caller hides the line, never errors.
+ */
+export async function fetchFriendCount(userId: string): Promise<number | null> {
+  try {
+    const {client} = await requireClient();
+    const {data, error} = await client.rpc('friend_count', {p_user_id: userId});
+    if (error) {
+      return null;
+    }
+    return typeof data === 'number' ? data : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * One friend's published results since `fromDateKey` (inclusive), newest
+ * first — the friend-profile page's log. Readable through daily_results RLS
+ * (own rows + friends' rows); like everything published, never an answer.
+ */
+export async function fetchFriendResults(
+  userId: string,
+  fromDateKey: string,
+): Promise<PublishedResult[]> {
+  const {client} = await requireClient();
+  const {data, error} = await client
+    .from('daily_results')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('date_key', fromDateKey)
+    .order('date_key', {ascending: false});
+  if (error) {
+    throw error;
+  }
+  return (data ?? []).map(mapResult);
 }
 
 /**
@@ -206,6 +345,83 @@ export async function fetchFriendsFeed(fromDateKey: string): Promise<FriendFeed[
       results: byUser.get(row.user_id) ?? [],
     }))
     .sort((a, b) => a.profile.displayName.localeCompare(b.profile.displayName));
+}
+
+/** All friends' profiles, alphabetical — the invite sheet's cut of the feed
+ * (no daily_results round trip). */
+export async function fetchFriends(): Promise<SocialProfile[]> {
+  const {client, uid} = await requireClient();
+  const {data: pairs, error: pairsError} = await client
+    .from('friendships')
+    .select('user_a, user_b');
+  if (pairsError) {
+    throw pairsError;
+  }
+  const friendIds = (pairs ?? []).map(row =>
+    row.user_a === uid ? row.user_b : row.user_a,
+  );
+  if (friendIds.length === 0) {
+    return [];
+  }
+  const {data, error} = await client
+    .from('profiles')
+    .select('*')
+    .in('user_id', friendIds);
+  if (error) {
+    throw error;
+  }
+  return (data ?? [])
+    .map(mapProfile)
+    .sort((a, b) => a.displayName.localeCompare(b.displayName));
+}
+
+/** Which of my friends can receive an invite push. Existence only — tokens
+ * themselves are unreadable by clients (0023_push_tokens.sql). */
+export async function fetchReachableFriendIds(): Promise<Set<string>> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('get_reachable_friends');
+  if (error) {
+    throw error;
+  }
+  return new Set(((data ?? []) as Array<{user_id: string}>).map(r => r.user_id));
+}
+
+/** Upload this device's APNs token so friends' invites can reach it. */
+export async function uploadPushToken(token: string): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.rpc('set_push_token', {p_token: token});
+  if (error) {
+    throw error;
+  }
+}
+
+/** Expected (non-throwing) outcomes of a party-invite push. */
+export type InviteSendResult = {
+  ok: boolean;
+  reason?: 'no_token' | 'not_friends' | 'no_room' | 'apns_failed';
+};
+
+/**
+ * Push "come join my party" to a friend's iPhone. The Edge Function
+ * re-verifies everything server-side (friendship, live lobby, membership);
+ * expected failures come back as `{ok:false, reason}` instead of throwing.
+ */
+export async function sendPartyInvite(
+  friendUserId: string,
+  code: string,
+): Promise<InviteSendResult> {
+  const {client} = await requireClient();
+  const {data, error} = await client.functions.invoke('send-party-invite', {
+    body: {
+      friendUserId,
+      code,
+      lang: i18n.language?.startsWith('da') ? 'da' : 'en',
+    },
+  });
+  if (error) {
+    throw error;
+  }
+  return (data ?? {ok: false, reason: 'apns_failed'}) as InviteSendResult;
 }
 
 /** Batch upsert of this device's results (finish, outbox flush, backfill). */

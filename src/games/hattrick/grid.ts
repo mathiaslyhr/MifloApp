@@ -39,55 +39,56 @@ const TAG_LABELS: Record<string, string> = {
 
 // ---------------------------------------------------------------- short labels
 // The grid axis chips are tiny, so long names ("Manchester United") wrap to two
-// lines and look broken. These maps give every axis criterion a ≤7-char label
-// for the grid ONLY — the picker/search still shows the full `criterionLabel`.
+// lines and look broken. These maps give every axis criterion a 3-letter code
+// (MUN, ESP, …) for the grid ONLY — picker/search still shows `criterionLabel`.
 
+/** Club id → 3-letter code (the crest is shown alongside it). */
 const CLUB_SHORT: Record<string, string> = {
-  'man-city': 'Man C', 'man-utd': 'Man U', arsenal: 'Arsenal', chelsea: 'Chelsea',
-  liverpool: "L'pool", tottenham: 'Spurs', 'aston-villa': 'Villa', everton: 'Everton',
-  newcastle: 'Newc.', 'west-ham': 'W. Ham', leicester: 'Leic.', leeds: 'Leeds',
-  wolves: 'Wolves', southampton: 'Soton', qpr: 'QPR', fulham: 'Fulham', barnsley: 'Barns.',
-  'real-madrid': 'Real', barcelona: 'Barça', 'atletico-madrid': 'Atléti', sevilla: 'Sevilla',
-  valencia: 'Valen.', villarreal: 'Villar.', 'real-sociedad': 'R. Soc', 'real-betis': 'Betis',
-  juventus: 'Juve', inter: 'Inter', 'ac-milan': 'Milan', napoli: 'Napoli', roma: 'Roma',
-  lazio: 'Lazio', fiorentina: 'Fiore.', atalanta: 'Atal.', bologna: 'Bologna',
-  bayern: 'Bayern', dortmund: 'BVB', leverkusen: 'Lever.', schalke: 'Schalke',
-  'rb-leipzig': 'Leipzig', wolfsburg: 'Wolfs.', monchengladbach: 'Gladb.',
-  psg: 'PSG', monaco: 'Monaco', marseille: 'OM', lyon: 'Lyon', lille: 'Lille',
-  rennes: 'Rennes', 'paris-fc': 'PFC',
-  'inter-miami': 'Miami', lafc: 'LAFC', 'la-galaxy': 'Galaxy', vancouver: 'Vanc.',
-  'al-nassr': 'Nassr', 'al-hilal': 'Hilal', 'al-ittihad': 'Ittihad', 'al-qadsiah': 'Qadsiah',
-  'al-ahli': 'Al Ahli', sporting: 'Sport.', benfica: 'Benfica', porto: 'Porto', ajax: 'Ajax',
-  santos: 'Santos', fluminense: 'Flumi.', flamengo: 'Flam.', palmeiras: 'Palm.',
-  'boca-juniors': 'Boca', 'river-plate': 'River', 'rosario-central': 'Rosario',
-  monterrey: 'Monter.', galatasaray: 'Gala', besiktas: 'Beşik.', fenerbahce: 'Fener.',
-  celtic: 'Celtic',
-  'nottingham-forest': 'Forest', 'crystal-palace': 'Palace', bournemouth: 'Bmouth',
-  burnley: 'Burnley', brentford: 'Brent.', 'werder-bremen': 'Bremen', psv: 'PSV',
-  feyenoord: 'Feyen.', genoa: 'Genoa', nice: 'Nice', 'club-brugge': 'Brugge',
-  'club-america': 'América', guadalajara: 'Chivas', tigres: 'Tigres',
-  'cruz-azul': 'Cruz A.', pumas: 'Pumas', pachuca: 'Pachuca', toluca: 'Toluca',
-  'real-mallorca': 'Mall.', brighton: 'Brigh.', anderlecht: 'Ander.', twente: 'Twente',
-  girona: 'Girona', 'eintracht-frankfurt': 'Eintr.', 'vfb-stuttgart': 'Stutt.',
-  freiburg: 'Freib.', parma: 'Parma', genk: 'Genk', lens: 'Lens',
-  montpellier: 'Montp.', 'al-sadd': 'Al Sadd', 'al-duhail': 'Duhail', reims: 'Reims',
-  'athletic-bilbao': 'Bilbao', torino: 'Torino', nantes: 'Nantes', 'al-ahly': 'Al Ahly',
-  'mamelodi-sundowns': 'Sundw.', toulouse: 'Toul.', metz: 'Metz', lorient: 'Lorient',
-  empoli: 'Empoli', udinese: 'Udin.', trabzonspor: 'Trab.', sunderland: 'Sund.',
-  'bristol-city': 'Bristol', 'union-sg': 'USG', basel: 'Basel',
-  getafe: 'Getafe', como: 'Como', internacional: 'Inter P', botafogo: 'Botaf.',
-  watford: 'Watford', cagliari: 'Cagli.', 'hertha-berlin': 'Hertha', 'west-brom': 'WBA',
-  hoffenheim: 'Hoff.', 'union-berlin': 'Union', mainz: 'Mainz', 'az-alkmaar': 'AZ',
-  lecce: 'Lecce', sampdoria: 'Samp.', 'sheffield-united': 'Sheff U', salzburg: 'Salz.',
-  'dinamo-zagreb': 'D.Zag.', midtjylland: 'Midt.', copenhagen: 'Copen.', shakhtar: 'Shakh.',
-  'dynamo-kyiv': 'D.Kyiv', ferencvaros: 'Ferenc', olympiacos: 'Olymp.',
-  augsburg: 'Augsb.', spezia: 'Spezia', norwich: 'Norwich', 'al-shabab': 'Shabab',
-  dnipro: 'Dnipro', gremio: 'Grêmio', hamburg: 'HSV', blackburn: 'Bburn',
-  'celta-vigo': 'Celta', corinthians: 'Corint.',
-  stoke: 'Stoke', bolton: 'Bolton', kaiserslautern: 'K\'lautern',
-  'saint-etienne': 'ASSE', elche: 'Elche', cannes: 'Cannes',
-  'orlando-city': 'Orlando',
-  deportivo: 'Depor', koln: 'Köln', brondby: 'Brøndby', 'aek-athens': 'AEK',
+  'man-city': 'MCI', 'man-utd': 'MUN', arsenal: 'ARS', chelsea: 'CHE',
+  liverpool: 'LIV', tottenham: 'TOT', 'aston-villa': 'AVA', everton: 'EVE',
+  newcastle: 'NEW', 'west-ham': 'WHU', leicester: 'LEI', leeds: 'LEE',
+  wolves: 'WOL', southampton: 'SOU', qpr: 'QPR', fulham: 'FUL', barnsley: 'BNS',
+  'real-madrid': 'RMA', barcelona: 'BAR', 'atletico-madrid': 'ATM', sevilla: 'SEV',
+  valencia: 'VAL', villarreal: 'VIL', 'real-sociedad': 'RSO', 'real-betis': 'BET',
+  juventus: 'JUV', inter: 'INT', 'ac-milan': 'ACM', napoli: 'NAP', roma: 'ROM',
+  lazio: 'LAZ', fiorentina: 'FIO', atalanta: 'ATA', bologna: 'BOL',
+  bayern: 'BAY', dortmund: 'BVB', leverkusen: 'LEV', schalke: 'SCH',
+  'rb-leipzig': 'RBL', wolfsburg: 'WOB', monchengladbach: 'BMG',
+  psg: 'PSG', monaco: 'AMO', marseille: 'MRS', lyon: 'LYO', lille: 'LIL',
+  rennes: 'REN', 'paris-fc': 'PFC',
+  'inter-miami': 'MIA', lafc: 'LAF', 'la-galaxy': 'LAG', vancouver: 'VAN',
+  'al-nassr': 'NAS', 'al-hilal': 'HIL', 'al-ittihad': 'ITT', 'al-qadsiah': 'QAD',
+  'al-ahli': 'AHL', sporting: 'SCP', benfica: 'BEN', porto: 'FCP', ajax: 'AJA',
+  santos: 'SAN', fluminense: 'FLU', flamengo: 'FLA', palmeiras: 'PAL',
+  'boca-juniors': 'BOC', 'river-plate': 'RIV', 'rosario-central': 'ROS',
+  monterrey: 'MTY', galatasaray: 'GAL', besiktas: 'BES', fenerbahce: 'FEN',
+  celtic: 'CEL',
+  'nottingham-forest': 'NFO', 'crystal-palace': 'CRY', bournemouth: 'BOU',
+  burnley: 'BUR', brentford: 'BRE', 'werder-bremen': 'WER', psv: 'PSV',
+  feyenoord: 'FEY', genoa: 'GEN', nice: 'NIC', 'club-brugge': 'BRU',
+  'club-america': 'AME', guadalajara: 'GDL', tigres: 'TIG',
+  'cruz-azul': 'CAZ', pumas: 'PUM', pachuca: 'PAC', toluca: 'TOL',
+  'real-mallorca': 'MLL', brighton: 'BHA', anderlecht: 'AND', twente: 'TWE',
+  girona: 'GIR', 'eintracht-frankfurt': 'EIN', 'vfb-stuttgart': 'VFB',
+  freiburg: 'FRE', parma: 'PMA', genk: 'GNK', lens: 'LEN',
+  montpellier: 'MTP', 'al-sadd': 'SAD', 'al-duhail': 'DUH', reims: 'REI',
+  'athletic-bilbao': 'ATH', torino: 'TOR', nantes: 'NAN', 'al-ahly': 'AHY',
+  'mamelodi-sundowns': 'SDW', toulouse: 'TOU', metz: 'MET', lorient: 'LOR',
+  empoli: 'EMP', udinese: 'UDI', trabzonspor: 'TRA', sunderland: 'SUN',
+  'bristol-city': 'BRC', 'union-sg': 'USG', basel: 'BAS',
+  getafe: 'GET', como: 'COM', internacional: 'INL', botafogo: 'BOT',
+  watford: 'WAT', cagliari: 'CAG', 'hertha-berlin': 'HER', 'west-brom': 'WBA',
+  hoffenheim: 'HOF', 'union-berlin': 'UNB', mainz: 'MAI', 'az-alkmaar': 'AZA',
+  lecce: 'LEC', sampdoria: 'SAM', 'hellas-verona': 'VER', 'sheffield-united': 'SHU',
+  salzburg: 'SAL', 'dinamo-zagreb': 'DZG', midtjylland: 'FCM', copenhagen: 'FCK',
+  shakhtar: 'SHK', 'dynamo-kyiv': 'DYK', ferencvaros: 'FER', olympiacos: 'OLY',
+  augsburg: 'AUG', spezia: 'SPE', norwich: 'NCI', 'al-shabab': 'SHB',
+  gremio: 'GRM', hamburg: 'HSV', blackburn: 'BLA',
+  'celta-vigo': 'CLV', corinthians: 'COR',
+  stoke: 'STO', bolton: 'BOW', kaiserslautern: 'KAI',
+  'saint-etienne': 'STE', elche: 'ELC', cannes: 'ACA',
+  'orlando-city': 'ORL',
+  deportivo: 'DEP', koln: 'KOE', brondby: 'BIF', 'aek-athens': 'AEK',
 };
 
 /** Country → short 3-letter code (a flag is shown alongside it). */
@@ -192,7 +193,7 @@ export function criterionValue(c: Criterion): string {
   }
 }
 
-/** Compact ≤7-char label for the tiny grid axis chips. */
+/** Compact code (MUN, ESP, UCL, …) for the tiny grid axis chips. */
 export function criterionShortLabel(c: Criterion): string {
   switch (c.kind) {
     case 'club':
