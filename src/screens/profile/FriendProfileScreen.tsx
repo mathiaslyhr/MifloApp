@@ -23,6 +23,7 @@ import {dateKeyFor, pastDateKeys} from '../../games/scout/dailySeed';
 import {DAILY_GAMES} from '../../core/daily/dailyLog';
 import {presenceFor} from '../../core/social/presence';
 import {
+  avatarUrlFor,
   fetchFriendCount,
   fetchFriendResults,
   removeFriend,
@@ -154,7 +155,9 @@ export function FriendProfileScreen({navigation, route}: Props) {
       <ProfileHeader
         name={profile.displayName}
         tone="soft"
+        showName={false}
         friendCount={friendCount}
+        avatarUri={avatarUrlFor(profile.avatarPath)}
         presence={presenceFor(profile.lastSeenAt, Date.now())}>
         {/* Instagram's Following/Message pair: the quiet status button hides
             the remove behind a confirm; the invite is the page's one primary. */}

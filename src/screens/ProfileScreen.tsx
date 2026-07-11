@@ -12,7 +12,7 @@
  * profile must update the count right away).
  */
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ActionSheetIOS, ScrollView, StyleSheet, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -42,11 +42,17 @@ import {
   type DailyLog,
 } from '../core/daily/dailyLog';
 import {optInToSocial} from '../core/social/onboarding';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {
+  avatarUrlFor,
+  clearAvatar,
   fetchFriends,
   fetchMyProfile,
   getCachedProfile,
+  isNameTakenError,
+  setAvatarPath,
   setDisplayName,
+  uploadAvatar,
 } from '../core/social/socialService';
 import type {SocialProfile} from '../core/social/types';
 import {CodeBlock} from './social/CodeBlock';
@@ -77,6 +83,10 @@ export function ProfileScreen({isActive}: Props) {
   );
   const [sheet, setSheet] = useState<'rename' | 'create' | null>(null);
   const [busy, setBusy] = useState(false);
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  // Bumped after a fresh upload so the new photo beats the CDN's cache of the
+  // previous image at the same (stable) object key.
+  const [avatarBust, setAvatarBust] = useState<number | undefined>(undefined);
 
   // Resolve the profile once: cache first (instant, works offline), then the
   // server as the truth when reachable — same recipe as the Friends tab.
@@ -167,10 +177,110 @@ export function ProfileScreen({isActive}: Props) {
     setSheet(null);
     setDisplayName(name).catch(err => {
       setProfile(before);
+      if (isNameTakenError(err)) {
+        // Bounce back into the sheet so they can pick another name.
+        toast.error(t('social.nameTaken'));
+        setSheet('rename');
+        return;
+      }
       toast.error(
         isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorRename'),
       );
     });
+  }
+
+  /** Tap the avatar: with a picture set, offer choose/remove; otherwise go
+   * straight to the picker (nothing to remove yet). */
+  function onAvatarPress() {
+    if (!profile || profile === 'loading' || avatarBusy) {
+      return;
+    }
+    if (!profile.avatarPath) {
+      pickAvatar();
+      return;
+    }
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [
+          t('profile.avatarChoose'),
+          t('profile.avatarRemove'),
+          t('common.cancel'),
+        ],
+        destructiveButtonIndex: 1,
+        cancelButtonIndex: 2,
+      },
+      index => {
+        if (index === 0) {
+          pickAvatar();
+        } else if (index === 1) {
+          removeAvatar();
+        }
+      },
+    );
+  }
+
+  /** Clear the avatar back to initials. Optimistic, mirroring pickAvatar. */
+  async function removeAvatar() {
+    if (!profile || profile === 'loading' || avatarBusy) {
+      return;
+    }
+    const before = profile;
+    setAvatarBusy(true);
+    setProfile({...before, avatarPath: null});
+    try {
+      await clearAvatar();
+      setAvatarBust(Date.now());
+      toast.success(t('profile.avatarRemoved'));
+    } catch (err) {
+      setProfile(before);
+      toast.error(
+        isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorAvatar'),
+      );
+    } finally {
+      setAvatarBusy(false);
+    }
+  }
+
+  /** Pick a photo, upload it, and point the profile at it. Optimistic: the
+   * server row is the truth, so any failure reverts and toasts. */
+  async function pickAvatar() {
+    if (!profile || profile === 'loading' || avatarBusy) {
+      return;
+    }
+    const res = await launchImageLibrary({
+      mediaType: 'photo',
+      maxWidth: 512,
+      maxHeight: 512,
+      quality: 0.7,
+      includeBase64: true,
+      selectionLimit: 1,
+    }).catch(() => null);
+    if (!res || res.didCancel) {
+      return;
+    }
+    const base64 = res.assets?.[0]?.base64;
+    if (res.errorCode || !base64) {
+      if (res.errorCode) {
+        toast.error(t('profile.errorAvatar'));
+      }
+      return;
+    }
+    const before = profile;
+    setAvatarBusy(true);
+    try {
+      const path = await uploadAvatar(base64);
+      await setAvatarPath(path);
+      setProfile({...before, avatarPath: path});
+      setAvatarBust(Date.now());
+      toast.success(t('profile.avatarUpdated'));
+    } catch (err) {
+      setProfile(before);
+      toast.error(
+        isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorAvatar'),
+      );
+    } finally {
+      setAvatarBusy(false);
+    }
   }
 
   async function create(name: string) {
@@ -182,6 +292,11 @@ export function ProfileScreen({isActive}: Props) {
     try {
       setProfile(await optInToSocial(name, dateKeyFor(new Date())));
     } catch (err) {
+      if (isNameTakenError(err)) {
+        toast.error(t('social.nameTaken'));
+        setSheet('create');
+        return;
+      }
       toast.error(
         isNetworkError(err) ? t('common.errorNetwork') : t('social.errorCreate'),
       );
@@ -260,6 +375,8 @@ export function ProfileScreen({isActive}: Props) {
                 navigation.navigate('Tabs', {tab: 'social', at: Date.now()})
               }
               onEditName={() => setSheet('rename')}
+              avatarUri={avatarUrlFor(profile.avatarPath, avatarBust)}
+              onPressAvatar={onAvatarPress}
             />
             <GlassCard style={styles.codeCard}>
               <CodeBlock code={profile.friendCode} divider={false} />

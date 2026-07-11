@@ -16,6 +16,7 @@ function friend(displayName: string, friendCode: string) {
     displayName,
     friendCode,
     lastSeenAt: null,
+    avatarPath: null,
   };
   return {profile};
 }

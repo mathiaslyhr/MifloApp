@@ -50,12 +50,15 @@ import {filterFriends, shouldOfferRequest} from '../core/social/friendSearch';
 import {presenceFor} from '../core/social/presence';
 import {refreshFriendRequests, useRequestsStore} from '../core/social/requestsStore';
 import {
+  avatarUrlFor,
   fetchFriendsFeed,
   fetchMyProfile,
   getCachedProfile,
+  isNameTakenError,
   removeFriend,
 } from '../core/social/socialService';
 import type {FriendFeed, SocialProfile} from '../core/social/types';
+import {AddFriendSheet} from './social/AddFriendSheet';
 import {PersonCard, friendCellsFor, friendStreak} from './social/PersonCard';
 import {RequestsSection} from './social/RequestsSection';
 import {useSendFriendRequest} from './social/useSendFriendRequest';
@@ -88,6 +91,7 @@ export function SocialScreen({isActive, addCode}: Props) {
   const [busy, setBusy] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
+  const [addOpen, setAddOpen] = useState(false);
   const requests = useRequestsStore(s => s.requests);
 
   // Resolve the profile once: cache first (instant, works offline), then the
@@ -160,7 +164,13 @@ export function SocialScreen({isActive, addCode}: Props) {
     try {
       setProfile(await optInToSocial(name, todayKey));
     } catch (err) {
-      toast.error(isNetworkError(err) ? t('common.errorNetwork') : t('social.errorCreate'));
+      toast.error(
+        isNameTakenError(err)
+          ? t('social.nameTaken')
+          : isNetworkError(err)
+            ? t('common.errorNetwork')
+            : t('social.errorCreate'),
+      );
     } finally {
       setBusy(false);
     }
@@ -256,6 +266,7 @@ export function SocialScreen({isActive, addCode}: Props) {
         scrollRef={scrollRef}>
         <PersonCard
           name={friend.profile.displayName}
+          avatarUri={avatarUrlFor(friend.profile.avatarPath)}
           presence={presenceFor(friend.profile.lastSeenAt, Date.now())}
           streak={friendStreak(friend.results, todayKey)}
           today={friendCellsFor(friend.results, todayKey)}
@@ -284,27 +295,38 @@ export function SocialScreen({isActive, addCode}: Props) {
         keyboardShouldPersistTaps="handled"
         onScrollBeginDrag={closeOpenSwipeReveal}
         showsVerticalScrollIndicator={false}>
-        {/* Wordmark header — in the scroll flow, slides off the top. The
-            corner button toggles the search (Profile's hamburger pattern). */}
+        {/* Wordmark header — in the scroll flow, slides off the top. Search on
+            the left filters the list; the plus on the right adds a friend by
+            code, so finding and adding each have their own affordance. */}
         <View style={styles.header}>
           <Text variant="wordmark" align="center">
             {t('social.title')}
           </Text>
           {profile !== 'loading' && profile !== null ? (
-            <View style={styles.headerRight}>
-              <CircleButton
-                size={30}
-                accessibilityLabel={
-                  searchOpen ? t('social.searchCloseA11y') : t('social.searchA11y')
-                }
-                onPress={toggleSearch}>
-                {searchOpen ? (
-                  <X size={16} color={colors.ink} strokeWidth={2} />
-                ) : (
-                  <Search size={16} color={colors.ink} strokeWidth={2} />
-                )}
-              </CircleButton>
-            </View>
+            <>
+              <View style={styles.headerLeft}>
+                <CircleButton
+                  size={30}
+                  accessibilityLabel={
+                    searchOpen ? t('social.searchCloseA11y') : t('social.searchA11y')
+                  }
+                  onPress={toggleSearch}>
+                  {searchOpen ? (
+                    <X size={16} color={colors.ink} strokeWidth={2} />
+                  ) : (
+                    <Search size={16} color={colors.ink} strokeWidth={2} />
+                  )}
+                </CircleButton>
+              </View>
+              <View style={styles.headerRight}>
+                <CircleButton
+                  size={30}
+                  accessibilityLabel={t('social.addA11y')}
+                  onPress={() => setAddOpen(true)}>
+                  <UserPlus size={16} color={colors.ink} strokeWidth={2} />
+                </CircleButton>
+              </View>
+            </>
           ) : null}
         </View>
 
@@ -387,7 +409,7 @@ export function SocialScreen({isActive, addCode}: Props) {
               visibleFeed.length > 0 ? (
                 <View style={styles.section}>
                   <Text variant="caption" color="tertiary" style={styles.eyebrow}>
-                    {t('social.friends').toUpperCase()}
+                    {t('social.friendsDailyEyebrow').toUpperCase()}
                   </Text>
                   {friendCards(visibleFeed)}
                 </View>
@@ -402,7 +424,7 @@ export function SocialScreen({isActive, addCode}: Props) {
               /* Friends, alphabetically. */
               <View style={styles.section}>
                 <Text variant="caption" color="tertiary" style={styles.eyebrow}>
-                  {t('social.friends').toUpperCase()}
+                  {t('social.friendsDailyEyebrow').toUpperCase()}
                 </Text>
                 {feed.length === 0 ? (
                   <GlassCard style={styles.messageCard}>
@@ -431,6 +453,17 @@ export function SocialScreen({isActive, addCode}: Props) {
 
       {/* Seamless frosted fade behind the status bar. */}
       <TopStatusFade />
+
+      {/* The plus button's add-by-code sheet. */}
+      <AddFriendSheet
+        visible={addOpen}
+        busy={sending}
+        onSubmit={code => {
+          setAddOpen(false);
+          send(code);
+        }}
+        onCancel={() => setAddOpen(false)}
+      />
     </Screen>
   );
 }
@@ -444,6 +477,13 @@ const styles = StyleSheet.create({
   headerRight: {
     position: 'absolute',
     right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
+  headerLeft: {
+    position: 'absolute',
+    left: 0,
     top: 0,
     bottom: 0,
     justifyContent: 'center',

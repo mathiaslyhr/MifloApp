@@ -13,11 +13,13 @@ import {JOIN_URL_BASE} from '../core/config';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
+  Avatar,
   Button,
   CircleButton,
   FloatingBar,
   GlassCard,
   GlassTag,
+  initialsFor,
   NameSheet,
   Screen,
   Skeleton,
@@ -29,6 +31,7 @@ import {haptics} from '../core/haptics';
 import {Sentry, isSentryEnabled} from '../core/observability/sentry';
 import {GAMES, isBuiltGame} from './gamesCatalog';
 import {InviteFriendsSheet} from './lobby/InviteFriendsSheet';
+import {avatarUrlFor} from '../core/social/socialService';
 import {colors, radii, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
@@ -446,6 +449,12 @@ export function LobbyScreen({route, navigation}: Props) {
                     ? t('lobby.removeName', {name: p.name})
                     : p.name) + (p.isHost ? `, ${t('lobby.host')}` : '')
                 }>
+                <Avatar
+                  initials={initialsFor(p.name)}
+                  tone={isMe ? 'accent' : 'soft'}
+                  size={20}
+                  uri={avatarUrlFor(p.avatarPath)}
+                />
                 <Text variant="section" style={styles.nameText}>
                   {p.name}
                 </Text>

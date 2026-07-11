@@ -25,6 +25,7 @@ const player = (id: string, joinedAt: string, score = 0): RoomPlayer => ({
   isHost: false,
   score,
   joinedAt,
+  avatarPath: null,
 });
 
 test('INSERT adds the player in join order', () => {

@@ -18,6 +18,7 @@ import {colors, radii, spacing} from '../../theme';
 import {requestPushPermissionAndSync} from '../../core/notifications/pushInvites';
 import {presenceFor} from '../../core/social/presence';
 import {
+  avatarUrlFor,
   fetchFriends,
   fetchReachableFriendIds,
   getCachedProfile,
@@ -157,7 +158,7 @@ export function InviteFriendsSheet({
     return (
       <View key={id} style={styles.row}>
         <View>
-          <Avatar initials={initials} tone="soft" />
+          <Avatar initials={initials} tone="soft" uri={avatarUrlFor(friend.avatarPath)} />
           {online ? (
             <View
               style={styles.onlineDot}

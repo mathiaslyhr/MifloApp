@@ -44,4 +44,6 @@ export type RoomPlayer = {
   isHost: boolean;
   score: number;
   joinedAt: string;
+  /** The player's profile picture object key (stamped at join), or null. */
+  avatarPath: string | null;
 };

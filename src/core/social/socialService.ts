@@ -10,6 +10,7 @@
  * session: losing it (reinstall) orphans the profile — accepted for v1.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {decode as decodeBase64} from 'base64-arraybuffer';
 import i18n from '../i18n';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
@@ -98,6 +99,17 @@ export async function fetchMyProfile(): Promise<SocialProfile | null> {
 }
 
 /**
+ * True when a create/rename failed because the display name is already taken
+ * (case-insensitive). The RPCs raise `name_taken`; PostgREST surfaces it in
+ * the error message, so the UI can offer a friendly retry instead of a generic
+ * error. See 0027_unique_display_name.sql.
+ */
+export function isNameTakenError(err: unknown): boolean {
+  const message = (err as {message?: string} | null)?.message;
+  return typeof message === 'string' && message.includes('name_taken');
+}
+
+/**
  * Opt in: create the profile (server mints the permanent friend code). Safe
  * to retry — an existing profile is returned untouched, never renamed.
  */
@@ -140,11 +152,10 @@ const AVATAR_BUCKET = 'avatars';
  */
 export async function uploadAvatar(base64: string): Promise<string> {
   const {client, uid} = await requireClient();
-  const {decode} = await import('base64-arraybuffer');
   const path = `${uid}/avatar.jpg`;
   const {error} = await client.storage
     .from(AVATAR_BUCKET)
-    .upload(path, decode(base64), {contentType: 'image/jpeg', upsert: true});
+    .upload(path, decodeBase64(base64), {contentType: 'image/jpeg', upsert: true});
   if (error) {
     throw error;
   }
@@ -162,6 +173,20 @@ export async function setAvatarPath(path: string | null): Promise<void> {
   if (cached) {
     await cacheProfile({...cached, avatarPath: path});
   }
+}
+
+/**
+ * Remove the caller's avatar: clear the profile pointer (the source of truth,
+ * so it falls back to initials everywhere) then best-effort delete the storage
+ * object. A delete failure is harmless — the pointer is already null.
+ */
+export async function clearAvatar(): Promise<void> {
+  const {client, uid} = await requireClient();
+  await setAvatarPath(null);
+  await client.storage
+    .from(AVATAR_BUCKET)
+    .remove([`${uid}/avatar.jpg`])
+    .catch(() => {});
 }
 
 /**

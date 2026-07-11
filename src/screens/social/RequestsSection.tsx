@@ -15,6 +15,7 @@ import {isNetworkError} from '../../core/rooms/roomService';
 import {refreshFriendRequests} from '../../core/social/requestsStore';
 import {
   acceptFriendRequest,
+  avatarUrlFor,
   declineFriendRequest,
   sendFriendPush,
 } from '../../core/social/socialService';
@@ -79,7 +80,11 @@ export function RequestsSection({requests, onAccepted}: Props) {
         const busy = busyId !== null;
         return (
           <GlassCard key={userId} style={styles.card}>
-            <Avatar initials={initials} tone="soft" />
+            <Avatar
+              initials={initials}
+              tone="soft"
+              uri={avatarUrlFor(request.profile.avatarPath)}
+            />
             <View style={styles.name}>
               <Text variant="label" numberOfLines={1}>
                 {displayName}

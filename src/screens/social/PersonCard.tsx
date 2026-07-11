@@ -5,11 +5,11 @@
  * 2026-07-11, the counts were unreadable at that size. A "You" card shared
  * this component too until the identity moved to the Profile tab.)
  */
-import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Animated, LayoutAnimation, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
-import {Flame} from 'lucide-react-native';
+import {ChevronDown, Flame} from 'lucide-react-native';
 import {Avatar, GlassCard, Text, initialsFor} from '../../core/ui';
 import {colors, spacing} from '../../theme';
 import {DAILY_GAMES, type DailyGame, type DayCellStatus} from '../../core/daily/dailyLog';
@@ -67,70 +67,139 @@ type Props = {
   streak: number;
   today: Map<DailyGame, ChipCell>;
   presence?: Presence;
+  /** The friend's profile picture URL, or null for the initials fallback. */
+  avatarUri?: string | null;
   /** Tap opens the friend's profile page. */
   onPress?: () => void;
 };
 
-export function PersonCard({name, streak, today, presence, onPress}: Props) {
+/** The avatar and name open the friend's profile; a plain View when there's
+ * nowhere to go (so it never swallows the row's fold tap). */
+function ProfileTarget({
+  onPress,
+  label,
+  style,
+  children,
+}: {
+  onPress?: () => void;
+  label: string;
+  style?: object;
+  children: React.ReactNode;
+}) {
+  if (!onPress) {
+    return <View style={style}>{children}</View>;
+  }
+  return (
+    <Pressable
+      onPress={onPress}
+      style={style}
+      accessibilityRole="button"
+      accessibilityLabel={label}>
+      {children}
+    </Pressable>
+  );
+}
+
+export function PersonCard({name, streak, today, presence, avatarUri, onPress}: Props) {
   const {t} = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const chevronSpin = useRef(new Animated.Value(0)).current;
   const initials = initialsFor(name);
   const activeLabel = presence ? formatLastActive(presence, t) : null;
-  const card = (
-    <GlassCard style={styles.personCard}>
-      <View style={styles.personRow}>
-        <View>
-          <Avatar initials={initials} tone="soft" />
-          {presence?.online ? (
-            <View style={styles.onlineDot} accessibilityLabel={t('social.a11yOnline')} />
-          ) : null}
-        </View>
-        <View style={styles.personName}>
-          <Text variant="label" numberOfLines={1}>
-            {name}
-          </Text>
-          {activeLabel ? (
-            <Text variant="caption" color="tertiary" numberOfLines={1}>
-              {activeLabel}
-            </Text>
-          ) : null}
-        </View>
-        {streak > 1 ? (
-          <View style={styles.streak} accessibilityLabel={t('social.a11yStreak', {count: streak})}>
-            <Flame size={14} color={colors.primary} strokeWidth={2} />
-            <Text variant="caption" color="secondary">
-              {streak}
-            </Text>
-          </View>
-        ) : null}
-      </View>
-      {/* Full-width game rows — the same list the Log tab's day cards use,
-          so a friend's card mirrors your own. */}
-      <View>
-        {DAILY_GAMES.map((game, i) => {
-          const cell = today.get(game);
-          return (
-            <DailyRow
-              key={game}
-              game={game}
-              status={cell?.status ?? 'notPlayed'}
-              count={cell?.count ?? null}
-              answer={cell?.answer ?? null}
-              isLast={i === DAILY_GAMES.length - 1}
-            />
-          );
-        })}
-      </View>
-    </GlassCard>
-  );
-  if (!onPress) {
-    return card;
+
+  function toggle() {
+    const next = !expanded;
+    // The body folds via LayoutAnimation; the chevron spins on its own native
+    // driver so it turns in place instead of being dragged by the layout pass.
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    Animated.timing(chevronSpin, {
+      toValue: next ? 1 : 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+    setExpanded(next);
   }
-  // The whole card is the tap target — it opens the friend's profile page,
-  // where invite and remove live (Instagram model, no hidden gestures).
+
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={name}>
-      {card}
-    </Pressable>
+    <GlassCard style={styles.personCard}>
+      {/* The row folds the daily games open; the avatar and name are their
+          own tap targets that open the friend's profile. RN hands the touch to
+          the innermost pressable, so tapping them navigates without toggling. */}
+      <Pressable
+        onPress={toggle}
+        accessibilityRole="button"
+        accessibilityLabel={t('social.a11yToggleGames', {name})}
+        accessibilityState={{expanded}}>
+        <View style={styles.personRow}>
+          <ProfileTarget onPress={onPress} label={name}>
+            <View>
+              <Avatar initials={initials} tone="soft" size={44} uri={avatarUri} />
+              {presence?.online ? (
+                <View
+                  style={styles.onlineDot}
+                  accessibilityLabel={t('social.a11yOnline')}
+                />
+              ) : null}
+            </View>
+          </ProfileTarget>
+          <ProfileTarget onPress={onPress} label={name} style={styles.personName}>
+            <Text variant="label" numberOfLines={1}>
+              {name}
+            </Text>
+            {activeLabel ? (
+              <Text variant="caption" color="tertiary" numberOfLines={1}>
+                {activeLabel}
+              </Text>
+            ) : null}
+          </ProfileTarget>
+          {streak > 1 ? (
+            <View
+              style={styles.streak}
+              accessibilityLabel={t('social.a11yStreak', {count: streak})}>
+              <Flame size={14} color={colors.primary} strokeWidth={2} />
+              <Text variant="caption" color="secondary">
+                {streak}
+              </Text>
+            </View>
+          ) : null}
+          {/* Rotation lives on an Animated wrapper View, never the SVG's own
+              style: under the New Architecture react-native-svg drops a
+              `transform` set on the icon (it vanished instead of flipping). */}
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: chevronSpin.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '180deg'],
+                  }),
+                },
+              ],
+            }}>
+            <ChevronDown size={18} color={colors.textSecondary} strokeWidth={2} />
+          </Animated.View>
+        </View>
+      </Pressable>
+      {/* Full-width game rows — the same list the Log tab's day cards use,
+          so a friend's card mirrors your own. Folded away until expanded. */}
+      {expanded ? (
+        <View>
+          {DAILY_GAMES.map((game, i) => {
+            const cell = today.get(game);
+            return (
+              <DailyRow
+                key={game}
+                game={game}
+                status={cell?.status ?? 'notPlayed'}
+                count={cell?.count ?? null}
+                answer={cell?.answer ?? null}
+                isLast={i === DAILY_GAMES.length - 1}
+              />
+            );
+          })}
+        </View>
+      ) : null}
+    </GlassCard>
   );
 }
 
@@ -149,11 +218,11 @@ const styles = StyleSheet.create({
   // corner, rimmed in surface white so it reads on the glass card.
   onlineDot: {
     position: 'absolute',
-    right: -1,
-    bottom: -1,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    right: 0,
+    bottom: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
     backgroundColor: colors.success,
     borderWidth: 2,
     borderColor: colors.surface,

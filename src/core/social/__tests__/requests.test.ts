@@ -9,7 +9,7 @@ import type {SocialProfile} from '../types';
 const ME = 'me-uuid';
 
 function profile(userId: string, displayName = userId): SocialProfile {
-  return {userId, displayName, friendCode: 'ABC123', lastSeenAt: null};
+  return {userId, displayName, friendCode: 'ABC123', lastSeenAt: null, avatarPath: null};
 }
 
 function row(requester: string, addressee: string, createdAt: string): FriendRequestRow {

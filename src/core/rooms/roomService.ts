@@ -91,6 +91,7 @@ function mapPlayer(row: any): RoomPlayer {
     isHost: row.is_host,
     score: row.score ?? 0,
     joinedAt: row.joined_at,
+    avatarPath: row.avatar_path ?? null,
   };
 }
 

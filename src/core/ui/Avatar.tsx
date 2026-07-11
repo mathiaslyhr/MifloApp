@@ -101,4 +101,5 @@ export function Avatar({
 
 const styles = StyleSheet.create({
   root: {alignItems: 'center', justifyContent: 'center'},
+  clip: {overflow: 'hidden'},
 });

@@ -24,6 +24,13 @@ type Props = {
   onPressFriends?: () => void;
   /** Own page only — the name itself becomes the rename tap target. */
   onEditName?: () => void;
+  /** The profile picture URL, or null for the initials fallback. */
+  avatarUri?: string | null;
+  /** Own page only — tapping the avatar picks a new profile picture. */
+  onPressAvatar?: () => void;
+  /** The friend page's nav header already carries the name, so it hides the
+   * name beside the avatar (own page keeps it — it's the rename target). */
+  showName?: boolean;
   /** Friend page only — the online dot on the avatar + "Active X ago" line. */
   presence?: Presence;
   /** The action row under the identity (friend page: Friends + Invite). */
@@ -36,7 +43,10 @@ export function ProfileHeader({
   friendCount,
   onPressFriends,
   onEditName,
+  avatarUri,
+  onPressAvatar,
   presence,
+  showName = true,
   children,
 }: Props) {
   const {t} = useTranslation();
@@ -60,29 +70,59 @@ export function ProfileHeader({
   return (
     <View style={styles.root}>
       <View style={styles.identityRow}>
-        <View>
-          <Avatar initials={initialsFor(name)} tone={tone} size={72} />
-          {presence?.online ? (
-            <View
-              style={styles.onlineDot}
-              accessibilityLabel={t('social.a11yOnline')}
+        {/* Own page: the avatar is the tap target for choosing a picture.
+            Friend page (no onPressAvatar): plain, non-tappable. */}
+        {onPressAvatar ? (
+          <Pressable
+            onPress={onPressAvatar}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={t('profile.editAvatarA11y')}>
+            <Avatar
+              initials={initialsFor(name)}
+              tone={tone}
+              size={72}
+              uri={avatarUri}
             />
-          ) : null}
-        </View>
+            {presence?.online ? (
+              <View
+                style={styles.onlineDot}
+                accessibilityLabel={t('social.a11yOnline')}
+              />
+            ) : null}
+          </Pressable>
+        ) : (
+          <View>
+            <Avatar
+              initials={initialsFor(name)}
+              tone={tone}
+              size={72}
+              uri={avatarUri}
+            />
+            {presence?.online ? (
+              <View
+                style={styles.onlineDot}
+                accessibilityLabel={t('social.a11yOnline')}
+              />
+            ) : null}
+          </View>
+        )}
 
         <View style={styles.info}>
-          {onEditName ? (
-            // The name itself is the (undecorated) tap target for renaming.
-            <Pressable
-              onPress={onEditName}
-              hitSlop={8}
-              accessibilityRole="button"
-              accessibilityLabel={t('profile.editNameA11y')}>
-              {nameText}
-            </Pressable>
-          ) : (
-            nameText
-          )}
+          {showName ? (
+            onEditName ? (
+              // The name itself is the (undecorated) tap target for renaming.
+              <Pressable
+                onPress={onEditName}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel={t('profile.editNameA11y')}>
+                {nameText}
+              </Pressable>
+            ) : (
+              nameText
+            )
+          ) : null}
 
           {activeLabel ? (
             <Text variant="caption" color="tertiary">
