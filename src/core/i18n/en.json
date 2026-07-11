@@ -290,8 +290,10 @@
     "a11yOnline": "Online now",
     "removeA11y": "Remove {{name}}",
     "activeMinutes": "Active {{count}} min ago",
-    "activeHours": "Active {{count}}h ago",
-    "activeDays": "Active {{count}}d ago"
+    "activeHours": "Active {{count}} hour ago",
+    "activeHours_plural": "Active {{count}} hours ago",
+    "activeDays": "Active {{count}} day ago",
+    "activeDays_plural": "Active {{count}} days ago"
   },
   "menu": {
     "title": "Menu",

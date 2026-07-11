@@ -19,8 +19,9 @@ export const PRESENCE_HEARTBEAT_MS = 120_000;
  */
 export const ONLINE_WINDOW_MS = 180_000;
 
-/** Older than this and the card shows no activity line at all. */
-export const MAX_ACTIVE_AGE_MIN = 7 * 24 * 60;
+/** The caption freezes here (2 weeks): older friends still show a line, but the
+ * number stops counting up — it stays at "Active 14 days ago". */
+export const MAX_ACTIVE_AGE_MIN = 14 * 24 * 60;
 
 export type Presence = {
   online: boolean;

@@ -47,12 +47,13 @@ export function friendStreak(results: PublishedResult[], todayKey: string): numb
   return best;
 }
 
-/** "Active 14 min ago" caption; nothing when online (the dot), after 7 days, or unknown. */
+/** "Active 14 min ago" caption; nothing when online (the dot) or unknown. Beyond
+ * two weeks the number stops climbing — it freezes at "Active 14 days ago". */
 export function formatLastActive(presence: Presence, t: TFunction): string | null {
-  const m = presence.minutesAgo;
-  if (presence.online || m === null || m > MAX_ACTIVE_AGE_MIN) {
+  if (presence.online || presence.minutesAgo === null) {
     return null;
   }
+  const m = Math.min(presence.minutesAgo, MAX_ACTIVE_AGE_MIN);
   if (m < 60) {
     return t('social.activeMinutes', {count: m});
   }
