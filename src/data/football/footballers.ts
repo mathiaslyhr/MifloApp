@@ -18148,6 +18148,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [],
   },
   {
+    id: 'Rosický, Tomáš',
+    name: 'Tomáš Rosický',
+    nationality: ['Czech Republic'],
+    positions: ['MF'],
+    born: '1980-10-04',
+    shirtNumbers: [7, 10],
+    clubs: [
+      {clubId: 'dortmund', from: 2001, to: 2006},
+      {clubId: 'arsenal', from: 2006, to: 2016},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2002]},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Rossi, Paolo',
     name: 'Paolo Rossi',
     nationality: ['Italy'],
