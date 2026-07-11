@@ -20627,6 +20627,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Thiago, Igor',
+    name: 'Igor Thiago',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    born: '2001-06-26',
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'club-brugge', from: 2023, to: 2024},
+      {clubId: 'brentford', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Thuram, Khéphren',
     name: 'Khéphren Thuram',
     nationality: ['France'],
