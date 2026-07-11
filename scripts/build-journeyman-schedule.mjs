@@ -98,7 +98,15 @@ freezeEnd.setDate(freezeEnd.getDate() + FREEZE_DAYS);
 const freezeEndKey = dateKeyFor(freezeEnd);
 // Seed anchored to the first date this run generates, so rerunning on the
 // same day is idempotent; the committed output is the source of truth anyway.
-const anchor = poolChanged
+// Scout reshuffles independently of us, so a fresh collision can surface on a
+// post-freeze day our own pool signature never touched. Detect that and reshuffle
+// the whole tail (the same path a pool change takes) rather than swapping single
+// days in place — a lone swap can't see forward and would risk a 200-day repeat.
+const scoutCollision = allDates.some(
+  k => k > freezeEndKey && existing.get(k) !== undefined && existing.get(k) === DAILY_SECRETS[k],
+);
+const reshuffleTail = poolChanged || scoutCollision;
+const anchor = reshuffleTail
   ? nextDateKey(freezeEndKey)
   : allDates.find(k => !validIds.has(existing.get(k) ?? '')) ?? horizonKey;
 let cycle = 0;
@@ -135,7 +143,7 @@ let replaced = 0;
 let reshuffled = 0;
 for (const key of allDates) {
   const current = existing.get(key);
-  const frozen = key <= freezeEndKey || !poolChanged;
+  const frozen = key <= freezeEndKey || !reshuffleTail;
   if (current !== undefined && validIds.has(current) && frozen) {
     schedule.set(key, current);
     remember(current);

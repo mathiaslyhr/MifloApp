@@ -257,7 +257,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [27, 7],
     clubs: [
       {clubId: 'salzburg', from: 2018, to: 2022},
-      {clubId: 'dortmund', from: 2022},
+      {clubId: 'dortmund', from: 2022, to: 2026},
+      {clubId: 'barcelona', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -8175,7 +8176,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [10, 8],
     clubs: [
       {clubId: 'everton', from: 2017, to: 2023},
-      {clubId: 'newcastle', from: 2023},
+      {clubId: 'newcastle', from: 2023, to: 2026},
+      {clubId: 'barcelona', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -14197,6 +14199,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 2, years: [1995, 1996]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Monga, Jeremy',
+    name: 'Jeremy Monga',
+    nationality: ['England'],
+    positions: ['FW'],
+    born: '2009-05-01',
+    shirtNumbers: [],
+    clubs: [
+      {clubId: 'leicester', from: 2024, to: 2026},
+      {clubId: 'man-city', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Monreal, Nacho',
