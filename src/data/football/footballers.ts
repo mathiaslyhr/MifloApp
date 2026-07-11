@@ -479,6 +479,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Akgün, Yunus',
+    name: 'Yunus Akgün',
+    nationality: ['Turkey'],
+    positions: ['FW', 'MF'],
+    born: '2000-07-07',
+    shirtNumbers: [21, 17],
+    clubs: [
+      {clubId: 'galatasaray', from: 2018},
+      {clubId: 'leicester', from: 2023, to: 2024, loan: true},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2024, 2025], clubId: 'galatasaray'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Akliouche, Maghnes',
     name: 'Maghnes Akliouche',
     nationality: ['France'],
@@ -1068,6 +1084,35 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 1, years: [2008]},
       {type: 'league-title', count: 4, years: [2008, 2009, 2011, 2013]},
     ],
+  },
+  {
+    id: 'Anderson, Elliot',
+    name: 'Elliot Anderson',
+    nationality: ['England'],
+    positions: ['MF'],
+    born: '2002-11-06',
+    shirtNumbers: [8, 41],
+    clubs: [
+      {clubId: 'newcastle', from: 2021, to: 2024},
+      {clubId: 'nottingham-forest', from: 2024, to: 2026},
+      {clubId: 'man-city', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'André',
+    name: 'André',
+    nationality: ['Brazil'],
+    positions: ['MF'],
+    born: '2001-07-16',
+    shirtNumbers: [7, 25],
+    clubs: [
+      {clubId: 'fluminense', from: 2020, to: 2024},
+      {clubId: 'wolves', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Andrich, Robert',
@@ -1831,6 +1876,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 4, years: [2008, 2009, 2010, 2012]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Bamba, Jonathan',
+    name: 'Jonathan Bamba',
+    nationality: ['Ivory Coast'],
+    positions: ['FW'],
+    born: '1996-03-26',
+    shirtNumbers: [7, 11],
+    clubs: [
+      {clubId: 'saint-etienne', from: 2014, to: 2018},
+      {clubId: 'lille', from: 2018, to: 2022},
+      {clubId: 'celta-vigo', from: 2022, to: 2025},
+      {clubId: 'chicago-fire', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Banega, Éver',
@@ -4236,6 +4299,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Çelik, Zeki',
+    name: 'Zeki Çelik',
+    nationality: ['Turkey'],
+    positions: ['DF'],
+    born: '1997-02-17',
+    shirtNumbers: [19, 2],
+    clubs: [
+      {clubId: 'lille', from: 2018, to: 2022},
+      {clubId: 'roma', from: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'César Sampaio',
     name: 'César Sampaio',
     nationality: ['Brazil'],
@@ -5585,6 +5664,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'world-cup', count: 1, years: [2006]},
       {type: 'domestic-cup', count: 2, years: [2007, 2008]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Debuchy, Mathieu',
+    name: 'Mathieu Debuchy',
+    nationality: ['France'],
+    positions: ['DF'],
+    born: '1985-07-28',
+    shirtNumbers: [2, 20],
+    clubs: [
+      {clubId: 'lille', from: 2004, to: 2013},
+      {clubId: 'newcastle', from: 2013, to: 2014},
+      {clubId: 'arsenal', from: 2014, to: 2018},
+      {clubId: 'saint-etienne', from: 2018, to: 2020},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2011], clubId: 'lille'},
+      {type: 'domestic-cup', count: 1, years: [2011], clubId: 'lille'},
     ],
     tags: ['legends'],
   },
@@ -10357,6 +10455,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2021], clubId: 'leicester'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Ikoné, Jonathan',
+    name: 'Jonathan Ikoné',
+    nationality: ['France'],
+    positions: ['FW'],
+    born: '1998-05-02',
+    shirtNumbers: [11, 7],
+    clubs: [
+      {clubId: 'montpellier', from: 2017, to: 2018},
+      {clubId: 'lille', from: 2018, to: 2022},
+      {clubId: 'fiorentina', from: 2022},
+      {clubId: 'como', from: 2025, to: 2026, loan: true},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
     ],
     tags: ['current-stars'],
   },
@@ -18599,6 +18715,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Reinildo',
+    name: 'Reinildo',
+    nationality: ['Mozambique'],
+    positions: ['DF'],
+    born: '1994-01-21',
+    shirtNumbers: [23, 3],
+    clubs: [
+      {clubId: 'lille', from: 2018, to: 2022},
+      {clubId: 'atletico-madrid', from: 2022, to: 2025},
+      {clubId: 'sunderland', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Reiziger, Michael',
     name: 'Michael Reiziger',
     nationality: ['Netherlands'],
@@ -21014,7 +21147,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [17, 4],
     clubs: [
       {clubId: 'torino', from: 2019, to: 2023},
-      {clubId: 'monaco', from: 2023},
+      {clubId: 'monaco', from: 2023, to: 2025},
+      {clubId: 'galatasaray', from: 2025},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -24474,6 +24608,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars', 'wordle'],
   },
   {
+    id: 'Yazıcı, Yusuf',
+    name: 'Yusuf Yazıcı',
+    nationality: ['Turkey'],
+    positions: ['MF', 'FW'],
+    born: '1997-01-29',
+    shirtNumbers: [10, 21],
+    clubs: [
+      {clubId: 'trabzonspor', from: 2016, to: 2019},
+      {clubId: 'lille', from: 2019, to: 2023},
+      {clubId: 'olympiacos', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Yıldız, Kenan',
     name: 'Kenan Yıldız',
     nationality: ['Turkey'],
@@ -24487,6 +24638,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'juventus'},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Yılmaz, Burak',
+    name: 'Burak Yılmaz',
+    nationality: ['Turkey'],
+    positions: ['FW'],
+    born: '1985-07-15',
+    shirtNumbers: [9, 17],
+    clubs: [
+      {clubId: 'galatasaray', from: 2012, to: 2015},
+      {clubId: 'trabzonspor', from: 2016, to: 2016},
+      {clubId: 'besiktas', from: 2016, to: 2019},
+      {clubId: 'lille', from: 2020, to: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 3, years: [2013, 2015, 2021]},
+    ],
+    tags: ['legends'],
   },
   {
     id: 'Yorke, Dwight',
