@@ -5,11 +5,14 @@
  */
 import type {Footballer} from '../../data/football';
 
-/** Strip accents and lowercase, so "João"/"Müller" match plain ASCII input. */
+/** Strip accents and lowercase, so "João"/"Müller" match plain ASCII input.
+ * Curly apostrophes fold to straight ones — iOS smart punctuation types ’
+ * while data mostly carries ', and "Guivarc’h" must equal "Guivarc'h". */
 export function fold(s: string): string {
   return s
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
+    .replace(/[’ʼ]/g, "'")
     .toLowerCase()
     .trim();
 }
