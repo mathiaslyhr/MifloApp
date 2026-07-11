@@ -1630,6 +1630,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Bah, Alexander',
+    name: 'Alexander Bah',
+    nationality: ['Denmark'],
+    positions: ['DF'],
+    born: '1997-12-09',
+    shirtNumbers: [34, 47],
+    clubs: [
+      {clubId: 'benfica', from: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023], clubId: 'benfica'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Bailey, Leon',
     name: 'Leon Bailey',
     nationality: ['Jamaica'],
@@ -12100,6 +12115,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Kristiansen, Victor',
+    name: 'Victor Kristiansen',
+    nationality: ['Denmark'],
+    positions: ['DF'],
+    born: '2002-12-16',
+    shirtNumbers: [3, 21],
+    clubs: [
+      {clubId: 'copenhagen', from: 2020, to: 2023},
+      {clubId: 'leicester', from: 2023, to: 2024},
+      {clubId: 'bologna', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2022], clubId: 'copenhagen'},
+      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'bologna'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Kroos, Toni',
     name: 'Toni Kroos',
     nationality: ['Germany'],
@@ -16167,6 +16200,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Nørgaard, Christian',
+    name: 'Christian Nørgaard',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    born: '1994-03-10',
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'brondby', from: 2013, to: 2018},
+      {clubId: 'fiorentina', from: 2018, to: 2019},
+      {clubId: 'brentford', from: 2019, to: 2025},
+      {clubId: 'arsenal', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Nübel, Alexander',
     name: 'Alexander Nübel',
     nationality: ['Germany'],
@@ -17883,6 +17932,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'europa-league', count: 1, years: [2025]},
       {type: 'league-title', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Poulsen, Yussuf',
+    name: 'Yussuf Poulsen',
+    nationality: ['Denmark'],
+    positions: ['FW'],
+    born: '1994-06-15',
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'rb-leipzig', from: 2013},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 2, years: [2022, 2023], clubId: 'rb-leipzig'},
     ],
     tags: ['current-stars'],
   },
@@ -20107,6 +20171,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [1990], clubId: 'juventus'},
       {type: 'golden-boot', count: 1, years: [1990]}],
     tags: ['legends'],
+  },
+  {
+    id: 'Schjelderup, Andreas',
+    name: 'Andreas Schjelderup',
+    nationality: ['Denmark'],
+    positions: ['FW', 'MF'],
+    born: '2004-06-01',
+    shirtNumbers: [10, 47],
+    clubs: [
+      {clubId: 'benfica', from: 2023},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023], clubId: 'benfica'},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Schlotterbeck, Nico',
@@ -23986,6 +24065,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'fulham', from: 2021},
     ],
     honours: [],
+  },
+  {
+    id: 'Wind, Jonas',
+    name: 'Jonas Wind',
+    nationality: ['Denmark'],
+    positions: ['FW'],
+    born: '1999-02-07',
+    shirtNumbers: [11, 9],
+    clubs: [
+      {clubId: 'copenhagen', from: 2017, to: 2022},
+      {clubId: 'wolfsburg', from: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2019], clubId: 'copenhagen'},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Winks, Harry',
