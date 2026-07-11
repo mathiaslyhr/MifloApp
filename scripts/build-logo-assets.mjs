@@ -95,6 +95,8 @@ const CLUB_SLUG = {
   // Wave B (famous-lineup legends) 2026-07
   deportivo: 'deportivo-la-coruna', koln: '1-fc-koln',
   brondby: 'brondby-if', 'aek-athens': 'aek-athens',
+  // Recent moves 2026-07
+  braga: 'sc-braga', panathinaikos: 'panathinaikos',
 };
 
 const slugify = s =>

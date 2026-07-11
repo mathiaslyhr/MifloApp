@@ -197,6 +197,10 @@ export const CLUBS: readonly Club[] = [
   {id: 'koln', name: '1. FC Köln', country: 'Germany', league: 'bundesliga'},
   {id: 'brondby', name: 'Brøndby', country: 'Denmark', league: 'danish-superliga'},
   {id: 'aek-athens', name: 'AEK Athens', country: 'Greece', league: 'greek-super-league'},
+
+  // --- Recent moves 2026-07: crests fetched via assets:logos ---
+  {id: 'braga', name: 'Sporting Braga', country: 'Portugal', league: 'primeira-liga'},
+  {id: 'panathinaikos', name: 'Panathinaikos', country: 'Greece', league: 'greek-super-league'},
 ];
 
 const clubsById = derivedFromData(

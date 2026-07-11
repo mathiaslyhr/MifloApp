@@ -12124,6 +12124,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'copenhagen', from: 2020, to: 2023},
       {clubId: 'leicester', from: 2023},
+      {clubId: 'panathinaikos', from: 2026, loan: true},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2022], clubId: 'copenhagen'},
@@ -24074,7 +24075,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [11, 9],
     clubs: [
       {clubId: 'copenhagen', from: 2017, to: 2022},
-      {clubId: 'wolfsburg', from: 2022},
+      {clubId: 'wolfsburg', from: 2022, to: 2025},
+      {clubId: 'braga', from: 2025},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2019], clubId: 'copenhagen'},
