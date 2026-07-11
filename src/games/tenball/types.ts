@@ -32,9 +32,17 @@ export type TenballEntry = {
   footballerId?: string;
 };
 
+/** What a list's answers are — drives which pool the type-ahead searches. */
+export type TenballKind = 'player' | 'club' | 'nation' | 'manager' | 'other';
+
 /** One curated top-10 list. The id is also the i18n key `tenball.lists.<id>.title`. */
 export type TenballList = {
   id: string;
+  /**
+   * Optional so a new binary reading an old cached OTA pack still works:
+   * treat `undefined` as `'player'` everywhere it is read.
+   */
+  kind?: TenballKind;
   entries: TenballEntry[];
 };
 

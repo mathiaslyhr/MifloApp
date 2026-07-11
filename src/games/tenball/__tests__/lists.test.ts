@@ -47,6 +47,18 @@ describe('bundled Top Bins lists', () => {
     },
   );
 
+  it('every bundled list declares what kind of answers it holds', () => {
+    // The runtime type keeps `kind` optional (old OTA packs lack it and fall
+    // back to 'player'), but new content must always say what the type-ahead
+    // should search.
+    for (const list of BUNDLED_LISTS) {
+      expect({list: list.id, kind: list.kind}).toEqual({
+        list: list.id,
+        kind: expect.stringMatching(/^(player|club|nation|manager|other)$/),
+      });
+    }
+  });
+
   it('every list has a title in both language catalogs', () => {
     for (const list of BUNDLED_LISTS) {
       const enTitle = (en.tenball.lists as Record<string, {title: string}>)[list.id]?.title;

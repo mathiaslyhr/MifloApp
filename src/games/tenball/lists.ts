@@ -22,6 +22,7 @@ import type {TenballList} from './types';
 export const BUNDLED_LISTS: TenballList[] = [
   {
     id: 'most-ballon-dor',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Lionel Messi', value: '8', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
       {rank: 2, name: 'Cristiano Ronaldo', value: '5', aliases: ['cristiano ronaldo', 'cristiano', 'cr7'], footballerId: 'Ronaldo, Cristiano'},
@@ -37,6 +38,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'wc-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Miroslav Klose', value: '16', aliases: ['klose', 'miroslav klose'], footballerId: 'Klose, Miroslav'},
       {rank: 2, name: 'Ronaldo Nazário', value: '15', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
@@ -52,6 +54,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'wc-most-matches',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Lionel Messi', value: '26', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
       {rank: 2, name: 'Lothar Matthäus', value: '25', aliases: ['matthaus', 'matthaeus', 'lothar matthaus'], footballerId: 'Matthäus, Lothar'},
@@ -67,6 +70,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'pl-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Alan Shearer', value: '260', aliases: ['shearer', 'alan shearer'], footballerId: 'Shearer, Alan'},
       {rank: 2, name: 'Harry Kane', value: '213', aliases: ['kane', 'harry kane'], footballerId: 'Kane, Harry'},
@@ -82,6 +86,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'pl-most-appearances',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Gareth Barry', value: '653', aliases: ['barry', 'gareth barry'], footballerId: 'Barry, Gareth'},
       {rank: 2, name: 'James Milner', value: '638+', aliases: ['milner', 'james milner'], footballerId: 'Milner, James'},
@@ -97,6 +102,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'pl-most-assists',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Ryan Giggs', value: '162', aliases: ['giggs', 'ryan giggs'], footballerId: 'Giggs, Ryan'},
       {rank: 2, name: 'Kevin De Bruyne', value: '119', aliases: ['de bruyne', 'kevin de bruyne', 'debruyne', 'kdb'], footballerId: 'De Bruyne, Kevin'},
@@ -112,6 +118,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'ucl-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Cristiano Ronaldo', value: '140', aliases: ['cristiano ronaldo', 'cristiano', 'cr7', 'ronaldo'], footballerId: 'Ronaldo, Cristiano'},
       {rank: 2, name: 'Lionel Messi', value: '129', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
@@ -127,6 +134,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'record-transfers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Neymar', value: '€222m', aliases: ['neymar', 'neymar jr'], footballerId: 'Neymar'},
       {rank: 2, name: 'Kylian Mbappé', value: '€180m', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
@@ -142,6 +150,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'intl-goals-men',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Cristiano Ronaldo', value: '140+', aliases: ['cristiano ronaldo', 'cristiano', 'cr7', 'ronaldo'], footballerId: 'Ronaldo, Cristiano'},
       {rank: 2, name: 'Lionel Messi', value: '112+', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
@@ -157,6 +166,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'serie-a-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Silvio Piola', value: '274', aliases: ['piola', 'silvio piola'], footballerId: 'Piola, Silvio'},
       {rank: 2, name: 'Francesco Totti', value: '250', aliases: ['totti', 'francesco totti'], footballerId: 'Totti, Francesco'},
@@ -172,6 +182,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'dk-most-caps',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Christian Eriksen', value: '140+', aliases: ['eriksen', 'christian eriksen'], footballerId: 'Eriksen, Christian'},
       {rank: 2, name: 'Simon Kjær', value: '132', aliases: ['kjaer', 'kjær', 'simon kjaer', 'simon kjær'], footballerId: 'Kjær, Simon'},
@@ -191,6 +202,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   // are the last 10 DIFFERENT winners, and the titles say so.
   {
     id: 'last-10-ballon-dor',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Ousmane Dembélé', value: '2025', aliases: ['dembele', 'ousmane dembele'], footballerId: 'Dembélé, Ousmane'},
       {rank: 2, name: 'Rodri', value: '2024', aliases: ['rodri', 'rodrigo hernandez'], footballerId: 'Rodri'},
@@ -206,6 +218,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-wc-golden-ball',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Lionel Messi', value: '2022', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
       {rank: 2, name: 'Luka Modrić', value: '2018', aliases: ['modric', 'luka modric'], footballerId: 'Modrić, Luka'},
@@ -221,6 +234,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-wc-golden-boot',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Kylian Mbappé', value: '2022 (8)', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
       {rank: 2, name: 'Harry Kane', value: '2018 (6)', aliases: ['kane', 'harry kane'], footballerId: 'Kane, Harry'},
@@ -236,6 +250,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-cl-winners',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Paris Saint-Germain', value: '2026', aliases: ['psg', 'paris saint-germain', 'paris saint germain', 'paris sg', 'paris']},
       {rank: 2, name: 'Real Madrid', value: '2024', aliases: ['real madrid', 'real', 'madrid']},
@@ -251,6 +266,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-cl-managers',
+    kind: 'manager',
     entries: [
       {rank: 1, name: 'Luis Enrique', value: '2026', aliases: ['luis enrique', 'enrique']},
       {rank: 2, name: 'Carlo Ancelotti', value: '2024', aliases: ['ancelotti', 'carlo ancelotti']},
@@ -266,6 +282,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-europa-winners',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Aston Villa', value: '2026', aliases: ['aston villa', 'villa']},
       {rank: 2, name: 'Tottenham Hotspur', value: '2025', aliases: ['tottenham', 'spurs', 'tottenham hotspur']},
@@ -281,6 +298,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-fa-cup-winners',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Manchester City', value: '2026', aliases: ['man city', 'manchester city', 'city']},
       {rank: 2, name: 'Crystal Palace', value: '2025', aliases: ['crystal palace', 'palace']},
@@ -296,6 +314,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-english-champions',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Arsenal', value: '2025/26', aliases: ['arsenal']},
       {rank: 2, name: 'Liverpool', value: '2024/25', aliases: ['liverpool', 'lfc']},
@@ -311,6 +330,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-pl-managers',
+    kind: 'manager',
     entries: [
       {rank: 1, name: 'Mikel Arteta', value: '2025/26', aliases: ['arteta', 'mikel arteta']},
       {rank: 2, name: 'Arne Slot', value: '2024/25', aliases: ['slot', 'arne slot']},
@@ -326,6 +346,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-serie-a-champions',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Inter', value: '2025/26', aliases: ['inter', 'inter milan', 'internazionale']},
       {rank: 2, name: 'Napoli', value: '2024/25', aliases: ['napoli']},
@@ -341,6 +362,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-pl-golden-boot',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Erling Haaland', value: '2025/26', aliases: ['haaland', 'erling haaland'], footballerId: 'Haaland, Erling'},
       {rank: 2, name: 'Mohamed Salah', value: '2024/25 (29)', aliases: ['salah', 'mohamed salah', 'mo salah'], footballerId: 'Salah, Mohamed'},
@@ -356,6 +378,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-pfa-poty',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Mohamed Salah', value: '2024/25', aliases: ['salah', 'mohamed salah', 'mo salah'], footballerId: 'Salah, Mohamed'},
       {rank: 2, name: 'Phil Foden', value: '2023/24', aliases: ['foden', 'phil foden'], footballerId: 'Foden, Phil'},
@@ -371,6 +394,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-cl-final-cities',
+    kind: 'other',
     entries: [
       {rank: 1, name: 'Budapest', value: '2026', aliases: ['budapest', 'puskas arena']},
       {rank: 2, name: 'Munich', value: '2025', aliases: ['munich', 'munchen', 'allianz arena']},
@@ -386,6 +410,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-superliga-champions',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'AGF', value: '2025/26', aliases: ['agf', 'agf aarhus', 'aarhus', 'arhus']},
       {rank: 2, name: 'FC København', value: '2024/25', aliases: ['fck', 'fc kobenhavn', 'fc københavn', 'kobenhavn', 'københavn', 'copenhagen', 'fc copenhagen']},
@@ -401,6 +426,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'last-10-african-poty',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Achraf Hakimi', value: '2025', aliases: ['hakimi', 'achraf hakimi'], footballerId: 'Hakimi, Achraf'},
       {rank: 2, name: 'Ademola Lookman', value: '2024', aliases: ['lookman', 'ademola lookman'], footballerId: 'Lookman, Ademola'},
@@ -416,6 +442,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'dk-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Poul "Tist" Nielsen', value: '52', aliases: ['nielsen', 'poul nielsen', 'tist']},
       {rank: 2, name: 'Jon Dahl Tomasson', value: '52', aliases: ['tomasson', 'jon dahl tomasson', 'jon dahl'], footballerId: 'Tomasson, Jon Dahl'},
@@ -432,6 +459,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   // ── Titles, records and club legends ─────────────────────────────────────
   {
     id: 'cl-titles-clubs',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Real Madrid', value: '15', aliases: ['real madrid', 'real', 'madrid']},
       {rank: 2, name: 'AC Milan', value: '7', aliases: ['milan', 'ac milan']},
@@ -447,6 +475,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'english-titles-clubs',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Liverpool', value: '20', aliases: ['liverpool', 'lfc']},
       {rank: 2, name: 'Manchester United', value: '20', aliases: ['man united', 'manchester united', 'united', 'man utd']},
@@ -462,6 +491,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'serie-a-titles-clubs',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Juventus', value: '36', aliases: ['juventus', 'juve']},
       {rank: 2, name: 'Inter', value: '21', aliases: ['inter', 'inter milan', 'internazionale']},
@@ -477,6 +507,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'german-titles-clubs',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Bayern Munich', value: '35', aliases: ['bayern', 'bayern munich', 'bayern munchen', 'fc bayern']},
       {rank: 2, name: '1. FC Nürnberg', value: '9', aliases: ['nurnberg', 'nuremberg', 'fc nurnberg', '1. fc nurnberg']},
@@ -492,6 +523,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'fa-cups-clubs',
+    kind: 'club',
     entries: [
       {rank: 1, name: 'Arsenal', value: '14', aliases: ['arsenal']},
       {rank: 2, name: 'Manchester United', value: '13', aliases: ['man united', 'manchester united', 'united', 'man utd']},
@@ -507,6 +539,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'euro-titles-nations',
+    kind: 'nation',
     entries: [
       {rank: 1, name: 'Spain', value: '4', aliases: ['spain', 'spanien']},
       {rank: 2, name: 'Germany', value: '3', aliases: ['germany', 'tyskland', 'west germany', 'vesttyskland']},
@@ -522,6 +555,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'pl-goals-season',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Erling Haaland', value: '36 (2022/23)', aliases: ['haaland', 'erling haaland'], footballerId: 'Haaland, Erling'},
       {rank: 2, name: 'Alan Shearer', value: '34 (1994/95)', aliases: ['shearer', 'alan shearer'], footballerId: 'Shearer, Alan'},
@@ -537,6 +571,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'wc-goals-tournament',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Just Fontaine', value: '13 (1958)', aliases: ['fontaine', 'just fontaine'], footballerId: 'Fontaine, Just'},
       {rank: 2, name: 'Sándor Kocsis', value: '11 (1954)', aliases: ['kocsis', 'sandor kocsis'], footballerId: 'Kocsis, Sándor'},
@@ -552,6 +587,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'man-united-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Wayne Rooney', value: '253', aliases: ['rooney', 'wayne rooney'], footballerId: 'Rooney, Wayne'},
       {rank: 2, name: 'Bobby Charlton', value: '249', aliases: ['charlton', 'bobby charlton'], footballerId: 'Charlton, Bobby'},
@@ -567,6 +603,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'liverpool-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Ian Rush', value: '346', aliases: ['rush', 'ian rush'], footballerId: 'Rush, Ian'},
       {rank: 2, name: 'Roger Hunt', value: '285', aliases: ['hunt', 'roger hunt'], footballerId: 'Hunt, Roger'},
@@ -582,6 +619,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'real-madrid-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Cristiano Ronaldo', value: '450', aliases: ['cristiano ronaldo', 'cristiano', 'cr7', 'ronaldo'], footballerId: 'Ronaldo, Cristiano'},
       {rank: 2, name: 'Karim Benzema', value: '354', aliases: ['benzema', 'karim benzema'], footballerId: 'Benzema, Karim'},
@@ -597,6 +635,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'arsenal-top-scorers',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Thierry Henry', value: '228', aliases: ['henry', 'thierry henry'], footballerId: 'Henry, Thierry'},
       {rank: 2, name: 'Ian Wright', value: '185', aliases: ['wright', 'ian wright'], footballerId: 'Wright, Ian'},
@@ -612,6 +651,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'man-united-appearances',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Ryan Giggs', value: '963', aliases: ['giggs', 'ryan giggs'], footballerId: 'Giggs, Ryan'},
       {rank: 2, name: 'Bobby Charlton', value: '758', aliases: ['charlton', 'bobby charlton'], footballerId: 'Charlton, Bobby'},
@@ -627,6 +667,7 @@ export const BUNDLED_LISTS: TenballList[] = [
   },
   {
     id: 'liverpool-appearances',
+    kind: 'player',
     entries: [
       {rank: 1, name: 'Ian Callaghan', value: '857', aliases: ['callaghan', 'ian callaghan'], footballerId: 'Callaghan, Ian'},
       {rank: 2, name: 'Jamie Carragher', value: '737', aliases: ['carragher', 'jamie carragher'], footballerId: 'Carragher, Jamie'},
