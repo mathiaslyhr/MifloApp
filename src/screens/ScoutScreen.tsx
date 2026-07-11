@@ -201,6 +201,7 @@ export function ScoutScreen({navigation}: Props) {
       key: f.id,
       label: f.name,
       flag: flagImage(f.nationality[0]) ?? undefined,
+      position: f.positions[0],
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, state]);

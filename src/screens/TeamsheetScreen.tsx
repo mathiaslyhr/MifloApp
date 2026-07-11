@@ -299,6 +299,7 @@ export function TeamsheetScreen({navigation}: Props) {
       key: f.id,
       label: f.name,
       flag: flagImage(f.nationality[0]) ?? undefined,
+      position: f.positions[0],
       footballer: f,
     }));
   }, [input, state]);
