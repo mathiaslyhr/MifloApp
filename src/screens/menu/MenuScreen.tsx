@@ -26,7 +26,7 @@ import {
   FEEDBACK_URL,
   PRIVACY_POLICY_URL,
 } from '../../core/config';
-import {colors, spacing} from '../../theme';
+import {spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
 import {PlayerCountBadge} from './PlayerCountBadge';
@@ -109,8 +109,9 @@ const styles = StyleSheet.create({
   body: {gap: spacing.xl},
   footer: {marginTop: spacing.sm, alignItems: 'center', gap: spacing.sm},
   footerDivider: {
-    height: StyleSheet.hairlineWidth,
-    width: 44,
-    backgroundColor: colors.divider,
+    height: 1,
+    width: 80,
+    borderRadius: 1,
+    backgroundColor: 'rgba(13,13,22,0.18)',
   },
 });
