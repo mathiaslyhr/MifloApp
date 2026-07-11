@@ -409,21 +409,6 @@ export function LobbyScreen({route, navigation}: Props) {
           </GlassCard>
         </Pressable>
 
-        {/* Targeted invites (a push straight to a friend's iPhone) — the code
-            pill above stays the generic anyone-share. */}
-        <View style={styles.inviteWrap}>
-          <GlassTag
-            size="sm"
-            onPress={() => setInviteOpen(true)}
-            accessibilityRole="button"
-            accessibilityLabel={t('lobby.inviteFriends')}>
-            <UserPlus size={16} color={colors.ink} strokeWidth={2} />
-            <Text variant="secondary" style={styles.inviteText}>
-              {t('lobby.inviteFriends')}
-            </Text>
-          </GlassTag>
-        </View>
-
         <Text variant="secondary" color="secondary" align="center">
           {players.length <= 1
             ? t('lobby.waitingFriends')
@@ -477,8 +462,8 @@ export function LobbyScreen({route, navigation}: Props) {
         </View>
       </ScrollView>
 
-      {/* Pinned floating back button (top-left) — stays reachable while the
-          wordmark scrolls away, mirroring Home's floating corner button. */}
+      {/* Pinned floating chrome (top) — back on the left, invite on the right,
+          both stay reachable while the wordmark scrolls away. */}
       <FloatingBar edge="top" style={styles.backBar}>
         <View style={styles.backRow}>
           <CircleButton
@@ -486,6 +471,12 @@ export function LobbyScreen({route, navigation}: Props) {
             accessibilityLabel={t('lobby.leave')}
             onPress={() => navigation.goBack()}>
             <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
+          </CircleButton>
+          <CircleButton
+            size={36}
+            accessibilityLabel={t('lobby.inviteFriends')}
+            onPress={() => setInviteOpen(true)}>
+            <UserPlus size={20} color={colors.ink} strokeWidth={2} />
           </CircleButton>
         </View>
       </FloatingBar>
@@ -608,13 +599,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // Pinned floating back button, aligned to the wordmark's row.
+  // Pinned floating chrome, aligned to the wordmark's row: back left, invite right.
   backBar: {paddingHorizontal: screenPadding},
   backRow: {
     height: 44,
     marginTop: spacing.sm,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   scroll: {flex: 1},
   body: {
@@ -629,9 +621,6 @@ const styles = StyleSheet.create({
   },
   codeLabel: {letterSpacing: 1},
   code: {letterSpacing: 6},
-  // The invite pill hangs centered right under the code, quieter than it.
-  inviteWrap: {alignSelf: 'center', marginTop: -spacing.md},
-  inviteText: {color: colors.ink},
   roster: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -44,6 +44,7 @@ function mapProfile(row: any): SocialProfile {
     displayName: row.display_name,
     friendCode: row.friend_code,
     lastSeenAt: row.last_seen_at ?? null,
+    avatarPath: row.avatar_path ?? null,
   };
 }
 

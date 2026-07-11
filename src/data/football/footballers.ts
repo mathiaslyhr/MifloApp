@@ -12980,6 +12980,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Malen, Donyell',
+    name: 'Donyell Malen',
+    nationality: ['Netherlands'],
+    positions: ['FW'],
+    born: '1999-01-19',
+    shirtNumbers: [21, 9],
+    clubs: [
+      {clubId: 'arsenal', from: 2015, to: 2017},
+      {clubId: 'psv', from: 2017, to: 2021},
+      {clubId: 'dortmund', from: 2021, to: 2025},
+      {clubId: 'aston-villa', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Malouda, Florent',
     name: 'Florent Malouda',
     nationality: ['France'],
