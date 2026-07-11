@@ -12991,6 +12991,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psv', from: 2017, to: 2021},
       {clubId: 'dortmund', from: 2021, to: 2025},
       {clubId: 'aston-villa', from: 2025},
+      {clubId: 'roma', from: 2026, loan: true},
     ],
     honours: [],
     tags: ['current-stars'],

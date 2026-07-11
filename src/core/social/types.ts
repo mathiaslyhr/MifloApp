@@ -31,6 +31,8 @@ export type SocialProfile = {
   friendCode: string;
   /** Server timestamp of the last presence heartbeat (ISO), or null. */
   lastSeenAt: string | null;
+  /** Storage object key for the chosen profile picture, or null for initials. */
+  avatarPath: string | null;
 };
 
 /** One friend's profile plus their recent published results, newest first. */

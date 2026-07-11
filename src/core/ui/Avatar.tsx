@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, fonts} from '../../theme';
 
 type Tone = 'accent' | 'soft' | 'surface';
@@ -16,6 +16,9 @@ type Props = {
   size?: number;
   /** Draw the accent "host" ring around the avatar (the Lobby host marker). */
   host?: boolean;
+  /** Profile picture URL. When set (and it loads), the photo replaces the
+   * initials; a null URL or a load failure falls back to initials. */
+  uri?: string | null;
 };
 
 /** Gap + stroke width of the host ring. */
@@ -31,24 +34,45 @@ export function initialsFor(name: string): string {
     .join('');
 }
 
-/** Round initials avatar (design.md — the app-mock Avatar atom). */
-export function Avatar({initials, tone = 'accent', size = 28, host = false}: Props) {
+/** Round initials avatar (design.md — the app-mock Avatar atom), or a profile
+ * photo when `uri` is set and loads. */
+export function Avatar({
+  initials,
+  tone = 'accent',
+  size = 28,
+  host = false,
+  uri,
+}: Props) {
   const {bg, fg} = TONES[tone];
+  // Fall back to initials if the photo fails to load (stale/broken URL).
+  const [failed, setFailed] = React.useState(false);
+  React.useEffect(() => setFailed(false), [uri]);
+  const showPhoto = !!uri && !failed;
+
   const disc = (
     <View
       style={[
         styles.root,
+        styles.clip,
         {width: size, height: size, borderRadius: size / 2, backgroundColor: bg},
       ]}>
-      {/* Inline font (not themed Text) so size scales with the avatar. */}
-      <Text
-        style={{
-          fontFamily: fonts.medium,
-          fontSize: Math.round(size * 0.43),
-          color: fg,
-        }}>
-        {initials}
-      </Text>
+      {showPhoto ? (
+        <Image
+          source={{uri: uri!}}
+          style={{width: size, height: size}}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        // Inline font (not themed Text) so size scales with the avatar.
+        <Text
+          style={{
+            fontFamily: fonts.medium,
+            fontSize: Math.round(size * 0.43),
+            color: fg,
+          }}>
+          {initials}
+        </Text>
+      )}
     </View>
   );
 

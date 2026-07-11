@@ -126,6 +126,60 @@ export async function setDisplayName(name: string): Promise<void> {
   }
 }
 
+/** The public bucket that stores profile pictures (0026_avatars.sql). */
+const AVATAR_BUCKET = 'avatars';
+
+/**
+ * Upload a JPEG avatar (as base64 from the image picker) to the caller's
+ * owner-scoped object and return the stored object key. Stable filename +
+ * upsert so re-uploads overwrite; the display URL cache-busts (avatarUrlFor).
+ *
+ * The base64 → ArrayBuffer decode is deliberate: in bare React Native,
+ * uploading a `fetch(uri).blob()` frequently writes a 0-byte/corrupt object,
+ * so base64 is the only reliable upload body here.
+ */
+export async function uploadAvatar(base64: string): Promise<string> {
+  const {client, uid} = await requireClient();
+  const {decode} = await import('base64-arraybuffer');
+  const path = `${uid}/avatar.jpg`;
+  const {error} = await client.storage
+    .from(AVATAR_BUCKET)
+    .upload(path, decode(base64), {contentType: 'image/jpeg', upsert: true});
+  if (error) {
+    throw error;
+  }
+  return path;
+}
+
+/** Point the caller's profile at an uploaded avatar object (or null to clear). */
+export async function setAvatarPath(path: string | null): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.rpc('set_avatar_path', {p_path: path});
+  if (error) {
+    throw error;
+  }
+  const cached = await getCachedProfile();
+  if (cached) {
+    await cacheProfile({...cached, avatarPath: path});
+  }
+}
+
+/**
+ * Resolve a stored avatar object key to a displayable URL, or null for the
+ * initials fallback. `bust` (a timestamp) appends a cache-buster so a fresh
+ * upload isn't masked by the CDN's cache of the previous image at this key.
+ */
+export function avatarUrlFor(
+  path: string | null | undefined,
+  bust?: number,
+): string | null {
+  if (!path || !supabase) {
+    return null;
+  }
+  const {publicUrl} = supabase.storage.from(AVATAR_BUCKET).getPublicUrl(path).data;
+  return bust ? `${publicUrl}?v=${bust}` : publicUrl;
+}
+
 /** The server's jsonb status strings → our camelCase outcomes. */
 const OUTCOME_BY_STATUS: Record<string, SendRequestOutcome> = {
   requested: 'requested',
