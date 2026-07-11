@@ -12856,7 +12856,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Matheus Mané',
     nationality: ['Portugal'],
     positions: ['FW'],
-    born: '2007-01-01',
+    born: '2007-09-16',
     shirtNumbers: [],
     clubs: [
       {clubId: 'wolves', from: 2024},
