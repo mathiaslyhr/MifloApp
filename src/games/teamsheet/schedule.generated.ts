@@ -203,4 +203,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-04': 'juventus-2017-ucl-final',
   '2027-01-05': 'italy-2012-euro-final',
   '2027-01-06': 'spain-2024-euro-final',
+  '2027-01-07': 'real-madrid-2014-ucl-final',
 };
