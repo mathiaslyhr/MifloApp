@@ -12852,6 +12852,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Mané, Matheus',
+    name: 'Matheus Mané',
+    nationality: ['Portugal'],
+    positions: ['FW'],
+    born: '2007-01-01',
+    shirtNumbers: [],
+    clubs: [
+      {clubId: 'wolves', from: 2024},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Mané, Sadio',
     name: 'Sadio Mané',
     nationality: ['Senegal'],
@@ -14205,7 +14218,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     name: 'Jeremy Monga',
     nationality: ['England'],
     positions: ['FW'],
-    born: '2009-05-01',
+    born: '2009-07-10',
     shirtNumbers: [],
     clubs: [
       {clubId: 'leicester', from: 2024, to: 2026},
@@ -15776,6 +15789,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2025, 2026]},
       {type: 'league-title', count: 2, years: [2025, 2026]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Page, Louis',
+    name: 'Louis Page',
+    nationality: ['England'],
+    positions: ['FW'],
+    born: '2007-01-01',
+    shirtNumbers: [],
+    clubs: [
+      {clubId: 'leicester', from: 2024},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
