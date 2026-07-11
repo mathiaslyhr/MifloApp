@@ -4528,6 +4528,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Circati, Alessandro',
+    name: 'Alessandro Circati',
+    nationality: ['Australia'],
+    positions: ['DF'],
+    born: '2003-10-10',
+    shirtNumbers: [15, 5],
+    clubs: [
+      {clubId: 'parma', from: 2021},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Cissé, Djibril',
     name: 'Djibril Cissé',
     nationality: ['France'],
@@ -10442,6 +10455,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Irankunda, Nestory',
+    name: 'Nestory Irankunda',
+    nationality: ['Australia'],
+    positions: ['FW'],
+    born: '2006-02-04',
+    shirtNumbers: [7, 30],
+    clubs: [
+      {clubId: 'bayern', from: 2024, to: 2025},
+      {clubId: 'watford', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Irwin, Denis',
     name: 'Denis Irwin',
     nationality: ['Ireland'],
@@ -15042,6 +15069,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'domestic-cup', count: 1, years: [2021], clubId: 'barcelona'},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Minteh, Yankuba',
+    name: 'Yankuba Minteh',
+    nationality: ['Gambia'],
+    positions: ['FW'],
+    born: '2004-07-22',
+    shirtNumbers: [7, 24],
+    clubs: [
+      {clubId: 'newcastle', from: 2023, to: 2024},
+      {clubId: 'feyenoord', from: 2023, to: 2024, loan: true},
+      {clubId: 'brighton', from: 2024},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -21275,8 +21317,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [42, 8],
     clubs: [
       {clubId: 'lille', from: 2017, to: 2021},
-      {clubId: 'leicester', from: 2021},
+      {clubId: 'leicester', from: 2021, to: 2025},
       {clubId: 'sevilla', from: 2024, to: 2025, loan: true},
+      {clubId: 'al-duhail', from: 2025},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},

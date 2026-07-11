@@ -31,7 +31,7 @@ const COUNTRY_ISO = {
   Croatia: 'hr', Curacao: 'cw', 'Czech Republic': 'cz', 'DR Congo': 'cd',
   Denmark: 'dk', Ecuador: 'ec', Egypt: 'eg', England: 'gb-eng',
   'Equatorial Guinea': 'gq', Finland: 'fi', France: 'fr', Gabon: 'ga',
-  Georgia: 'ge', Germany: 'de', Ghana: 'gh', Greece: 'gr', Guinea: 'gn',
+  Gambia: 'gm', Georgia: 'ge', Germany: 'de', Ghana: 'gh', Greece: 'gr', Guinea: 'gn',
   Honduras: 'hn', Hungary: 'hu', Iceland: 'is', 'Ivory Coast': 'ci', Iran: 'ir',
   Iraq: 'iq', Ireland: 'ie', Israel: 'il', Italy: 'it', Jamaica: 'jm',
   Japan: 'jp', Jordan: 'jo', Kosovo: 'xk', Liberia: 'lr', Mali: 'ml', Mexico: 'mx',
