@@ -27,6 +27,8 @@ export type RootStackParamList = {
   // Pass-and-play on one shared phone — roomless, fully offline.
   HattrickLocal: undefined;
   RedCardLocal: undefined;
+  OffsideLocal: undefined;
+  CultHeroLocal: undefined;
   Scout: undefined;
   TopBins: undefined;
   Journeyman: undefined;

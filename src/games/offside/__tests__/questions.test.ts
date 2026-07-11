@@ -17,8 +17,9 @@ function seededRng(seed: number): () => number {
 }
 
 describe('buildRounds', () => {
-  it('returns the requested number of rounds', () => {
+  it('returns the requested number of rounds, up to the 20-round maximum', () => {
     expect(buildRounds(8, {rng: seededRng(1)})).toHaveLength(8);
+    expect(buildRounds(20, {rng: seededRng(1)})).toHaveLength(20);
   });
 
   it('builds well-formed rounds: 4 distinct players, valid outlier index', () => {

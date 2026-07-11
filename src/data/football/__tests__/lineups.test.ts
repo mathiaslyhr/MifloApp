@@ -56,16 +56,6 @@ describe('famous lineups integrity', () => {
   });
 });
 
-/** Legacy players still missing from FOOTBALLERS — Wave B: their nationality
- * has no bundled flag (Hleb) or their defining clubs lack crest art. */
-const KNOWN_MISSING: string[] = [
-  'Alexander Hleb',
-  'Kim Christofte',
-  'Mauro Silva',
-  'Michalis Kapsis',
-  'Pierre Littbarski',
-];
-
 /**
  * Team sheet enrichment integrity — runs over the eligible subset only, so
  * unenriched legacy entries stay valid while the pool grows.
@@ -160,9 +150,8 @@ describe('teamsheet lineups', () => {
 
   it('every eligible lineup player resolves in the footballers dataset', () => {
     // Autocomplete suggests from FOOTBALLERS, so a lineup player missing there
-    // is guessable only by exact typing. New lineups must ship with their XI
-    // fully in the dataset; KNOWN_MISSING is the legacy backlog being worked
-    // down in batches and may only shrink — delete it when it hits zero.
+    // is guessable only by exact typing. Every daily XI ships fully in the
+    // dataset — a new lineup must land together with its missing players.
     const known = new Set<string>();
     for (const f of FOOTBALLERS) {
       known.add(fold(f.name));
@@ -184,11 +173,7 @@ describe('teamsheet lineups', () => {
         }
       }
     }
-    const allowed = new Set(KNOWN_MISSING);
-    const newGaps = [...missing].filter(n => !allowed.has(n)).sort();
-    const staleAllowlist = KNOWN_MISSING.filter(n => !missing.has(n));
-    expect(newGaps).toEqual([]);
-    expect(staleAllowlist).toEqual([]);
+    expect([...missing].sort()).toEqual([]);
   });
 
   it('no accepted answer token maps to two players in one XI', () => {

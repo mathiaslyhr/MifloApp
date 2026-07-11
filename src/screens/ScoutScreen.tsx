@@ -1,6 +1,15 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
-import {Alert, Image, Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import {ChevronLeft, HelpCircle, Search} from 'lucide-react-native';
+import {
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
+import {ChevronLeft, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -14,7 +23,7 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {colors, fonts, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
 import {
@@ -24,8 +33,11 @@ import {
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
 import {syncStreakSaver} from '../core/notifications/streakSaver';
+import {queueDailyResult} from '../core/social/outbox';
+import {fromScoutEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
+import {InlineSuggestions} from '../games/shared/InlineSuggestions';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';
 import {
   applyGuess,
@@ -99,7 +111,6 @@ export function ScoutScreen({navigation}: Props) {
   const [state, setState] = useState<MysteryState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
   const [query, setQuery] = useState('');
-  const [pickerOpen, setPickerOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [cellInfo, setCellInfo] = useState<CellInfo | null>(null);
 
@@ -180,23 +191,19 @@ export function ScoutScreen({navigation}: Props) {
   }, [dateKey]);
 
   const guessedIds = state ? state.guesses.map(g => g.footballerId) : [];
-  const results = useMemo(() => {
+  // Inline type-ahead (the Top Bins pattern): top five matches above the
+  // field, already-guessed players excluded.
+  const suggestions = useMemo(() => {
     if (!state || isFinished(state)) {
       return [];
     }
-    return searchPlayers(FOOTBALLERS, query, guessedIds);
+    return searchPlayers(FOOTBALLERS, query, guessedIds, 5).map(f => ({
+      key: f.id,
+      label: f.name,
+      flag: flagImage(f.nationality[0]) ?? undefined,
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, state]);
-
-  function openPicker() {
-    setQuery('');
-    setPickerOpen(true);
-  }
-
-  function closePicker() {
-    setPickerOpen(false);
-    setQuery('');
-  }
 
   function submitGuess(footballerId: string) {
     if (!state || isFinished(state)) {
@@ -209,7 +216,6 @@ export function ScoutScreen({navigation}: Props) {
     const next = applyGuess(state, footballerId);
     setState(next);
     setQuery('');
-    setPickerOpen(false);
     // The game keeps playing in-session either way; the toast warns that this
     // guess won't be there after a relaunch.
     const saveFailed = () => toast.error(t('scout.errorSave'));
@@ -225,13 +231,22 @@ export function ScoutScreen({navigation}: Props) {
       setStreak(updated);
       // History data is still recorded (the archive button is removed for
       // now). One toast covers both writes failing.
-      Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
+      const entry = historyEntryFor(next);
+      Promise.all([saveStreak(updated), recordHistory(entry)])
         // Solved: drop tonight's rescue nudge and skip tomorrow-morning's
         // "new player" ping past today.
         .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
         .catch(saveFailed);
+      // Share the score-only result with friends — a local queue write plus a
+      // fire-and-forget flush; a no-op until the player opts into Friends.
+      queueDailyResult(fromScoutEntry(entry, updated.current)).catch(() => {});
     } else {
       haptics.tap();
+      // Live "in progress" row for friends: the eye + the running guess
+      // count. The finish row above replaces it (same day+game key).
+      queueDailyResult(
+        ongoingResult('scout', dateKey, next.guesses.length, liveStreak(streak, dateKey)),
+      ).catch(() => {});
     }
   }
 
@@ -275,6 +290,10 @@ export function ScoutScreen({navigation}: Props) {
 
   return (
     <Screen canvas edges={['left', 'right', 'bottom']}>
+      {/* Lift the guess field above the keyboard while typing. */}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.body, {paddingTop: insets.top + spacing.sm}]}>
         {/* Wordmark centred full-width; back/history/help float in the corners. */}
         <View style={styles.titleHeader}>
@@ -326,6 +345,8 @@ export function ScoutScreen({navigation}: Props) {
         <ScrollView
           style={styles.board}
           contentContainerStyle={styles.boardContent}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}>
           {/* Newest guess first. */}
           {state.guesses
@@ -411,20 +432,22 @@ export function ScoutScreen({navigation}: Props) {
             <Countdown />
           </View>
         ) : (
-          // A field-styled trigger; the real search is a top overlay (below) so
-          // results always clear the keyboard.
-          <Pressable
-            style={styles.trigger}
-            onPress={openPicker}
-            accessibilityRole="button"
-            accessibilityLabel={t('scout.searchPlaceholder')}>
-            <Search size={18} color={colors.textTertiary} strokeWidth={2} />
-            <Text variant="body" color="tertiary">
-              {t('scout.searchPlaceholder')}
-            </Text>
-          </Pressable>
+          <View style={styles.inputPanel}>
+            <InlineSuggestions
+              items={suggestions}
+              onPick={item => submitGuess(item.key)}
+            />
+            <TextField
+              value={query}
+              onChangeText={setQuery}
+              placeholder={t('scout.searchPlaceholder')}
+              autoCapitalize="words"
+              accessibilityLabel={t('scout.searchPlaceholder')}
+            />
+          </View>
         )}
       </View>
+      </KeyboardAvoidingView>
 
       {/* Pinned floating corner buttons (back left, history + help right). */}
       <FloatingBar edge="top" style={styles.chromeBar}>
@@ -439,55 +462,6 @@ export function ScoutScreen({navigation}: Props) {
         </View>
       </FloatingBar>
       <TopStatusFade />
-
-      {/* Top-anchored search overlay: card near the top, keyboard at the bottom. */}
-      <Modal
-        visible={pickerOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={closePicker}>
-        <Pressable style={styles.scrim} onPress={closePicker}>
-          <Pressable style={styles.pickCard} onPress={() => {}}>
-            <TextField
-              value={query}
-              onChangeText={setQuery}
-              placeholder={t('scout.searchPlaceholder')}
-              autoFocus
-              autoCapitalize="words"
-              accessibilityLabel={t('scout.searchPlaceholder')}
-            />
-            <ScrollView
-              style={styles.results}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}>
-              {query.trim() === '' ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('scout.searchHint')}
-                </Text>
-              ) : results.length === 0 ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('scout.noPlayers')}
-                </Text>
-              ) : (
-                results.map(f => {
-                  const flag = flagImage(f.nationality[0]);
-                  return (
-                    <Pressable
-                      key={f.id}
-                      style={styles.resultRow}
-                      onPress={() => submitGuess(f.id)}>
-                      {flag != null ? (
-                        <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
-                      ) : null}
-                      <Text variant="body">{f.name}</Text>
-                    </Pressable>
-                  );
-                })
-              )}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
 
       <MysteryHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
       <CellInfoModal info={cellInfo} onClose={() => setCellInfo(null)} />
@@ -640,6 +614,7 @@ function Countdown() {
 const CELL_GAP = 4;
 
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
@@ -712,47 +687,5 @@ const styles = StyleSheet.create({
   statValueHot: {color: colors.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-  // Bottom trigger that opens the search overlay — a glass search field, so the
-  // main action speaks the same liquid-glass language as the rest of the app.
-  trigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    minHeight: 48,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radii.pill,
-    backgroundColor: colors.glassLight,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    marginBottom: spacing.sm,
-  },
-  // Search overlay anchored near the top so the results clear the keyboard.
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    justifyContent: 'flex-start',
-    paddingTop: 72,
-    paddingHorizontal: spacing.xl,
-  },
-  pickCard: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 380,
-    maxHeight: '70%',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  results: {maxHeight: 300},
-  resultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.textTertiary,
-  },
-  resultFlag: {width: 22, height: 16, borderRadius: 2},
-  hint: {paddingVertical: spacing.lg},
+  inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
 });

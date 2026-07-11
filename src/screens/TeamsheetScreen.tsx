@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
-  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -36,7 +35,7 @@ import {
   shouldOfferScoutReminder,
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {colors, fonts, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   FOOTBALLERS,
@@ -47,6 +46,7 @@ import {
 } from '../data/football';
 import {flagImage} from '../games/hattrick/criterionIcon';
 import {fold, searchPlayers} from '../games/hattrick/playerSearch';
+import {InlineSuggestions} from '../games/shared/InlineSuggestions';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyLineupFor} from '../games/teamsheet/dailySeed';
 import {formationRows, positionLabels} from '../games/teamsheet/positions';
@@ -71,6 +71,8 @@ import {
   saveStreak,
 } from '../games/teamsheet/storage';
 import {syncStreakSaver} from '../core/notifications/streakSaver';
+import {queueDailyResult} from '../core/social/outbox';
+import {fromTeamsheetEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {TeamsheetHelpModal} from '../games/teamsheet/TeamsheetHelpModal';
 import type {StreakState, TeamsheetState} from '../games/teamsheet/types';
 
@@ -193,11 +195,15 @@ export function TeamsheetScreen({navigation}: Props) {
   function finishDay(next: TeamsheetState, gaveUpFlag: boolean) {
     const updated = recordResult(streak, dateKey, missCount(next), gaveUpFlag);
     setStreak(updated);
-    Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
+    const entry = historyEntryFor(next);
+    Promise.all([saveStreak(updated), recordHistory(entry)])
       // Finished: drop tonight's rescue nudge and, if the other dailies are
       // done too, skip tomorrow-morning's "new games" ping past today.
       .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('teamsheet.errorSave')));
+    // Share the score-only result with friends — a local queue write plus a
+    // fire-and-forget flush; a no-op until the player opts into Friends.
+    queueDailyResult(fromTeamsheetEntry(entry, updated.current)).catch(() => {});
   }
 
   function toggleSelect(slot: number) {
@@ -237,17 +243,29 @@ export function TeamsheetScreen({navigation}: Props) {
     if (outcome === 'hit' && slot === selected) {
       setSelected(null);
     }
+    if (outcome === 'hit' && slot !== undefined) {
+      // Name the player just placed — the token only shows the surname, so
+      // the toast confirms exactly who landed.
+      toast.success(t('teamsheet.hitToast', {name: lineup.players[slot].name}));
+    }
     if (next.status === 'won') {
       haptics.success();
       finishDay(next, false);
-    } else if (outcome === 'hit') {
-      haptics.tap();
-    } else if (outcome === 'wrong-slot') {
-      haptics.error();
-      toast.neutral(t('teamsheet.wrongSlotToast'));
     } else {
-      haptics.error();
-      toast.neutral(t('teamsheet.missToast'));
+      // Live "in progress" row for friends: the eye + the running miss
+      // count. The finish row replaces it (same day+game key).
+      queueDailyResult(
+        ongoingResult('teamsheet', dateKey, missCount(next), liveStreak(streak, dateKey)),
+      ).catch(() => {});
+      if (outcome === 'hit') {
+        haptics.tap();
+      } else if (outcome === 'wrong-slot') {
+        haptics.error();
+        toast.neutral(t('teamsheet.wrongSlotToast'));
+      } else {
+        haptics.error();
+        toast.neutral(t('teamsheet.missToast'));
+      }
     }
   }
 
@@ -271,11 +289,18 @@ export function TeamsheetScreen({navigation}: Props) {
     submitText(best ?? player.name);
   }
 
+  // Whole-dataset search on purpose: suggesting from the XI would leak the
+  // answers. Mapped to the shared suggestion card's row shape.
   const suggestions = useMemo(() => {
     if (!state || isFinished(state) || input.trim().length === 0) {
       return [];
     }
-    return searchPlayers(FOOTBALLERS, input, [], 5);
+    return searchPlayers(FOOTBALLERS, input, [], 5).map(f => ({
+      key: f.id,
+      label: f.name,
+      flag: flagImage(f.nationality[0]) ?? undefined,
+      footballer: f,
+    }));
   }, [input, state]);
 
   function confirmGiveUp() {
@@ -334,7 +359,7 @@ export function TeamsheetScreen({navigation}: Props) {
       ? t(compI18nKey, {year: lineup.year})
       : `${lineup.competition} ${lineup.year}`;
   const scoreTail = match
-    ? ` – ${match.goalsAgainst} ${match.opponent}` +
+    ? ` - ${match.goalsAgainst} ${match.opponent}` +
       (match.pensFor !== undefined
         ? ` · ${t('teamsheet.pens', {for: match.pensFor, against: match.pensAgainst})}`
         : match.afterExtraTime
@@ -360,22 +385,25 @@ export function TeamsheetScreen({navigation}: Props) {
             </Text>
           </View>
 
+          {/* Match on one line, the score on the line under it. Winning swaps
+              the title for the payoff banner and drops the competition to a
+              caption; a reveal keeps the match itself as the title. */}
           <Text
             variant="section"
             align="center"
             style={[styles.matchTitle, finished && state.status === 'won' && {color: colors.success}]}>
-            {finished
-              ? state.status === 'won'
-                ? keptStreak
-                  ? t('teamsheet.won')
-                  : t('teamsheet.wonNoStreak')
-                : t('teamsheet.revealedTitle')
+            {finished && state.status === 'won'
+              ? keptStreak
+                ? t('teamsheet.won')
+                : t('teamsheet.wonNoStreak')
               : competitionLine}
           </Text>
-          {/* The team whose XI you are naming carries the weight in the
-              score line; once finished the competition joins it down here. */}
+          {finished && state.status === 'won' ? (
+            <Text variant="caption" color="muted" align="center">
+              {competitionLine}
+            </Text>
+          ) : null}
           <Text variant="caption" color="muted" align="center">
-            {finished ? `${competitionLine} · ` : null}
             <Text variant="caption" style={styles.scoreTeam}>
               {match ? `${lineup.team} ${match.goalsFor}` : lineup.team}
             </Text>
@@ -453,28 +481,10 @@ export function TeamsheetScreen({navigation}: Props) {
             </View>
           ) : (
             <View style={styles.inputPanel}>
-              {suggestions.length > 0 ? (
-                <View style={styles.suggestions}>
-                  {suggestions.map(f => {
-                    const flag = flagImage(f.nationality[0]);
-                    return (
-                      <Pressable
-                        key={f.id}
-                        style={styles.suggestionRow}
-                        onPress={() => submitSuggestion(f)}
-                        accessibilityRole="button"
-                        accessibilityLabel={f.name}>
-                        {flag != null ? (
-                          <Image source={flag} resizeMode="contain" style={styles.suggestionFlag} />
-                        ) : null}
-                        <Text variant="body" numberOfLines={1} style={styles.suggestionName}>
-                          {f.name}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              ) : null}
+              <InlineSuggestions
+                items={suggestions}
+                onPick={item => submitSuggestion(item.footballer)}
+              />
               <TextField
                 ref={inputRef}
                 value={input}
@@ -580,7 +590,13 @@ function PlayerToken({
       style={[styles.token, tight && styles.tokenTight]}>
       <Text
         numberOfLines={1}
-        style={[styles.tokenName, !earned && shown && styles.tokenNameRevealed]}>
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
+        style={[
+          styles.tokenName,
+          tight && styles.tokenNameTight,
+          !earned && shown && styles.tokenNameRevealed,
+        ]}>
         {shown ? tokenName(lineup, player) : ' '}
       </Text>
       <View
@@ -811,36 +827,21 @@ const styles = StyleSheet.create({
     lineHeight: 10,
     color: colors.muted,
   },
+  // adjustsFontSizeToFit needs a bounded box, so the name gets an explicit
+  // width (slightly past the token so scaling only kicks in for the truly
+  // long surnames — Jankulovski, Grobbelaar).
   tokenName: {
     fontFamily: fonts.medium,
     fontSize: 11,
     lineHeight: 13,
     color: colors.ink,
     textAlign: 'center',
-    maxWidth: TOKEN_WIDTH + 6,
+    width: TOKEN_WIDTH + 6,
   },
+  tokenNameTight: {width: CIRCLE + 8},
   tokenNameRevealed: {color: colors.textTertiary},
   scoreTeam: {fontFamily: fonts.medium, color: colors.primary},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-  // Type-ahead card floating above the field: whole-dataset search, so it
-  // helps spelling without leaking who is on today's sheet.
-  suggestions: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    paddingHorizontal: spacing.md,
-  },
-  suggestionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    minHeight: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
-  },
-  suggestionFlag: {width: 22, height: 16, borderRadius: 2},
-  suggestionName: {flex: 1},
   giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},

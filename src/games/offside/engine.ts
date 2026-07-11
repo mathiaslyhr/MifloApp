@@ -66,7 +66,9 @@ export function topicKeyFor(criterion: Criterion): string {
 export type StandingRow = {userId: string; name: string; score: number};
 
 /** Players by score (desc), ties broken by name for a stable board. */
-export function standings(state: OffsideState): StandingRow[] {
+export function standings(
+  state: Pick<OffsideState, 'players' | 'scores'>,
+): StandingRow[] {
   return state.players
     .map(p => ({
       userId: p.userId,
@@ -89,7 +91,9 @@ export function missingNames(state: OffsideState): string[] {
 }
 
 /** This round's points per user, for the reveal's score deltas. */
-export function deltasOf(state: OffsideState): Record<string, number> {
+export function deltasOf(
+  state: Pick<OffsideState, 'answers'>,
+): Record<string, number> {
   return Object.fromEntries(
     Object.entries(state.answers).map(([userId, a]) => [userId, a.points]),
   );

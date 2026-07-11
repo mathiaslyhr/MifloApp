@@ -14,6 +14,27 @@ import type {ChannelStatus} from './roomService';
  * across a screen's channels so one outage produces one toast, not one per
  * channel. `CLOSED` is ignored — it also fires on normal unsubscribe/unmount.
  */
+let lastClosedToastAt = 0;
+
+/**
+ * Toast once when the party closes (host left). Deduped across screens: a
+ * guest who is in a game still has the lobby mounted underneath, so one close
+ * fires two `onClosed` callbacks. `selfIsHost` is the returning-host case —
+ * their own stale party was closed while they were away, so "the host left"
+ * would read absurdly; they get "the party was closed" instead.
+ */
+export function notifyPartyClosed(selfIsHost?: boolean): void {
+  const now = Date.now();
+  if (now - lastClosedToastAt < 3000) {
+    return;
+  }
+  lastClosedToastAt = now;
+  toast.show({
+    message: i18n.t(selfIsHost ? 'lobby.partyClosed' : 'lobby.hostLeft'),
+    duration: 4000,
+  });
+}
+
 export function createConnectionNotifier(): (status: ChannelStatus) => void {
   let lost = false;
   return status => {

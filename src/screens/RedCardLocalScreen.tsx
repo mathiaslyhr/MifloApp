@@ -6,7 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, Plus, X} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -27,14 +27,19 @@ import {colors, screenPadding, spacing} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {getById} from '../data/football';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
+import {
+  LOCAL_MAX_PLAYERS,
+  PassGate,
+  PlayerNamesEditor,
+} from '../games/shared/localPlay';
 import {FootballerCard} from '../games/red-card/FootballerCard';
 import {
   AnswerRevealBlock,
   PlayerGrid,
-  RoundsPicker,
   Scoreboard,
   VotesBlock,
 } from '../games/red-card/components';
+import {RoundsStepper} from '../games/shared/RoundsStepper';
 import {cleanAnswer} from '../games/red-card/engine';
 import {
   advanceLocalAnswerReveal,
@@ -50,13 +55,15 @@ import {
   showContent,
   submitLocalAnswer,
 } from '../games/red-card/localEngine';
-import {ANSWER_MAX_LEN, DEFAULT_ROUNDS} from '../games/red-card/types';
+import {
+  ANSWER_MAX_LEN,
+  DEFAULT_ROUNDS,
+  MAX_ROUNDS,
+  MIN_ROUNDS,
+} from '../games/red-card/types';
 import type {LocalRedCardState} from '../games/red-card/localEngine';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RedCardLocal'>;
-
-/** Most name rows the setup offers — a couch-sized group. */
-const MAX_PLAYERS = 8;
 
 /**
  * Pass-and-play Red Card — the whole hand on one shared phone, fully offline.
@@ -226,45 +233,22 @@ function SetupStage({
       <Text variant="secondary" color="secondary" align="center">
         {t('redCard.local.setupSub', {count: LOCAL_MIN_PLAYERS})}
       </Text>
-      <View style={styles.nameList}>
-        {names.map((name, i) => (
-          <View key={i} style={styles.nameRow}>
-            <View style={styles.nameField}>
-              <TextField
-                value={name}
-                onChangeText={value =>
-                  onChange(names.map((n, j) => (j === i ? value : n)))
-                }
-                placeholder={t('redCard.local.namePlaceholder')}
-                autoCapitalize="words"
-                maxLength={20}
-                accessibilityLabel={t('redCard.local.namePlaceholder')}
-              />
-            </View>
-            {names.length > LOCAL_MIN_PLAYERS ? (
-              <CircleButton
-                size={36}
-                accessibilityLabel={t('redCard.local.removePlayer')}
-                onPress={() => onChange(names.filter((_, j) => j !== i))}>
-                <X size={16} color={colors.ink} strokeWidth={2} />
-              </CircleButton>
-            ) : null}
-          </View>
-        ))}
-      </View>
-      {names.length < MAX_PLAYERS ? (
-        <GlassTag
-          onPress={() => onChange([...names, ''])}
-          accessibilityRole="button"
-          accessibilityLabel={t('redCard.local.addPlayer')}
-          style={styles.addTag}>
-          <Plus size={16} color={colors.ink} strokeWidth={2} />
-          <Text variant="body" style={styles.addLabel}>
-            {t('redCard.local.addPlayer')}
-          </Text>
-        </GlassTag>
-      ) : null}
-      <RoundsPicker value={rounds} onChange={onRounds} />
+      <PlayerNamesEditor
+        names={names}
+        onChange={onChange}
+        minPlayers={LOCAL_MIN_PLAYERS}
+        maxPlayers={LOCAL_MAX_PLAYERS}
+        placeholder={t('redCard.local.namePlaceholder')}
+        addLabel={t('redCard.local.addPlayer')}
+        removeLabel={t('redCard.local.removePlayer')}
+      />
+      <RoundsStepper
+        value={rounds}
+        onChange={onRounds}
+        min={MIN_ROUNDS}
+        max={MAX_ROUNDS}
+        label={t('redCard.roundsPicker.label')}
+      />
       <Button
         label={t('redCard.local.start')}
         variant="primary"
@@ -272,39 +256,6 @@ function SetupStage({
         onPress={onStart}
       />
     </View>
-  );
-}
-
-/** Full-screen "Pass the phone to X" gate with one action to show the content. */
-function PassGate({
-  name,
-  sub,
-  actionLabel,
-  onShow,
-}: {
-  name: string;
-  sub: string;
-  actionLabel: string;
-  onShow: () => void;
-}) {
-  const {t} = useTranslation();
-  return (
-    <>
-      <Text variant="section" align="center" style={styles.headline}>
-        {t('redCard.local.passTo', {name})}
-      </Text>
-      <Text variant="secondary" color="secondary" align="center">
-        {sub}
-      </Text>
-      <Button
-        label={actionLabel}
-        variant="primary"
-        onPress={() => {
-          haptics.tap();
-          onShow();
-        }}
-      />
-    </>
   );
 }
 
@@ -325,7 +276,7 @@ function RoleRevealStage({
     return (
       <View style={styles.phase}>
         <PassGate
-          name={player.name}
+          title={t('redCard.local.passTo', {name: player.name})}
           sub={t('redCard.local.roleIntro', {name: player.name})}
           actionLabel={t('redCard.local.showRole')}
           onShow={() => onAdvance(showContent(state))}
@@ -407,7 +358,7 @@ function AnsweringStage({
       </GlassTag>
       {!state.contentShown ? (
         <PassGate
-          name={player.name}
+          title={t('redCard.local.passTo', {name: player.name})}
           sub={t('redCard.local.answerIntro')}
           actionLabel={t('redCard.local.showAnswer')}
           onShow={() => onAdvance(showContent(state))}
@@ -517,7 +468,7 @@ function VotingStage({
       </GlassTag>
       {!state.contentShown ? (
         <PassGate
-          name={voter.name}
+          title={t('redCard.local.passTo', {name: voter.name})}
           sub={t('redCard.local.voteIntro')}
           actionLabel={t('redCard.local.showVote')}
           onShow={() => onAdvance(showContent(state))}
@@ -585,7 +536,7 @@ function RevealStage({
       {awaitingGuess ? (
         !state.contentShown ? (
           <PassGate
-            name={imposterName}
+            title={t('redCard.local.passTo', {name: imposterName})}
             sub={t('redCard.local.redeemPass')}
             actionLabel={t('redCard.redeem.button')}
             onShow={onShowContent}
@@ -689,11 +640,6 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   roundText: {letterSpacing: 1},
-  nameList: {gap: spacing.sm},
-  nameRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-  nameField: {flex: 1},
-  addTag: {alignSelf: 'center'},
-  addLabel: {color: colors.ink},
   sectionLabel: {letterSpacing: 1, marginBottom: -spacing.sm},
   // Private role card — same frosted recipe as the online role overlay.
   roleCard: {gap: spacing.lg, padding: spacing.xl},

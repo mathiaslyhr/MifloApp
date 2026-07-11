@@ -135,6 +135,7 @@ export const GAMES: GameEntry[] = [
     Icon: Flag,
     category: 'group',
     available: true,
+    localPlay: true,
   },
   {
     gameType: 'cult-hero',
@@ -142,6 +143,7 @@ export const GAMES: GameEntry[] = [
     Icon: Gem,
     category: 'group',
     available: true,
+    localPlay: true,
   },
   {
     gameType: 'red-card',

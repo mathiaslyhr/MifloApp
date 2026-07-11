@@ -25,7 +25,10 @@ import {
   submitCultHeroAnswer,
   subscribeRoom,
 } from '../core/rooms/roomService';
-import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {
+  createConnectionNotifier,
+  notifyPartyClosed,
+} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
 import {Scoreboard} from '../games/offside/components';
@@ -72,9 +75,10 @@ export function CultHeroScreen({route, navigation}: Props) {
         setState(room.gameState as CultHeroState);
       },
       // Host left the party entirely (no host, no party) → back to the menu.
-      () => {
+      ({selfIsHost}) => {
         if (!leftRef.current) {
           leftRef.current = true;
+          notifyPartyClosed(selfIsHost);
           navigation.popToTop();
         }
       },

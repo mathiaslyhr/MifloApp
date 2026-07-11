@@ -12,7 +12,10 @@ import {
   returnToLobby,
   subscribeRoom,
 } from '../core/rooms/roomService';
-import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {
+  createConnectionNotifier,
+  notifyPartyClosed,
+} from '../core/rooms/connectionStatus';
 import {useOptimisticRoomState} from '../core/rooms/useOptimisticRoomState';
 import {ensureSession} from '../core/supabase/client';
 import {HattrickGameView} from '../games/hattrick/HattrickGameView';
@@ -55,9 +58,10 @@ export function HattrickScreen({route, navigation}: Props) {
       },
       // Host left the party entirely (no host, no party) → back to the menu,
       // popping straight past the now-dead lobby.
-      () => {
+      ({selfIsHost}) => {
         if (!leftRef.current) {
           leftRef.current = true;
+          notifyPartyClosed(selfIsHost);
           navigation.popToTop();
         }
       },

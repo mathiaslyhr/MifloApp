@@ -9,6 +9,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import {
+  InlineSuggestions,
+  type InlineSuggestion,
+} from '../games/shared/InlineSuggestions';
+import {searchSuggestions} from '../games/tenball/suggestions';
 import {ChevronLeft, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
@@ -58,6 +63,8 @@ import {
   saveStreak,
 } from '../games/tenball/storage';
 import {syncStreakSaver} from '../core/notifications/streakSaver';
+import {queueDailyResult} from '../core/social/outbox';
+import {fromTenballEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {TenballHelpModal} from '../games/tenball/TenballHelpModal';
 import type {StreakState, TenballState} from '../games/tenball/types';
 
@@ -163,11 +170,15 @@ export function TopBinsScreen({navigation}: Props) {
   function finishDay(next: TenballState, gaveUpFlag: boolean) {
     const updated = recordResult(streak, dateKey, missCount(next), gaveUpFlag);
     setStreak(updated);
-    Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
+    const entry = historyEntryFor(next);
+    Promise.all([saveStreak(updated), recordHistory(entry)])
       // Finished: drop tonight's rescue nudge and, if Scout is done too,
       // skip tomorrow-morning's "new games" ping past today.
       .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('tenball.errorSave')));
+    // Share the score-only result with friends — a local queue write plus a
+    // fire-and-forget flush; a no-op until the player opts into Friends.
+    queueDailyResult(fromTenballEntry(entry, updated.current)).catch(() => {});
   }
 
   function submitText(text: string) {
@@ -202,15 +213,26 @@ export function TopBinsScreen({navigation}: Props) {
           });
         });
       }
+      const name = list.entries.find(e => e.rank === rank)?.name;
+      if (name) {
+        toast.success(t('tenball.hitToast', {name}));
+      }
     }
     if (next.status === 'won') {
       haptics.success();
       finishDay(next, false);
-    } else if (outcome === 'hit') {
-      haptics.tap();
     } else {
-      haptics.error();
-      toast.neutral(t('tenball.missToast'));
+      // Live "in progress" row for friends: the eye + the running miss
+      // count. The finish row replaces it (same day+game key).
+      queueDailyResult(
+        ongoingResult('tenball', dateKey, missCount(next), liveStreak(streak, dateKey)),
+      ).catch(() => {});
+      if (outcome === 'hit') {
+        haptics.tap();
+      } else {
+        haptics.error();
+        toast.neutral(t('tenball.missToast'));
+      }
     }
   }
 
@@ -234,12 +256,29 @@ export function TopBinsScreen({navigation}: Props) {
     submitText(best ?? player.name);
   }
 
-  const suggestions = useMemo(() => {
-    if (!state || isFinished(state) || input.trim().length === 0) {
+  // Suggestion pool follows the list's answer kind: player lists search the
+  // whole footballer dataset, club/nation/manager/other lists search their
+  // kind's pool (suggestions.ts). `kind` defaults to 'player' so old cached
+  // OTA packs keep working.
+  const suggestions = useMemo<(InlineSuggestion & {footballer?: Footballer})[]>(() => {
+    if (!state || !list || isFinished(state) || input.trim().length === 0) {
       return [];
     }
-    return searchPlayers(FOOTBALLERS, input, [], 5);
-  }, [input, state]);
+    const kind = list.kind ?? 'player';
+    if (kind === 'player') {
+      return searchPlayers(FOOTBALLERS, input, [], 5).map(f => ({
+        key: f.id,
+        label: f.name,
+        flag: flagImage(f.nationality[0]) ?? undefined,
+        footballer: f,
+      }));
+    }
+    return searchSuggestions(kind, input).map(e => ({
+      key: fold(e.label),
+      label: e.label,
+      flag: e.flagCountry != null ? flagImage(e.flagCountry) ?? undefined : undefined,
+    }));
+  }, [input, state, list]);
 
   function confirmGiveUp() {
     if (!state || isFinished(state)) {
@@ -284,6 +323,15 @@ export function TopBinsScreen({navigation}: Props) {
   const finished = isFinished(state);
   const found = foundRanks(state);
   const misses = missCount(state);
+  // The guess field names what kind of answer today's list wants.
+  const placeholderByKind = {
+    player: 'tenball.inputPlaceholder',
+    club: 'tenball.inputPlaceholderClub',
+    nation: 'tenball.inputPlaceholderNation',
+    manager: 'tenball.inputPlaceholderManager',
+    other: 'tenball.inputPlaceholderOther',
+  } as const;
+  const inputPlaceholder = t(placeholderByKind[list.kind ?? 'player']);
   const keptStreak = state.status === 'won' && misses <= STREAK_MISS_LIMIT;
   const streakStillAlive = misses <= STREAK_MISS_LIMIT;
 
@@ -393,37 +441,23 @@ export function TopBinsScreen({navigation}: Props) {
             </View>
           ) : (
             <View style={styles.inputPanel}>
-              {suggestions.length > 0 ? (
-                <View style={styles.suggestions}>
-                  {suggestions.map(f => {
-                    const flag = flagImage(f.nationality[0]);
-                    return (
-                      <Pressable
-                        key={f.id}
-                        style={styles.suggestionRow}
-                        onPress={() => submitSuggestion(f)}
-                        accessibilityRole="button"
-                        accessibilityLabel={f.name}>
-                        {flag != null ? (
-                          <Image source={flag} resizeMode="contain" style={styles.slotFlag} />
-                        ) : null}
-                        <Text variant="body" numberOfLines={1} style={styles.suggestionName}>
-                          {f.name}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
-                </View>
-              ) : null}
+              <InlineSuggestions
+                items={suggestions}
+                onPick={item =>
+                  item.footballer
+                    ? submitSuggestion(item.footballer)
+                    : submitText(item.label)
+                }
+              />
               <TextField
                 value={input}
                 onChangeText={setInput}
-                placeholder={t('tenball.inputPlaceholder')}
+                placeholder={inputPlaceholder}
                 autoCapitalize="words"
                 returnKeyType="go"
                 submitBehavior="submit"
                 onSubmitEditing={submitGuess}
-                accessibilityLabel={t('tenball.inputPlaceholder')}
+                accessibilityLabel={inputPlaceholder}
               />
               <Pressable
                 onPress={confirmGiveUp}
@@ -566,24 +600,6 @@ const styles = StyleSheet.create({
   slotNameRevealed: {color: colors.textSecondary},
   slotBlank: {flex: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-  // Type-ahead card floating above the field: whole-dataset search, so it
-  // helps spelling without leaking who is on today's list.
-  suggestions: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    paddingHorizontal: spacing.md,
-  },
-  suggestionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    minHeight: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
-  },
-  suggestionName: {flex: 1},
   giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},

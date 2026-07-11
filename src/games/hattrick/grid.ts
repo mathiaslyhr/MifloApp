@@ -87,12 +87,13 @@ const CLUB_SHORT: Record<string, string> = {
   stoke: 'Stoke', bolton: 'Bolton', kaiserslautern: 'K\'lautern',
   'saint-etienne': 'ASSE', elche: 'Elche', cannes: 'Cannes',
   'orlando-city': 'Orlando',
+  deportivo: 'Depor', koln: 'Köln', brondby: 'Brøndby', 'aek-athens': 'AEK',
 };
 
 /** Country → short 3-letter code (a flag is shown alongside it). */
 const NATION_SHORT: Record<string, string> = {
   Algeria: 'ALG', Angola: 'ANG', Argentina: 'ARG', Armenia: 'ARM', Australia: 'AUS',
-  Austria: 'AUT', Belgium: 'BEL', Bolivia: 'BOL', 'Bosnia and Herzegovina': 'BIH',
+  Austria: 'AUT', Belarus: 'BLR', Belgium: 'BEL', Bolivia: 'BOL', 'Bosnia and Herzegovina': 'BIH',
   Brazil: 'BRA', Bulgaria: 'BUL', 'Burkina Faso': 'BFA', Cameroon: 'CMR', Canada: 'CAN',
   'Cape Verde': 'CPV', Chile: 'CHI', China: 'CHN', Colombia: 'COL', 'Costa Rica': 'CRC',
   Croatia: 'CRO', Curacao: 'CUW', 'Czech Republic': 'CZE', 'DR Congo': 'COD', Denmark: 'DEN',
@@ -231,9 +232,13 @@ const MIN_AXIS = 4;
 /**
  * Clubs need a deeper pool than other axes: a club with a handful of players
  * (e.g. Vancouver via a single star's MLS spell) makes near-unguessable cells,
- * so career-history clubs only become axes once they have real depth.
+ * so career-history clubs only become axes once they have real depth. The
+ * same goes for nations — lineup-driven data batches can push a small
+ * footballing nation past MIN_AXIS purely on retired squad players, and a
+ * four-deep nation column is brutal to guess.
  */
 const MIN_CLUB_AXIS = 6;
+const MIN_NATION_AXIS = 6;
 
 /** Iconic shirt numbers offered as axes (kept only if ≥ MIN_AXIS players). */
 const AXIS_SHIRT_NUMBERS = [7, 9, 10, 11, 8] as const;
@@ -304,8 +309,14 @@ function buildCandidates(): Candidate[] {
       c,
       ids: new Set(FOOTBALLERS.filter(f => matches(f, c)).map(f => f.id)),
     }))
-    .filter(cand =>
-      cand.ids.size >= (cand.c.kind === 'club' ? MIN_CLUB_AXIS : MIN_AXIS),
+    .filter(
+      cand =>
+        cand.ids.size >=
+        (cand.c.kind === 'club'
+          ? MIN_CLUB_AXIS
+          : cand.c.kind === 'nationality'
+            ? MIN_NATION_AXIS
+            : MIN_AXIS),
     );
 }
 

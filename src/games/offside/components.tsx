@@ -1,7 +1,7 @@
 /**
- * Offside presentational atoms: the 2×2 card grid, the countdown bar, the
- * rounds picker and the reveal scoreboard. Pure display over plain props — no
- * room, no engine, no network.
+ * Offside presentational atoms: the 2×2 card grid, the countdown bar and the
+ * reveal scoreboard. Pure display over plain props — no room, no engine, no
+ * network.
  *
  * Cards deliberately show the NAME ONLY. Any attribute made visible (flag,
  * crest, position badge) would give away every round built on that attribute —
@@ -10,10 +10,8 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import {Crown} from 'lucide-react-native';
-import {useTranslation} from 'react-i18next';
-import {GlassCard, GlassTag, Text} from '../../core/ui';
+import {GlassCard, Text} from '../../core/ui';
 import {colors, fonts, radii, spacing} from '../../theme';
-import {ROUND_COUNT_OPTIONS} from './types';
 import type {OffsideCard} from './types';
 
 /**
@@ -121,40 +119,6 @@ export function CountdownBar({
   );
 }
 
-/** How many rounds the game runs — a row of small glass tags. */
-export function RoundsPicker({
-  value,
-  onChange,
-}: {
-  value: number;
-  onChange: (rounds: number) => void;
-}) {
-  const {t} = useTranslation();
-  return (
-    <View style={styles.roundsPicker}>
-      <Text variant="caption" color="muted" style={styles.roundsLabel}>
-        {t('offside.roundsPicker.label')}
-      </Text>
-      <View style={styles.roundsRow}>
-        {ROUND_COUNT_OPTIONS.map(n => (
-          <GlassTag
-            key={n}
-            size="sm"
-            borderWidth={2}
-            accent={value === n}
-            onPress={() => onChange(n)}
-            accessibilityRole="button"
-            accessibilityLabel={`${t('offside.roundsPicker.label')}: ${n}`}>
-            <Text variant="body" style={styles.roundsValue}>
-              {n}
-            </Text>
-          </GlassTag>
-        ))}
-      </View>
-    </View>
-  );
-}
-
 /**
  * Kahoot-style leaderboard: one glass pill per player (rank, name, this
  * round's +delta, running total), leader crowned. The list lives in the
@@ -234,10 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     backgroundColor: colors.primary,
   },
-  roundsPicker: {gap: spacing.sm, alignItems: 'center'},
-  roundsLabel: {letterSpacing: 1},
-  roundsRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.sm},
-  roundsValue: {color: colors.ink},
   board: {gap: spacing.sm},
   playerPill: {
     flexDirection: 'row',

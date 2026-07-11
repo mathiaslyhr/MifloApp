@@ -1,10 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Image, Modal, Pressable, ScrollView, StyleSheet} from 'react-native';
+import {Modal, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {Text, TextField} from '../../core/ui';
 import {colors, radii, spacing} from '../../theme';
 import {FOOTBALLERS} from '../../data/football';
 import {searchPlayers} from '../hattrick/playerSearch';
 import {flagImage} from '../hattrick/criterionIcon';
+import {InlineSuggestions} from './InlineSuggestions';
 
 type Props = {
   visible: boolean;
@@ -89,20 +90,16 @@ export function FootballerSearchModal({
                 {empty}
               </Text>
             ) : (
-              results.map(f => {
-                const flag = flagImage(f.nationality[0]);
-                return (
-                  <Pressable
-                    key={f.id}
-                    style={styles.resultRow}
-                    onPress={() => onPick(f.id)}>
-                    {flag != null ? (
-                      <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
-                    ) : null}
-                    <Text variant="body">{f.name}</Text>
-                  </Pressable>
-                );
-              })
+              // Same suggestion rows as the daily games' inline type-ahead —
+              // one shared look for every player search in the app.
+              <InlineSuggestions
+                items={results.map(f => ({
+                  key: f.id,
+                  label: f.name,
+                  flag: flagImage(f.nationality[0]) ?? undefined,
+                }))}
+                onPick={item => onPick(item.key)}
+              />
             )}
           </ScrollView>
         </Pressable>
@@ -130,14 +127,5 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   results: {maxHeight: 300},
-  resultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.textTertiary,
-  },
-  resultFlag: {width: 22, height: 16, borderRadius: 2},
   hint: {paddingVertical: spacing.lg},
 });

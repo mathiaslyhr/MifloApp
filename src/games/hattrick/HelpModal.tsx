@@ -22,6 +22,7 @@ export function HelpModal({visible, onClose}: Props) {
       title={t('hattrick.help.title')}
       lines={[
         {text: t('hattrick.help.rule')},
+        {text: t('hattrick.help.oncePerBoard')},
         {text: t('hattrick.help.tapHint'), tone: 'strong', divider: true},
       ]}
     />

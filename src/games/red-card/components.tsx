@@ -1,8 +1,7 @@
 /**
  * Red Card presentational atoms shared by the online screen and pass-and-play:
- * the vote grid, the rounds picker, the one-by-one answer reveal, the reveal
- * scoreboard, and the votes list. Pure display over plain props — no room, no
- * engine, no network.
+ * the vote grid, the one-by-one answer reveal, the reveal scoreboard, and the
+ * votes list. Pure display over plain props — no room, no engine, no network.
  */
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -10,7 +9,6 @@ import {Crown} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {GlassCard, GlassTag, Text} from '../../core/ui';
 import {colors, fonts, spacing} from '../../theme';
-import {MAX_ROUNDS, MIN_ROUNDS} from './types';
 
 export type NamedPlayer = {userId: string; name: string};
 
@@ -39,55 +37,6 @@ export function PlayerGrid({
             </Text>
           </GlassTag>
         ))}
-    </View>
-  );
-}
-
-/**
- * How many rounds a game runs — a row of small glass tags. Born in Red Card,
- * whose range and label stay the defaults; other games (Cult Hero) pass their
- * own.
- */
-export function RoundsPicker({
-  value,
-  onChange,
-  min = MIN_ROUNDS,
-  max = MAX_ROUNDS,
-  label,
-}: {
-  value: number;
-  onChange: (rounds: number) => void;
-  min?: number;
-  max?: number;
-  label?: string;
-}) {
-  const {t} = useTranslation();
-  const resolvedLabel = label ?? t('redCard.roundsPicker.label');
-  const options = [];
-  for (let n = min; n <= max; n++) {
-    options.push(n);
-  }
-  return (
-    <View style={styles.roundsPicker}>
-      <Text variant="caption" color="muted" style={styles.roundsLabel}>
-        {resolvedLabel}
-      </Text>
-      <View style={styles.roundsRow}>
-        {options.map(n => (
-          <GlassTag
-            key={n}
-            size="sm"
-            borderWidth={2}
-            accent={value === n}
-            onPress={() => onChange(n)}
-            accessibilityRole="button"
-            accessibilityLabel={`${resolvedLabel}: ${n}`}>
-            <Text variant="body" style={styles.roundsValue}>
-              {n}
-            </Text>
-          </GlassTag>
-        ))}
-      </View>
     </View>
   );
 }
@@ -225,10 +174,6 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   pickName: {color: colors.ink},
-  roundsPicker: {gap: spacing.sm, alignItems: 'center'},
-  roundsLabel: {letterSpacing: 1},
-  roundsRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.sm},
-  roundsValue: {color: colors.ink},
   answerCard: {gap: spacing.xs, padding: spacing.lg},
   answerAuthor: {letterSpacing: 1},
   answerText: {color: colors.ink},

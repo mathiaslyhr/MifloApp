@@ -54,6 +54,9 @@ export function computeScores(
  * the leaderboard, and moving into the next question returns it to null so
  * the state locks again. `results` stay through 'leaderboard' and 'final' so
  * the round's deltas can show.
+ *
+ * Pass-and-play reuses this pager on a wider state (`localEngine.ts`), which
+ * relies on every branch spreading `state` — keep it spread-preserving.
  */
 export function advanceRoundReveal(state: CultHeroState): CultHeroState {
   if (state.phase === 'leaderboard') {

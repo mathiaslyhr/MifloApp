@@ -62,8 +62,10 @@ export type OffsideState = {
   scores: Record<string, number>;
 };
 
-/** The host picks how many rounds a game runs. */
-export const ROUND_COUNT_OPTIONS = [5, 10, 15] as const;
+/** The host picks how many rounds a game runs. `offside_check_deck` (0017)
+ * accepts 1..20; the 5-round floor keeps the race worth playing. */
+export const MIN_ROUNDS = 5;
+export const MAX_ROUNDS = 20;
 export const DEFAULT_ROUNDS = 10;
 
 /** An odd-one-out race works head-to-head, so the room minimum applies. */

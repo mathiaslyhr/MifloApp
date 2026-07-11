@@ -41,20 +41,28 @@ import {
   subscribePlayers,
   subscribeRoom,
 } from '../core/rooms/roomService';
-import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {
+  createConnectionNotifier,
+  notifyPartyClosed,
+} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {generateGrid, gridSignature} from '../games/hattrick/grid';
 import {createIndividualState} from '../games/hattrick/engine';
 import {buildFootballerPool} from '../games/red-card/engine';
 import {takeSessionQuestions} from '../games/red-card/questions';
-import {RoundsPicker} from '../games/red-card/components';
+import {RoundsStepper} from '../games/shared/RoundsStepper';
 import {
   DEFAULT_ROUNDS,
+  MAX_ROUNDS as RED_CARD_MAX_ROUNDS,
   MIN_PLAYERS as IMPOSTER_MIN,
+  MIN_ROUNDS as RED_CARD_MIN_ROUNDS,
 } from '../games/red-card/types';
 import {buildRounds} from '../games/offside/questions';
-import {RoundsPicker as OffsideRoundsPicker} from '../games/offside/components';
-import {DEFAULT_ROUNDS as OFFSIDE_DEFAULT_ROUNDS} from '../games/offside/types';
+import {
+  DEFAULT_ROUNDS as OFFSIDE_DEFAULT_ROUNDS,
+  MAX_ROUNDS as OFFSIDE_MAX_ROUNDS,
+  MIN_ROUNDS as OFFSIDE_MIN_ROUNDS,
+} from '../games/offside/types';
 import {buildPromptPayloads} from '../games/cult-hero/famePrior';
 import {takeSessionPrompts} from '../games/cult-hero/prompts';
 import {
@@ -117,9 +125,10 @@ export function LobbyScreen({route, navigation}: Props) {
     const unsubRoom = subscribeRoom(
       roomId,
       setRoom,
-      () => {
+      ({selfIsHost}) => {
         if (!closedRef.current) {
           closedRef.current = true;
+          notifyPartyClosed(selfIsHost);
           navigation.popToTop();
         }
       },
@@ -469,20 +478,29 @@ export function LobbyScreen({route, navigation}: Props) {
       <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
         {isHost && locked && room?.gameType === 'red-card' ? (
           <View style={styles.roundsPickerWrap}>
-            <RoundsPicker value={redCardRounds} onChange={setRedCardRounds} />
+            <RoundsStepper
+              value={redCardRounds}
+              onChange={setRedCardRounds}
+              min={RED_CARD_MIN_ROUNDS}
+              max={RED_CARD_MAX_ROUNDS}
+              label={t('redCard.roundsPicker.label')}
+            />
           </View>
         ) : null}
         {isHost && locked && room?.gameType === 'offside' ? (
           <View style={styles.roundsPickerWrap}>
-            <OffsideRoundsPicker
+            <RoundsStepper
               value={offsideRounds}
               onChange={setOffsideRounds}
+              min={OFFSIDE_MIN_ROUNDS}
+              max={OFFSIDE_MAX_ROUNDS}
+              label={t('offside.roundsPicker.label')}
             />
           </View>
         ) : null}
         {isHost && locked && room?.gameType === 'cult-hero' ? (
           <View style={styles.roundsPickerWrap}>
-            <RoundsPicker
+            <RoundsStepper
               value={cultHeroRounds}
               onChange={setCultHeroRounds}
               min={CULT_HERO_MIN_ROUNDS}

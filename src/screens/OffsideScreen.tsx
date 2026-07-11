@@ -27,7 +27,10 @@ import {
   submitOffsideAnswer,
   subscribeRoom,
 } from '../core/rooms/roomService';
-import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {
+  createConnectionNotifier,
+  notifyPartyClosed,
+} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {CardGrid, CountdownBar, Scoreboard} from '../games/offside/components';
 import {
@@ -83,9 +86,10 @@ export function OffsideScreen({route, navigation}: Props) {
         setState(room.gameState as OffsideState);
       },
       // Host left the party entirely (no host, no party) → back to the menu.
-      () => {
+      ({selfIsHost}) => {
         if (!leftRef.current) {
           leftRef.current = true;
+          notifyPartyClosed(selfIsHost);
           navigation.popToTop();
         }
       },

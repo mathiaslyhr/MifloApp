@@ -7,7 +7,7 @@ import {
   takeSessionPrompts,
 } from '../prompts';
 import {buildPromptPayloads} from '../famePrior';
-import {MIN_ELIGIBLE} from '../types';
+import {MAX_ROUNDS, MIN_ELIGIBLE} from '../types';
 import {find} from '../../../data/football';
 
 /** Deterministic rng for shuffle-based helpers. */
@@ -70,6 +70,18 @@ describe('buildPromptKeys', () => {
       for (const count of Object.values(perKind)) {
         expect(count).toBeLessThanOrEqual(2);
       }
+    }
+  });
+
+  // MAX_ROUNDS relies on every kind clearing the gate with at least two
+  // candidates (MAX_PER_KIND × 4 kinds = 8); a dataset shrink would surface
+  // here before a host ever sees a short game.
+  it('always fills a maximum-length game, even with a fully used history', () => {
+    const everyKey = promptCandidates().map(c => c.key);
+    for (const used of [[], everyKey]) {
+      const keys = buildPromptKeys(MAX_ROUNDS, seededRng(9), used);
+      expect(keys).toHaveLength(MAX_ROUNDS);
+      expect(new Set(keys).size).toBe(MAX_ROUNDS);
     }
   });
 

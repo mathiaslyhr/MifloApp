@@ -3,6 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeScreen} from './HomeScreen';
 import {GamesScreen} from './GamesScreen';
+import {SocialScreen} from './SocialScreen';
+import {DailyLogScreen} from './DailyLogScreen';
 import {MenuScreen, type MenuItem} from './MenuScreen';
 import {FloatingBar, IslandTabBar, type TabId} from '../core/ui';
 import type {RootStackParamList} from '../core/navigation';
@@ -56,6 +58,16 @@ export function TabsScreen({navigation}: Props) {
       </View>
       <View {...pageProps('games')}>
         <GamesScreen />
+      </View>
+      <View {...pageProps('social')}>
+        {/* Stays mounted like the others; isActive is its focus signal (it has
+            no navigation focus of its own), used to refresh the friends feed. */}
+        <SocialScreen isActive={tab === 'social'} />
+      </View>
+      <View {...pageProps('log')}>
+        {/* Same isActive pattern as Friends: the page stays mounted, so the
+            flag is its focus signal, used to reload the daily archive. */}
+        <DailyLogScreen isActive={tab === 'log'} />
       </View>
       <View {...pageProps('menu')}>
         <MenuScreen

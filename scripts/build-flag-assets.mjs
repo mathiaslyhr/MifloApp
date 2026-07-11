@@ -25,7 +25,7 @@ const FLAG_WIDTH = 120; // ~3x of the ~22–40pt flag chip; height follows aspec
 // Deliberately broad so future dataset batches rarely need a code added.
 const COUNTRY_ISO = {
   Algeria: 'dz', Angola: 'ao', Argentina: 'ar', Armenia: 'am', Australia: 'au',
-  Austria: 'at', Belgium: 'be', Bolivia: 'bo', 'Bosnia and Herzegovina': 'ba',
+  Austria: 'at', Belarus: 'by', Belgium: 'be', Bolivia: 'bo', 'Bosnia and Herzegovina': 'ba',
   Brazil: 'br', Bulgaria: 'bg', 'Burkina Faso': 'bf', Cameroon: 'cm', Canada: 'ca',
   'Cape Verde': 'cv', Chile: 'cl', China: 'cn', Colombia: 'co', 'Costa Rica': 'cr',
   Croatia: 'hr', Curacao: 'cw', 'Czech Republic': 'cz', 'DR Congo': 'cd',

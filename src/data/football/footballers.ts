@@ -4264,6 +4264,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Christofte, Kim',
+    name: 'Kim Christofte',
+    nationality: ['Denmark'],
+    positions: ['DF', 'MF'],
+    born: '1960-08-24',
+    clubs: [
+      {clubId: 'brondby', from: 1979, to: 1981},
+      {clubId: 'brondby', from: 1984, to: 1987},
+      {clubId: 'brondby', from: 1988, to: 1993},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [1992]},
+    ],
+  },
+  {
     id: 'Chukwuemeka, Carney',
     name: 'Carney Chukwuemeka',
     nationality: ['Austria'],
@@ -9293,6 +9308,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Hleb, Alexander',
+    name: 'Alexander Hleb',
+    nationality: ['Belarus'],
+    positions: ['MF'],
+    born: '1981-05-01',
+    clubs: [
+      {clubId: 'vfb-stuttgart', from: 2000, to: 2005},
+      {clubId: 'arsenal', from: 2005, to: 2008},
+      {clubId: 'barcelona', from: 2008, to: 2012},
+      {clubId: 'vfb-stuttgart', from: 2009, to: 2010, loan: true},
+      {clubId: 'wolfsburg', from: 2011, to: 2012, loan: true},
+    ],
+    honours: [
+      {type: 'champions-league', count: 1, years: [2009]},
+      {type: 'league-title', count: 1, years: [2009]},
+    ],
+  },
+  {
     id: 'Hložek, Adam',
     name: 'Adam Hložek',
     nationality: ['Czech Republic'],
@@ -10485,6 +10518,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 3, years: [2016, 2017, 2025]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Kapsis, Michalis',
+    name: 'Michalis Kapsis',
+    nationality: ['Greece'],
+    positions: ['DF'],
+    born: '1973-10-18',
+    clubs: [
+      {clubId: 'aek-athens', from: 1999, to: 2004},
+    ],
+    honours: [
+      {type: 'european-championship', count: 1, years: [2004]},
+    ],
   },
   {
     id: 'Karembeu, Christian',
@@ -12125,6 +12171,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Littbarski, Pierre',
+    name: 'Pierre Littbarski',
+    nationality: ['Germany'],
+    positions: ['MF'],
+    born: '1960-04-16',
+    shirtNumbers: [7],
+    clubs: [
+      {clubId: 'koln', from: 1978, to: 1986},
+      {clubId: 'koln', from: 1987, to: 1993},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [1990]},
+      {type: 'domestic-cup', count: 1, years: [1983]},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Livaković, Dominik',
     name: 'Dominik Livaković',
     nationality: ['Croatia'],
@@ -13276,6 +13339,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Mauro Silva',
+    name: 'Mauro Silva',
+    fullName: 'Mauro Silva Gomes',
+    nationality: ['Brazil'],
+    positions: ['MF'],
+    born: '1968-01-12',
+    clubs: [
+      {clubId: 'deportivo', from: 1992, to: 2005},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [1994]},
+      {type: 'league-title', count: 1, years: [2000]},
+      {type: 'domestic-cup', count: 2, years: [1995, 2002]},
+    ],
+    tags: ['legends'],
   },
   {
     id: 'Maxwell',

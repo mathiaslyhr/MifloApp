@@ -193,6 +193,10 @@ export const CLUBS: readonly Club[] = [
   {id: 'elche', name: 'Elche', country: 'Spain', league: 'la-liga'},
   {id: 'cannes', name: 'AS Cannes', country: 'France', league: 'ligue-1'},
   {id: 'orlando-city', name: 'Orlando City', country: 'USA', league: 'mls'},
+  {id: 'deportivo', name: 'Deportivo La Coruña', country: 'Spain', league: 'la-liga'},
+  {id: 'koln', name: '1. FC Köln', country: 'Germany', league: 'bundesliga'},
+  {id: 'brondby', name: 'Brøndby', country: 'Denmark', league: 'danish-superliga'},
+  {id: 'aek-athens', name: 'AEK Athens', country: 'Greece', league: 'greek-super-league'},
 ];
 
 const clubsById = derivedFromData(

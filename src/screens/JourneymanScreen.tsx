@@ -2,13 +2,14 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
   Image,
-  Modal,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, Lock, Search} from 'lucide-react-native';
+import {ChevronLeft, HelpCircle, Lock} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -33,6 +34,7 @@ import {
 } from '../core/notifications/scoutReminder';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
 import {searchPlayers} from '../games/hattrick/playerSearch';
+import {InlineSuggestions} from '../games/shared/InlineSuggestions';
 import {ageOn} from '../games/scout/compare';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailySecretFor} from '../games/journeyman/dailySeed';
@@ -56,6 +58,8 @@ import {
   saveStreak,
 } from '../games/journeyman/storage';
 import {syncStreakSaver} from '../core/notifications/streakSaver';
+import {queueDailyResult} from '../core/social/outbox';
+import {fromJourneymanEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {JourneymanHelpModal} from '../games/journeyman/JourneymanHelpModal';
 import type {
   HintKey,
@@ -73,7 +77,6 @@ export function JourneymanScreen({navigation}: Props) {
   const [state, setState] = useState<JourneymanState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
   const [query, setQuery] = useState('');
-  const [pickerOpen, setPickerOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
   // One-time reminder offer, shown the moment a puzzle is finished — shared
@@ -150,22 +153,18 @@ export function JourneymanScreen({navigation}: Props) {
     };
   }, [dateKey]);
 
-  const results = useMemo(() => {
+  // Inline type-ahead (the Top Bins pattern): top five matches above the
+  // field, already-guessed players excluded.
+  const suggestions = useMemo(() => {
     if (!state || isFinished(state)) {
       return [];
     }
-    return searchPlayers(FOOTBALLERS, query, state.guessedIds);
+    return searchPlayers(FOOTBALLERS, query, state.guessedIds, 5).map(f => ({
+      key: f.id,
+      label: f.name,
+      flag: flagImage(f.nationality[0]) ?? undefined,
+    }));
   }, [query, state]);
-
-  function openPicker() {
-    setQuery('');
-    setPickerOpen(true);
-  }
-
-  function closePicker() {
-    setPickerOpen(false);
-    setQuery('');
-  }
 
   function persist(next: JourneymanState, gaveUpFlag: boolean) {
     saveDailyProgress({
@@ -184,11 +183,15 @@ export function JourneymanScreen({navigation}: Props) {
       gaveUpFlag,
     );
     setStreak(updated);
-    Promise.all([saveStreak(updated), recordHistory(historyEntryFor(next))])
+    const entry = historyEntryFor(next);
+    Promise.all([saveStreak(updated), recordHistory(entry)])
       // Finished: drop tonight's rescue nudge and, if the other dailies are
       // done too, skip tomorrow-morning's "new games" ping past today.
       .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
       .catch(() => toast.error(t('journeyman.errorSave')));
+    // Share the score-only result with friends — a local queue write plus a
+    // fire-and-forget flush; a no-op until the player opts into Friends.
+    queueDailyResult(fromJourneymanEntry(entry, updated.current)).catch(() => {});
   }
 
   function submitGuess(footballerId: string) {
@@ -202,13 +205,17 @@ export function JourneymanScreen({navigation}: Props) {
     const next = applyGuess(state, footballerId);
     setState(next);
     setQuery('');
-    setPickerOpen(false);
     persist(next, false);
     if (isFinished(next)) {
       haptics.success();
       finishDay(next, false);
     } else {
       haptics.tap();
+      // Live "in progress" row for friends: the eye + the running guess
+      // count. The finish row replaces it (same day+game key).
+      queueDailyResult(
+        ongoingResult('journeyman', dateKey, next.guessedIds.length, liveStreak(streak, dateKey)),
+      ).catch(() => {});
     }
   }
 
@@ -295,6 +302,10 @@ export function JourneymanScreen({navigation}: Props) {
 
   return (
     <Screen canvas edges={['left', 'right', 'bottom']}>
+      {/* Lift the guess field above the keyboard while typing. */}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.body, {paddingTop: insets.top + spacing.sm}]}>
         {/* Wordmark centred full-width; back/help float in the corners. */}
         <View style={styles.titleHeader}>
@@ -338,6 +349,8 @@ export function JourneymanScreen({navigation}: Props) {
         <ScrollView
           style={styles.board}
           contentContainerStyle={styles.boardContent}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}>
           {/* The career path — every club spell, oldest first, always visible. */}
           {(secretPlayer?.clubs ?? []).map((spell, index) => {
@@ -357,7 +370,12 @@ export function JourneymanScreen({navigation}: Props) {
                 {crest != null ? (
                   <Image source={crest} resizeMode="contain" style={styles.spellCrest} />
                 ) : null}
-                <Text variant="body" numberOfLines={1} style={styles.spellClub}>
+                <Text
+                  variant="body"
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
+                  style={styles.spellClub}>
                   {club?.name ?? spell.clubId}
                 </Text>
                 {spell.loan ? (
@@ -437,18 +455,17 @@ export function JourneymanScreen({navigation}: Props) {
           </View>
         ) : (
           <View style={styles.inputPanel}>
-            {/* A field-styled trigger; the real search is a top overlay (below)
-                so results always clear the keyboard. */}
-            <Pressable
-              style={styles.trigger}
-              onPress={openPicker}
-              accessibilityRole="button"
-              accessibilityLabel={t('journeyman.searchPlaceholder')}>
-              <Search size={18} color={colors.textTertiary} strokeWidth={2} />
-              <Text variant="body" color="tertiary">
-                {t('journeyman.searchPlaceholder')}
-              </Text>
-            </Pressable>
+            <InlineSuggestions
+              items={suggestions}
+              onPick={item => submitGuess(item.key)}
+            />
+            <TextField
+              value={query}
+              onChangeText={setQuery}
+              placeholder={t('journeyman.searchPlaceholder')}
+              autoCapitalize="words"
+              accessibilityLabel={t('journeyman.searchPlaceholder')}
+            />
             <Pressable
               onPress={confirmGiveUp}
               accessibilityRole="button"
@@ -462,6 +479,7 @@ export function JourneymanScreen({navigation}: Props) {
           </View>
         )}
       </View>
+      </KeyboardAvoidingView>
 
       {/* Pinned floating corner buttons (back left, help right). */}
       <FloatingBar edge="top" style={styles.chromeBar}>
@@ -476,55 +494,6 @@ export function JourneymanScreen({navigation}: Props) {
         </View>
       </FloatingBar>
       <TopStatusFade />
-
-      {/* Top-anchored search overlay: card near the top, keyboard at the bottom. */}
-      <Modal
-        visible={pickerOpen}
-        transparent
-        animationType="fade"
-        onRequestClose={closePicker}>
-        <Pressable style={styles.scrim} onPress={closePicker}>
-          <Pressable style={styles.pickCard} onPress={() => {}}>
-            <TextField
-              value={query}
-              onChangeText={setQuery}
-              placeholder={t('journeyman.searchPlaceholder')}
-              autoFocus
-              autoCapitalize="words"
-              accessibilityLabel={t('journeyman.searchPlaceholder')}
-            />
-            <ScrollView
-              style={styles.results}
-              keyboardShouldPersistTaps="handled"
-              showsVerticalScrollIndicator={false}>
-              {query.trim() === '' ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('journeyman.searchHint')}
-                </Text>
-              ) : results.length === 0 ? (
-                <Text variant="secondary" color="secondary" align="center" style={styles.hint}>
-                  {t('journeyman.noPlayers')}
-                </Text>
-              ) : (
-                results.map(f => {
-                  const flag = flagImage(f.nationality[0]);
-                  return (
-                    <Pressable
-                      key={f.id}
-                      style={styles.resultRow}
-                      onPress={() => submitGuess(f.id)}>
-                      {flag != null ? (
-                        <Image source={flag} resizeMode="contain" style={styles.resultFlag} />
-                      ) : null}
-                      <Text variant="body">{f.name}</Text>
-                    </Pressable>
-                  );
-                })
-              )}
-            </ScrollView>
-          </Pressable>
-        </Pressable>
-      </Modal>
 
       <JourneymanHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>
@@ -588,6 +557,7 @@ function Countdown() {
 }
 
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
@@ -672,47 +642,5 @@ const styles = StyleSheet.create({
   statValueHot: {color: colors.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-  // Bottom trigger that opens the search overlay — a glass search field, so the
-  // main action speaks the same liquid-glass language as the rest of the app.
-  trigger: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    minHeight: 48,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radii.pill,
-    backgroundColor: colors.glassLight,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-  },
   giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
-  // Search overlay anchored near the top so the results clear the keyboard.
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    justifyContent: 'flex-start',
-    paddingTop: 72,
-    paddingHorizontal: spacing.xl,
-  },
-  pickCard: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 380,
-    maxHeight: '70%',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  results: {maxHeight: 300},
-  resultRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.textTertiary,
-  },
-  resultFlag: {width: 22, height: 16, borderRadius: 2},
-  hint: {paddingVertical: spacing.lg},
 });

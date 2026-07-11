@@ -8,6 +8,12 @@
  */
 import {ensureSession, supabase} from '../supabase/client';
 import type {ResultEntry} from '../stats/types';
+import {
+  createHostHeartbeat,
+  createStaleWatchdog,
+  STALE_RETRY_MS,
+  type StaleWatchdog,
+} from './liveness';
 import type {Deck, Room, RoomPlayer} from './types';
 
 /** Thrown when a room feature is used but the backend isn't configured. */
@@ -55,6 +61,9 @@ async function requireClient() {
 }
 
 // Supabase returns snake_case rows; map them to our camelCase domain types.
+// `host_last_seen` is deliberately NOT mapped: it's a liveness heartbeat, not
+// room state, and leaving it out lets subscribeRoom drop heartbeat-only
+// updates before they re-render screens.
 function mapRoom(row: any): Room {
   return {
     id: row.id,
@@ -448,6 +457,31 @@ export async function leaveRoom(roomId: string): Promise<void> {
   }
 }
 
+/** Host liveness ping (see liveness.ts); a missed beat is never an error. */
+export async function heartbeatRoom(roomId: string): Promise<void> {
+  const client = await requireClient();
+  const {error} = await client.rpc('heartbeat_room', {p_room_id: roomId});
+  if (error) {
+    throw error;
+  }
+}
+
+/**
+ * Ask the server to close a room whose host went silent. The server clock is
+ * authoritative (0019_host_liveness.sql), so this is safe to call on
+ * suspicion; returns true when the room was actually deleted.
+ */
+export async function closeStaleRoom(roomId: string): Promise<boolean> {
+  const client = await requireClient();
+  const {data, error} = await client.rpc('close_stale_room', {
+    p_room_id: roomId,
+  });
+  if (error) {
+    throw error;
+  }
+  return !!data;
+}
+
 export async function fetchRoom(roomId: string): Promise<Room | null> {
   const client = await requireClient();
   const {data, error} = await client
@@ -581,29 +615,112 @@ export function subscribePlayers(
  *
  * `onClosed` fires when the room row is deleted — i.e. the host left and the
  * party is over ("no host, no party"). Guests use it to return to the menu.
+ * `selfIsHost` tells a returning host their own stale party was closed, so
+ * screens can word the toast sensibly.
  *
  * `onStatus` observes channel health. Every (re-)`SUBSCRIBED` refetches the
  * row so updates missed during an outage are recovered — including a deleted
  * room, which can't replay as an event and instead surfaces via `onClosed`.
+ *
+ * Also runs the host-liveness protocol (liveness.ts): the host device beats
+ * `heartbeat_room` while foregrounded; guest devices watch for the room to go
+ * silent and then ask the server to close it (`close_stale_room`, server-clock
+ * verified), which lands here as the same DELETE → `onClosed` path as an
+ * explicit leave. `host_id` never changes, so the role is decided once.
  */
 export function subscribeRoom(
   roomId: string,
   cb: (room: Room) => void,
-  onClosed?: () => void,
+  onClosed?: (info: {selfIsHost: boolean}) => void,
   onStatus?: (status: ChannelStatus, err?: Error) => void,
 ): () => void {
   if (!supabase) {
     return () => {};
   }
+
+  let userId: string | null = null;
+  let hostId: string | null = null;
+  let stopHeartbeat: (() => void) | null = null;
+  let watchdog: StaleWatchdog | null = null;
+  let lastStatus: ChannelStatus | null = null;
+  // Last room signature delivered to `cb` — heartbeat_room only bumps the
+  // unmapped host_last_seen column, so its UPDATE echoes map to an identical
+  // Room and are dropped here instead of re-rendering screens every beat (and
+  // possibly clobbering an in-flight optimistic move with a stale gameState).
+  let lastSig: string | null = null;
+  let closed = false;
+
+  const disposeLiveness = () => {
+    stopHeartbeat?.();
+    stopHeartbeat = null;
+    watchdog?.dispose();
+    watchdog = null;
+  };
+
+  const closeOut = () => {
+    if (closed) {
+      return;
+    }
+    closed = true;
+    disposeLiveness();
+    onClosed?.({selfIsHost: hostId != null && hostId === userId});
+  };
+
+  const startLiveness = () => {
+    if (closed || stopHeartbeat || watchdog || !userId || !hostId) {
+      return;
+    }
+    if (userId === hostId) {
+      stopHeartbeat = createHostHeartbeat(() => {
+        heartbeatRoom(roomId).catch(() => {});
+      });
+    } else {
+      watchdog = createStaleWatchdog(() => {
+        // Our own channel is down: WE are the disconnected one, not the host.
+        // Never accuse; check again once reconnected (re-SUBSCRIBED refresh
+        // also pokes/ends this watchdog as appropriate).
+        if (lastStatus !== 'SUBSCRIBED') {
+          watchdog?.rearm(STALE_RETRY_MS);
+          return;
+        }
+        closeStaleRoom(roomId)
+          .then(wasClosed => {
+            // Either way, resync: a deleted room surfaces via refresh() →
+            // closeOut without relying on the DELETE event landing; a live
+            // one repaints and the watchdog tries again later.
+            refresh();
+            if (!wasClosed) {
+              watchdog?.rearm(STALE_RETRY_MS);
+            }
+          })
+          .catch(() => {
+            refresh();
+            watchdog?.rearm(STALE_RETRY_MS);
+          });
+      });
+    }
+  };
+
+  ensureSession()
+    .then(id => {
+      userId = id;
+      startLiveness();
+    })
+    .catch(() => {});
+
   // Deliver the current row (postgres_changes only fires on change) — used to
   // prime on mount and to catch up after a reconnect.
   const refresh = () => {
     fetchRoom(roomId)
       .then(room => {
         if (room) {
+          hostId = room.hostId;
+          startLiveness();
+          watchdog?.poke();
+          lastSig = JSON.stringify(room);
           cb(room);
         } else {
-          onClosed?.();
+          closeOut();
         }
       })
       .catch(() => {});
@@ -613,16 +730,27 @@ export function subscribeRoom(
     .on(
       'postgres_changes',
       {event: 'UPDATE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
-      payload => cb(mapRoom(payload.new)),
+      payload => {
+        const room = mapRoom(payload.new);
+        hostId = room.hostId;
+        startLiveness();
+        watchdog?.poke();
+        const sig = JSON.stringify(room);
+        if (sig !== lastSig) {
+          lastSig = sig;
+          cb(room);
+        }
+      },
     )
     .on(
       'postgres_changes',
       // DELETE carries only the primary key by default — that's all we need to
       // know the party closed. Filtering on `id` is valid because it's the PK.
       {event: 'DELETE', schema: 'public', table: 'rooms', filter: `id=eq.${roomId}`},
-      () => onClosed?.(),
+      () => closeOut(),
     )
     .subscribe((status, err) => {
+      lastStatus = status as ChannelStatus;
       if (status === 'SUBSCRIBED') {
         refresh();
       }
@@ -630,6 +758,7 @@ export function subscribeRoom(
     });
   refresh();
   return () => {
+    disposeLiveness();
     supabase?.removeChannel(channel);
   };
 }

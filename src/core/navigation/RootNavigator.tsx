@@ -14,7 +14,9 @@ import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
 import {RedCardLocalScreen} from '../../screens/RedCardLocalScreen';
 import {OffsideScreen} from '../../screens/OffsideScreen';
+import {OffsideLocalScreen} from '../../screens/OffsideLocalScreen';
 import {CultHeroScreen} from '../../screens/CultHeroScreen';
+import {CultHeroLocalScreen} from '../../screens/CultHeroLocalScreen';
 import {JourneymanScreen} from '../../screens/JourneymanScreen';
 import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
@@ -68,6 +70,16 @@ export function RootNavigator() {
       <Stack.Screen
         name="RedCardLocal"
         component={RedCardLocalScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="OffsideLocal"
+        component={OffsideLocalScreen}
+        options={{gestureEnabled: false}}
+      />
+      <Stack.Screen
+        name="CultHeroLocal"
+        component={CultHeroLocalScreen}
         options={{gestureEnabled: false}}
       />
       {/* Single-player daily puzzles; leave via the header back button. */}

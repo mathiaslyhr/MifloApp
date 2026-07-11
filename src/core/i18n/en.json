@@ -8,7 +8,9 @@
     "miflo": "Miflo",
     "errorNetwork": "Couldn't reach the server. Check your internet and try again.",
     "connectionLost": "Connection lost. Reconnecting…",
-    "connectionRestored": "Back online"
+    "connectionRestored": "Back online",
+    "stepperDown": "Fewer",
+    "stepperUp": "More"
   },
   "home": {
     "help": "How it works",
@@ -35,7 +37,7 @@
     "leave": "Leave party",
     "shareCode": "Share party code",
     "code": "PARTY CODE",
-    "shareMessage": "Join my Miflo party! Code {{code}} — tap to join: {{link}}",
+    "shareMessage": "Join my Miflo party! The code is {{code}}, or tap to join: {{link}}",
     "waitingFriends": "Waiting for friends to join…",
     "inParty": "{{count}} in the party",
     "changeName": "Change your name",
@@ -54,6 +56,8 @@
     "removeTitle": "Remove player",
     "removeConfirm": "Remove {{name}} from the party?",
     "kicked": "You were removed from the party.",
+    "hostLeft": "The host left. The party is over.",
+    "partyClosed": "Your party was closed while you were away.",
     "errorRemove": "Couldn't remove {{name}}.",
     "errorRename": "Couldn't change your name.",
     "errorStart": "Couldn't start the game. Please try again.",
@@ -63,6 +67,8 @@
   "tabs": {
     "home": "Home",
     "games": "Games",
+    "social": "Friends",
+    "log": "Log",
     "menu": "Menu"
   },
   "games": {
@@ -83,6 +89,7 @@
       "howToPlay": {
         "rules": [
           "On your turn, name a footballer who fits both the row and the column of a cell.",
+          "Each footballer can only be used once per board, and a wrong pick hands the turn to your opponent.",
           "Claim three cells in a row to win.",
           "Stuck? Skip your turn or propose a tie that everyone agrees to.",
           "No internet? Swipe right on the game card to play on one phone."
@@ -95,7 +102,7 @@
       "howToPlay": {
         "rules": [
           "Everyone but the faker is given the same footballer.",
-          "Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one, then you vote on who to send off.",
+          "Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one. After the last round you vote on who to send off.",
           "Sent off as the faker? Name the footballer to steal the win back.",
           "No internet? Swipe right on the game card to play on one phone."
         ]
@@ -144,7 +151,7 @@
       "howToPlay": {
         "rules": [
           "Fill in the day's famous starting XI. Type a name and submit, or tap a shirt to aim at that exact spot.",
-          "Every shirt shows its number. A ball means a goal, a boot means an assist, C is the captain, and swap arrows mean they were substituted.",
+          "Every shirt shows its number. A ball means a goal, a boot means an assist, C is the captain, swap arrows mean they were substituted, and a yellow or red card means they were booked or sent off.",
           "Wrong guesses count as misses, but you can't lose. Finish with 5 or fewer to keep your streak.",
           "A new team sheet drops every day, the same for everyone."
         ]
@@ -157,7 +164,8 @@
         "rules": [
           "Every round shows four footballers. Three share something hidden, like a club, a country or a trophy, and one does not.",
           "Everyone races to tap the odd one out before the clock runs dry. The faster you are, the more points a correct pick earns.",
-          "After the last round the highest total wins."
+          "After the last round the highest total wins.",
+          "No internet? Swipe right on the game card to play on one phone."
         ]
       }
     },
@@ -169,10 +177,70 @@
           "Every round asks one question, like naming a player who played for a certain club.",
           "Everyone secretly picks a real footballer at the same time.",
           "Rare picks score big, famous picks score little, and a wrong answer scores nothing.",
-          "Highest total after all rounds wins."
+          "Highest total after all rounds wins.",
+          "No internet? Swipe right on the game card to play on one phone."
         ]
       }
     }
+  },
+  "dailyLog": {
+    "title": "Daily log",
+    "streaks": "Streaks",
+    "history": "History",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "best": "Best {{count}}",
+    "a11yWon": "{{game}}: solved",
+    "a11ySurrendered": "{{game}}: gave up",
+    "a11yOngoing": "{{game}}: in progress",
+    "a11yNotPlayed": "{{game}}: not played",
+    "a11yGuesses": "{{count}} guesses",
+    "a11yMisses": "{{count}} misses"
+  },
+  "social": {
+    "title": "Friends",
+    "onboardTitle": "Play with friends",
+    "onboardBody": "Pick a name your friends will recognise and share your code. Friends only ever see scores and streaks, never answers.",
+    "namePlaceholder": "Your name",
+    "create": "Create profile",
+    "errorCreate": "Couldn't create your profile. Try again.",
+    "yourCode": "Your friend code",
+    "share": "Share",
+    "shareMessage": "Add me on Miflo! My friend code is {{code}}",
+    "addTitle": "Add a friend",
+    "addPlaceholder": "Friend code",
+    "add": "Add",
+    "friendAdded": "You and {{name}} are now friends",
+    "errorNotFound": "No friend with that code.",
+    "errorSelf": "That is your own code.",
+    "errorAdd": "Couldn't add the friend. Try again.",
+    "unavailable": "You need an internet connection to see your friends.",
+    "you": "You",
+    "friends": "Friends",
+    "empty": "No friends yet. Share your code to get started.",
+    "loadError": "Couldn't load your friends.",
+    "removeTitle": "Remove friend?",
+    "removeBody": "You and {{name}} will no longer see each other's results.",
+    "a11yStreak": "{{count}} day streak",
+    "a11yWeekDay": "{{date}}: finished {{count}} of {{total}} games",
+    "a11yOnline": "Online now",
+    "activeMinutes": "Active {{count}} min ago",
+    "activeHours": "Active {{count}}h ago",
+    "activeDays": "Active {{count}}d ago"
   },
   "menu": {
     "title": "Menu",
@@ -198,6 +266,7 @@
     "help": {
       "title": "How to play",
       "rule": "Name a footballer who matches both the row and the column of a cell.",
+      "oncePerBoard": "Each footballer can only be used once per board, and a wrong pick hands the turn to your opponent.",
       "tapHint": "Not sure what a category means? Tap it on the grid to see."
     },
     "yourTurn": "Your turn",
@@ -225,6 +294,7 @@
     "timeLeft": "Time left",
     "someone": "Someone",
     "claimCell": "Claim cell",
+    "exampleAnswer": "Example answer: {{name}}",
     "local": {
       "player1": "Player 1",
       "player2": "Player 2",
@@ -236,7 +306,7 @@
     "loading": "Loading…",
     "help": {
       "title": "How to play",
-      "rule": "Everyone but the faker is given the same footballer. Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one, then you vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
+      "rule": "Everyone but the faker is given the same footballer. Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one. After the last round you vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
     },
     "role": {
       "detectiveIntro": "Everyone got this player",
@@ -408,6 +478,20 @@
       "rule1": "Every round shows four footballers. Three share something hidden, like a club, a country or a trophy, and one does not.",
       "rule2": "Everyone races to tap the odd one out before the clock runs dry. The faster you are, the more points a correct pick earns.",
       "rule3": "After the last round the highest total wins."
+    },
+    "local": {
+      "setupTitle": "Who's playing?",
+      "setupSub": "Add at least {{count}} names, then pass one phone around.",
+      "namePlaceholder": "Player name",
+      "addPlayer": "Add player",
+      "removePlayer": "Remove player",
+      "start": "Start game",
+      "passTo": "Pass the phone to {{name}}",
+      "questionIntro": "Only {{name}} answers this one. The clock starts when the cards show.",
+      "showCards": "Show the cards",
+      "helpRule2": "You take turns on one phone. Your own clock starts when you reveal the cards, and the faster you are, the more points a correct pick earns.",
+      "revealIntro": "Put the phone in the middle.",
+      "exit": "Exit"
     }
   },
   "cultHero": {
@@ -469,14 +553,28 @@
     "searchHint": "Start typing to search a footballer",
     "noPlayers": "No players found",
     "errorAnswer": "Couldn't send your answer. Try again.",
-    "newGameError": "Couldn't start a new game. Try again."
+    "newGameError": "Couldn't start a new game. Try again.",
+    "local": {
+      "setupTitle": "Who's playing?",
+      "setupSub": "Add at least {{count}} names, then pass one phone around.",
+      "namePlaceholder": "Player name",
+      "addPlayer": "Add player",
+      "removePlayer": "Remove player",
+      "start": "Start game",
+      "passTo": "Pass the phone to {{name}}",
+      "pickIntro": "Your pick stays secret. Only {{name}} looks at the screen.",
+      "showPick": "Pick in secret",
+      "lockIn": "Lock in and pass",
+      "revealIntro": "Put the phone in the middle.",
+      "exit": "Exit"
+    }
   },
   "scout": {
     "reminderTitle": "Daily reminder?",
     "reminderPrompt": "Want a nudge when the new daily games drop?",
     "reminderYes": "Remind me",
     "reminderNo": "Not now",
-    "reminderDenied": "Notifications are off for Miflo — enable them in iOS Settings.",
+    "reminderDenied": "Notifications are off for Miflo. Enable them in iOS Settings.",
     "reminderNotifTitle": "Miflo",
     "reminderNotifBody": "Today's daily games are ready.",
     "streakNotifTitle": "Miflo",
@@ -514,15 +612,9 @@
     },
     "help": {
       "title": "How to play",
-      "rule": "Guess the day's player. Guesses are unlimited, but solve it in under 10 to keep your streak. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
+      "rule": "Guess the day's player. Guesses are unlimited, but solve it in 10 or fewer to keep your streak. After each guess, every column turns green if it matches, yellow if it's close, and grey if it's wrong.",
       "arrows": "The arrow on Age points toward the secret player's age.",
       "daily": "A new footballer drops every day, the same for everyone."
-    },
-    "history": {
-      "title": "Past puzzles",
-      "played": "Played",
-      "notPlayed": "Not played",
-      "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     }
   },
   "journeyman": {
@@ -583,6 +675,7 @@
     "inputPlaceholder": "Type a player",
     "targetPlaceholder": "Number {{shirt}}?",
     "missToast": "Not in this XI",
+    "hitToast": "{{name}} is on the sheet!",
     "wrongSlotToast": "On the sheet, but not in that spot",
     "alreadyFound": "Already on the sheet",
     "alreadyTried": "You already tried that",
@@ -594,7 +687,6 @@
     "giveUpCancel": "Keep guessing",
     "won": "You named all 11!",
     "wonNoStreak": "All 11 named. 5 or fewer misses keeps your streak next time.",
-    "revealedTitle": "The full team sheet",
     "misses": "Misses",
     "streakCurrent": "Current streak",
     "streakBest": "Best streak",
@@ -632,7 +724,12 @@
     "missCount": "{{count}} miss",
     "missCount_plural": "{{count}} misses",
     "inputPlaceholder": "Type a player",
+    "inputPlaceholderClub": "Type a club",
+    "inputPlaceholderNation": "Type a country",
+    "inputPlaceholderManager": "Type a manager",
+    "inputPlaceholderOther": "Type an answer",
     "missToast": "Not in the top 10",
+    "hitToast": "{{name}} is on the board!",
     "alreadyFound": "Already on the board",
     "alreadyTried": "You already tried that",
     "errorSave": "Couldn't save your progress.",
@@ -757,12 +854,12 @@
   },
   "oneDevice": {
     "title": "One device",
-    "intro": "Hattrick and Red Card can also be played together on a single phone. No internet needed, so it works on a plane or anywhere offline.",
+    "intro": "Several of the games can also be played together on a single phone. No internet needed, so it works on a plane or anywhere offline.",
     "step1Title": "Swipe right on the game",
-    "step1Desc": "On the Games tab, swipe the Hattrick or Red Card card to the right.",
+    "step1Desc": "On the Games tab, swipe right on any game that offers 1 device play.",
     "step2Title": "Tap the phone button",
     "step2Desc": "A round 1 device button appears on the left of the card. Tap it to start.",
     "step3Title": "Pass the phone around",
-    "step3Desc": "Take turns on one phone. In Red Card the screen always says who may look before anything secret is shown."
+    "step3Desc": "Take turns on one phone. The screen always says who may look before anything secret is shown."
   }
 }

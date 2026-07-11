@@ -39,7 +39,10 @@ import {
   subscribeRoom,
   type ImposterRoleResult,
 } from '../core/rooms/roomService';
-import {createConnectionNotifier} from '../core/rooms/connectionStatus';
+import {
+  createConnectionNotifier,
+  notifyPartyClosed,
+} from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {getById} from '../data/football';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
@@ -98,9 +101,10 @@ export function RedCardScreen({route, navigation}: Props) {
         setState(room.gameState as ImposterState);
       },
       // Host left the party entirely (no host, no party) → back to the menu.
-      () => {
+      ({selfIsHost}) => {
         if (!leftRef.current) {
           leftRef.current = true;
+          notifyPartyClosed(selfIsHost);
           navigation.popToTop();
         }
       },

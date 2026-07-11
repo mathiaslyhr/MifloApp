@@ -92,6 +92,9 @@ const CLUB_SLUG = {
   kaiserslautern: 'fc-kaiserslautern', 'saint-etienne': 'as-saint-etienne',
   elche: 'elche-cf', cannes: 'as-cannes',
   'orlando-city': 'orlando-city',
+  // Wave B (famous-lineup legends) 2026-07
+  deportivo: 'deportivo-la-coruna', koln: '1-fc-koln',
+  brondby: 'brondby-if', 'aek-athens': 'aek-athens',
 };
 
 const slugify = s =>

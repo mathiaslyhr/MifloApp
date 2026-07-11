@@ -1,12 +1,12 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
-import {Gamepad2, Home, Menu, type LucideIcon} from 'lucide-react-native';
+import {CalendarDays, Gamepad2, Home, Menu, Users, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {colors, fonts, radii, shadows} from '../../theme';
 import {usePressScale} from './usePressScale';
 import {AppBlur} from './Blur';
 
-export type TabId = 'home' | 'games' | 'menu';
+export type TabId = 'home' | 'games' | 'social' | 'log' | 'menu';
 
 /**
  * Vertical clearance the nav island reserves at the bottom of a screen — the pill
@@ -18,6 +18,8 @@ export const NAV_HEIGHT = 76;
 const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
   {id: 'home', labelKey: 'tabs.home', Icon: Home},
   {id: 'games', labelKey: 'tabs.games', Icon: Gamepad2},
+  {id: 'social', labelKey: 'tabs.social', Icon: Users},
+  {id: 'log', labelKey: 'tabs.log', Icon: CalendarDays},
   {id: 'menu', labelKey: 'tabs.menu', Icon: Menu},
 ];
 
@@ -91,12 +93,13 @@ const styles = StyleSheet.create({
     borderColor: colors.glassRim,
     overflow: 'hidden',
   },
+  // Slimmed so five tabs fit on the narrowest iPhones (was 60/14 with four).
   item: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 60,
-    paddingHorizontal: 14,
+    minWidth: 52,
+    paddingHorizontal: 8,
     paddingVertical: 6,
   },
   label: {

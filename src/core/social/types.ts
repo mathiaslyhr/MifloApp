@@ -1,0 +1,40 @@
+/**
+ * Domain types for the Social tab: friends see each other's daily-game
+ * results at score level only. The games' actual answers and guesses never
+ * leave the device, so nothing in these shapes can spoil a puzzle.
+ */
+import type {DailyGame} from '../daily/dailyLog';
+
+/**
+ * One published day of one daily game — the normalized cross-game shape the
+ * backend stores. `score` is the tries metric friends see: guesses used for
+ * Scout/Journeyman, misses for Top Bins/Team sheet — the same number the Log
+ * tab shows, so a friend's card mirrors your own. `'ongoing'` rows are live
+ * started-but-unfinished games, republished as the count grows and replaced
+ * by the final row at finish. `total` is a legacy column, always null now.
+ * `streak` is the streak at publish time; the UI only trusts it on today's
+ * row.
+ */
+export type PublishedResult = {
+  dateKey: string;
+  game: DailyGame;
+  status: 'won' | 'revealed' | 'ongoing';
+  score: number;
+  total: number | null;
+  streak: number;
+};
+
+/** A device's opted-in social identity — separate from party names. */
+export type SocialProfile = {
+  userId: string;
+  displayName: string;
+  friendCode: string;
+  /** Server timestamp of the last presence heartbeat (ISO), or null. */
+  lastSeenAt: string | null;
+};
+
+/** One friend's profile plus their recent published results, newest first. */
+export type FriendFeed = {
+  profile: SocialProfile;
+  results: PublishedResult[];
+};

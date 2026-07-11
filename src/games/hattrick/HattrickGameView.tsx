@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Animated,
   Image,
@@ -36,7 +36,8 @@ import {
   TURN_SECONDS,
   validatePick,
 } from './engine';
-import type {Criterion} from '../../data/football';
+import {tieExampleAnswers} from './tieExamples';
+import type {Criterion, Footballer} from '../../data/football';
 import type {GridState} from './types';
 
 /**
@@ -120,6 +121,13 @@ export function HattrickGameView({
     !state.winner &&
     !!actingUserId &&
     state.turnUserId === actingUserId;
+
+  // "What could have been" — after an agreed tie, each empty cell shows a
+  // grayed example answer. Empty map unless winner === 'tie'.
+  const tieExamples = useMemo(
+    () => (state ? tieExampleAnswers(state) : new Map<number, Footballer>()),
+    [state],
+  );
 
   // Drive the turn countdown: re-render 4×/sec so the timer bar animates.
   const [nowTs, setNowTs] = useState(() => Date.now());
@@ -375,6 +383,26 @@ export function HattrickGameView({
                           minimumFontScale={0.8}
                           style={[styles.cellName, {color: side?.color ?? colors.ink}]}>
                           {f?.name ?? '?'}
+                        </Text>
+                      </View>
+                    );
+                  }
+                  const example = tieExamples.get(index);
+                  if (example) {
+                    return (
+                      <View
+                        key={c}
+                        style={cellStyle}
+                        accessibilityLabel={t('hattrick.exampleAnswer', {
+                          name: example.name,
+                        })}>
+                        <Text
+                          align="center"
+                          numberOfLines={2}
+                          adjustsFontSizeToFit
+                          minimumFontScale={0.8}
+                          style={[styles.cellName, styles.cellGhost]}>
+                          {example.name}
                         </Text>
                       </View>
                     );
@@ -721,6 +749,8 @@ const styles = StyleSheet.create({
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
   cellName: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14},
+  // Ghost example answer shown in cells left empty by an agreed tie.
+  cellGhost: {color: colors.muted, opacity: 0.45},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',

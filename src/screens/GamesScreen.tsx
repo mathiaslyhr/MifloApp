@@ -25,6 +25,8 @@ import {GAMES, GameType} from './gamesCatalog';
 const LOCAL_ROUTES = {
   hattrick: 'HattrickLocal',
   'red-card': 'RedCardLocal',
+  offside: 'OffsideLocal',
+  'cult-hero': 'CultHeroLocal',
 } as const;
 
 /**

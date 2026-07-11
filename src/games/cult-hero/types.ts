@@ -59,9 +59,11 @@ export type CultHeroState = {
   scores: Record<string, number>;
 };
 
-/** The host picks how many prompts a game runs. */
+/** The host picks how many prompts a game runs. 8 is the variety hard cap
+ * (MAX_PER_KIND = 2 across the 4 prompt kinds in prompts.ts); the server
+ * enforces the same bounds since migration 0021. */
 export const MIN_ROUNDS = 3;
-export const MAX_ROUNDS = 5;
+export const MAX_ROUNDS = 8;
 export const DEFAULT_ROUNDS = 4;
 
 /** Rarity is judged against the world, not the table, so two players work. */

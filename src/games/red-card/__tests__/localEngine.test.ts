@@ -101,9 +101,10 @@ describe('createLocalGame', () => {
     expect(s.players.map(p => p.name)).toEqual(['Ana', 'Ben', 'Cai']);
   });
 
-  it('rejects a round count outside 2 to 4', () => {
+  it('rejects a round count outside 2 to 10', () => {
     expect(() => createLocalGame(NAMES, 1)).toThrow();
-    expect(() => createLocalGame(NAMES, 5)).toThrow();
+    expect(() => createLocalGame(NAMES, 11)).toThrow();
+    expect(createLocalGame(NAMES, 10).rounds).toBe(10);
   });
 });
 

@@ -6,6 +6,7 @@
 /* eslint-disable */
 export const LOGO_IMAGES: Record<string, number> = {
   "ac-milan": require('./logos/ac-milan.png'),
+  "aek-athens": require('./logos/aek-athens.png'),
   "ajax": require('./logos/ajax.png'),
   "al-ahli": require('./logos/al-ahli.png'),
   "al-ahly": require('./logos/al-ahly.png'),
@@ -39,6 +40,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "brentford": require('./logos/brentford.png'),
   "brighton": require('./logos/brighton.png'),
   "bristol-city": require('./logos/bristol-city.png'),
+  "brondby": require('./logos/brondby.png'),
   "burnley": require('./logos/burnley.png'),
   "cagliari": require('./logos/cagliari.png'),
   "cannes": require('./logos/cannes.png'),
@@ -52,6 +54,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "corinthians": require('./logos/corinthians.png'),
   "cruz-azul": require('./logos/cruz-azul.png'),
   "crystal-palace": require('./logos/crystal-palace.png'),
+  "deportivo": require('./logos/deportivo.png'),
   "dinamo-zagreb": require('./logos/dinamo-zagreb.png'),
   "dortmund": require('./logos/dortmund.png'),
   "dynamo-kyiv": require('./logos/dynamo-kyiv.png'),
@@ -83,6 +86,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "internacional": require('./logos/internacional.png'),
   "juventus": require('./logos/juventus.png'),
   "kaiserslautern": require('./logos/kaiserslautern.png'),
+  "koln": require('./logos/koln.png'),
   "la-galaxy": require('./logos/la-galaxy.png'),
   "lafc": require('./logos/lafc.png'),
   "lazio": require('./logos/lazio.png'),

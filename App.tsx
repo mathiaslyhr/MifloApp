@@ -28,6 +28,8 @@ import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
 import {syncScoutReminder} from './src/core/notifications/scoutReminder';
 import {syncStreakSaver} from './src/core/notifications/streakSaver';
+import {flushOutbox} from './src/core/social/outbox';
+import {startPresenceHeartbeat} from './src/core/social/presence';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -56,6 +58,12 @@ function App(): React.JSX.Element {
     // OTA game content: apply the cached pack, then poll for a newer one on
     // launch + every foreground. Fails silently — bundled data always works.
     initFootballDataSync().catch(() => {});
+    // Daily results finished offline (flight mode) wait in the social outbox;
+    // retry publishing them on every launch. No-op before opting into Friends.
+    flushOutbox().catch(() => {});
+    // Friends presence: beat "I'm here" while foregrounded (green dot / last
+    // active on friends' tabs). Also a no-op before opting into Friends.
+    startPresenceHeartbeat();
   }, []);
 
   // Surface uncaught JS errors (event handlers, effects, async) that an error

@@ -8,7 +8,9 @@
     "miflo": "Miflo",
     "errorNetwork": "Kunne ikke få forbindelse til serveren. Tjek dit internet og prøv igen.",
     "connectionLost": "Mistede forbindelsen. Opretter forbindelse igen…",
-    "connectionRestored": "Forbindelsen er tilbage"
+    "connectionRestored": "Forbindelsen er tilbage",
+    "stepperDown": "Færre",
+    "stepperUp": "Flere"
   },
   "home": {
     "help": "Sådan spiller du",
@@ -35,7 +37,7 @@
     "leave": "Forlad rummet",
     "shareCode": "Del rumkode",
     "code": "RUMKODE",
-    "shareMessage": "Deltag i mit rum i Miflo! Kode {{code}} — tryk for at deltage: {{link}}",
+    "shareMessage": "Deltag i mit rum i Miflo! Koden er {{code}}, eller tryk for at deltage: {{link}}",
     "waitingFriends": "Venter på at venner deltager…",
     "inParty": "{{count}} i rummet",
     "changeName": "Skift dit navn",
@@ -54,6 +56,8 @@
     "removeTitle": "Fjern spiller",
     "removeConfirm": "Fjern {{name}} fra rummet?",
     "kicked": "Du blev fjernet fra rummet.",
+    "hostLeft": "Værten forlod rummet. Festen er slut.",
+    "partyClosed": "Dit rum blev lukket, mens du var væk.",
     "errorRemove": "Kunne ikke fjerne {{name}}.",
     "errorRename": "Kunne ikke skifte dit navn.",
     "errorStart": "Kunne ikke starte spillet. Prøv igen.",
@@ -63,6 +67,8 @@
   "tabs": {
     "home": "Hjem",
     "games": "Spil",
+    "social": "Venner",
+    "log": "Log",
     "menu": "Menu"
   },
   "games": {
@@ -83,6 +89,7 @@
       "howToPlay": {
         "rules": [
           "På din tur nævner du en fodboldspiller, der passer til både rækken og kolonnen i en celle.",
+          "Hver fodboldspiller kan kun bruges én gang pr. bræt, og et forkert gæt giver turen videre til modstanderen.",
           "Få tre celler på stribe for at vinde.",
           "Gået i stå? Spring din tur over, eller foreslå uafgjort, som alle er enige om.",
           "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
@@ -95,7 +102,7 @@
       "howToPlay": {
         "rules": [
           "Alle undtagen snyderen får den samme fodboldspiller.",
-          "Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen, og til sidst stemmer I om, hvem der skal sendes af banen.",
+          "Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen. Efter sidste runde stemmer I om, hvem der skal sendes af banen.",
           "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage.",
           "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
@@ -144,7 +151,7 @@
       "howToPlay": {
         "rules": [
           "Udfyld dagens berømte startopstilling. Skriv et navn og send, eller tryk på en trøje for at sigte efter netop den plads.",
-          "Hver trøje viser sit nummer. En bold betyder mål, en støvle betyder assist, C er anføreren, og skiftepile betyder at spilleren blev skiftet ud.",
+          "Hver trøje viser sit nummer. En bold betyder mål, en støvle betyder assist, C er anføreren, skiftepile betyder at spilleren blev skiftet ud, og et gult eller rødt kort betyder at spilleren fik en advarsel eller blev udvist.",
           "Forkerte gæt tæller som forbiere, men du kan ikke tabe. Afslut med 5 eller færre for at beholde din stime.",
           "Et nyt holdkort kommer hver dag, det samme for alle."
         ]
@@ -157,7 +164,8 @@
         "rules": [
           "Hver runde viser fire fodboldspillere. Tre af dem har noget skjult til fælles, fx en klub, et land eller et trofæ, og én har det ikke.",
           "Alle kapper om at trykke på den der stikker ud, før tiden løber ud. Jo hurtigere du er, jo flere point giver et rigtigt svar.",
-          "Efter sidste runde vinder den højeste score."
+          "Efter sidste runde vinder den højeste score.",
+          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
       }
     },
@@ -169,10 +177,70 @@
           "Hver runde stiller ét spørgsmål, fx at nævne en spiller der har spillet for en bestemt klub.",
           "Alle vælger i hemmelighed en rigtig fodboldspiller på samme tid.",
           "Sjældne svar giver mange point, kendte svar giver få, og et forkert svar giver ingenting.",
-          "Flest point efter alle runder vinder."
+          "Flest point efter alle runder vinder.",
+          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
         ]
       }
     }
+  },
+  "dailyLog": {
+    "title": "Daglig log",
+    "streaks": "Stimer",
+    "history": "Historik",
+    "today": "I dag",
+    "yesterday": "I går",
+    "months": [
+      "jan",
+      "feb",
+      "mar",
+      "apr",
+      "maj",
+      "jun",
+      "jul",
+      "aug",
+      "sep",
+      "okt",
+      "nov",
+      "dec"
+    ],
+    "best": "Bedste {{count}}",
+    "a11yWon": "{{game}}: løst",
+    "a11ySurrendered": "{{game}}: gav op",
+    "a11yOngoing": "{{game}}: i gang",
+    "a11yNotPlayed": "{{game}}: ikke spillet",
+    "a11yGuesses": "{{count}} gæt",
+    "a11yMisses": "{{count}} forbiere"
+  },
+  "social": {
+    "title": "Venner",
+    "onboardTitle": "Spil med venner",
+    "onboardBody": "Vælg et navn dine venner kan genkende, og del din kode. Venner ser kun point og stimer, aldrig svar.",
+    "namePlaceholder": "Dit navn",
+    "create": "Opret profil",
+    "errorCreate": "Kunne ikke oprette din profil. Prøv igen.",
+    "yourCode": "Din vennekode",
+    "share": "Del",
+    "shareMessage": "Tilføj mig på Miflo! Min vennekode er {{code}}",
+    "addTitle": "Tilføj en ven",
+    "addPlaceholder": "Vennekode",
+    "add": "Tilføj",
+    "friendAdded": "Du og {{name}} er nu venner",
+    "errorNotFound": "Ingen ven med den kode.",
+    "errorSelf": "Det er din egen kode.",
+    "errorAdd": "Kunne ikke tilføje vennen. Prøv igen.",
+    "unavailable": "Du skal have internetforbindelse for at se dine venner.",
+    "you": "Dig",
+    "friends": "Venner",
+    "empty": "Ingen venner endnu. Del din kode for at komme i gang.",
+    "loadError": "Kunne ikke hente dine venner.",
+    "removeTitle": "Fjern ven?",
+    "removeBody": "Du og {{name}} kan ikke længere se hinandens resultater.",
+    "a11yStreak": "{{count}} dages stime",
+    "a11yWeekDay": "{{date}}: klarede {{count}} af {{total}} spil",
+    "a11yOnline": "Online nu",
+    "activeMinutes": "Aktiv for {{count}} min. siden",
+    "activeHours": "Aktiv for {{count}} t. siden",
+    "activeDays": "Aktiv for {{count}} d. siden"
   },
   "menu": {
     "title": "Menu",
@@ -198,6 +266,7 @@
     "help": {
       "title": "Sådan spiller du",
       "rule": "Nævn en fodboldspiller, der passer til både rækken og kolonnen i en celle.",
+      "oncePerBoard": "Hver fodboldspiller kan kun bruges én gang pr. bræt, og et forkert gæt giver turen videre til modstanderen.",
       "tapHint": "Er du i tvivl om, hvad en kategori betyder? Tryk på den i gitteret for at se det."
     },
     "yourTurn": "Din tur",
@@ -225,6 +294,7 @@
     "timeLeft": "Tid tilbage",
     "someone": "Nogen",
     "claimCell": "Vælg felt",
+    "exampleAnswer": "Eksempel på svar: {{name}}",
     "local": {
       "player1": "Spiller 1",
       "player2": "Spiller 2",
@@ -236,7 +306,7 @@
     "loading": "Indlæser…",
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Alle undtagen snyderen får den samme fodboldspiller. Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen, og til sidst stemmer I om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
+      "rule": "Alle undtagen snyderen får den samme fodboldspiller. Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen. Efter sidste runde stemmer I om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
     },
     "role": {
       "detectiveIntro": "Alle fik denne spiller",
@@ -408,6 +478,20 @@
       "rule1": "Hver runde viser fire fodboldspillere. Tre har noget skjult til fælles, fx en klub, et land eller et trofæ, og en har ikke.",
       "rule2": "Alle kapper om at trykke på den der stikker ud, før uret løber tørt. Jo hurtigere du er, jo flere point giver et rigtigt svar.",
       "rule3": "Efter sidste runde vinder den højeste score."
+    },
+    "local": {
+      "setupTitle": "Hvem spiller?",
+      "setupSub": "Tilføj mindst {{count}} navne, og send så én telefon rundt.",
+      "namePlaceholder": "Spillernavn",
+      "addPlayer": "Tilføj spiller",
+      "removePlayer": "Fjern spiller",
+      "start": "Start spillet",
+      "passTo": "Giv telefonen til {{name}}",
+      "questionIntro": "Kun {{name}} svarer på denne. Uret starter, når kortene vises.",
+      "showCards": "Vis kortene",
+      "helpRule2": "I skiftes på én telefon. Dit eget ur starter, når du viser kortene, og jo hurtigere du er, jo flere point giver et rigtigt svar.",
+      "revealIntro": "Læg telefonen i midten.",
+      "exit": "Afslut"
     }
   },
   "cultHero": {
@@ -469,14 +553,28 @@
     "searchHint": "Begynd at skrive for at søge efter en spiller",
     "noPlayers": "Ingen spillere fundet",
     "errorAnswer": "Kunne ikke sende dit svar. Prøv igen.",
-    "newGameError": "Kunne ikke starte et nyt spil. Prøv igen."
+    "newGameError": "Kunne ikke starte et nyt spil. Prøv igen.",
+    "local": {
+      "setupTitle": "Hvem spiller?",
+      "setupSub": "Tilføj mindst {{count}} navne, og send så én telefon rundt.",
+      "namePlaceholder": "Spillernavn",
+      "addPlayer": "Tilføj spiller",
+      "removePlayer": "Fjern spiller",
+      "start": "Start spillet",
+      "passTo": "Giv telefonen til {{name}}",
+      "pickIntro": "Dit valg forbliver hemmeligt. Kun {{name}} kigger på skærmen.",
+      "showPick": "Vælg i smug",
+      "lockIn": "Lås svaret og giv videre",
+      "revealIntro": "Læg telefonen i midten.",
+      "exit": "Afslut"
+    }
   },
   "scout": {
     "reminderTitle": "Daglig påmindelse?",
     "reminderPrompt": "Vil du have et prik, når dagens nye spil lander?",
     "reminderYes": "Påmind mig",
     "reminderNo": "Ikke nu",
-    "reminderDenied": "Notifikationer er slået fra for Miflo — slå dem til i Indstillinger.",
+    "reminderDenied": "Notifikationer er slået fra for Miflo. Slå dem til i Indstillinger.",
     "reminderNotifTitle": "Miflo",
     "reminderNotifBody": "Dagens daglige spil er klar.",
     "streakNotifTitle": "Miflo",
@@ -514,15 +612,9 @@
     },
     "help": {
       "title": "Sådan spiller du",
-      "rule": "Gæt dagens spiller. Du har uendelige gæt, men klar den på under 10 for at beholde din stime. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
+      "rule": "Gæt dagens spiller. Du har uendelige gæt, men klar den på 10 eller færre for at beholde din stime. Efter hvert gæt bliver hver kolonne grøn hvis den passer, gul hvis den er tæt på, og grå hvis den er forkert.",
       "arrows": "Pilen på Alder peger mod den hemmelige spillers alder.",
       "daily": "En ny spiller kommer hver dag, den samme for alle."
-    },
-    "history": {
-      "title": "Tidligere spil",
-      "played": "Spillet",
-      "notPlayed": "Ikke spillet",
-      "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
     }
   },
   "journeyman": {
@@ -583,6 +675,7 @@
     "inputPlaceholder": "Skriv en spiller",
     "targetPlaceholder": "Nummer {{shirt}}?",
     "missToast": "Ikke med i startopstillingen",
+    "hitToast": "{{name}} er på holdkortet!",
     "wrongSlotToast": "Med på holdkortet, men ikke på den plads",
     "alreadyFound": "Allerede på holdkortet",
     "alreadyTried": "Det har du allerede prøvet",
@@ -594,7 +687,6 @@
     "giveUpCancel": "Gæt videre",
     "won": "Du fandt alle 11!",
     "wonNoStreak": "Alle 11 fundet. 5 eller færre forbiere beholder din stime næste gang.",
-    "revealedTitle": "Hele holdkortet",
     "misses": "Forbiere",
     "streakCurrent": "Nuværende stime",
     "streakBest": "Bedste stime",
@@ -632,7 +724,12 @@
     "missCount": "{{count}} forbier",
     "missCount_plural": "{{count}} forbiere",
     "inputPlaceholder": "Skriv en spiller",
+    "inputPlaceholderClub": "Skriv en klub",
+    "inputPlaceholderNation": "Skriv et land",
+    "inputPlaceholderManager": "Skriv en træner",
+    "inputPlaceholderOther": "Skriv et svar",
     "missToast": "Ikke i top 10",
+    "hitToast": "{{name}} er på tavlen!",
     "alreadyFound": "Allerede på tavlen",
     "alreadyTried": "Det har du allerede prøvet",
     "errorSave": "Kunne ikke gemme din fremgang.",
@@ -757,12 +854,12 @@
   },
   "oneDevice": {
     "title": "Én enhed",
-    "intro": "Hattrick og Red Card kan også spilles sammen på én telefon. Der kræves ikke internet, så det virker på et fly og alle andre steder uden forbindelse.",
+    "intro": "Flere af spillene kan også spilles sammen på én telefon. Der kræves ikke internet, så det virker på et fly og alle andre steder uden forbindelse.",
     "step1Title": "Stryg til højre på spillet",
-    "step1Desc": "Stryg Hattrick- eller Red Card-kortet til højre under Spil.",
+    "step1Desc": "Stryg til højre på et spil med 1 enhed-knappen under Spil.",
     "step2Title": "Tryk på telefonknappen",
     "step2Desc": "En rund 1 enhed-knap dukker op til venstre på kortet. Tryk på den for at starte.",
     "step3Title": "Send telefonen rundt",
-    "step3Desc": "I skiftes på én telefon. I Red Card fortæller skærmen altid, hvem der må kigge, før noget hemmeligt vises."
+    "step3Desc": "I skiftes på én telefon. Skærmen fortæller altid, hvem der må kigge, før noget hemmeligt vises."
   }
 }

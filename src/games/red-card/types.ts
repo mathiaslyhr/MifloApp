@@ -62,9 +62,10 @@ export type ImposterRole =
   | {role: 'imposter'}
   | {role: 'detective'; footballerId: string};
 
-/** The host picks how many question rounds a hand runs before the vote. */
+/** The host picks how many question rounds a hand runs before the vote.
+ * Bounds mirror the start/restart RPCs (raised to 10 in migration 0021). */
 export const MIN_ROUNDS = 2;
-export const MAX_ROUNDS = 4;
+export const MAX_ROUNDS = 10;
 export const DEFAULT_ROUNDS = 2;
 
 /** Hard cap on a typed answer, enforced client-side AND in the submit RPC. */

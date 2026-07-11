@@ -9,6 +9,7 @@ export const FLAG_IMAGES: Record<string, number> = {
   "Armenia": require('./flags/am.png'),
   "Australia": require('./flags/au.png'),
   "Austria": require('./flags/at.png'),
+  "Belarus": require('./flags/by.png'),
   "Belgium": require('./flags/be.png'),
   "Bosnia and Herzegovina": require('./flags/ba.png'),
   "Brazil": require('./flags/br.png'),
