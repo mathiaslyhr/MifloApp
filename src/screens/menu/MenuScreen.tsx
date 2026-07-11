@@ -26,7 +26,7 @@ import {
   FEEDBACK_URL,
   PRIVACY_POLICY_URL,
 } from '../../core/config';
-import {spacing} from '../../theme';
+import {colors, spacing} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
 import {PlayerCountBadge} from './PlayerCountBadge';
@@ -96,6 +96,7 @@ export function MenuScreen({navigation}: Props) {
 
       <View style={styles.footer}>
         <PlayerCountBadge />
+        <View style={styles.footerDivider} />
         <Text variant="caption" color="muted" align="center">
           {t('menu.version', {version: APP_VERSION})}
         </Text>
@@ -106,5 +107,10 @@ export function MenuScreen({navigation}: Props) {
 
 const styles = StyleSheet.create({
   body: {gap: spacing.xl},
-  footer: {marginTop: spacing.sm, alignItems: 'center', gap: spacing.xs},
+  footer: {marginTop: spacing.sm, alignItems: 'center', gap: spacing.sm},
+  footerDivider: {
+    height: StyleSheet.hairlineWidth,
+    width: 44,
+    backgroundColor: colors.divider,
+  },
 });
