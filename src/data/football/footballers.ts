@@ -5102,6 +5102,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Daka, Patson',
+    name: 'Patson Daka',
+    nationality: ['Zambia'],
+    positions: ['FW'],
+    born: '1998-10-09',
+    shirtNumbers: [20, 29],
+    clubs: [
+      {clubId: 'salzburg', from: 2017, to: 2021},
+      {clubId: 'leicester', from: 2021, to: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 3, years: [2019, 2020, 2021], clubId: 'salzburg'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Dalglish, Kenny',
     name: 'Kenny Dalglish',
     nationality: ['Scotland'],
@@ -6681,6 +6697,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'psg'},
       {type: 'league-title', count: 2, years: [2023, 2024]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'El Khannouss, Bilal',
+    name: 'Bilal El Khannouss',
+    nationality: ['Morocco'],
+    positions: ['MF'],
+    born: '2004-05-10',
+    shirtNumbers: [7, 21],
+    clubs: [
+      {clubId: 'genk', from: 2021, to: 2024},
+      {clubId: 'leicester', from: 2024, to: 2025},
+      {clubId: 'vfb-stuttgart', from: 2025, to: 2026, loan: true},
+      {clubId: 'vfb-stuttgart', from: 2026},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -17433,6 +17465,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Pérez, Ayoze',
+    name: 'Ayoze Pérez',
+    nationality: ['Spain'],
+    positions: ['FW', 'MF'],
+    born: '1993-07-29',
+    shirtNumbers: [10, 17],
+    clubs: [
+      {clubId: 'newcastle', from: 2014, to: 2019},
+      {clubId: 'leicester', from: 2019, to: 2022},
+      {clubId: 'real-betis', from: 2022, to: 2024},
+      {clubId: 'villarreal', from: 2024},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2021], clubId: 'leicester'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Pérez, Enzo',
     name: 'Enzo Pérez',
     nationality: ['Argentina'],
@@ -21213,6 +21263,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'juventus'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Soumaré, Boubakary',
+    name: 'Boubakary Soumaré',
+    nationality: ['France'],
+    positions: ['MF'],
+    born: '1999-02-27',
+    shirtNumbers: [42, 8],
+    clubs: [
+      {clubId: 'lille', from: 2017, to: 2021},
+      {clubId: 'leicester', from: 2021},
+      {clubId: 'sevilla', from: 2024, to: 2025, loan: true},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
     ],
     tags: ['current-stars'],
   },
