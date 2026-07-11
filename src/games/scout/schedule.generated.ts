@@ -934,4 +934,5 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-07': 'Verbruggen, Bart',
   '2028-07-08': 'García, Joan',
   '2028-07-09': 'Mina, Yerry',
+  '2028-07-10': 'João Pedro',
 };

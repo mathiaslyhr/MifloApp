@@ -754,4 +754,5 @@ export const JOURNEYMAN_SCHEDULE: Record<string, string> = {
   '2028-07-07': 'Aurier, Serge',
   '2028-07-08': 'Džeko, Edin',
   '2028-07-09': 'Dimarco, Federico',
+  '2028-07-10': 'Chukwuemeka, Carney',
 };

@@ -18508,8 +18508,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1995-09-08',
     clubs: [
       {clubId: 'dortmund', from: 2015, to: 2020},
-      {clubId: 'benfica', from: 2020, to: 2022},
-      {clubId: 'monchengladbach', from: 2022},
+      {clubId: 'benfica', from: 2020, to: 2023},
+      {clubId: 'monchengladbach', from: 2022, to: 2023, loan: true},
+      {clubId: 'monchengladbach', from: 2023},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2017]},
