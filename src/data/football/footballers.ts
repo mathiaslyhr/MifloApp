@@ -1377,7 +1377,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'real-madrid', from: 2015, to: 2023},
       {clubId: 'psg', from: 2023, to: 2025},
       {clubId: 'aston-villa', from: 2025, to: 2025, loan: true},
-      {clubId: 'fenerbahce', from: 2025},
+      {clubId: 'fenerbahce', from: 2025, to: 2026},
+      {clubId: 'tottenham', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2023], clubId: 'real-madrid'},
@@ -7338,6 +7339,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2019], clubId: 'sporting'},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
     ],
+  },
+  {
+    id: 'Fernandes, Mateus',
+    name: 'Mateus Fernandes',
+    nationality: ['Portugal'],
+    positions: ['MF'],
+    born: '2004-07-10',
+    shirtNumbers: [45, 16],
+    clubs: [
+      {clubId: 'sporting', from: 2022, to: 2024},
+      {clubId: 'southampton', from: 2024, to: 2025},
+      {clubId: 'west-ham', from: 2025, to: 2026},
+      {clubId: 'tottenham', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Fernández, Augusto',
@@ -14458,6 +14475,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Mbokazi, Mbekezeli',
+    name: 'Mbekezeli Mbokazi',
+    nationality: ['South Africa'],
+    positions: ['DF'],
+    born: '2005-09-19',
+    shirtNumbers: [3, 25],
+    clubs: [
+      {clubId: 'orlando-pirates', from: 2024, to: 2025},
+      {clubId: 'chicago-fire', from: 2025},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'orlando-pirates'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'McGinn, John',
     name: 'John McGinn',
     nationality: ['Scotland'],
@@ -14674,6 +14707,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'champions-league', count: 2, years: [2022, 2024]},
       {type: 'league-title', count: 3, years: [2020, 2022, 2024]},
     ],
+  },
+  {
+    id: 'Mendy, Nobel',
+    name: 'Nobel Mendy',
+    nationality: ['Senegal'],
+    positions: ['DF'],
+    born: '2004-08-16',
+    shirtNumbers: [24, 3],
+    clubs: [
+      {clubId: 'real-betis', from: 2023, to: 2026},
+      {clubId: 'rayo-vallecano', from: 2025, to: 2026, loan: true},
+      {clubId: 'rayo-vallecano', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Merino, Mikel',
@@ -16789,6 +16837,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Oulaï, Christ Inao',
+    name: 'Christ Inao Oulaï',
+    nationality: ['Ivory Coast'],
+    positions: ['MF'],
+    born: '2006-04-06',
+    shirtNumbers: [8, 27],
+    clubs: [
+      {clubId: 'trabzonspor', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Ounahi, Azzedine',
     name: 'Azzedine Ounahi',
     nationality: ['Morocco'],
@@ -16964,6 +17025,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'feyenoord'},
       {type: 'league-title', count: 1, years: [2023]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Palestra, Marco',
+    name: 'Marco Palestra',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    born: '2005-05-09',
+    shirtNumbers: [33, 2],
+    clubs: [
+      {clubId: 'atalanta', from: 2023, to: 2026},
+      {clubId: 'cagliari', from: 2025, to: 2026, loan: true},
+      {clubId: 'chelsea', from: 2026},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -22441,7 +22517,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2000-05-08',
     clubs: [
       {clubId: 'ac-milan', from: 2020, to: 2023},
-      {clubId: 'newcastle', from: 2023},
+      {clubId: 'newcastle', from: 2023, to: 2026},
+      {clubId: 'tottenham', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2022]},
@@ -23252,7 +23329,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['DF'],
     born: '2000-06-08',
     clubs: [
-      {clubId: 'brighton', from: 2020},
+      {clubId: 'brighton', from: 2020, to: 2026},
+      {clubId: 'tottenham', from: 2026},
     ],
     honours: [],
   },

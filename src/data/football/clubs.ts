@@ -201,6 +201,9 @@ export const CLUBS: readonly Club[] = [
   // --- Recent moves 2026-07: crests fetched via assets:logos ---
   {id: 'braga', name: 'Sporting Braga', country: 'Portugal', league: 'primeira-liga'},
   {id: 'panathinaikos', name: 'Panathinaikos', country: 'Greece', league: 'greek-super-league'},
+  {id: 'rayo-vallecano', name: 'Rayo Vallecano', country: 'Spain', league: 'la-liga'},
+  {id: 'orlando-pirates', name: 'Orlando Pirates', country: 'South Africa', league: 'south-african-league'},
+  {id: 'chicago-fire', name: 'Chicago Fire', country: 'USA', league: 'mls'},
 ];
 
 const clubsById = derivedFromData(

@@ -97,6 +97,8 @@ const CLUB_SLUG = {
   brondby: 'brondby-if', 'aek-athens': 'aek-athens',
   // Recent moves 2026-07
   braga: 'sc-braga', panathinaikos: 'panathinaikos',
+  'rayo-vallecano': 'rayo-vallecano', 'orlando-pirates': 'orlando-pirates',
+  'chicago-fire': 'chicago-fire',
 };
 
 const slugify = s =>
