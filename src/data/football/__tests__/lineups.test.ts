@@ -1,7 +1,7 @@
 /**
  * @format
  */
-import {COMPETITION_KEYS, FAMOUS_LINEUPS, getById, isTeamsheetLineup} from '..';
+import {COMPETITION_KEYS, FAMOUS_LINEUPS, FOOTBALLERS, getById, isTeamsheetLineup} from '..';
 import {fold} from '../../../games/hattrick/playerSearch';
 import type {Position} from '../types';
 
@@ -55,6 +55,245 @@ describe('famous lineups integrity', () => {
     }
   });
 });
+
+/** Legacy players still missing from FOOTBALLERS — may only shrink. */
+const KNOWN_MISSING: string[] = [
+  'Abedi Pelé',
+  'Adrien Silva',
+  'Albert Ferrer',
+  'Aldair',
+  'Alen Bokšić',
+  'Alexander Hleb',
+  'Anatoliy Tymoshchuk',
+  'Anderson',
+  'Andoni Zubizarreta',
+  'Andrea Barzagli',
+  'Andreas Brehme',
+  'Andreas Möller',
+  'Angelo Peruzzi',
+  'Angelos Basinas',
+  'Angelos Charisteas',
+  'Antonio Benarrivo',
+  'Antonio Conte',
+  'Antonio Valencia',
+  'Antonios Nikopolidis',
+  'Arne Friedrich',
+  'Augusto Fernández',
+  'Bacary Sagna',
+  'Basile Boli',
+  'Bebeto',
+  'Ben Chilwell',
+  'Benedikt Höwedes',
+  'Bernd Schneider',
+  'Bixente Lizarazu',
+  'Blaise Matuidi',
+  'Bodo Illgner',
+  'Boudewijn Zenden',
+  'Branco',
+  'Brian Laudrup',
+  'Carlos Marchena',
+  'Carsten Ramelow',
+  'Charles Aránguiz',
+  'Chris Smalling',
+  'Christian Karembeu',
+  'Christian Panucci',
+  'Christoph Kramer',
+  'Christoph Metzelder',
+  'Christophe Dugarry',
+  'Ciro Ferrara',
+  'Claudio Marchisio',
+  'Cédric Soares',
+  'César Sampaio',
+  'César Sánchez',
+  'Daley Blind',
+  'Dani Carvajal',
+  'Daniel Agger',
+  'Daniele De Rossi',
+  'Daniele Massaro',
+  'Danijel Subašić',
+  'Danny Blind',
+  'Danny Rose',
+  'Dejan Savićević',
+  'Demetrio Albertini',
+  'Dida',
+  'Diego Contento',
+  'Dietmar Hamann',
+  'Dimitri Payet',
+  'Dino Baggio',
+  'Djimi Traoré',
+  'Domagoj Vida',
+  'Dunga',
+  'Edmílson',
+  'Eduardo Vargas',
+  'Emmanuel Eboué',
+  'Everton',
+  'Ezequiel Garay',
+  'Ezequiel Lavezzi',
+  'Fabien Barthez',
+  'Fabio Grosso',
+  'Fabrizio Ravanelli',
+  'Ferland Mendy',
+  'Filippo Galli',
+  'Finidi George',
+  'Flemming Povlsen',
+  'Florent Malouda',
+  'Francesco Toldo',
+  'Francisco Silva',
+  'Franck Sauzée',
+  'Frank Lebœuf',
+  'Frank Rijkaard',
+  'Frank de Boer',
+  'Freddie Ljungberg',
+  'Gabi',
+  'Gianluca Pagliuca',
+  'Gianluca Pessotto',
+  'Gianluca Vialli',
+  'Gilberto Silva',
+  'Giourkas Seitaridis',
+  'Giovanni van Bronckhorst',
+  'Guido Buchwald',
+  'Harry Kewell',
+  'Harry Maguire',
+  'Harry Winks',
+  'Henrik Larsen',
+  'Hugo Lloris',
+  'Ignazio Abate',
+  'Ivan Strinić',
+  'Iván Helguera',
+  'Jean Beausejour',
+  'Jean-Jacques Eydelie',
+  'Jens Jeremies',
+  'Jens Lehmann',
+  'Jermaine Pennant',
+  'Jerzy Dudek',
+  'Jesper Blomqvist',
+  'Joan Capdevila',
+  'Jocelyn Angloma',
+  'John Arne Riise',
+  'John Heitinga',
+  'John Jensen',
+  "John O'Shea",
+  'John Obi Mikel',
+  'John Sivebæk',
+  'Jorge Valdivia',
+  'Joris Mathijsen',
+  'José Bosingwa',
+  'José Mari Bakero',
+  'Joël Matip',
+  'Juan Carlos',
+  'Juanfran',
+  'Julio Salinas',
+  'Jörg Heinrich',
+  'Júnior Baiano',
+  'Jürgen Kohler',
+  'Kalvin Phillips',
+  'Karl-Heinz Riedle',
+  'Kent Nielsen',
+  'Kim Christofte',
+  'Kim Vilfort',
+  'Klaus Augenthaler',
+  'Kléberson',
+  'Kolo Touré',
+  'Kostas Katsouranis',
+  'Lars Olsen',
+  'Laurent Blanc',
+  'Laurent Koscielny',
+  'Leonardo',
+  'Loris Karius',
+  'Luca Toni',
+  'Lucas Biglia',
+  'Ludovic Giuly',
+  'Luigi Di Biagio',
+  'Luis García',
+  'Luke Shaw',
+  'Maarten Stekelenburg',
+  'Manolo Sanchís',
+  'Marcel Desailly',
+  'Marcelo Díaz',
+  'Marco Bode',
+  'Marco Delvecchio',
+  'Marcos',
+  'Marcos Acuña',
+  'Marcos Senna',
+  'Marek Jankulovski',
+  'Mark Iuliano',
+  'Martin Kree',
+  'Massimo Ambrosini',
+  'Massimo Oddo',
+  'Mauricio Isla',
+  'Mauro Camoranesi',
+  'Mauro Silva',
+  'Mauro Tassotti',
+  'Mazinho',
+  'Michael Reiziger',
+  'Michalis Kapsis',
+  'Milan Baroš',
+  'Moreno Torricelli',
+  'Márcio Santos',
+  'Míchel Salgado',
+  'Nacho',
+  'Nando',
+  'Nicky Butt',
+  'Nicola Berti',
+  'Nigel de Jong',
+  'Oleguer',
+  'Oliver Neuville',
+  'Owen Hargreaves',
+  'Paul Lambert',
+  'Paulo Sousa',
+  'Pep Guardiola',
+  'Per Mertesacker',
+  'Pierre Littbarski',
+  'Pietro Vierchowod',
+  'Predrag Mijatović',
+  'Presnel Kimpembe',
+  'Rafael Márquez',
+  'Raphaël Guerreiro',
+  'Renato Sanches',
+  'Riccardo Montolivo',
+  'Roberto Donadoni',
+  'Roberto Mussi',
+  'Ronald Koeman',
+  'Ronald de Boer',
+  'Ronny Johnsen',
+  'Roque Júnior',
+  'Rudi Völler',
+  'Salomon Kalou',
+  'Sami Hyypiä',
+  'Samuel Umtiti',
+  'Santiago Solari',
+  'Sebastiano Rossi',
+  'Sergio Romero',
+  'Simone Perrotta',
+  'Stefan Klos',
+  'Stefan Reuter',
+  'Stefano Fiore',
+  'Stelios Giannakopoulos',
+  'Stephan Lichtsteiner',
+  'Steve Finnan',
+  'Stéphane Chapuisat',
+  'Stéphane Guivarc’h',
+  'Sylvinho',
+  'Taffarel',
+  'Takis Fyssas',
+  'Theodoros Zagorakis',
+  'Thomas Berthold',
+  'Thomas Hitzlsperger',
+  'Thomas Häßler',
+  'Thomas Linke',
+  'Torben Piechnik',
+  'Torsten Frings',
+  'Traianos Dellas',
+  'Wes Brown',
+  'William Carvalho',
+  'William Gallas',
+  'Willy Sagnol',
+  'Zinho',
+  'Zisis Vryzas',
+  'Zvonimir Boban',
+  'Álvaro Arbeloa',
+  'Šime Vrsaljko',
+];
 
 /**
  * Team sheet enrichment integrity — runs over the eligible subset only, so
@@ -146,6 +385,39 @@ describe('teamsheet lineups', () => {
       expect(match.goalsFor).toBeGreaterThanOrEqual(0);
       expect(match.goalsAgainst).toBeGreaterThanOrEqual(0);
     }
+  });
+
+  it('every eligible lineup player resolves in the footballers dataset', () => {
+    // Autocomplete suggests from FOOTBALLERS, so a lineup player missing there
+    // is guessable only by exact typing. New lineups must ship with their XI
+    // fully in the dataset; KNOWN_MISSING is the legacy backlog being worked
+    // down in batches and may only shrink — delete it when it hits zero.
+    const known = new Set<string>();
+    for (const f of FOOTBALLERS) {
+      known.add(fold(f.name));
+      if (f.fullName) {
+        known.add(fold(f.fullName));
+      }
+      for (const nickname of f.nicknames ?? []) {
+        known.add(fold(nickname));
+      }
+    }
+    const missing = new Set<string>();
+    for (const lineup of ELIGIBLE) {
+      for (const player of lineup.players) {
+        const resolves =
+          player.footballerId !== undefined ||
+          [player.name, ...(player.aliases ?? [])].some(n => known.has(fold(n)));
+        if (!resolves) {
+          missing.add(player.name);
+        }
+      }
+    }
+    const allowed = new Set(KNOWN_MISSING);
+    const newGaps = [...missing].filter(n => !allowed.has(n)).sort();
+    const staleAllowlist = KNOWN_MISSING.filter(n => !missing.has(n));
+    expect(newGaps).toEqual([]);
+    expect(staleAllowlist).toEqual([]);
   });
 
   it('no accepted answer token maps to two players in one XI', () => {
