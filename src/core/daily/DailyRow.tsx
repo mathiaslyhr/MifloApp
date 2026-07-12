@@ -1,9 +1,10 @@
 /**
  * DailyRow — one game's state on one day, as a full-width list row. The
  * shared unit of the daily archive language, used inside the Log tab's day
- * cards and the Friends tab's person cards, so both surfaces read
- * identically: dimmed = not started, eye + tries = ongoing, green check +
- * tries = solved, red cross + tries = surrendered.
+ * cards and the Friends tab's person cards, so both surfaces read identically.
+ * Status glyph: dimmed = not started, eye = ongoing, green check = solved, red
+ * flag = surrendered or rolled over unfinished. Then the right/wrong counts:
+ * the correct count, a red cross (miss mark), the wrong count.
  *
  * Deliberately a plain row, not a pill: pills nested inside a glass card
  * squeeze the game name and the answer into half-width and read as glass on
@@ -17,10 +18,10 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {
-  Ban,
   Check,
   ClipboardList,
   Eye,
+  Flag,
   ListOrdered,
   Route,
   UserSearch,
@@ -99,23 +100,29 @@ export function DailyRow({game, status, right, wrong, answer = null, isLast = fa
       </View>
       {played ? (
         <View style={styles.state}>
-          {status === 'won' ? (
-            <Check size={14} color={colors.success} strokeWidth={2.5} />
-          ) : status === 'revealed' ? (
-            <X size={14} color={colors.error} strokeWidth={2.5} />
-          ) : (
-            <Eye size={14} color={colors.textSecondary} strokeWidth={2} />
-          )}
-          {hasScore ? (
-            <>
-              <Text variant="secondary" color="secondary">
+          {/* Group 1: outcome + correct count, tight so they read as one unit. */}
+          <View style={styles.group}>
+            {status === 'won' ? (
+              <Check size={14} color={colors.success} strokeWidth={2.5} />
+            ) : status === 'revealed' ? (
+              <Flag size={14} color={colors.error} strokeWidth={2.5} />
+            ) : (
+              <Eye size={14} color={colors.textSecondary} strokeWidth={2} />
+            )}
+            {hasScore ? (
+              <Text variant="secondary" color="secondary" style={styles.count}>
                 {right}
               </Text>
-              <Ban size={13} color={colors.error} strokeWidth={2} />
-              <Text variant="secondary" color="secondary">
+            ) : null}
+          </View>
+          {/* Group 2: miss mark + wrong count, set apart by the wider state gap. */}
+          {hasScore ? (
+            <View style={styles.group}>
+              <X size={13} color={colors.error} strokeWidth={2.5} />
+              <Text variant="secondary" color="secondary" style={styles.count}>
                 {wrong}
               </Text>
-            </>
+            </View>
           ) : null}
         </View>
       ) : null}
@@ -138,9 +145,28 @@ const styles = StyleSheet.create({
   },
   dim: {opacity: 0.45},
   text: {flex: 1},
+  // The wider gap separates the two count groups; the row reads as
+  // [outcome right] … [miss wrong], not four loose glyphs.
   state: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.xs,
+    gap: spacing.sm,
+  },
+  // Each group is icon + number, hugging tight so the number belongs to its
+  // icon (a lone "1" no longer floats a slot-width away).
+  group: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  // Fixed-width, left-aligned tabular figures: the number sits next to its
+  // icon, and the slot must be wide enough that a two-digit count still fits
+  // INSIDE it — otherwise a wider "38" grows the cluster and, since it is
+  // right-anchored, shoves that row's icons out of column. Sized for two
+  // digits at 14px; left-align keeps the digit hugging its icon.
+  count: {
+    minWidth: 22,
+    textAlign: 'left',
+    fontVariant: ['tabular-nums'],
   },
 });

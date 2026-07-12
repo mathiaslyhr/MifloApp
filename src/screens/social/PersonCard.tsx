@@ -163,7 +163,7 @@ export function PersonCard({name, streak, today, presence, avatarUri, onPress}: 
             <View
               style={styles.streak}
               accessibilityLabel={t('social.a11yStreak', {count: streak})}>
-              <Flame size={14} color={colors.primary} strokeWidth={2} />
+              <Flame size={14} color={colors.primary} strokeWidth={2.5} />
               <Text variant="caption" color="secondary">
                 {streak}
               </Text>
