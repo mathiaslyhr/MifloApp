@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle, Lock} from 'lucide-react-native';
+import {ChevronLeft, Flag, HelpCircle, Lock} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -476,6 +476,7 @@ export function JourneymanScreen({navigation}: Props) {
               <Text variant="caption" color="muted">
                 {t('journeyman.giveUp')}
               </Text>
+              <Flag size={12} color={colors.muted} strokeWidth={2} />
             </Pressable>
           </View>
         )}
@@ -643,5 +644,11 @@ const styles = StyleSheet.create({
   statValueHot: {color: colors.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-  giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
+  giveUp: {
+    alignSelf: 'center',
+    paddingVertical: spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
 });

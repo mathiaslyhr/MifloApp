@@ -14,7 +14,7 @@ import {
   type InlineSuggestion,
 } from '../games/shared/InlineSuggestions';
 import {searchSuggestions} from '../games/tenball/suggestions';
-import {ChevronLeft, HelpCircle} from 'lucide-react-native';
+import {ChevronLeft, Flag, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -475,6 +475,7 @@ export function TopBinsScreen({navigation}: Props) {
                 <Text variant="caption" color="muted">
                   {t('tenball.giveUp')}
                 </Text>
+                <Flag size={12} color={colors.muted} strokeWidth={2} />
               </Pressable>
             </View>
           )}
@@ -607,7 +608,13 @@ const styles = StyleSheet.create({
   slotNameRevealed: {color: colors.textSecondary},
   slotBlank: {flex: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-  giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
+  giveUp: {
+    alignSelf: 'center',
+    paddingVertical: spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},

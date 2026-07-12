@@ -12,6 +12,7 @@ import {
 import {
   ArrowLeftRight,
   ChevronLeft,
+  Flag,
   Footprints,
   HelpCircle,
   Volleyball,
@@ -518,6 +519,7 @@ export function TeamsheetScreen({navigation}: Props) {
                 <Text variant="caption" color="muted">
                   {t('teamsheet.giveUp')}
                 </Text>
+                <Flag size={12} color={colors.muted} strokeWidth={2} />
               </Pressable>
             </View>
           )}
@@ -849,7 +851,13 @@ const styles = StyleSheet.create({
   tokenNameRevealed: {color: colors.textTertiary},
   scoreTeam: {fontFamily: fonts.medium, color: colors.primary},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-  giveUp: {alignSelf: 'center', paddingVertical: spacing.xs},
+  giveUp: {
+    alignSelf: 'center',
+    paddingVertical: spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
