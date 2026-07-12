@@ -265,7 +265,7 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2026-09-07': 'Bentancur, Rodrigo',
   '2026-09-08': 'Areola, Alphonse',
   '2026-09-09': 'Cancelo, João',
-  '2026-09-10': 'Poulsen, Yussuf',
+  '2026-09-10': 'Carter-Vickers, Cameron',
   '2026-09-11': 'Aspas, Iago',
   '2026-09-12': 'Jović, Luka',
   '2026-09-13': 'Depay, Memphis',
