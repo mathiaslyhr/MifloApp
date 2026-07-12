@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text as RNText, TextProps as RNTextProps, TextStyle} from 'react-native';
-import {colors, type as typeScale, TypeVariant} from '../../theme';
+import {type as typeScale, TypeVariant, useColors, type Palette} from '../../theme';
 
 type ColorName =
   | 'primary' // textPrimary ink
@@ -10,14 +10,14 @@ type ColorName =
   | 'onInk'
   | 'accent';
 
-const COLOR_MAP: Record<ColorName, string> = {
-  primary: colors.textPrimary,
-  secondary: colors.textSecondary,
-  tertiary: colors.textTertiary,
-  muted: colors.muted,
-  onInk: colors.onInk,
-  accent: colors.primary,
-};
+const colorFor = (c: Palette): Record<ColorName, string> => ({
+  primary: c.textPrimary,
+  secondary: c.textSecondary,
+  tertiary: c.textTertiary,
+  muted: c.muted,
+  onInk: c.onInk,
+  accent: c.primary,
+});
 
 type Props = RNTextProps & {
   /** Type-scale variant (defaults to `body`). */
@@ -39,13 +39,14 @@ export function Text({
   style,
   ...rest
 }: Props) {
+  const colors = useColors();
   return (
     <RNText
       // Cap Dynamic Type: past ~1.2x the glass layouts clip instead of helping.
       maxFontSizeMultiplier={1.2}
       style={[
         typeScale[variant],
-        {color: COLOR_MAP[color]},
+        {color: colorFor(colors)[color]},
         align ? {textAlign: align} : null,
         style,
       ]}

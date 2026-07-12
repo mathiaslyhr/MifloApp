@@ -23,7 +23,14 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, screenPadding, spacing} from '../theme';
+import {
+  fonts,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
 import {
@@ -70,12 +77,14 @@ import type {
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Scout'>;
 
-/** Solid fill per feedback status; white content reads on all three. */
-const STATUS_BG: Record<CellResult['status'], string> = {
-  hit: colors.guessHit,
-  partial: colors.guessNear,
-  miss: colors.guessMiss,
-};
+/** Solid fill per feedback status; white content reads on all three. These are
+ * semantically fixed (Wordle tones) but `guessMiss` has a dark-tuned value, so
+ * read them from the active palette. */
+const statusBg = (c: Palette): Record<CellResult['status'], string> => ({
+  hit: c.guessHit,
+  partial: c.guessNear,
+  miss: c.guessMiss,
+});
 
 /** Compact league labels for the tiny grid cell (colour carries the signal). */
 const LEAGUE_SHORT: Record<string, string> = {
@@ -106,6 +115,8 @@ function leagueShort(league: string | undefined): string {
 export function ScoutScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
 
   const [state, setState] = useState<MysteryState | null>(null);
@@ -485,8 +496,10 @@ function Cell({
   dateKey: string;
   onInfo?: (info: CellInfo) => void;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const attrs = player ? deriveAttributes(player, dateKey) : undefined;
-  const bg = STATUS_BG[cell.status];
+  const bg = statusBg(colors)[cell.status];
   const arrow = cell.direction === 'up' ? '↑' : cell.direction === 'down' ? '↓' : '';
 
   let content: React.ReactNode = null;
@@ -549,6 +562,7 @@ function cellValue(key: ColumnKey, attrs: ReturnType<typeof deriveAttributes> | 
 }
 
 function CellText({children}: {children: React.ReactNode}) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Text style={styles.cellText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
       {children}
@@ -565,6 +579,7 @@ function Stat({
   value: number;
   highlight?: boolean;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
       <Text style={[styles.statValue, highlight && styles.statValueHot]}>
@@ -580,6 +595,7 @@ function Stat({
 /** "Come back in" + a live HH:MM:SS to the next daily puzzle (next local midnight). */
 function Countdown() {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -614,7 +630,8 @@ function Countdown() {
 
 const CELL_GAP = 4;
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
@@ -643,13 +660,13 @@ const styles = StyleSheet.create({
   columnLabel: {
     fontFamily: fonts.medium,
     fontSize: 10,
-    color: colors.muted,
+    color: c.muted,
     textAlign: 'center',
   },
   // Divider separating the header row from the guesses.
   headerRule: {
     height: 1,
-    backgroundColor: colors.textTertiary,
+    backgroundColor: c.textTertiary,
     marginTop: spacing.xs,
   },
   board: {flex: 1, marginTop: spacing.xs},
@@ -668,7 +685,8 @@ const styles = StyleSheet.create({
   cellText: {
     fontFamily: fonts.regular,
     fontSize: 12,
-    color: colors.onInk,
+    // White always: the guess tiles are fixed bold colours in both themes.
+    color: '#FFFFFF',
     textAlign: 'center',
   },
   cellFlag: {width: 22, height: 16, borderRadius: 2},
@@ -678,15 +696,15 @@ const styles = StyleSheet.create({
   // Answer reveal (the payoff): eyebrow + name + flag · crest · position.
   answerReveal: {alignItems: 'center', gap: spacing.xs},
   answerLabel: {letterSpacing: 1},
-  answerName: {color: colors.ink},
+  answerName: {color: c.ink},
   answerMeta: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
   answerFlag: {width: 24, height: 18, borderRadius: 2},
   answerCrest: {width: 22, height: 22},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: colors.ink},
-  statValueHot: {color: colors.primary},
+  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
+  statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
-});
+  });

@@ -8,7 +8,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {GlassCard, Text} from '../../core/ui';
-import {colors, fonts, spacing} from '../../theme';
+import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
 import {GAME_META} from '../../core/daily/DailyRow';
 import type {DailyGame} from '../../core/daily/dailyLog';
 
@@ -21,6 +21,7 @@ export type StreakCell = {
 
 export function StreaksSection({cells}: {cells: StreakCell[]}) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.section}>
       <Text variant="caption" color="tertiary" style={styles.eyebrow}>
@@ -45,31 +46,32 @@ export function StreaksSection({cells}: {cells: StreakCell[]}) {
   );
 }
 
-const styles = StyleSheet.create({
-  section: {gap: spacing.sm},
-  // Mirrors MenuGroup's eyebrow so the page reads like the other grouped ones.
-  eyebrow: {
-    letterSpacing: 1,
-    marginLeft: spacing.md,
-  },
-  streakCard: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingVertical: spacing.md,
-  },
-  // Half-width cells → a 2×2 grid; every game name fits in full.
-  streakCell: {
-    flexBasis: '50%',
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-  },
-  // Matches the games' result-screen Stat value (medium 20, the scale's cap).
-  streakValue: {
-    fontFamily: fonts.medium,
-    fontSize: 20,
-    lineHeight: 24,
-    color: colors.ink,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    section: {gap: spacing.sm},
+    // Mirrors MenuGroup's eyebrow so the page reads like the other grouped ones.
+    eyebrow: {
+      letterSpacing: 1,
+      marginLeft: spacing.md,
+    },
+    streakCard: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingVertical: spacing.md,
+    },
+    // Half-width cells → a 2×2 grid; every game name fits in full.
+    streakCell: {
+      flexBasis: '50%',
+      alignItems: 'center',
+      gap: spacing.xs,
+      paddingVertical: spacing.sm,
+      paddingHorizontal: spacing.md,
+    },
+    // Matches the games' result-screen Stat value (medium 20, the scale's cap).
+    streakValue: {
+      fontFamily: fonts.medium,
+      fontSize: 20,
+      lineHeight: 24,
+      color: c.ink,
+    },
+  });

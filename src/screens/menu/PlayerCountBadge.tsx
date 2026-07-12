@@ -11,12 +11,13 @@ import {Animated, Easing, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from '../../core/ui';
 import {usePlayerCount} from '../../data/football';
-import {colors, spacing} from '../../theme';
+import {spacing, useThemedStyles, type Palette} from '../../theme';
 
 const DOT = 7;
 
 export function PlayerCountBadge() {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const count = usePlayerCount();
   const ping = useRef(new Animated.Value(0)).current;
 
@@ -59,30 +60,31 @@ export function PlayerCountBadge() {
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-  },
-  ping: {
-    width: DOT,
-    height: DOT,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  ring: {
-    position: 'absolute',
-    width: DOT,
-    height: DOT,
-    borderRadius: DOT / 2,
-    backgroundColor: colors.success,
-  },
-  dot: {
-    width: DOT,
-    height: DOT,
-    borderRadius: DOT / 2,
-    backgroundColor: colors.success,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.xs,
+    },
+    ping: {
+      width: DOT,
+      height: DOT,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    ring: {
+      position: 'absolute',
+      width: DOT,
+      height: DOT,
+      borderRadius: DOT / 2,
+      backgroundColor: c.success,
+    },
+    dot: {
+      width: DOT,
+      height: DOT,
+      borderRadius: DOT / 2,
+      backgroundColor: c.success,
+    },
+  });

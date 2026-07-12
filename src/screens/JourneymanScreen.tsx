@@ -23,7 +23,15 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {
+  fonts,
+  radii,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, getClub, POSITION_LABELS} from '../data/football';
 import {
@@ -72,6 +80,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Journeyman'>;
 export function JourneymanScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
 
   const [state, setState] = useState<JourneymanState | null>(null);
@@ -511,6 +521,7 @@ function Stat({
   value: number;
   highlight?: boolean;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
       <Text style={[styles.statValue, highlight && styles.statValueHot]}>
@@ -526,6 +537,7 @@ function Stat({
 /** "Come back in" + a live HH:MM:SS to the next daily puzzle (next local midnight). */
 function Countdown() {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -558,7 +570,8 @@ function Countdown() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
@@ -583,9 +596,9 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: spacing.md,
     borderRadius: radii.card,
-    backgroundColor: colors.glassLight,
+    backgroundColor: c.glassLight,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   stepBadge: {
     width: 26,
@@ -593,22 +606,22 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surface2,
+    backgroundColor: c.surface2,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   // Explicit tight lineHeight: without it the themed body lineHeight (24)
   // pushes the digit off-centre inside the 26pt circle.
-  stepText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: colors.muted},
+  stepText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: c.muted},
   spellCrest: {width: 22, height: 22},
   spellClub: {flex: 1},
   loanTag: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 1,
     borderRadius: radii.pill,
-    backgroundColor: colors.surface2,
+    backgroundColor: c.surface2,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   loanText: {fontSize: 11, lineHeight: 14},
   spellYears: {fontVariant: ['tabular-nums']},
@@ -621,27 +634,27 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.xs,
     borderRadius: radii.card,
-    backgroundColor: colors.glassLight,
+    backgroundColor: c.glassLight,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   hintChipLocked: {opacity: 0.55},
   hintLabel: {letterSpacing: 0.3},
   hintValueRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
   hintFlag: {width: 20, height: 15, borderRadius: 2},
-  hintValueText: {color: colors.ink},
+  hintValueText: {color: c.ink},
   inputPanel: {gap: spacing.xs, paddingBottom: spacing.sm},
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   // Answer reveal (the payoff): eyebrow + name + flag · position · age.
   answerReveal: {alignItems: 'center', gap: spacing.xs},
   answerLabel: {letterSpacing: 1},
-  answerName: {color: colors.ink},
+  answerName: {color: c.ink},
   answerMeta: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
   answerFlag: {width: 24, height: 18, borderRadius: 2},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: colors.ink},
-  statValueHot: {color: colors.primary},
+  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
+  statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
   giveUp: {
@@ -651,4 +664,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.xs,
   },
-});
+  });

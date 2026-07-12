@@ -21,6 +21,7 @@ import {
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
 // Side-effect: initialize i18next (device language) before any screen renders.
@@ -115,23 +116,39 @@ function App(): React.JSX.Element {
     <ErrorBoundary>
       {/* Root for react-native-gesture-handler (the swipeable game tiles). */}
       <GestureHandlerRootView style={styles.root}>
-        <SafeAreaProvider>
-          <StatusBar barStyle="dark-content" />
-          <UpdateGate>
-            {/* navigationRef + onStateChange let the OTA content sync apply a
-                downloaded pack the moment the user leaves a game screen. */}
-            <NavigationContainer
-              ref={navigationRef}
-              linking={linking}
-              onReady={flushPendingNavigation}
-              onStateChange={maybeApplyPending}>
-              <RootNavigator />
-            </NavigationContainer>
-          </UpdateGate>
-          <ToastHost />
-        </SafeAreaProvider>
+        <SkinProvider>
+          <SafeAreaProvider>
+            <ThemedStatusBar />
+            <UpdateGate>
+              {/* navigationRef + onStateChange let the OTA content sync apply a
+                  downloaded pack the moment the user leaves a game screen. */}
+              <NavigationContainer
+                ref={navigationRef}
+                linking={linking}
+                onReady={flushPendingNavigation}
+                onStateChange={maybeApplyPending}>
+                <RootNavigator />
+              </NavigationContainer>
+            </UpdateGate>
+            <ToastHost />
+          </SafeAreaProvider>
+        </SkinProvider>
       </GestureHandlerRootView>
     </ErrorBoundary>
+  );
+}
+
+/**
+ * Status-bar glyphs track the active skin's appearance: dark glyphs on a light
+ * skin, light glyphs on a dark one. Lives under `SkinProvider` so it re-renders
+ * when the skin changes.
+ */
+function ThemedStatusBar(): React.JSX.Element {
+  const {skin} = useSkin();
+  return (
+    <StatusBar
+      barStyle={skin.appearance === 'dark' ? 'light-content' : 'dark-content'}
+    />
   );
 }
 

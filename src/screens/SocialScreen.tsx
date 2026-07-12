@@ -29,17 +29,18 @@ import {
   Button,
   CircleButton,
   GlassCard,
+  GlassTag,
   NAV_HEIGHT,
   Screen,
   Skeleton,
-  SwipeReveal,
   Text,
   TextField,
   toast,
   TopStatusFade,
   closeOpenSwipeReveal,
+  SwipeReveal,
 } from '../core/ui';
-import {colors, spacing} from '../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../theme';
 import {isBackendConfigured} from '../core/config';
 import {isNetworkError} from '../core/rooms/roomService';
 import {useAppNavigation} from '../core/navigation';
@@ -61,6 +62,7 @@ import type {FriendFeed, SocialProfile} from '../core/social/types';
 import {AddFriendSheet} from './social/AddFriendSheet';
 import {PersonCard, friendCellsFor, friendStreak} from './social/PersonCard';
 import {RequestsSection} from './social/RequestsSection';
+import {WorldwideBoard} from './social/WorldwideBoard';
 import {useSendFriendRequest} from './social/useSendFriendRequest';
 
 /** The feed window: today plus the six days before it. */
@@ -75,6 +77,8 @@ type Props = {
 
 export function SocialScreen({isActive, addCode}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
@@ -86,6 +90,7 @@ export function SocialScreen({isActive, addCode}: Props) {
   );
 
   const [profile, setProfile] = useState<SocialProfile | null | 'loading'>('loading');
+  const [view, setView] = useState<'friends' | 'worldwide'>('friends');
   const [feed, setFeed] = useState<FriendFeed[] | null>(null);
   const [nameInput, setNameInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -320,7 +325,7 @@ export function SocialScreen({isActive, addCode}: Props) {
           <Text variant="wordmark" align="center">
             {t('social.title')}
           </Text>
-          {profile !== 'loading' && profile !== null ? (
+          {profile !== 'loading' && profile !== null && view === 'friends' ? (
             <>
               <View style={styles.headerLeft}>
                 <CircleButton
@@ -383,6 +388,41 @@ export function SocialScreen({isActive, addCode}: Props) {
             />
           </GlassCard>
         ) : (
+          <>
+            {/* Friends | Worldwide — the two daily comparisons this tab holds.
+                Switching to Worldwide closes the friend search. */}
+            <View style={styles.viewToggle}>
+              {(['friends', 'worldwide'] as const).map(v => (
+                <GlassTag
+                  key={v}
+                  onPress={() => {
+                    if (v === 'worldwide' && searchOpen) {
+                      closeSearch();
+                    }
+                    setView(v);
+                  }}
+                  accent={view === v}
+                  accessibilityRole="button"
+                  accessibilityLabel={t(`leaderboard.${v}`)}
+                  style={styles.viewToggleTag}>
+                  <Text
+                    variant="secondary"
+                    color={view === v ? 'primary' : 'secondary'}
+                    style={view === v ? styles.viewToggleActive : undefined}>
+                    {t(`leaderboard.${v}`)}
+                  </Text>
+                </GlassTag>
+              ))}
+            </View>
+
+            {view === 'worldwide' ? (
+              <WorldwideBoard
+                todayKey={todayKey}
+                active={isActive && isFocused}
+                myName={profile.displayName}
+                myAvatarUri={avatarUrlFor(profile.avatarPath)}
+              />
+            ) : (
           <>
             {searchOpen ? (
               <TextField
@@ -466,6 +506,8 @@ export function SocialScreen({isActive, addCode}: Props) {
               </View>
             )}
           </>
+            )}
+          </>
         )}
       </ScrollView>
 
@@ -486,7 +528,8 @@ export function SocialScreen({isActive, addCode}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   header: {
     height: 44,
     alignItems: 'center',
@@ -513,6 +556,16 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
   },
   skeletons: {gap: spacing.lg},
+  viewToggle: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.sm,
+  },
+  viewToggleTag: {
+    minWidth: 108,
+    justifyContent: 'center',
+  },
+  viewToggleActive: {color: c.primaryInk},
   messageCard: {
     padding: spacing.xl,
   },
@@ -538,4 +591,4 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     paddingHorizontal: spacing.sm,
   },
-});
+  });

@@ -17,16 +17,24 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   advanceOffsideRound,
   forceOffsideReveal,
+  recordGameResults,
   restartOffsideGame,
   returnToLobby,
   submitOffsideAnswer,
   subscribeRoom,
 } from '../core/rooms/roomService';
+import {entriesFromStandings, matchIdFrom} from '../core/stats/recordEntries';
 import {
   createConnectionNotifier,
   notifyPartyClosed,
@@ -61,6 +69,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Offside'>;
 export function OffsideScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<OffsideState | null>(null);
   const [hostId, setHostId] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
@@ -100,6 +110,27 @@ export function OffsideScreen({route, navigation}: Props) {
 
   const isHost = !!myUserId && myUserId === hostId;
   const deadline = state ? deadlineTs(state) : null;
+
+  // Host records the final result once the game reaches its standings (0031).
+  // Keyed by the deck's content so a Play again (fresh deck, same room) records
+  // as a distinct game; the ref stops it re-firing on every standings render.
+  const recordedMatchRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isHost || !state || state.phase !== 'standings') {
+      return;
+    }
+    const signature = state.deck
+      .map(r => `${r.cards.map(c => c.footballerId).join('-')}:${r.outlierIndex}`)
+      .join('|');
+    const matchId = matchIdFrom(roomId, signature);
+    if (recordedMatchRef.current === matchId) {
+      return;
+    }
+    recordedMatchRef.current = matchId;
+    recordGameResults(matchId, roomId, entriesFromStandings(standings(state)), 'offside').catch(
+      () => {},
+    );
+  }, [isHost, state, roomId]);
 
   // Entering a reveal: buzz by how your own round went.
   useEffect(() => {
@@ -304,6 +335,7 @@ function QuestionPhase({
   onSubmit: (option: number | null, points: number) => Promise<void>;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [localPick, setLocalPick] = useState<number | null>(null);
   const [timedOut, setTimedOut] = useState(false);
   const round = state.deck[state.round - 1];
@@ -418,6 +450,8 @@ function RevealPhase({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const round = state.deck[state.round - 1];
   if (round == null) {
     return null;
@@ -484,6 +518,7 @@ function ScoreboardPhase({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const lastRound = state.round >= state.rounds;
   return (
     <View style={styles.phase}>
@@ -528,6 +563,7 @@ function StandingsPhase({
   onBackToLobby: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const board = standings(state);
   const winner = board[0];
   return (
@@ -560,7 +596,8 @@ function StandingsPhase({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   loadingStack: {width: '100%', gap: 12},
   // Scroll-away wordmark row.
@@ -586,9 +623,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   roundText: {letterSpacing: 1},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   topicText: {letterSpacing: 1, marginTop: -spacing.sm},
-  pointsLine: {color: colors.success, marginTop: -spacing.sm},
+  pointsLine: {color: c.success, marginTop: -spacing.sm},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
   waiting: {marginTop: spacing.md},
-});
+  });

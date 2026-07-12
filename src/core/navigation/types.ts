@@ -42,8 +42,14 @@ export type RootStackParamList = {
   Teamsheet: undefined;
   /** The old Menu tab's remainder, behind the Profile tab's hamburger. */
   Menu: undefined;
+  /** The Instagram-style friends list, opened from the Profile tab: a plain
+   * list of your friends, each row tapping through to their profile. */
+  FriendsList: undefined;
   /** A friend's profile page — the full profile travels for instant paint. */
   FriendProfile: {profile: SocialProfile};
+  /** Head-to-head record against a friend in the online games — the friend's
+   * profile travels for instant paint of the tally header. */
+  HeadToHead: {profile: SocialProfile};
   Settings: undefined;
   HowToPlay: undefined;
   About: undefined;

@@ -2,6 +2,7 @@
  * @format
  */
 import {buildRounds} from '../questions';
+import {explanationFor, topicKeyFor} from '../engine';
 import {getById, matches} from '../../../data/football';
 
 /** Deterministic RNG (mulberry32) so generated rounds are stable in tests. */
@@ -66,21 +67,30 @@ describe('buildRounds', () => {
     expect(rounds.length).toBeGreaterThan(0);
   });
 
-  it('only emits criteria the reveal can explain', () => {
-    const rounds = buildRounds(30, {rng: seededRng(6)});
-    const kinds = new Set(rounds.map(r => r.criterion.kind));
-    for (const kind of kinds) {
-      expect(['honour', 'nationality', 'club', 'position']).toContain(kind);
-    }
-    for (const r of rounds) {
-      if (r.criterion.kind === 'honour') {
-        expect([
-          'champions-league',
-          'world-cup',
-          'ballon-dor',
-          'european-championship',
-        ]).toContain(r.criterion.honour);
+  it('only emits criteria the reveal can explain (no generic fallback)', () => {
+    // Across many seeds we should hit a wide spread of criterion kinds, and
+    // every one must resolve to a real reveal line and category chip rather
+    // than degrading to the generic/mixed fallback.
+    for (let seed = 1; seed <= 12; seed++) {
+      const rounds = buildRounds(20, {rng: seededRng(seed)});
+      for (const r of rounds) {
+        expect(explanationFor(r).key).not.toBe('offside.explanation.generic');
+        expect(topicKeyFor(r.criterion)).not.toBe('offside.topic.mixed');
       }
+    }
+  });
+
+  it('the legends cut pairs three legends with a current-star outlier', () => {
+    // Legends is one spec among hundreds, so exhaust the pool (which walks every
+    // spec round-robin) to reliably surface it.
+    const legendsRounds = buildRounds(1000, {rng: seededRng(7)}).filter(
+      r => r.criterion.kind === 'tag' && r.criterion.tag === 'legends',
+    );
+    expect(legendsRounds.length).toBeGreaterThan(0);
+    for (const r of legendsRounds) {
+      const outlier = getById(r.cards[r.outlierIndex].footballerId)!;
+      expect(outlier.tags ?? []).toContain('current-stars');
+      expect(outlier.tags ?? []).not.toContain('legends');
     }
   });
 });

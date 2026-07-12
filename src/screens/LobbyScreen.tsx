@@ -32,7 +32,14 @@ import {Sentry, isSentryEnabled} from '../core/observability/sentry';
 import {GAMES, isBuiltGame} from './gamesCatalog';
 import {InviteFriendsSheet} from './lobby/InviteFriendsSheet';
 import {avatarUrlFor} from '../core/social/socialService';
-import {colors, radii, screenPadding, spacing} from '../theme';
+import {
+  radii,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   kickPlayer,
@@ -90,6 +97,8 @@ export type GameRoute = 'Hattrick' | 'RedCard' | 'Offside' | 'CultHero';
 export function LobbyScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [room, setRoom] = useState<Room | null>(null);
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [myUserId, setMyUserId] = useState<string | null>(null);
@@ -602,7 +611,8 @@ export function LobbyScreen({route, navigation}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   header: {
     height: 44,
     alignItems: 'center',
@@ -637,7 +647,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   // Smaller than the 20pt "section" default so more players fit per row.
-  nameText: {color: colors.ink, fontSize: 15, lineHeight: 19},
+  nameText: {color: c.ink, fontSize: 15, lineHeight: 19},
   // Small accent pill marking the host — straddles the tag's top border,
   // centered then nudged a bit left.
   hostBadge: {
@@ -648,7 +658,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 1,
     borderRadius: radii.pill,
-    backgroundColor: colors.primary,
+    backgroundColor: c.primary,
   },
   hostBadgeText: {fontSize: 10, lineHeight: 13, letterSpacing: 0.5},
   // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area

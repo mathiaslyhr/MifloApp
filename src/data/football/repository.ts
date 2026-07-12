@@ -9,10 +9,12 @@
  */
 import {CLUBS, getClub} from './clubs';
 import {getCategory} from './categories';
+import {continentOf} from './continents';
 import {FOOTBALLERS} from './footballers';
 import {derivedFromData} from './generation';
+import {MANAGERS} from './managers';
 import {TREBLE_WINNER_IDS} from './trebles';
-import type {ClubSpell, Criterion, Footballer} from './types';
+import type {ClubSpell, Criterion, Footballer, Manager} from './types';
 
 /** Year used as the open end of a still-active club spell (`to` undefined). */
 const CURRENT_YEAR = new Date().getFullYear();
@@ -50,6 +52,57 @@ function wereTeammates(a: Footballer, b: Footballer): boolean {
   return false;
 }
 
+/**
+ * Did a footballer play under a manager? True when one of the player's club
+ * spells overlaps a managerial spell at the SAME club. National-team spells are
+ * ignored — we can't tell from `nationality` when a player was actually called
+ * up, so counting them would produce false "managed by" matches.
+ */
+function wasManagedBy(footballer: Footballer, manager: Manager): boolean {
+  for (const job of manager.spells) {
+    if (job.clubId == null) {
+      continue;
+    }
+    const managerSpell: ClubSpell = {
+      clubId: job.clubId,
+      from: job.from,
+      to: job.to,
+    };
+    for (const spell of footballer.clubs) {
+      if (spell.clubId === job.clubId && spellsOverlap(spell, managerSpell)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/** The distinct countries of the clubs a footballer has played for. */
+export function clubCountriesOf(footballer: Footballer): string[] {
+  const countries = new Set<string>();
+  for (const spell of footballer.clubs) {
+    const club = getClub(spell.clubId);
+    if (club) {
+      countries.add(club.country);
+    }
+  }
+  return [...countries];
+}
+
+/** True if the footballer played for exactly one club (loans don't count). */
+function isOneClub(footballer: Footballer): boolean {
+  const clubs = new Set(
+    footballer.clubs.filter(s => !s.loan).map(s => s.clubId),
+  );
+  return clubs.size === 1;
+}
+
+/** The decade a footballer was born in (e.g. 1993 → 1990); NaN if unparseable. */
+function bornDecadeOf(footballer: Footballer): number {
+  const year = Number.parseInt(footballer.born.slice(0, 4), 10);
+  return Number.isNaN(year) ? NaN : Math.floor(year / 10) * 10;
+}
+
 export function all(): readonly Footballer[] {
   return FOOTBALLERS;
 }
@@ -60,6 +113,14 @@ const byId = derivedFromData(
 
 export function getById(id: string): Footballer | undefined {
   return byId().get(id);
+}
+
+const managerById = derivedFromData(
+  (): ReadonlyMap<string, Manager> => new Map(MANAGERS.map(m => [m.id, m])),
+);
+
+export function getManagerById(id: string): Manager | undefined {
+  return managerById().get(id);
 }
 
 /** The leagues a footballer has played in, derived from their club spells. */
@@ -119,6 +180,26 @@ export function matches(footballer: Footballer, criterion: Criterion): boolean {
     }
     case 'treble':
       return TREBLE_WINNER_IDS.has(footballer.id);
+    case 'bornDecade':
+      return bornDecadeOf(footballer) === criterion.decade;
+    case 'oneClub':
+      return isOneClub(footballer);
+    case 'honourYear':
+      return footballer.honours.some(
+        h =>
+          h.type === criterion.honour &&
+          (h.years ?? []).includes(criterion.year),
+      );
+    case 'playedInCountry':
+      return clubCountriesOf(footballer).includes(criterion.country);
+    case 'continent':
+      return footballer.nationality.some(
+        c => continentOf(c) === criterion.continent,
+      );
+    case 'managedBy': {
+      const manager = getManagerById(criterion.managerId);
+      return manager ? wasManagedBy(footballer, manager) : false;
+    }
   }
 }
 

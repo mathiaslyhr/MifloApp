@@ -11,7 +11,14 @@ import React, {useEffect, useRef} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import {Crown} from 'lucide-react-native';
 import {GlassCard, Text} from '../../core/ui';
-import {colors, fonts, radii, spacing} from '../../theme';
+import {
+  fonts,
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 import type {OffsideCard} from './types';
 
 /**
@@ -35,6 +42,8 @@ export function CardGrid({
   disabled?: boolean;
   onPick?: (index: number) => void;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const revealing = correctIndex != null;
   return (
     <View style={styles.grid}>
@@ -85,6 +94,7 @@ export function CountdownBar({
   deadline: number;
   durationMs: number;
 }) {
+  const styles = useThemedStyles(makeStyles);
   const fractionLeft = Math.max(
     0,
     Math.min(1, (deadline - Date.now()) / durationMs),
@@ -132,6 +142,8 @@ export function Scoreboard({
   rows: {userId: string; name: string; score: number}[];
   deltas: Record<string, number>;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.board}>
       {rows.map((row, i) => {
@@ -171,7 +183,8 @@ export function Scoreboard({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -186,17 +199,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
   },
   cardPressed: {opacity: 0.7},
-  cardName: {color: colors.ink},
+  cardName: {color: c.ink},
   track: {
     height: 4,
     borderRadius: radii.pill,
-    backgroundColor: 'rgba(13,13,22,0.12)',
+    backgroundColor: c.divider,
     overflow: 'hidden',
   },
   fill: {
     height: '100%',
     borderRadius: radii.pill,
-    backgroundColor: colors.primary,
+    backgroundColor: c.primary,
   },
   board: {gap: spacing.sm},
   playerPill: {
@@ -208,10 +221,10 @@ const styles = StyleSheet.create({
   },
   // Fixed rank column so every name starts at the same x.
   rank: {width: 18},
-  points: {fontFamily: fonts.regular, color: colors.ink},
+  points: {fontFamily: fonts.regular, color: c.ink},
   leaderName: {fontFamily: fonts.regular},
-  leaderScore: {color: colors.primary},
+  leaderScore: {color: c.primary},
   scoreNameCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flex: 1},
   scoreValueCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-  deltaUp: {color: colors.success},
-});
+  deltaUp: {color: c.success},
+  });

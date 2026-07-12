@@ -26,19 +26,27 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   castRedCardVote,
   getMyRedCardRole,
   redCardGuess,
   playMove,
+  recordGameResults,
   restartRedCardGame,
   returnToLobby,
   submitRedCardAnswer,
   subscribeRoom,
   type ImposterRoleResult,
 } from '../core/rooms/roomService';
+import {entriesFromStandings, matchIdFrom} from '../core/stats/recordEntries';
 import {
   createConnectionNotifier,
   notifyPartyClosed,
@@ -72,6 +80,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'RedCard'>;
 export function RedCardScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<ImposterState | null>(null);
   const [hostId, setHostId] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
@@ -168,6 +178,39 @@ export function RedCardScreen({route, navigation}: Props) {
   }, [state?.phase, state, fetchRole]);
 
   const isHost = !!myUserId && myUserId === hostId;
+
+  // Host records each hand's result once its reveal is fully resolved (0031).
+  // A Red Card hand is a self-contained game: the score is this hand's delta
+  // (not the running total), so each hand is its own head-to-head match, keyed
+  // by the hand's questions + imposter. A caught imposter guesses blind, so wait
+  // until the redemption has settled before recording the final deltas.
+  const recordedMatchRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isHost || !state || state.phase !== 'reveal' || !state.reveal) {
+      return;
+    }
+    const reveal = state.reveal;
+    const awaitingGuess = reveal.caught && !reveal.redemption;
+    if (awaitingGuess) {
+      return;
+    }
+    const matchId = matchIdFrom(
+      roomId,
+      `${state.questionIds.join(',')}|${reveal.imposterId}`,
+    );
+    if (recordedMatchRef.current === matchId) {
+      return;
+    }
+    recordedMatchRef.current = matchId;
+    const board = state.players.map(p => ({
+      userId: p.userId,
+      name: p.name,
+      score: reveal.deltas[p.userId] ?? 0,
+    }));
+    recordGameResults(matchId, roomId, entriesFromStandings(board), 'red-card').catch(
+      () => {},
+    );
+  }, [isHost, state, roomId]);
 
   // Shared catch for room RPCs: the action never reached the server (offline,
   // timeout), so buzz and say so instead of failing silently.
@@ -353,7 +396,7 @@ export function RedCardScreen({route, navigation}: Props) {
         <View style={styles.roleScrim}>
           <GlassCard
             blur={28}
-            tintColor="rgba(255,255,255,0.6)"
+            tintColor={colors.glassStrong}
             style={styles.roleCard}>
             {role == null ? (
               <View
@@ -424,6 +467,7 @@ function AnsweringPhase({
   onSubmit: (text: string) => Promise<void>;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [draft, setDraft] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const clean = cleanAnswer(draft);
@@ -499,6 +543,7 @@ function AnswerRevealPhase({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const answers = state.answers ?? [];
   const answer = answers[state.answerIndex];
   if (!answer) {
@@ -549,6 +594,7 @@ function VotingPhase({
   onVote: (userId: string) => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   // Shared "finished" beat: when everyone lands on voting, show a ready screen
   // first, then reveal the vote grid on tap.
   const [started, setStarted] = useState(false);
@@ -616,6 +662,8 @@ function RevealPhase({
   onBackToLobby: () => void;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const reveal = state.reveal;
   if (!reveal) {
     return null;
@@ -727,7 +775,8 @@ function HelpModal({visible, onClose}: {visible: boolean; onClose: () => void}) 
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   loadingStack: {width: '100%', gap: 12},
@@ -755,7 +804,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xs,
   },
   roundText: {letterSpacing: 1},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   sectionLabel: {letterSpacing: 1, marginBottom: -spacing.sm},
   redeemBox: {
     gap: spacing.sm,
@@ -774,7 +823,7 @@ const styles = StyleSheet.create({
   // Role reveal overlay: a dim backdrop + a centered, frosted card.
   roleScrim: {
     flex: 1,
-    backgroundColor: colors.scrim,
+    backgroundColor: c.scrim,
     justifyContent: 'center',
     paddingHorizontal: spacing.xl,
   },
@@ -785,5 +834,5 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
     padding: spacing.xl,
   },
-  imposterTitle: {color: colors.error},
-});
+  imposterTitle: {color: c.error},
+  });

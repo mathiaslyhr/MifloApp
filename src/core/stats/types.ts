@@ -30,7 +30,7 @@ export type CareerStats = {
   bestScore: number;
 };
 
-/** What the host sends to finish_game — one entry per player. */
+/** What the host sends to record_game_results — one entry per player. */
 export type ResultEntry = {
   user_id: string;
   name: string;

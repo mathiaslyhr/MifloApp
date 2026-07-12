@@ -8,7 +8,13 @@ import {StyleSheet, View} from 'react-native';
 import {Crown} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {GlassCard, GlassTag, Text} from '../../core/ui';
-import {colors, fonts, spacing} from '../../theme';
+import {
+  fonts,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 
 export type NamedPlayer = {userId: string; name: string};
 
@@ -22,6 +28,7 @@ export function PlayerGrid({
   excludeId: string | null;
   onPick: (userId: string) => void;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.pickGrid}>
       {players
@@ -57,6 +64,7 @@ export function AnswerRevealBlock({
   total: number;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const dots = [];
   for (let i = 0; i < total; i++) {
     dots.push(i);
@@ -98,6 +106,8 @@ export function Scoreboard({
   deltas: Record<string, number>;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <GlassCard style={styles.listCard}>
       <Text variant="label" style={styles.listTitle}>
@@ -149,6 +159,7 @@ export function VotesBlock({
   nameOf: (id: string) => string;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.votesBlock}>
       <Text variant="caption" color="muted" style={styles.votesLabel}>
@@ -166,24 +177,25 @@ export function VotesBlock({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   pickGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: spacing.sm,
   },
-  pickName: {color: colors.ink},
+  pickName: {color: c.ink},
   answerCard: {gap: spacing.xs, padding: spacing.lg},
   answerAuthor: {letterSpacing: 1},
-  answerText: {color: colors.ink},
+  answerText: {color: c.ink},
   answerProgress: {alignItems: 'center', gap: spacing.xs},
   answerDots: {flexDirection: 'row', gap: spacing.xs},
   answerDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.ink,
+    backgroundColor: c.ink,
     opacity: 0.2,
   },
   answerDotDone: {opacity: 1},
@@ -198,14 +210,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing.xs,
   },
-  points: {fontFamily: fonts.regular, color: colors.ink},
+  points: {fontFamily: fonts.regular, color: c.ink},
   leaderName: {fontFamily: fonts.regular},
-  leaderScore: {color: colors.primary},
+  leaderScore: {color: c.primary},
   scoreNameCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flex: 1},
   scoreValueCol: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-  delta: {color: colors.textTertiary},
-  deltaUp: {color: colors.success},
+  delta: {color: c.textTertiary},
+  deltaUp: {color: c.success},
   votesBlock: {gap: 2, marginTop: spacing.xs, paddingHorizontal: spacing.sm},
   votesLabel: {letterSpacing: 1, marginBottom: spacing.xs},
   voteLine: {paddingVertical: 1},
-});
+  });

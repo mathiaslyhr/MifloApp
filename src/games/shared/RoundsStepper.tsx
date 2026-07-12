@@ -10,7 +10,14 @@ import {StyleSheet, View} from 'react-native';
 import {Minus, Plus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {PressableScale, Text} from '../../core/ui';
-import {colors, fonts, radii, spacing} from '../../theme';
+import {
+  fonts,
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 
 export function RoundsStepper({
   value,
@@ -26,6 +33,8 @@ export function RoundsStepper({
   label: string;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const canDecrement = value > min;
   const canIncrement = value < max;
   return (
@@ -68,6 +77,7 @@ function StepCircle({
   onPress: () => void;
   accessibilityLabel: string;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <PressableScale
       style={[styles.circle, !enabled && styles.circleDisabled]}
@@ -81,25 +91,26 @@ function StepCircle({
   );
 }
 
-const styles = StyleSheet.create({
-  stepper: {gap: spacing.sm, alignItems: 'center'},
-  label: {letterSpacing: 1},
-  row: {flexDirection: 'row', alignItems: 'center', gap: spacing.lg},
-  circle: {
-    width: 44,
-    height: 44,
-    borderRadius: radii.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.glass,
-    borderWidth: 2,
-    borderColor: colors.glassRim,
-  },
-  circleDisabled: {opacity: 0.35},
-  value: {
-    minWidth: 40,
-    textAlign: 'center',
-    color: colors.ink,
-    fontFamily: fonts.regular,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    stepper: {gap: spacing.sm, alignItems: 'center'},
+    label: {letterSpacing: 1},
+    row: {flexDirection: 'row', alignItems: 'center', gap: spacing.lg},
+    circle: {
+      width: 44,
+      height: 44,
+      borderRadius: radii.pill,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: c.glass,
+      borderWidth: 2,
+      borderColor: c.glassRim,
+    },
+    circleDisabled: {opacity: 0.35},
+    value: {
+      minWidth: 40,
+      textAlign: 'center',
+      color: c.ink,
+      fontFamily: fonts.regular,
+    },
+  });

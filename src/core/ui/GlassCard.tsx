@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
-import {colors, radii, shadows} from '../../theme';
+import {radii, shadows, useColors} from '../../theme';
 import {AppBlur} from './Blur';
 
 type Props = {
@@ -37,12 +37,17 @@ export function GlassCard({
   blur,
   radius = 'card',
   borderWidth = 1,
-  borderColor = colors.glassRim,
+  borderColor,
   style,
 }: Props) {
+  const colors = useColors();
   const fill = tintColor ?? (tint === 'light' ? colors.glassLight : colors.glass);
   const borderRadius = radii[radius];
-  const frame: ViewStyle = {borderRadius, borderWidth, borderColor};
+  const frame: ViewStyle = {
+    borderRadius,
+    borderWidth,
+    borderColor: borderColor ?? colors.glassRim,
+  };
   const lift = shadow === 'none' ? undefined : shadows[shadow];
 
   if (blur == null) {

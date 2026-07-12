@@ -23,7 +23,13 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {getById} from '../data/football';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
@@ -76,6 +82,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'RedCardLocal'>;
 export function RedCardLocalScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<LocalRedCardState | null>(null);
   const [names, setNames] = useState<string[]>(['', '', '']);
   const [rounds, setRounds] = useState(DEFAULT_ROUNDS);
@@ -225,6 +233,7 @@ function SetupStage({
   onStart: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.phase}>
       <Text variant="section" align="center" style={styles.headline}>
@@ -268,6 +277,8 @@ function RoleRevealStage({
   onAdvance: (next: LocalRedCardState) => void;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const player = handoffPlayer(state);
   if (!player) {
     return null;
@@ -287,7 +298,7 @@ function RoleRevealStage({
   const isImposter = player.id === state.imposterId;
   return (
     <View style={styles.phase}>
-      <GlassCard blur={28} tintColor="rgba(255,255,255,0.6)" style={styles.roleCard}>
+      <GlassCard blur={28} tintColor={colors.glassStrong} style={styles.roleCard}>
         {isImposter ? (
           <>
             <Text variant="title" align="center" style={styles.imposterTitle}>
@@ -334,6 +345,7 @@ function AnsweringStage({
   onAdvance: (next: LocalRedCardState) => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [draft, setDraft] = useState('');
   const player = handoffPlayer(state);
   if (!player) {
@@ -404,6 +416,7 @@ function AnswerRevealStage({
   onAdvance: (next: LocalRedCardState) => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const playerId = state.revealOrder[state.answerIndex];
   const text = state.answers[playerId];
   if (!playerId || text === undefined) {
@@ -455,6 +468,7 @@ function VotingStage({
   onAdvance: (next: LocalRedCardState) => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const voter = handoffPlayer(state);
   if (!voter) {
     return null;
@@ -514,6 +528,8 @@ function RevealStage({
   onExit: () => void;
 }) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const reveal = state.reveal;
   if (!reveal) {
     return null;
@@ -614,7 +630,8 @@ function RevealStage({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   // Scroll-away wordmark row.
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
@@ -632,7 +649,7 @@ const styles = StyleSheet.create({
   phaseWrap: {flex: 1, justifyContent: 'center'},
   phaseWrapTop: {justifyContent: 'flex-start'},
   phase: {gap: spacing.lg, alignItems: 'stretch'},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   // Quiet glass round pill — same as online Red Card.
   roundPill: {
     alignSelf: 'center',
@@ -643,9 +660,9 @@ const styles = StyleSheet.create({
   sectionLabel: {letterSpacing: 1, marginBottom: -spacing.sm},
   // Private role card — same frosted recipe as the online role overlay.
   roleCard: {gap: spacing.lg, padding: spacing.xl},
-  imposterTitle: {color: colors.error},
+  imposterTitle: {color: c.error},
   redeemBox: {gap: spacing.sm, padding: spacing.md},
   // The revealed footballer sits in a single glass card; a caught guess tints its rim.
   revealFrame: {alignSelf: 'stretch', padding: spacing.lg},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
-});
+  });

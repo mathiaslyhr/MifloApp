@@ -7,12 +7,13 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {Text} from '../../core/ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useThemedStyles, type Palette} from '../../theme';
 import {getById, POSITION_LABELS} from '../../data/football';
 import {flagImage, logoImage} from '../hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
 
 export function FootballerCard({footballerId}: {footballerId: string}) {
+  const styles = useThemedStyles(makeStyles);
   const f = getById(footballerId);
   if (!f) {
     return null;
@@ -49,14 +50,15 @@ export function FootballerCard({footballerId}: {footballerId: string}) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   content: {
     alignItems: 'center',
     gap: spacing.sm,
     alignSelf: 'stretch',
   },
   portrait: {width: 132, height: 132},
-  name: {color: colors.ink},
+  name: {color: c.ink},
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',

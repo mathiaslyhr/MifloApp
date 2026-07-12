@@ -58,6 +58,33 @@ export const POSITION_LABELS: Record<Position, string> = {
   FW: 'Forward',
 };
 
+/** Continents used by the geography axis. See continents.ts for the mapping. */
+export type Continent =
+  | 'Europe'
+  | 'South America'
+  | 'North America'
+  | 'Africa'
+  | 'Asia'
+  | 'Oceania';
+
+/**
+ * Display labels for the leagues we surface by name (Offside's league axis).
+ * Only recognizable leagues are listed — a criterion for a league missing here
+ * is never emitted, so obscure "played in the Croatian HNL" rounds can't occur.
+ * English names, consistent with the rest of the app's criterion copy.
+ */
+export const LEAGUE_LABELS: Record<string, string> = {
+  'premier-league': 'the Premier League',
+  'la-liga': 'La Liga',
+  'serie-a': 'Serie A',
+  bundesliga: 'the Bundesliga',
+  'ligue-1': 'Ligue 1',
+  'primeira-liga': 'the Primeira Liga',
+  eredivisie: 'the Eredivisie',
+  'saudi-pro-league': 'the Saudi Pro League',
+  mls: 'MLS',
+};
+
 /** Reference entity. `league` matches quiz topic ids ('premier-league', ...). */
 export type Club = {
   id: string;
@@ -169,4 +196,16 @@ export type Criterion =
    */
   | {kind: 'leagueTitle'; league: string}
   /** Continental treble winner — curated squads in trebles.ts. */
-  | {kind: 'treble'};
+  | {kind: 'treble'}
+  /** Born in a given decade (e.g. 1990 = 1990–1999), from `born`. */
+  | {kind: 'bornDecade'; decade: number}
+  /** Spent their whole career at a single (non-loan) club. */
+  | {kind: 'oneClub'}
+  /** Won a SPECIFIC tournament in a SPECIFIC year (from honour `years`). */
+  | {kind: 'honourYear'; honour: HonourType; year: number}
+  /** Played for a club based in a given country (club's country, not league). */
+  | {kind: 'playedInCountry'; country: string}
+  /** Nationality maps to a given continent — see continents.ts. */
+  | {kind: 'continent'; continent: Continent}
+  /** Played under a given manager — club spells overlap (managers.ts). */
+  | {kind: 'managedBy'; managerId: string};

@@ -11,7 +11,7 @@ import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
 import {ChevronDown, Flame} from 'lucide-react-native';
 import {Avatar, GlassCard, Text, initialsFor} from '../../core/ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {DAILY_GAMES, type DailyGame, type DayCellStatus} from '../../core/daily/dailyLog';
 import {DailyRow} from '../../core/daily/DailyRow';
 import {MAX_ACTIVE_AGE_MIN, type Presence} from '../../core/social/presence';
@@ -109,6 +109,8 @@ function ProfileTarget({
 
 export function PersonCard({name, streak, today, presence, avatarUri, onPress}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [expanded, setExpanded] = useState(false);
   const chevronSpin = useRef(new Animated.Value(0)).current;
   const initials = initialsFor(name);
@@ -211,33 +213,34 @@ export function PersonCard({name, streak, today, presence, avatarUri, onPress}: 
   );
 }
 
-const styles = StyleSheet.create({
-  personCard: {
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  personRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-  },
-  personName: {flex: 1},
-  // Instagram-style presence: a small green disc pinned to the avatar's
-  // corner, rimmed in surface white so it reads on the glass card.
-  onlineDot: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: colors.success,
-    borderWidth: 2,
-    borderColor: colors.surface,
-  },
-  streak: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    personCard: {
+      padding: spacing.lg,
+      gap: spacing.md,
+    },
+    personRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    personName: {flex: 1},
+    // Instagram-style presence: a small green disc pinned to the avatar's
+    // corner, rimmed in surface white so it reads on the glass card.
+    onlineDot: {
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: c.success,
+      borderWidth: 2,
+      borderColor: c.surface,
+    },
+    streak: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 2,
+    },
+  });

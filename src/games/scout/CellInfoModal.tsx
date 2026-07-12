@@ -8,7 +8,7 @@ import React from 'react';
 import {Image, Modal, Pressable, StyleSheet} from 'react-native';
 import type {ImageSourcePropType} from 'react-native';
 import {Text} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 
 export type CellInfo = {
   image: ImageSourcePropType | null;
@@ -22,6 +22,7 @@ type Props = {
 };
 
 export function CellInfoModal({info, onClose}: Props) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Modal
       visible={info != null}
@@ -42,23 +43,24 @@ export function CellInfoModal({info, onClose}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 300,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    alignItems: 'center',
-    gap: spacing.md,
-  },
-  icon: {width: 52, height: 52},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      flex: 1,
+      backgroundColor: c.scrimLight,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: spacing.xl,
+    },
+    card: {
+      width: '100%',
+      maxWidth: 300,
+      backgroundColor: c.surface,
+      borderRadius: radii.card,
+      paddingVertical: spacing.xl,
+      paddingHorizontal: spacing.lg,
+      alignItems: 'center',
+      gap: spacing.md,
+    },
+    icon: {width: 52, height: 52},
+  });

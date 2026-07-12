@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Button, CircleButton, Screen, Text, TextField, toast} from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, spacing} from '../theme';
+import {spacing, useColors} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   joinRoom,
@@ -25,6 +25,7 @@ const CODE_LENGTH = 4;
  */
 export function JoinScreen({navigation, route}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
 

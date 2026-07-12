@@ -8,7 +8,7 @@ import {StyleSheet, View} from 'react-native';
 import {Plus, X} from 'lucide-react-native';
 import {Button, CircleButton, GlassTag, Text, TextField} from '../../core/ui';
 import {haptics} from '../../core/haptics';
-import {colors, spacing} from '../../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 
 /** Most name rows a local setup offers — a couch-sized group. */
 export const LOCAL_MAX_PLAYERS = 8;
@@ -26,6 +26,7 @@ export function PassGate({
   actionLabel: string;
   onShow: () => void;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <>
       <Text variant="section" align="center" style={styles.headline}>
@@ -66,6 +67,8 @@ export function PlayerNamesEditor({
   addLabel: string;
   removeLabel: string;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <>
       <View style={styles.nameList}>
@@ -110,11 +113,12 @@ export function PlayerNamesEditor({
   );
 }
 
-const styles = StyleSheet.create({
-  headline: {color: colors.ink},
-  nameList: {gap: spacing.sm},
-  nameRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-  nameField: {flex: 1},
-  addTag: {alignSelf: 'center'},
-  addLabel: {color: colors.ink},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    headline: {color: c.ink},
+    nameList: {gap: spacing.sm},
+    nameRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+    nameField: {flex: 1},
+    addTag: {alignSelf: 'center'},
+    addLabel: {color: c.ink},
+  });

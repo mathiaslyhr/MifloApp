@@ -10,7 +10,7 @@ import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {X} from 'lucide-react-native';
 import {Avatar, Button, CircleButton, GlassCard, Text, toast} from '../../core/ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useColors} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import {refreshFriendRequests} from '../../core/social/requestsStore';
 import {
@@ -29,6 +29,7 @@ type Props = {
 
 export function RequestsSection({requests, onAccepted}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
   const [busyId, setBusyId] = useState<string | null>(null);
 
   if (requests.length === 0) {

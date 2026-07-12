@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
-import {colors, radii, type as typeScale} from '../../theme';
+import {radii, type as typeScale, useColors, type Palette} from '../../theme';
 import {haptics} from '../haptics';
 import {usePressScale} from './usePressScale';
 
@@ -49,6 +49,7 @@ export function Button({
   accessibilityHint,
 }: Props) {
   const press = usePressScale();
+  const colors = useColors();
   const isPrimary = variant === 'primary';
 
   // A light tap confirms the press landed (no-op when haptics are off/absent).
@@ -73,7 +74,7 @@ export function Button({
       <Animated.View
         style={[
           styles.base,
-          VARIANT_STYLES[variant],
+          variantStyles(colors)[variant],
           disabled && styles.disabled,
           press.animatedStyle,
           style,
@@ -90,23 +91,23 @@ export function Button({
   );
 }
 
-const VARIANT_STYLES: Record<ButtonVariant, ViewStyle> = {
+const variantStyles = (c: Palette): Record<ButtonVariant, ViewStyle> => ({
   primary: {
-    backgroundColor: colors.ink,
+    backgroundColor: c.ink,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.solidRim,
+    borderColor: c.solidRim,
   },
   secondary: {
-    backgroundColor: colors.glassLight,
+    backgroundColor: c.glassLight,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   outline: {
-    backgroundColor: 'rgba(255,255,255,0.35)',
+    backgroundColor: c.glassLight,
     borderWidth: 1,
-    borderColor: 'rgba(13,13,22,0.20)',
+    borderColor: c.divider,
   },
-};
+});
 
 const styles = StyleSheet.create({
   fullWidth: {alignSelf: 'stretch'},

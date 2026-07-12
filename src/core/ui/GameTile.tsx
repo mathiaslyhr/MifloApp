@@ -6,7 +6,13 @@ import {
   type ScrollView as GHScrollView,
 } from 'react-native-gesture-handler';
 import {ChevronRight, type LucideIcon} from 'lucide-react-native';
-import {colors, radii, spacing} from '../../theme';
+import {
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 import {CircleButton} from './CircleButton';
 import {PressableScale} from './PressableScale';
 import {Text} from './Text';
@@ -106,6 +112,8 @@ export function GameTile({
   secondaryLabel,
   scrollRef,
 }: Props) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const hasSwipeAction =
     !!SecondaryIcon && !!onSecondaryPress && !disabled && !badge;
 
@@ -323,7 +331,8 @@ export function GameTile({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -335,14 +344,14 @@ const styles = StyleSheet.create({
     // "Clear" frosted glass — matches the nav island / secondary button. Flat
     // on purpose: in-flow glass carries no shadow (it smears the pastel mesh
     // and bleeds into the gaps between stacked tiles).
-    backgroundColor: colors.glassLight,
-    borderColor: colors.glassRim,
+    backgroundColor: c.glassLight,
+    borderColor: c.glassRim,
   },
   // Floating on a dimmed scrim (picker popup): near-solid white + a real lift
   // so the tile reads as its own card with no container behind it.
   cardFloating: {
-    backgroundColor: colors.glassStrong,
-    shadowColor: colors.shadowInk,
+    backgroundColor: c.glassStrong,
+    shadowColor: c.shadowInk,
     shadowOpacity: 0.22,
     shadowRadius: 24,
     shadowOffset: {width: 0, height: 12},
@@ -383,18 +392,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: 2,
     borderRadius: radii.pill,
-    backgroundColor: colors.surface2,
+    backgroundColor: c.surface2,
     borderWidth: 1,
-    borderColor: colors.glassRim,
-    shadowColor: colors.shadowInk,
+    borderColor: c.glassRim,
+    shadowColor: c.shadowInk,
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 6,
     elevation: 3,
   },
   // The "Daily" variant: brand purple, white rim, white text.
-  dailyPill: {backgroundColor: colors.primary, borderColor: colors.onInk},
-  dailyText: {color: colors.onInk},
+  dailyPill: {backgroundColor: c.primary, borderColor: c.onInk},
+  dailyText: {color: c.onInk},
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   metaText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   // Plain muted label (picker popup) — no background to clash with glass tiles.

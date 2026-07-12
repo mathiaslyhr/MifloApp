@@ -11,12 +11,13 @@
  * 14 days, the same window the opt-in backfill can seed.
  */
 import React, {useCallback, useMemo, useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {Button, Skeleton, toast} from '../../core/ui';
-import {spacing} from '../../theme';
+import {ChevronRight, Swords} from 'lucide-react-native';
+import {Button, GlassCard, Skeleton, Text, toast} from '../../core/ui';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import type {RootStackParamList} from '../../core/navigation';
 import {dateKeyFor, pastDateKeys, previousDateKey} from '../../games/scout/dailySeed';
@@ -32,6 +33,7 @@ import type {PublishedResult} from '../../core/social/types';
 import {inviteFriendToParty} from '../social/inviteToParty';
 import {MenuDetailScreen} from '../menu/MenuDetailScreen';
 import {ProfileHeader} from './ProfileHeader';
+import {FavoritesShowcase} from './FavoritesShowcase';
 import {StreaksSection} from './StreaksSection';
 import {HistorySection, type HistoryDay} from './HistorySection';
 
@@ -42,6 +44,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'FriendProfile'>;
 
 export function FriendProfileScreen({navigation, route}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const {profile} = route.params;
   const todayKey = useMemo(() => dateKeyFor(new Date()), []);
 
@@ -198,6 +202,27 @@ export function FriendProfileScreen({navigation, route}: Props) {
         </View>
       </ProfileHeader>
 
+      <FavoritesShowcase
+        favorites={{
+          playerId: profile.favoritePlayerId,
+          clubId: profile.favoriteClubId,
+          nation: profile.favoriteNation,
+        }}
+      />
+
+      <GlassCard style={styles.h2hCard}>
+        <Pressable
+          onPress={() => navigation.navigate('HeadToHead', {profile})}
+          accessibilityRole="button"
+          style={styles.h2hRow}>
+          <Swords size={18} color={colors.ink} strokeWidth={2} />
+          <Text variant="body" style={styles.h2hLabel}>
+            {t('headToHead.title')}
+          </Text>
+          <ChevronRight size={18} color={colors.textTertiary} strokeWidth={2} />
+        </Pressable>
+      </GlassCard>
+
       {results === null ? (
         <Skeleton height={168} />
       ) : (
@@ -214,8 +239,18 @@ export function FriendProfileScreen({navigation, route}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  body: {gap: spacing.lg},
-  // Half-width buttons side by side (the Following/Message row).
-  action: {flex: 1},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    body: {gap: spacing.lg},
+    // Half-width buttons side by side (the Following/Message row).
+    action: {flex: 1},
+    // The Head-to-head entry point: a quiet tappable row into the record page.
+    h2hCard: {paddingHorizontal: spacing.lg, paddingVertical: spacing.xs},
+    h2hRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
+      paddingVertical: spacing.md,
+    },
+    h2hLabel: {flex: 1, color: c.ink},
+  });

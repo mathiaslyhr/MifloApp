@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from 'lucide-react-native';
 import {Text} from '../ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {DailyGame, DayCellStatus} from './dailyLog';
 
 /** Per-game presentation: the hub tile's icon (gamesCatalog) + title key. */
@@ -62,6 +62,8 @@ type Props = {
 
 export function DailyRow({game, status, right, wrong, answer = null, isLast = false}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const {Icon, titleKey} = GAME_META[game];
   const title = t(titleKey);
   const played = status !== 'notPlayed';
@@ -137,7 +139,8 @@ export function DailyRow({game, status, right, wrong, answer = null, isLast = fa
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -148,7 +151,7 @@ const styles = StyleSheet.create({
   divider: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     // Bright hairline matching the card rim, same recipe as MenuRow dividers.
-    borderBottomColor: colors.glassRim,
+    borderBottomColor: c.glassRim,
   },
   dim: {opacity: 0.45},
   text: {flex: 1},

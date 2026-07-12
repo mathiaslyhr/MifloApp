@@ -2,7 +2,13 @@ import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import {CircleUserRound, Gamepad2, Home, Users, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
-import {colors, radii, shadows} from '../../theme';
+import {
+  radii,
+  shadows,
+  useSkin,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 import {usePressScale} from './usePressScale';
 import {AppBlur} from './Blur';
 
@@ -43,12 +49,20 @@ type Props = {
 export function IslandTabBar({active, onSelect, badge}: Props) {
   const press = usePressScale();
   const {t} = useTranslation();
+  const {colors, skin} = useSkin();
+  const styles = useThemedStyles(makeStyles);
+  // A faint white tint over the blur keeps the "clear" frosted look; on the dark
+  // canvas it drops so the pill doesn't glow brighter than the aurora behind it.
+  const pillTint =
+    skin.appearance === 'dark'
+      ? 'rgba(255,255,255,0.08)'
+      : 'rgba(255,255,255,0.22)';
   return (
     <View style={styles.wrap} pointerEvents="box-none">
       {/* Outer layer carries the shadow (a clipped view clips its own shadow on
           iOS); the inner pill clips the blur to the rounded shape. */}
       <Animated.View style={[styles.island, press.animatedStyle]}>
-        <View style={styles.pill}>
+        <View style={[styles.pill, {backgroundColor: pillTint}]}>
           <AppBlur amount={22} />
           {ITEMS.map(({id, labelKey, Icon}) => {
             const on = id === active;
@@ -80,15 +94,16 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   wrap: {alignItems: 'center', paddingTop: 12},
   // Shadow-only layer (no clip, so the ambient lift isn't cut off).
   island: {
     borderRadius: radii.pill,
     ...shadows.floating,
   },
-  // Visible pill: clips the real backdrop blur to the rounded shape. A light
-  // tint over the blur keeps the "clear" frosted look; blur shows through.
+  // Visible pill: clips the real backdrop blur to the rounded shape. The light
+  // tint (backgroundColor) is applied inline per theme; blur shows through.
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -96,8 +111,7 @@ const styles = StyleSheet.create({
     padding: 6,
     borderRadius: radii.pill,
     borderWidth: 1,
-    backgroundColor: 'rgba(255,255,255,0.22)',
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
     overflow: 'hidden',
   },
   // paddingVertical 11 + the 22pt icon = a 44pt tap target (HIG minimum).
@@ -118,8 +132,8 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.primary,
+    backgroundColor: c.primary,
     borderWidth: 1.5,
-    borderColor: colors.surface,
+    borderColor: c.surface,
   },
-});
+  });

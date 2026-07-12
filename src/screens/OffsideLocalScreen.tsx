@@ -22,7 +22,13 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   LOCAL_MAX_PLAYERS,
@@ -70,6 +76,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'OffsideLocal'>;
 export function OffsideLocalScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<LocalOffsideState | null>(null);
   const [names, setNames] = useState<string[]>(['', '']);
   const [rounds, setRounds] = useState(DEFAULT_ROUNDS);
@@ -216,6 +224,7 @@ function SetupStage({
   onStart: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.phase}>
       <Text variant="section" align="center" style={styles.headline}>
@@ -263,6 +272,7 @@ function QuestionStage({
   onAdvance: React.Dispatch<React.SetStateAction<LocalOffsideState | null>>;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const player = handoffPlayer(state);
   const round = state.deck[state.round - 1];
   const deadline = state.deadline;
@@ -339,6 +349,7 @@ function RevealStage({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const round = state.deck[state.round - 1];
   if (round == null) {
     return null;
@@ -380,6 +391,7 @@ function ScoreboardStage({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const lastRound = state.round >= state.rounds;
   return (
     <View style={styles.phase}>
@@ -414,6 +426,7 @@ function StandingsStage({
   onExit: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const board = standings(state);
   const winner = board[0];
   return (
@@ -440,7 +453,8 @@ function StandingsStage({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   // Scroll-away wordmark row.
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
@@ -458,7 +472,7 @@ const styles = StyleSheet.create({
   phaseWrap: {flex: 1, justifyContent: 'center'},
   phaseWrapTop: {justifyContent: 'flex-start'},
   phase: {gap: spacing.lg, alignItems: 'stretch'},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   topicText: {letterSpacing: 1, marginTop: -spacing.sm},
   // Quiet glass round pill, shared with the online screen's look.
   roundPill: {
@@ -468,4 +482,4 @@ const styles = StyleSheet.create({
   },
   roundText: {letterSpacing: 1},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
-});
+  });

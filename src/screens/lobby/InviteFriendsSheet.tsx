@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Avatar, GlassTag, Skeleton, Text, toast} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {requestPushPermissionAndSync} from '../../core/notifications/pushInvites';
 import {presenceFor} from '../../core/social/presence';
 import {
@@ -50,6 +50,7 @@ export function InviteFriendsSheet({
   initialInvitedId,
 }: Props) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [phase, setPhase] = useState<Phase>('loading');
   const [friends, setFriends] = useState<SocialProfile[]>([]);
   const [reachable, setReachable] = useState<Set<string>>(new Set());
@@ -242,11 +243,12 @@ export function InviteFriendsSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   // Same scrim/card recipe as NameSheet — the app's one floating-sheet look.
   scrim: {
     flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.35)',
+    backgroundColor: c.scrim,
     justifyContent: 'flex-start',
     paddingTop: 150,
     paddingHorizontal: spacing.xl,
@@ -255,12 +257,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     maxWidth: 340,
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderRadius: radii.card,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     gap: spacing.md,
-    shadowColor: colors.shadowInk,
+    shadowColor: c.shadowInk,
     shadowOpacity: 0.24,
     shadowOffset: {width: 0, height: 16},
     shadowRadius: 32,
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   rowName: {flex: 1},
-  tagText: {color: colors.ink},
+  tagText: {color: c.ink},
   // Same presence disc as the Friends tab's cards.
   onlineDot: {
     position: 'absolute',
@@ -284,8 +286,8 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: colors.success,
+    backgroundColor: c.success,
     borderWidth: 2,
-    borderColor: colors.surface,
+    borderColor: c.surface,
   },
-});
+  });

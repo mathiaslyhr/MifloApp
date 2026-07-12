@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {Text} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 
 export type InlineSuggestion = {
   /** Stable identity for the row (footballer id, folded label, …). */
@@ -29,6 +29,7 @@ export function InlineSuggestions<T extends InlineSuggestion>({
   items: readonly T[];
   onPick: (item: T) => void;
 }) {
+  const styles = useThemedStyles(makeStyles);
   // Names that appear on more than one visible row — those rows get a position
   // pill to disambiguate; unique names stay clean.
   const clashingNames = React.useMemo(() => {
@@ -79,29 +80,30 @@ export function InlineSuggestions<T extends InlineSuggestion>({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    paddingHorizontal: spacing.md,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    minHeight: 40,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.divider,
-  },
-  flag: {width: 22, height: 16, borderRadius: 2},
-  label: {flex: 1},
-  pill: {
-    backgroundColor: colors.surface2,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
-  },
-  pillText: {letterSpacing: 0.3},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: c.surface,
+      borderRadius: radii.card,
+      borderWidth: 1,
+      borderColor: c.glassRim,
+      paddingHorizontal: spacing.md,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.sm,
+      minHeight: 40,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: c.divider,
+    },
+    flag: {width: 22, height: 16, borderRadius: 2},
+    label: {flex: 1},
+    pill: {
+      backgroundColor: c.surface2,
+      borderRadius: radii.pill,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 2,
+    },
+    pillText: {letterSpacing: 0.3},
+  });

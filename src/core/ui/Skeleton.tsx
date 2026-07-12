@@ -7,7 +7,7 @@
  */
 import React, {useEffect, useRef} from 'react';
 import {Animated, type StyleProp, type ViewStyle} from 'react-native';
-import {colors, radii} from '../../theme';
+import {radii, useColors} from '../../theme';
 
 type Props = {
   width?: number | `${number}%`;
@@ -26,6 +26,7 @@ export function Skeleton({
   accessibilityLabel,
   style,
 }: Props) {
+  const colors = useColors();
   const pulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

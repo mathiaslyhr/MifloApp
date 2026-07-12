@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {GlassCard, Text} from '../../core/ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useThemedStyles, type Palette} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
 
@@ -17,6 +17,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'OneDevice'>;
  */
 export function OneDeviceScreen({navigation}: Props) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
 
   const steps = [1, 2, 3].map(n => ({
     n,
@@ -53,18 +54,19 @@ export function OneDeviceScreen({navigation}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  body: {gap: spacing.xl},
-  step: {flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start'},
-  // Frosted "liquid glass" chip (GlassCard) holding the step number.
-  badge: {
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // Nudge down so the number sits level with the step title's cap height.
-    marginTop: 2,
-  },
-  badgeText: {lineHeight: 20, color: colors.ink},
-  stepText: {flex: 1, gap: spacing.xs},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    body: {gap: spacing.xl},
+    step: {flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start'},
+    // Frosted "liquid glass" chip (GlassCard) holding the step number.
+    badge: {
+      width: 30,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
+      // Nudge down so the number sits level with the step title's cap height.
+      marginTop: 2,
+    },
+    badgeText: {lineHeight: 20, color: c.ink},
+    stepText: {flex: 1, gap: spacing.xs},
+  });

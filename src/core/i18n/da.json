@@ -84,9 +84,21 @@
   "tabs": {
     "home": "Hjem",
     "games": "Spil",
-    "social": "Venner",
+    "social": "Social",
     "profile": "Profil",
     "a11yBadge": "nye venneanmodninger"
+  },
+  "headToHead": {
+    "title": "Head to head",
+    "you": "Dig",
+    "byGame": "Efter spil",
+    "recent": "Seneste",
+    "draws": "{{count}} uafgjort",
+    "draws_plural": "{{count}} uafgjorte",
+    "youWon": "Du vandt",
+    "friendWon": "{{name}} vandt",
+    "drawn": "Uafgjort",
+    "empty": "Ingen spil med {{name}} endnu. Spil et onlinespil sammen, så dukker det op her."
   },
   "profile": {
     "title": "Profil",
@@ -103,7 +115,24 @@
     "errorAvatar": "Kunne ikke opdatere dit billede. Prøv igen.",
     "errorRename": "Kunne ikke skifte dit navn. Prøv igen.",
     "friendsButton": "Venner",
-    "friendLogEmpty": "Ingen spil spillet endnu."
+    "friendLogEmpty": "Ingen spil spillet endnu.",
+    "showcaseTitle": "Favoritter",
+    "favoritePlayer": "Spiller",
+    "favoriteClub": "Klub",
+    "favoriteNation": "Land",
+    "favoriteAdd": "Tilføj",
+    "favoriteAddA11y": "Tilføj favorit {{slot}}",
+    "favoriteChange": "Skift",
+    "favoriteRemove": "Fjern",
+    "favoritePlayerPick": "Favoritspiller",
+    "favoriteClubPick": "Favoritklub",
+    "favoriteNationPick": "Favoritlandshold",
+    "favoritePlayerHint": "Søg efter din favoritspiller.",
+    "favoriteClubHint": "Søg efter din favoritklub.",
+    "favoriteNationHint": "Søg efter dit favoritlandshold.",
+    "favoriteSearchPlaceholder": "Skriv et navn",
+    "favoriteEmpty": "Ingen match.",
+    "errorFavorite": "Kunne ikke gemme din favorit. Prøv igen."
   },
   "games": {
     "title": "Spil",
@@ -244,7 +273,7 @@
     "a11yScore": "{{right}} rigtige, {{wrong}} forkerte"
   },
   "social": {
-    "title": "Venner",
+    "title": "Social",
     "onboardTitle": "Spil med venner",
     "onboardBody": "Vælg et navn dine venner kan genkende, og del din kode. Venner ser kun point og stimer, aldrig svar.",
     "namePlaceholder": "Dit navn",
@@ -293,6 +322,21 @@
     "activeHours_plural": "Aktiv for {{count}} t. siden",
     "activeDays": "Aktiv for {{count}} d. siden",
     "activeDays_plural": "Aktiv for {{count}} d. siden"
+  },
+  "leaderboard": {
+    "friends": "Venner",
+    "worldwide": "Verden",
+    "you": "Dig",
+    "todayEyebrow": "I dag · {{game}}",
+    "solvedGuesses": "Løst på {{count}} gæt",
+    "solvedGuesses_plural": "Løst på {{count}} gæt",
+    "gaveUp": "Gav op",
+    "foundMisses": "{{found}}/{{of}} fundet, {{count}} fejl",
+    "foundMisses_plural": "{{found}}/{{of}} fundet, {{count}} fejl",
+    "empty": "Ingen har løst dagens {{game}} endnu.",
+    "loadError": "Kunne ikke hente ranglisten.",
+    "unavailable": "Du skal have internet for at se verdensranglisten.",
+    "a11yRow": "Plads {{rank}}, {{name}}, {{result}}"
   },
   "menu": {
     "title": "Menu",
@@ -486,6 +530,15 @@
       "nationality": "Nationalitet",
       "clubs": "Klubber",
       "positions": "Positioner",
+      "leagues": "Ligaer",
+      "shirtNumbers": "Rygnumre",
+      "teammates": "Holdkammerater",
+      "era": "Æra",
+      "oneClub": "Én klub",
+      "countries": "Lande",
+      "continents": "Kontinenter",
+      "managers": "Trænere",
+      "legends": "Legender",
       "mixed": "Blandet"
     },
     "question": {
@@ -501,7 +554,11 @@
         "champions-league": "{{name}} har aldrig vundet Champions League. De tre andre har.",
         "world-cup": "{{name}} har aldrig vundet VM. De tre andre har.",
         "ballon-dor": "{{name}} har aldrig vundet Ballon d'Or. De tre andre har.",
-        "european-championship": "{{name}} har aldrig vundet EM. De tre andre har."
+        "european-championship": "{{name}} har aldrig vundet EM. De tre andre har.",
+        "europa-league": "{{name}} har aldrig vundet Europa League. De tre andre har.",
+        "copa-america": "{{name}} har aldrig vundet Copa América. De tre andre har.",
+        "golden-boot": "{{name}} har aldrig vundet Golden Boot. De tre andre har.",
+        "player-of-the-season": "{{name}} har aldrig vundet Player of the Season. De tre andre har."
       },
       "nationality": "{{name}} repræsenterer ikke {{country}}. De tre andre gør.",
       "club": "{{name}} har aldrig spillet for {{club}}. De tre andre har.",
@@ -511,6 +568,16 @@
         "MF": "{{name}} er ikke midtbanespiller. De tre andre er.",
         "FW": "{{name}} er ikke angriber. De tre andre er."
       },
+      "league": "{{name}} har aldrig spillet i {{league}}. De tre andre har.",
+      "shirtNumber": "{{name}} har aldrig båret nummer {{number}}. De tre andre har.",
+      "teammate": "{{name}} har aldrig spillet sammen med {{player}}. De tre andre har.",
+      "bornDecade": "{{name}} er ikke født i {{decade}}'erne. De tre andre er.",
+      "oneClub": "{{name}} har spillet for mere end én klub. De tre andre brugte hele karrieren i én klub.",
+      "honourYear": "{{name}} vandt ikke {{competition}} i {{year}}. De tre andre gjorde.",
+      "playedInCountry": "{{name}} har aldrig spillet i {{country}}. De tre andre har.",
+      "continent": "{{name}} er ikke fra {{continent}}. De tre andre er.",
+      "managedBy": "{{name}} har aldrig spillet under {{manager}}. De tre andre har.",
+      "legends": "{{name}} er en nutidig stjerne, ikke en af de helt store. De tre andre er legender.",
       "generic": "{{name}} deler ikke det skjulte fællestræk, som de tre andre har."
     },
     "reveal": {
@@ -594,7 +661,8 @@
       "hostAdvances": "Værten afslører svarene",
       "invalid": "Forkert svar",
       "points": "+{{score}}",
-      "rarity": "Sjældnere end {{score}}% af de mulige svar"
+      "commonness": "Mere almindeligt end {{percent}}% af de mulige svar",
+      "mostCommon": "Det mest almindelige svar"
     },
     "leaderboard": {
       "title": "Stilling"
@@ -878,6 +946,10 @@
   },
   "settings": {
     "title": "Indstillinger",
+    "appearance": "Udseende",
+    "appearanceSystem": "Systemets standard",
+    "appearanceLight": "Lyst",
+    "appearanceDark": "Mørkt",
     "language": "Sprog",
     "languageSystem": "Systemets standard",
     "languageEn": "English",

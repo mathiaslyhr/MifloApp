@@ -84,9 +84,21 @@
   "tabs": {
     "home": "Home",
     "games": "Games",
-    "social": "Friends",
+    "social": "Social",
     "profile": "Profile",
     "a11yBadge": "new friend requests"
+  },
+  "headToHead": {
+    "title": "Head to head",
+    "you": "You",
+    "byGame": "By game",
+    "recent": "Recent",
+    "draws": "{{count}} draw",
+    "draws_plural": "{{count}} draws",
+    "youWon": "You won",
+    "friendWon": "{{name}} won",
+    "drawn": "Drawn",
+    "empty": "No games with {{name}} yet. Play an online game together and it shows up here."
   },
   "profile": {
     "title": "Profile",
@@ -103,7 +115,24 @@
     "errorAvatar": "Couldn't update your picture. Try again.",
     "errorRename": "Couldn't change your name. Try again.",
     "friendsButton": "Friends",
-    "friendLogEmpty": "No games played yet."
+    "friendLogEmpty": "No games played yet.",
+    "showcaseTitle": "Showcase",
+    "favoritePlayer": "Player",
+    "favoriteClub": "Club",
+    "favoriteNation": "Nation",
+    "favoriteAdd": "Add",
+    "favoriteAddA11y": "Add favorite {{slot}}",
+    "favoriteChange": "Change",
+    "favoriteRemove": "Remove",
+    "favoritePlayerPick": "Favorite player",
+    "favoriteClubPick": "Favorite club",
+    "favoriteNationPick": "Favorite nation",
+    "favoritePlayerHint": "Search for your favorite player.",
+    "favoriteClubHint": "Search for your favorite club.",
+    "favoriteNationHint": "Search for your favorite national team.",
+    "favoriteSearchPlaceholder": "Type a name",
+    "favoriteEmpty": "No matches.",
+    "errorFavorite": "Couldn't save your favorite. Try again."
   },
   "games": {
     "title": "Games",
@@ -244,7 +273,7 @@
     "a11yScore": "{{right}} correct, {{wrong}} wrong"
   },
   "social": {
-    "title": "Friends",
+    "title": "Social",
     "onboardTitle": "Play with friends",
     "onboardBody": "Pick a name your friends will recognise and share your code. Friends only ever see scores and streaks, never answers.",
     "namePlaceholder": "Your name",
@@ -293,6 +322,21 @@
     "activeHours_plural": "Active {{count}} hours ago",
     "activeDays": "Active {{count}} day ago",
     "activeDays_plural": "Active {{count}} days ago"
+  },
+  "leaderboard": {
+    "friends": "Friends",
+    "worldwide": "Worldwide",
+    "you": "You",
+    "todayEyebrow": "Today · {{game}}",
+    "solvedGuesses": "Solved in {{count}} guess",
+    "solvedGuesses_plural": "Solved in {{count}} guesses",
+    "gaveUp": "Gave up",
+    "foundMisses": "{{found}}/{{of}} found, {{count}} miss",
+    "foundMisses_plural": "{{found}}/{{of}} found, {{count}} misses",
+    "empty": "Nobody has finished today's {{game}} yet.",
+    "loadError": "Couldn't load the leaderboard.",
+    "unavailable": "You need an internet connection to see the worldwide board.",
+    "a11yRow": "Rank {{rank}}, {{name}}, {{result}}"
   },
   "menu": {
     "title": "Menu",
@@ -486,6 +530,15 @@
       "nationality": "Nationality",
       "clubs": "Clubs",
       "positions": "Positions",
+      "leagues": "Leagues",
+      "shirtNumbers": "Shirt numbers",
+      "teammates": "Teammates",
+      "era": "Era",
+      "oneClub": "One club",
+      "countries": "Countries",
+      "continents": "Continents",
+      "managers": "Managers",
+      "legends": "Legends",
       "mixed": "Mixed"
     },
     "question": {
@@ -501,7 +554,11 @@
         "champions-league": "{{name}} never won the Champions League. The other three all did.",
         "world-cup": "{{name}} never won the World Cup. The other three all did.",
         "ballon-dor": "{{name}} never won the Ballon d'Or. The other three all did.",
-        "european-championship": "{{name}} never won the European Championship. The other three all did."
+        "european-championship": "{{name}} never won the European Championship. The other three all did.",
+        "europa-league": "{{name}} never won the Europa League. The other three all did.",
+        "copa-america": "{{name}} never won the Copa América. The other three all did.",
+        "golden-boot": "{{name}} never won the Golden Boot. The other three all did.",
+        "player-of-the-season": "{{name}} never won Player of the Season. The other three all did."
       },
       "nationality": "{{name}} does not represent {{country}}. The other three do.",
       "club": "{{name}} never played for {{club}}. The other three did.",
@@ -511,6 +568,16 @@
         "MF": "{{name}} is not a midfielder. The other three are.",
         "FW": "{{name}} is not a forward. The other three are."
       },
+      "league": "{{name}} never played in {{league}}. The other three did.",
+      "shirtNumber": "{{name}} never wore the number {{number}}. The other three did.",
+      "teammate": "{{name}} never played alongside {{player}}. The other three did.",
+      "bornDecade": "{{name}} was not born in the {{decade}}s. The other three were.",
+      "oneClub": "{{name}} played for more than one club. The other three each spent their whole career at a single club.",
+      "honourYear": "{{name}} did not win the {{year}} {{competition}}. The other three did.",
+      "playedInCountry": "{{name}} never played in {{country}}. The other three did.",
+      "continent": "{{name}} is not from {{continent}}. The other three are.",
+      "managedBy": "{{name}} never played under {{manager}}. The other three did.",
+      "legends": "{{name}} is a current star, not one of the all-time greats. The other three are legends of the game.",
       "generic": "{{name}} does not share the hidden link the other three have."
     },
     "reveal": {
@@ -594,7 +661,8 @@
       "hostAdvances": "The host reveals the answers",
       "invalid": "Wrong answer",
       "points": "+{{score}}",
-      "rarity": "Rarer than {{score}}% of the possible answers"
+      "commonness": "More common than {{percent}}% of the possible answers",
+      "mostCommon": "The most common answer"
     },
     "leaderboard": {
       "title": "Leaderboard"
@@ -878,6 +946,10 @@
   },
   "settings": {
     "title": "Settings",
+    "appearance": "Appearance",
+    "appearanceSystem": "System default",
+    "appearanceLight": "Light",
+    "appearanceDark": "Dark",
     "language": "Language",
     "languageSystem": "System default",
     "languageEn": "English",

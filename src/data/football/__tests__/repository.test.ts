@@ -43,6 +43,17 @@ describe('matches', () => {
     ['honour miss', {kind: 'honour', honour: 'european-championship'}, false],
     ['tag hit', {kind: 'tag', tag: 'legends'}, true],
     ['tag miss', {kind: 'tag', tag: 'unknown'}, false],
+    ['bornDecade hit', {kind: 'bornDecade', decade: 1980}, true],
+    ['bornDecade miss', {kind: 'bornDecade', decade: 1990}, false],
+    ['oneClub miss', {kind: 'oneClub'}, false],
+    ['honourYear hit', {kind: 'honourYear', honour: 'copa-america', year: 2021}, true],
+    ['honourYear miss', {kind: 'honourYear', honour: 'world-cup', year: 2018}, false],
+    ['playedInCountry hit', {kind: 'playedInCountry', country: 'Spain'}, true],
+    ['playedInCountry miss', {kind: 'playedInCountry', country: 'Italy'}, false],
+    ['continent hit', {kind: 'continent', continent: 'South America'}, true],
+    ['continent miss', {kind: 'continent', continent: 'Europe'}, false],
+    ['managedBy hit', {kind: 'managedBy', managerId: 'Guardiola, Pep'}, true],
+    ['managedBy miss', {kind: 'managedBy', managerId: 'Mourinho, José'}, false],
   ];
 
   it.each(cases)('%s', (_label, criterion, expected) => {

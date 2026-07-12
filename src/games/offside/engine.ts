@@ -3,7 +3,14 @@
  * from the broadcast `OffsideState` (single source of truth), so a device that
  * rejoins mid-game lands in exactly the right view.
  */
-import {getClub, type Criterion} from '../../data/football';
+import {
+  getById,
+  getClub,
+  getManagerById,
+  HONOUR_LABELS,
+  LEAGUE_LABELS,
+  type Criterion,
+} from '../../data/football';
 import type {OffsideRound, OffsideState} from './types';
 
 /** A localized string reference: i18n key plus interpolation params. */
@@ -42,6 +49,63 @@ export function explanationFor(round: OffsideRound): Explanation {
         key: `offside.explanation.position.${criterion.position}`,
         params: {name},
       };
+    case 'league':
+      return {
+        key: 'offside.explanation.league',
+        params: {name, league: LEAGUE_LABELS[criterion.league] ?? criterion.league},
+      };
+    case 'shirtNumber':
+      return {
+        key: 'offside.explanation.shirtNumber',
+        params: {name, number: String(criterion.number)},
+      };
+    case 'teammate':
+      return {
+        key: 'offside.explanation.teammate',
+        params: {
+          name,
+          player: getById(criterion.playerId)?.name ?? criterion.playerId,
+        },
+      };
+    case 'bornDecade':
+      return {
+        key: 'offside.explanation.bornDecade',
+        params: {name, decade: String(criterion.decade)},
+      };
+    case 'oneClub':
+      return {key: 'offside.explanation.oneClub', params: {name}};
+    case 'honourYear':
+      return {
+        key: 'offside.explanation.honourYear',
+        params: {
+          name,
+          year: String(criterion.year),
+          competition: HONOUR_LABELS[criterion.honour],
+        },
+      };
+    case 'playedInCountry':
+      return {
+        key: 'offside.explanation.playedInCountry',
+        params: {name, country: criterion.country},
+      };
+    case 'continent':
+      return {
+        key: 'offside.explanation.continent',
+        params: {name, continent: criterion.continent},
+      };
+    case 'managedBy':
+      return {
+        key: 'offside.explanation.managedBy',
+        params: {
+          name,
+          manager: getManagerById(criterion.managerId)?.name ?? criterion.managerId,
+        },
+      };
+    case 'tag':
+      if (criterion.tag === 'legends') {
+        return {key: 'offside.explanation.legends', params: {name}};
+      }
+      return {key: 'offside.explanation.generic', params: {name}};
     default:
       return {key: 'offside.explanation.generic', params: {name}};
   }
@@ -58,6 +122,28 @@ export function topicKeyFor(criterion: Criterion): string {
       return 'offside.topic.clubs';
     case 'position':
       return 'offside.topic.positions';
+    case 'league':
+      return 'offside.topic.leagues';
+    case 'shirtNumber':
+      return 'offside.topic.shirtNumbers';
+    case 'teammate':
+      return 'offside.topic.teammates';
+    case 'bornDecade':
+      return 'offside.topic.era';
+    case 'oneClub':
+      return 'offside.topic.oneClub';
+    case 'honourYear':
+      return 'offside.topic.honours';
+    case 'playedInCountry':
+      return 'offside.topic.countries';
+    case 'continent':
+      return 'offside.topic.continents';
+    case 'managedBy':
+      return 'offside.topic.managers';
+    case 'tag':
+      return criterion.tag === 'legends'
+        ? 'offside.topic.legends'
+        : 'offside.topic.mixed';
     default:
       return 'offside.topic.mixed';
   }

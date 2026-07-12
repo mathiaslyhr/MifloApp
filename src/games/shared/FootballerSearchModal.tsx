@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Modal, Pressable, ScrollView, StyleSheet} from 'react-native';
 import {Text, TextField} from '../../core/ui';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {FOOTBALLERS} from '../../data/football';
 import {searchPlayers} from '../hattrick/playerSearch';
 import {flagImage} from '../hattrick/criterionIcon';
@@ -39,6 +39,7 @@ export function FootballerSearchModal({
   onPick,
   onClose,
 }: Props) {
+  const styles = useThemedStyles(makeStyles);
   const [query, setQuery] = useState('');
 
   // Fresh search each time the picker opens.
@@ -109,24 +110,25 @@ export function FootballerSearchModal({
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    justifyContent: 'flex-start',
-    paddingTop: 72,
-    paddingHorizontal: spacing.xl,
-  },
-  pickCard: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 380,
-    maxHeight: '70%',
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    gap: spacing.md,
-  },
-  results: {maxHeight: 300},
-  hint: {paddingVertical: spacing.lg},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      flex: 1,
+      backgroundColor: c.scrimLight,
+      justifyContent: 'flex-start',
+      paddingTop: 72,
+      paddingHorizontal: spacing.xl,
+    },
+    pickCard: {
+      alignSelf: 'center',
+      width: '100%',
+      maxWidth: 380,
+      maxHeight: '70%',
+      backgroundColor: c.surface,
+      borderRadius: radii.card,
+      padding: spacing.lg,
+      gap: spacing.md,
+    },
+    results: {maxHeight: 300},
+    hint: {paddingVertical: spacing.lg},
+  });

@@ -6,7 +6,7 @@ import {
   type ScrollView as GHScrollView,
 } from 'react-native-gesture-handler';
 import type {LucideIcon} from 'lucide-react-native';
-import {colors, spacing} from '../../theme';
+import {spacing, useColors} from '../../theme';
 import {CircleButton} from './CircleButton';
 import {Text} from './Text';
 
@@ -154,6 +154,7 @@ export function SwipeReveal({
     return scrollRef ? gesture.blocksExternalGesture(scrollRef) : gesture;
   }, [enabled, scrollRef, setRevealedNow, settle, translateX]);
 
+  const colors = useColors();
   const tint = destructive ? colors.error : colors.ink;
 
   return (

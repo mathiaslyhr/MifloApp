@@ -8,7 +8,7 @@
 import React from 'react';
 import {Modal, Pressable, StyleSheet, View} from 'react-native';
 import {Text} from './Text';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 
 export type HelpLine = {
   text: string;
@@ -26,6 +26,7 @@ type Props = {
 };
 
 export function HowToPlayModal({visible, onClose, title, lines}: Props) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable style={styles.scrim} onPress={onClose}>
@@ -50,26 +51,27 @@ export function HowToPlayModal({visible, onClose, title, lines}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    flex: 1,
-    backgroundColor: colors.scrimLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: spacing.xl,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 300,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.lg,
-    gap: spacing.md,
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    alignSelf: 'stretch',
-    backgroundColor: colors.divider,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      flex: 1,
+      backgroundColor: c.scrimLight,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: spacing.xl,
+    },
+    card: {
+      width: '100%',
+      maxWidth: 300,
+      backgroundColor: c.surface,
+      borderRadius: radii.card,
+      paddingVertical: spacing.xl,
+      paddingHorizontal: spacing.lg,
+      gap: spacing.md,
+    },
+    divider: {
+      height: StyleSheet.hairlineWidth,
+      alignSelf: 'stretch',
+      backgroundColor: c.divider,
+    },
+  });

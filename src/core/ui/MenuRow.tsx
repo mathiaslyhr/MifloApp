@@ -5,7 +5,13 @@ import {
   ChevronRight,
   type LucideIcon,
 } from 'lucide-react-native';
-import {colors, radii, spacing} from '../../theme';
+import {
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 import {Text} from './Text';
 import {usePressScale} from './usePressScale';
 
@@ -53,6 +59,8 @@ export function MenuRow({
   accessibilityHint,
 }: Props) {
   const press = usePressScale();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const Trailing = kind === 'link' ? ArrowUpRight : ChevronRight;
   // Rows without a handler (e.g. a Switch row) skip the button semantics and
   // press-feel — the accessory owns the interaction.
@@ -102,26 +110,27 @@ export function MenuRow({
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingVertical: spacing.md + 2,
-    paddingHorizontal: spacing.lg,
-    minHeight: 56,
-    borderRadius: radii.card,
-  },
-  divider: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    // A bright white hairline that matches the card's glass rim, so the rim and
-    // the row separators read as one piece of glass (not a gray line on frost).
-    borderBottomColor: colors.glassRim,
-    // Square off the bottom corners so the divider spans full width; the group
-    // card clips the outer radius.
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  text: {flex: 1},
-  disabled: {opacity: 0.5},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
+      paddingVertical: spacing.md + 2,
+      paddingHorizontal: spacing.lg,
+      minHeight: 56,
+      borderRadius: radii.card,
+    },
+    divider: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      // A bright white hairline that matches the card's glass rim, so the rim and
+      // the row separators read as one piece of glass (not a gray line on frost).
+      borderBottomColor: c.glassRim,
+      // Square off the bottom corners so the divider spans full width; the group
+      // card clips the outer radius.
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    text: {flex: 1},
+    disabled: {opacity: 0.5},
+  });

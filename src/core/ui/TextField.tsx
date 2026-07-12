@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 import {StyleProp, StyleSheet, TextInput, TextStyle} from 'react-native';
-import {colors, fonts, radii, spacing} from '../../theme';
+import {
+  fonts,
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 
 type Props = {
   value: string;
@@ -47,6 +54,8 @@ export const TextField = React.forwardRef<TextInput, Props>(function TextFieldIn
   ref: React.Ref<TextInput>,
 ) {
   const [focused, setFocused] = useState(false);
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <TextInput
       ref={ref}
@@ -75,7 +84,8 @@ export const TextField = React.forwardRef<TextInput, Props>(function TextFieldIn
   );
 });
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   field: {
     alignSelf: 'stretch',
     minHeight: 48,
@@ -83,10 +93,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: spacing.lg - 1,
     borderRadius: radii.pill,
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderWidth: 2,
-    borderColor: colors.divider,
-    color: colors.ink,
+    borderColor: c.divider,
+    color: c.ink,
     // Explicit font WITHOUT a lineHeight — a tight lineHeight clips descenders
     // (g/y/p) on a single-line TextInput.
     fontFamily: fonts.regular,
@@ -106,6 +116,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   fieldFocused: {
-    borderColor: colors.primary,
+    borderColor: c.primary,
   },
-});
+  });

@@ -10,7 +10,7 @@ import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Avatar, Text, initialsFor} from '../../core/ui';
-import {colors, fonts, spacing} from '../../theme';
+import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
 import type {Presence} from '../../core/social/presence';
 import {formatLastActive} from '../social/PersonCard';
 
@@ -50,6 +50,7 @@ export function ProfileHeader({
   children,
 }: Props) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const activeLabel = presence ? formatLastActive(presence, t) : null;
 
   const nameText = (
@@ -151,43 +152,44 @@ export function ProfileHeader({
   );
 }
 
-const styles = StyleSheet.create({
-  root: {
-    paddingTop: spacing.sm,
-  },
-  identityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.lg,
-  },
-  info: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  // The scale's cap (medium 20) — the same size the wordmark uses, because the
-  // name IS this page's headline.
-  name: {
-    fontFamily: fonts.medium,
-    fontSize: 20,
-    lineHeight: 24,
-    color: colors.ink,
-  },
-  // Same presence trick as PersonCard, scaled for the 72pt disc.
-  onlineDot: {
-    position: 'absolute',
-    right: 2,
-    bottom: 2,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: colors.success,
-    borderWidth: 2.5,
-    borderColor: colors.surface,
-  },
-  actions: {
-    flexDirection: 'row',
-    alignSelf: 'stretch',
-    gap: spacing.sm,
-    marginTop: spacing.md,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    root: {
+      paddingTop: spacing.sm,
+    },
+    identityRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.lg,
+    },
+    info: {
+      flex: 1,
+      gap: spacing.xs,
+    },
+    // The scale's cap (medium 20) — the same size the wordmark uses, because the
+    // name IS this page's headline.
+    name: {
+      fontFamily: fonts.medium,
+      fontSize: 20,
+      lineHeight: 24,
+      color: c.ink,
+    },
+    // Same presence trick as PersonCard, scaled for the 72pt disc.
+    onlineDot: {
+      position: 'absolute',
+      right: 2,
+      bottom: 2,
+      width: 14,
+      height: 14,
+      borderRadius: 7,
+      backgroundColor: c.success,
+      borderWidth: 2.5,
+      borderColor: c.surface,
+    },
+    actions: {
+      flexDirection: 'row',
+      alignSelf: 'stretch',
+      gap: spacing.sm,
+      marginTop: spacing.md,
+    },
+  });

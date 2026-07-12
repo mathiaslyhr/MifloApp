@@ -33,12 +33,52 @@ export type SocialProfile = {
   lastSeenAt: string | null;
   /** Storage object key for the chosen profile picture, or null for initials. */
   avatarPath: string | null;
+  /** Showcase favorites — stable dataset ids, resolved to art/names at render.
+   * Null when unset. Visible to friends (profiles RLS exposes friends' rows). */
+  favoritePlayerId: string | null;
+  favoriteClubId: string | null;
+  favoriteNation: string | null;
 };
 
 /** One friend's profile plus their recent published results, newest first. */
 export type FriendFeed = {
   profile: SocialProfile;
   results: PublishedResult[];
+};
+
+/**
+ * One ranked player on the worldwide board for a single game+day. Only
+ * finished days rank (won/revealed); `total` is the right count (higher is
+ * better), `score` the tries/misses (lower is better). Public by design — a
+ * display name and avatar, never a user id or an answer (worldwide_leaderboard,
+ * 0030). `avatarPath` resolves through avatarUrlFor like every other avatar.
+ */
+export type LeaderboardEntry = {
+  rank: number;
+  displayName: string;
+  avatarPath: string | null;
+  status: 'won' | 'revealed';
+  score: number;
+  total: number;
+  /** True for the caller's own row, so the UI can highlight it in the slice
+   * without any user id crossing the wire. */
+  isMe: boolean;
+};
+
+/** The caller's own ranked position, or null when they haven't finished today's
+ * game (so nothing to pin). Shares the entry's score fields, minus identity. */
+export type LeaderboardMe = {
+  rank: number;
+  status: 'won' | 'revealed';
+  score: number;
+  total: number;
+};
+
+/** A worldwide board: the top slice plus the caller's own row (for pinning when
+ * it falls outside the slice). */
+export type LeaderboardView = {
+  rows: LeaderboardEntry[];
+  me: LeaderboardMe | null;
 };
 
 /**

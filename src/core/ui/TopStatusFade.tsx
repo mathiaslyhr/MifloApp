@@ -4,7 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaskedView from '@react-native-masked-view/masked-view';
 import {BlurView} from '@react-native-community/blur';
 import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
-import {colors} from '../../theme';
+import {useSkin} from '../../theme';
 
 /** How far the blur fades below the solid region before it's fully gone. */
 const FADE_TAIL = 28;
@@ -32,6 +32,7 @@ type Props = {
  */
 export function TopStatusFade({solidHeight, tail = FADE_TAIL}: Props = {}) {
   const insets = useSafeAreaInsets();
+  const {skin, colors} = useSkin();
   const solidH = solidHeight ?? insets.top;
   const height = solidH + tail;
   // Hold full opacity through the solid region, then ramp to transparent.
@@ -55,7 +56,7 @@ export function TopStatusFade({solidHeight, tail = FADE_TAIL}: Props = {}) {
         }>
         <BlurView
           style={StyleSheet.absoluteFill}
-          blurType="light"
+          blurType={skin.appearance === 'dark' ? 'dark' : 'light'}
           blurAmount={18}
           reducedTransparencyFallbackColor={colors.glassStrong}
         />

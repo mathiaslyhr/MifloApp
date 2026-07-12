@@ -6,7 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useColors} from '../../theme';
 import {PressableScale} from './PressableScale';
 
 type Props = {
@@ -47,6 +47,7 @@ export function GlassTag({
   accessibilityRole,
   accessibilityLabel,
 }: Props) {
+  const colors = useColors();
   const tagStyle = [
     styles.tag,
     size === 'sm' ? styles.sm : styles.md,

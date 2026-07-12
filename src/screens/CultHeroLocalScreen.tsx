@@ -21,7 +21,13 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
 import {
@@ -67,6 +73,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CultHeroLocal'>;
 export function CultHeroLocalScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<LocalCultHeroState | null>(null);
   const [names, setNames] = useState<string[]>(['', '']);
   const [rounds, setRounds] = useState(DEFAULT_ROUNDS);
@@ -209,6 +217,7 @@ function SetupStage({
   onStart: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.phase}>
       <Text variant="section" align="center" style={styles.headline}>
@@ -256,6 +265,7 @@ function AnsweringStage({
   onAdvance: React.Dispatch<React.SetStateAction<LocalCultHeroState | null>>;
 }) {
   const {t, i18n} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [searchOpen, setSearchOpen] = useState(false);
   const [draft, setDraft] = useState<string | null>(null);
   const player = handoffPlayer(state);
@@ -342,6 +352,7 @@ function RoundRevealStage({
   onAdvance: () => void;
 }) {
   const {t, i18n} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const results = state.results ?? [];
   const result = results[state.revealIndex];
   if (!result) {
@@ -384,6 +395,7 @@ function LeaderboardStage({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const deltas: Record<string, number> = {};
   for (const result of state.results ?? []) {
     deltas[result.userId] = result.score;
@@ -416,6 +428,7 @@ function FinalStage({
   onExit: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const board = standings(state);
   // The last round's scores double as the final deltas.
   const deltas: Record<string, number> = {};
@@ -446,7 +459,8 @@ function FinalStage({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   // Scroll-away wordmark row.
   titleHeader: {height: 44, alignItems: 'center', justifyContent: 'center'},
@@ -464,6 +478,6 @@ const styles = StyleSheet.create({
   phaseWrap: {flex: 1, justifyContent: 'center'},
   phaseWrapTop: {justifyContent: 'flex-start'},
   phase: {gap: spacing.lg, alignItems: 'stretch'},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
-});
+  });

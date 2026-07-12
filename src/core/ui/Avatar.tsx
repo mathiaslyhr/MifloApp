@@ -1,14 +1,14 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {colors, fonts} from '../../theme';
+import {fonts, useColors, type Palette} from '../../theme';
 
 type Tone = 'accent' | 'soft' | 'surface';
 
-const TONES: Record<Tone, {bg: string; fg: string}> = {
-  accent: {bg: colors.primary, fg: colors.onInk},
-  soft: {bg: 'rgba(98,96,246,0.20)', fg: colors.primaryInk},
-  surface: {bg: colors.surface2, fg: colors.ink},
-};
+const tonesFor = (c: Palette): Record<Tone, {bg: string; fg: string}> => ({
+  accent: {bg: c.primary, fg: c.onInk},
+  soft: {bg: 'rgba(98,96,246,0.20)', fg: c.primaryInk},
+  surface: {bg: c.surface2, fg: c.ink},
+});
 
 type Props = {
   initials: string;
@@ -43,7 +43,8 @@ export function Avatar({
   host = false,
   uri,
 }: Props) {
-  const {bg, fg} = TONES[tone];
+  const colors = useColors();
+  const {bg, fg} = tonesFor(colors)[tone];
   // Fall back to initials if the photo fails to load (stale/broken URL).
   const [failed, setFailed] = React.useState(false);
   React.useEffect(() => setFailed(false), [uri]);

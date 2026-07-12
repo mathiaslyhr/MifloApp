@@ -36,7 +36,14 @@ import {
   shouldOfferScoutReminder,
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
-import {colors, fonts, screenPadding, spacing} from '../theme';
+import {
+  fonts,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   FOOTBALLERS,
@@ -96,6 +103,8 @@ function tokenName(lineup: FamousLineup, player: LineupPlayer): string {
 export function TeamsheetScreen({navigation}: Props) {
   const {t, i18n} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
 
   const [state, setState] = useState<TeamsheetState | null>(null);
@@ -579,6 +588,8 @@ function PlayerToken({
   selectedToken: boolean;
   onPress: () => void;
 }) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const goals = player.goals ?? 0;
   const assists = player.assists ?? 0;
   // The circle wears the shirt this team wore that day; lineups without a
@@ -676,6 +687,7 @@ function Stat({
   value: number;
   highlight?: boolean;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
       <Text style={[styles.statValue, highlight && styles.statValueHot]}>
@@ -691,6 +703,7 @@ function Stat({
 /** "Come back in" + a live HH:MM:SS to the next daily sheet (next local midnight). */
 function Countdown() {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -730,7 +743,8 @@ const BADGE = 16;
  * at the 45° point: r − r/√2 − badge/2. */
 const BADGE_ON_RIM = CIRCLE / 2 - CIRCLE / (2 * Math.SQRT2) - BADGE / 2;
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
@@ -768,9 +782,9 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 11,
     letterSpacing: 0.5,
-    color: colors.textTertiary,
+    color: c.textTertiary,
   },
-  posLabelSelected: {color: colors.primary},
+  posLabelSelected: {color: c.primary},
   // The player circle: shirt number where the face would be. Glass while
   // hidden, brand purple once earned, primary ring while targeted.
   circle: {
@@ -779,12 +793,12 @@ const styles = StyleSheet.create({
     borderRadius: CIRCLE / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.glassLight,
+    backgroundColor: c.glassLight,
     borderWidth: 2,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
-  circleSelected: {borderColor: colors.primary},
-  circleEarned: {backgroundColor: colors.primary, borderColor: colors.primary},
+  circleSelected: {borderColor: c.primary},
+  circleEarned: {backgroundColor: c.primary, borderColor: c.primary},
   // Revealed-by-surrender: the shirt shows, but faded — not earned.
   circleRevealed: {opacity: 0.55},
   // Explicit tight lineHeight: without it the themed lineHeight pushes the
@@ -793,10 +807,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 18,
     lineHeight: 22,
-    color: colors.muted,
+    color: c.muted,
     fontVariant: ['tabular-nums'],
   },
-  shirtTextEarned: {color: colors.onInk},
+  shirtTextEarned: {color: c.onInk},
   // Mini clue badges pinned to the circle rim (screenshot layout): swap
   // arrows top-left, armband top-right, goals bottom-left, assist bottom-right.
   badge: {
@@ -808,9 +822,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 1,
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   badgeWide: {paddingHorizontal: 3},
   // Badge centres sit exactly on the circle outline: corners at the rim's
@@ -821,20 +835,21 @@ const styles = StyleSheet.create({
   badgeBottomRight: {bottom: BADGE_ON_RIM, right: BADGE_ON_RIM},
   badgeMid: {top: CIRCLE / 2 - BADGE / 2, left: -BADGE / 2},
   cardIcon: {width: 6, height: 9, borderRadius: 1.5},
+  // Yellow card is a fixed football colour in both themes.
   cardYellow: {backgroundColor: '#F2C230'},
-  cardRed: {backgroundColor: colors.error},
+  cardRed: {backgroundColor: c.error},
   badgeCount: {
     fontFamily: fonts.medium,
     fontSize: 8,
     lineHeight: 10,
-    color: colors.ink,
+    color: c.ink,
     fontVariant: ['tabular-nums'],
   },
   captainText: {
     fontFamily: fonts.medium,
     fontSize: 8,
     lineHeight: 10,
-    color: colors.muted,
+    color: c.muted,
   },
   // adjustsFontSizeToFit needs a bounded box, so the name gets an explicit
   // width (slightly past the token so scaling only kicks in for the truly
@@ -843,13 +858,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.medium,
     fontSize: 11,
     lineHeight: 13,
-    color: colors.ink,
+    color: c.ink,
     textAlign: 'center',
     width: TOKEN_WIDTH + 6,
   },
   tokenNameTight: {width: CIRCLE + 8},
-  tokenNameRevealed: {color: colors.textTertiary},
-  scoreTeam: {fontFamily: fonts.medium, color: colors.primary},
+  tokenNameRevealed: {color: c.textTertiary},
+  scoreTeam: {fontFamily: fonts.medium, color: c.primary},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
   giveUp: {
     alignSelf: 'center',
@@ -861,8 +876,8 @@ const styles = StyleSheet.create({
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: colors.ink},
-  statValueHot: {color: colors.primary},
+  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
+  statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-});
+  });

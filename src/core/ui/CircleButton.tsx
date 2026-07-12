@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet} from 'react-native';
-import {colors, radii, shadows} from '../../theme';
+import {radii, shadows, useThemedStyles, type Palette} from '../../theme';
 import {usePressScale} from './usePressScale';
 
 type Props = {
@@ -23,6 +23,7 @@ export function CircleButton({
   accessibilityLabel,
 }: Props) {
   const press = usePressScale();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable
       onPress={onPress}
@@ -43,13 +44,14 @@ export function CircleButton({
   );
 }
 
-const styles = StyleSheet.create({
-  circle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.glassLight,
-    borderWidth: 1,
-    borderColor: colors.glassRim,
-    ...shadows.soft,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    circle: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: c.glassLight,
+      borderWidth: 1,
+      borderColor: c.glassRim,
+      ...shadows.soft,
+    },
+  });

@@ -21,7 +21,14 @@ import {
   toast,
 } from '../../core/ui';
 import {haptics} from '../../core/haptics';
-import {colors, fonts, screenPadding, spacing} from '../../theme';
+import {
+  fonts,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 import {AxisInfoModal} from './AxisInfoModal';
 import {HelpModal} from './HelpModal';
 import {getById} from '../../data/football';
@@ -74,8 +81,8 @@ type Props = {
 const ROW_LABEL_W = 58;
 const LABEL_GAP = 8;
 // White hairline dividers on the glass board — same language as the menu cards.
+// The colour is the palette's `glassRim`, applied inside `makeStyles`.
 const DIVIDER = 1;
-const DIVIDER_COLOR = colors.glassRim;
 
 /**
  * The whole Hattrick game surface — board, axis bars, timer, picker, tie
@@ -96,6 +103,8 @@ export function HattrickGameView({
   showResultActions,
 }: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [pickCell, setPickCell] = useState<number | null>(null);
   const [explain, setExplain] = useState<Criterion | null>(null);
   const [showHelp, setShowHelp] = useState(false);
@@ -493,6 +502,8 @@ export function HattrickGameView({
  * matching the back button width so the title stays optically centred). */
 function Header({onBack, onHelp}: {onBack: () => void; onHelp?: () => void}) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.header}>
       <CircleButton size={36} accessibilityLabel={t('hattrick.back')} onPress={onBack}>
@@ -530,6 +541,7 @@ function AxisCell({
   divider: 'left' | 'top' | null;
   onPress?: () => void;
 }) {
+  const styles = useThemedStyles(makeStyles);
   const image = criterionImage(criterion);
   const emoji = image == null ? criterionIcon(criterion) : null;
   const hasVisual = image != null || emoji != null;
@@ -579,6 +591,8 @@ function AxisCell({
  */
 function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const remainingMs = Math.max(0, deadline - nowTs);
   const remainingSec = Math.ceil(remainingMs / 1000);
   const fraction = Math.max(0, Math.min(1, remainingMs / (TURN_SECONDS * 1000)));
@@ -628,6 +642,7 @@ function TieOverlay({
   onRespond: (accept: boolean) => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(8)).current;
@@ -689,7 +704,8 @@ function TieOverlay({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   loadingBoard: {
     width: '100%',
@@ -713,13 +729,13 @@ const styles = StyleSheet.create({
   // The header bars and board clip their internal grid dividers to the corners.
   card: {overflow: 'hidden'},
   // White dividers that split a card into a grid.
-  divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: DIVIDER_COLOR},
-  divTop: {borderTopWidth: DIVIDER, borderTopColor: DIVIDER_COLOR},
+  divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: c.glassRim},
+  divTop: {borderTopWidth: DIVIDER, borderTopColor: c.glassRim},
   // Top-left corner: Skip / Tie stacked as compact glass actions.
   corner: {flexDirection: 'column'},
-  cornerBlank: {backgroundColor: colors.transparent, borderWidth: 0},
+  cornerBlank: {backgroundColor: c.transparent, borderWidth: 0},
   cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
-  cornerDiv: {height: DIVIDER, backgroundColor: DIVIDER_COLOR},
+  cornerDiv: {height: DIVIDER, backgroundColor: c.glassRim},
   axis: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -732,10 +748,10 @@ const styles = StyleSheet.create({
   // Real flag/crest images sit in the same slot the emoji used to occupy.
   axisFlag: {width: 24, height: 17, borderRadius: 2},
   axisLogo: {width: 24, height: 24},
-  axisText: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14, color: colors.ink},
+  axisText: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14, color: c.ink},
   axisTextOnly: {fontSize: 10, lineHeight: 14},
   // Shirt number renders as pure text at the same caption size/ink as the labels.
-  axisNumber: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: colors.ink},
+  axisNumber: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16, color: c.ink},
   // Turn countdown, pinned to the bottom of the board area.
   timerBar: {marginTop: 'auto', paddingTop: spacing.xl, paddingBottom: spacing.md},
   timerLabelRow: {
@@ -745,12 +761,12 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   timerTime: {fontVariant: ['tabular-nums']},
-  timerTrack: {height: 8, borderRadius: 4, backgroundColor: colors.glassRim, overflow: 'hidden'},
+  timerTrack: {height: 8, borderRadius: 4, backgroundColor: c.glassRim, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
   cellName: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14},
   // Ghost example answer shown in cells left empty by an agreed tie.
-  cellGhost: {color: colors.muted, opacity: 0.45},
+  cellGhost: {color: c.muted, opacity: 0.45},
   // Purple ring marking the cell you're currently filling.
   cellSelected: {
     position: 'absolute',
@@ -760,7 +776,7 @@ const styles = StyleSheet.create({
     bottom: 3,
     borderRadius: 8,
     borderWidth: 2.5,
-    borderColor: colors.primary,
+    borderColor: c.primary,
   },
   resultActions: {
     alignSelf: 'stretch',
@@ -783,7 +799,7 @@ const styles = StyleSheet.create({
   // Frosted glass tie card (GlassCard blur) with a bespoke, tighter lift than
   // the shared floating recipe — it hovers close over the board.
   tieCard: {
-    shadowColor: colors.shadowInk,
+    shadowColor: c.shadowInk,
     shadowOpacity: 0.18,
     shadowRadius: 16,
     shadowOffset: {width: 0, height: 8},
@@ -794,4 +810,4 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     padding: spacing.md,
   },
-});
+  });

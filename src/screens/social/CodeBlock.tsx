@@ -10,7 +10,13 @@ import {useTranslation} from 'react-i18next';
 import {Share as ShareIcon} from 'lucide-react-native';
 import {CircleButton, Text} from '../../core/ui';
 import {ADD_URL_BASE} from '../../core/config';
-import {colors, fonts, spacing} from '../../theme';
+import {
+  fonts,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
 
 type Props = {
   code: string;
@@ -20,6 +26,8 @@ type Props = {
 
 export function CodeBlock({code, divider = true}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View>
       <View style={styles.row}>
@@ -49,27 +57,28 @@ export function CodeBlock({code, divider = true}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: spacing.md,
-  },
-  col: {gap: 2},
-  eyebrow: {letterSpacing: 1},
-  // The code is a deliberate "moment": wordmark weight at the scale's 20 cap,
-  // spaced out so the six characters read one by one.
-  code: {
-    fontFamily: fonts.medium,
-    fontSize: 20,
-    lineHeight: 24,
-    letterSpacing: 4,
-    color: colors.ink,
-  },
-  divider: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.glassRim,
-    marginTop: spacing.sm,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: spacing.md,
+    },
+    col: {gap: 2},
+    eyebrow: {letterSpacing: 1},
+    // The code is a deliberate "moment": wordmark weight at the scale's 20 cap,
+    // spaced out so the six characters read one by one.
+    code: {
+      fontFamily: fonts.medium,
+      fontSize: 20,
+      lineHeight: 24,
+      letterSpacing: 4,
+      color: c.ink,
+    },
+    divider: {
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: c.glassRim,
+      marginTop: spacing.sm,
+    },
+  });

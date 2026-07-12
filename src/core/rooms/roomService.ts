@@ -888,17 +888,24 @@ export async function restartGame(roomId: string, deck: Deck): Promise<void> {
 }
 
 /**
- * Host only — mark the game finished after the last standings, and persist each
- * player's final result (M5). The host is the only device with the authoritative
- * full standings, so it writes everyone's row in one idempotent RPC call.
+ * Host only — persist each player's result for one finished game WITHOUT ending
+ * the room (0031). Unlike the old finish_game, this leaves rooms.status =
+ * 'in_progress', so the scoreboard, Play again and Back-to-lobby flows stay
+ * intact — the four online games drive their end screens off game_state, not
+ * status. `matchId` is a stable per-game-instance key (a room is reused across
+ * Play again), so rematches record as distinct results; upserts server-side, so
+ * re-calling for the same instance (a reconnect) is harmless. Only the host has
+ * the authoritative full standings, so it writes everyone's row.
  */
-export async function finishGame(
+export async function recordGameResults(
+  matchId: string,
   roomId: string,
   results: ResultEntry[],
-  gameType: string = 'quiz',
+  gameType: string,
 ): Promise<void> {
   const client = await requireClient();
-  const {error} = await client.rpc('finish_game', {
+  const {error} = await client.rpc('record_game_results', {
+    p_match_id: matchId,
     p_room_id: roomId,
     p_results: results,
     p_game_type: gameType,

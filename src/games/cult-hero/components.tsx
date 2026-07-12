@@ -7,7 +7,7 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {GlassCard, GlassTag, Text} from '../../core/ui';
-import {colors, spacing} from '../../theme';
+import {spacing, useThemedStyles, type Palette} from '../../theme';
 import {getById} from '../../data/football';
 import {flagImage} from '../hattrick/criterionIcon';
 import type {CultHeroResult} from './types';
@@ -17,6 +17,7 @@ import type {CultHeroResult} from './types';
  * "Surname, First") covers a device whose older dataset lacks the player.
  */
 export function FootballerLine({footballerId}: {footballerId: string}) {
+  const styles = useThemedStyles(makeStyles);
   const footballer = getById(footballerId);
   const flag = footballer ? flagImage(footballer.nationality[0]) : null;
   return (
@@ -46,6 +47,7 @@ export function PromptBlock({
   muted?: boolean;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <>
       <GlassTag tint="light" style={styles.roundPill}>
@@ -69,6 +71,7 @@ export function PromptBlock({
 /** The caller's locked-in pick while the table finishes answering. */
 export function PickedAnswerCard({footballerId}: {footballerId: string}) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   return (
     <GlassCard style={styles.card}>
       <Text variant="caption" color="muted" align="center" style={styles.cardLabel}>
@@ -80,7 +83,7 @@ export function PickedAnswerCard({footballerId}: {footballerId: string}) {
 }
 
 /**
- * One revealed answer with its author and rarity score, plus progress dots.
+ * One revealed answer with its author, points, and how common the pick was, plus progress dots.
  * The advance button lives in the screen (host-gated).
  */
 export function ResultRevealCard({
@@ -95,6 +98,7 @@ export function ResultRevealCard({
   total: number;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const dots = [];
   for (let i = 0; i < total; i++) {
     dots.push(i);
@@ -111,11 +115,11 @@ export function ResultRevealCard({
             <Text variant="wordmark" align="center" style={styles.scoreUp}>
               {t('cultHero.results.points', {score: result.score})}
             </Text>
-            {result.score > 0 ? (
-              <Text variant="caption" color="muted" align="center">
-                {t('cultHero.results.rarity', {score: result.score})}
-              </Text>
-            ) : null}
+            <Text variant="caption" color="muted" align="center">
+              {result.score > 0
+                ? t('cultHero.results.commonness', {percent: 100 - result.score})
+                : t('cultHero.results.mostCommon')}
+            </Text>
           </>
         ) : (
           <Text variant="section" align="center" style={styles.scoreZero}>
@@ -137,34 +141,35 @@ export function ResultRevealCard({
   );
 }
 
-const styles = StyleSheet.create({
-  roundPill: {
-    alignSelf: 'center',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-  },
-  roundText: {letterSpacing: 1},
-  headline: {color: colors.ink},
-  card: {gap: spacing.sm, padding: spacing.lg},
-  cardLabel: {letterSpacing: 1},
-  playerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-  },
-  flag: {width: 22, height: 16, borderRadius: 2},
-  playerName: {color: colors.ink},
-  scoreUp: {color: colors.success},
-  scoreZero: {color: colors.error},
-  progress: {alignItems: 'center', gap: spacing.xs},
-  dots: {flexDirection: 'row', gap: spacing.xs},
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: colors.ink,
-    opacity: 0.2,
-  },
-  dotDone: {opacity: 1},
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    roundPill: {
+      alignSelf: 'center',
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.xs,
+    },
+    roundText: {letterSpacing: 1},
+    headline: {color: c.ink},
+    card: {gap: spacing.sm, padding: spacing.lg},
+    cardLabel: {letterSpacing: 1},
+    playerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+    },
+    flag: {width: 22, height: 16, borderRadius: 2},
+    playerName: {color: c.ink},
+    scoreUp: {color: c.success},
+    scoreZero: {color: c.error},
+    progress: {alignItems: 'center', gap: spacing.xs},
+    dots: {flexDirection: 'row', gap: spacing.xs},
+    dot: {
+      width: 6,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: c.ink,
+      opacity: 0.2,
+    },
+    dotDone: {opacity: 1},
+  });

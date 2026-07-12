@@ -17,6 +17,9 @@ function friend(displayName: string, friendCode: string) {
     friendCode,
     lastSeenAt: null,
     avatarPath: null,
+    favoritePlayerId: null,
+    favoriteClubId: null,
+    favoriteNation: null,
   };
   return {profile};
 }

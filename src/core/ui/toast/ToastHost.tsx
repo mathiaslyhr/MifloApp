@@ -28,7 +28,13 @@ import {
 } from 'react-native';
 import {Check, Info, X} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {colors, radii, spacing} from '../../../theme';
+import {
+  radii,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../../theme';
 import {Text} from '../Text';
 import {Toast, ToastTone, useToastStore} from './toastStore';
 
@@ -52,14 +58,13 @@ const SWIPE_VELOCITY = 0.3;
  * Leading icon chip per tone: a lucide glyph in a soft tinted circle, so the
  * meaning reads without color (and without relying on red/green alone).
  */
-const TONE_CHIP: Record<
-  ToastTone,
-  {Icon: typeof Info; color: string; tint: string}
-> = {
-  neutral: {Icon: Info, color: colors.primary, tint: colors.toastTintNeutral},
-  success: {Icon: Check, color: colors.success, tint: colors.toastTintSuccess},
-  error: {Icon: X, color: colors.error, tint: colors.toastTintError},
-};
+const toneChip = (
+  c: Palette,
+): Record<ToastTone, {Icon: typeof Info; color: string; tint: string}> => ({
+  neutral: {Icon: Info, color: c.primary, tint: c.toastTintNeutral},
+  success: {Icon: Check, color: c.success, tint: c.toastTintSuccess},
+  error: {Icon: X, color: c.error, tint: c.toastTintError},
+});
 
 const EXPAND_ANIM = LayoutAnimation.create(
   ENTER_MS,
@@ -69,6 +74,7 @@ const EXPAND_ANIM = LayoutAnimation.create(
 
 export function ToastHost() {
   const insets = useSafeAreaInsets();
+  const styles = useThemedStyles(makeStyles);
   const toasts = useToastStore(s => s.toasts);
   const [expanded, setExpanded] = useState(false);
   // The front pill's measured height — pills behind are clamped to it so a
@@ -156,6 +162,8 @@ function ToastCard({
   frontHeight,
   onFrontHeight,
 }: CardProps) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const dismiss = useToastStore(s => s.dismiss);
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(-8)).current;
@@ -325,7 +333,7 @@ function ToastCard({
     }),
   ).current;
 
-  const {Icon, color, tint} = TONE_CHIP[toast.tone];
+  const {Icon, color, tint} = toneChip(colors)[toast.tone];
 
   const stackTranslateY = stack.interpolate({
     inputRange: [0, 1, 2],
@@ -379,7 +387,8 @@ function ToastCard({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   host: {
     position: 'absolute',
     top: 0,
@@ -403,11 +412,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     // Fully solid white: pills overlap in the stack and float over busy
     // content, so nothing may ghost through.
-    backgroundColor: colors.surface,
+    backgroundColor: c.surface,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
     // Soft lift so the glass reads above the busy rainbow canvas.
-    shadowColor: colors.shadow,
+    shadowColor: c.shadow,
     shadowOpacity: 1,
     shadowRadius: 16,
     shadowOffset: {width: 0, height: 6},
@@ -436,4 +445,4 @@ const styles = StyleSheet.create({
     marginRight: spacing.sm,
   },
   message: {flex: 1},
-});
+  });

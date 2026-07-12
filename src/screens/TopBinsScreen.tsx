@@ -34,7 +34,15 @@ import {
   shouldOfferScoutReminder,
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
-import {colors, fonts, radii, screenPadding, spacing} from '../theme';
+import {
+  fonts,
+  radii,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {FOOTBALLERS, getById, type Footballer} from '../data/football';
 import {flagImage} from '../games/hattrick/criterionIcon';
@@ -73,6 +81,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TopBins'>;
 export function TopBinsScreen({navigation}: Props) {
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const dateKey = useMemo(() => dateKeyFor(new Date()), []);
 
   const [state, setState] = useState<TenballState | null>(null);
@@ -510,6 +520,7 @@ function Stat({
   value: number;
   highlight?: boolean;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
       <Text style={[styles.statValue, highlight && styles.statValueHot]}>
@@ -525,6 +536,7 @@ function Stat({
 /** "Come back in" + a live HH:MM:SS to the next daily list (next local midnight). */
 function Countdown() {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -557,7 +569,8 @@ function Countdown() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   flex: {flex: 1},
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   // Scroll-away wordmark row + pinned floating corner buttons (canonical chrome).
@@ -582,9 +595,9 @@ const styles = StyleSheet.create({
     minHeight: 44,
     paddingHorizontal: spacing.md,
     borderRadius: radii.card,
-    backgroundColor: colors.glassLight,
+    backgroundColor: c.glassLight,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
   // Slots exposed by giving up read as "shown, not earned".
   slotRevealed: {opacity: 0.55},
@@ -594,18 +607,18 @@ const styles = StyleSheet.create({
     borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surface2,
+    backgroundColor: c.surface2,
     borderWidth: 1,
-    borderColor: colors.glassRim,
+    borderColor: c.glassRim,
   },
-  rankBadgeEarned: {backgroundColor: colors.primary, borderColor: colors.primary},
+  rankBadgeEarned: {backgroundColor: c.primary, borderColor: c.primary},
   // Explicit tight lineHeight: without it the themed body lineHeight (24)
   // pushes the digit off-centre inside the 26pt circle.
-  rankText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: colors.muted},
-  rankTextEarned: {color: colors.onInk},
+  rankText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: c.muted},
+  rankTextEarned: {color: c.onInk},
   slotFlag: {width: 22, height: 16, borderRadius: 2},
   slotName: {flex: 1},
-  slotNameRevealed: {color: colors.textSecondary},
+  slotNameRevealed: {color: c.textSecondary},
   slotBlank: {flex: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
   giveUp: {
@@ -618,8 +631,8 @@ const styles = StyleSheet.create({
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: colors.ink},
-  statValueHot: {color: colors.primary},
+  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
+  statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
-});
+  });

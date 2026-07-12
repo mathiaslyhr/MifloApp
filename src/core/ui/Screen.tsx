@@ -8,14 +8,14 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
-import {colors, screenPadding} from '../../theme';
+import {screenPadding, useColors} from '../../theme';
 import {MeshBackground} from './MeshBackground';
 
 type Props = {
   children: React.ReactNode;
   /** Render the rainbow canvas behind content (chrome screens). */
   canvas?: boolean;
-  /** Solid background color when not a canvas screen (defaults to `background`). */
+  /** Solid background color when not a canvas screen (defaults to the theme `background`). */
   background?: string;
   /** Which safe-area edges to inset (defaults to all). */
   edges?: readonly Edge[];
@@ -40,11 +40,13 @@ const TAP_MS = 300;
 export function Screen({
   children,
   canvas = false,
-  background = colors.background,
+  background,
   edges = ['top', 'left', 'right', 'bottom'],
   padded = true,
   style,
 }: Props) {
+  const colors = useColors();
+  const bg = background ?? colors.background;
   const touchStart = useRef({x: 0, y: 0, at: 0});
   return (
     <View
@@ -82,7 +84,7 @@ export function Screen({
       {canvas ? (
         <MeshBackground />
       ) : (
-        <View style={[StyleSheet.absoluteFill, {backgroundColor: background}]} />
+        <View style={[StyleSheet.absoluteFill, {backgroundColor: bg}]} />
       )}
       <SafeAreaView
         edges={edges}

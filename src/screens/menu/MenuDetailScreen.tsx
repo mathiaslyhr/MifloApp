@@ -6,7 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ChevronLeft} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CircleButton, FloatingBar, Screen, Text, TopStatusFade} from '../../core/ui';
-import {colors, screenPadding, spacing} from '../../theme';
+import {screenPadding, spacing, useColors} from '../../theme';
 
 type Props = {
   title: string;
@@ -35,6 +35,7 @@ export function MenuDetailScreen({
   scrollRef,
 }: Props) {
   const insets = useSafeAreaInsets();
+  const colors = useColors();
 
   return (
     // Drop the top safe-area edge — the scroll content owns the top inset so the

@@ -15,6 +15,7 @@ import {
   FOOTBALLERS,
   getById,
   getClub,
+  getManagerById,
   HONOUR_LABELS,
   matches,
   POSITION_LABELS,
@@ -132,6 +133,11 @@ function teammateName(playerId: string): string {
   return getById(playerId)?.name ?? playerId;
 }
 
+/** Manager's display name for a managed-by axis, e.g. 'Pep Guardiola'. */
+function managerName(managerId: string): string {
+  return getManagerById(managerId)?.name ?? managerId;
+}
+
 /** Full human label for an axis chip — used by the picker/search. */
 export function criterionLabel(c: Criterion): string {
   switch (c.kind) {
@@ -157,6 +163,18 @@ export function criterionLabel(c: Criterion): string {
       return `${LEAGUE_LABELS[c.league] ?? c.league} winner`;
     case 'treble':
       return 'Treble winner';
+    case 'bornDecade':
+      return `Born in the ${c.decade}s`;
+    case 'oneClub':
+      return 'One-club player';
+    case 'honourYear':
+      return `${HONOUR_LABELS[c.honour]} ${c.year}`;
+    case 'playedInCountry':
+      return `Played in ${c.country}`;
+    case 'continent':
+      return c.continent;
+    case 'managedBy':
+      return `Played under ${managerName(c.managerId)}`;
   }
 }
 
@@ -190,6 +208,18 @@ export function criterionValue(c: Criterion): string {
       return LEAGUE_LABELS[c.league] ?? c.league;
     case 'treble':
       return 'treble';
+    case 'bornDecade':
+      return `${c.decade}s`;
+    case 'oneClub':
+      return 'one club';
+    case 'honourYear':
+      return `${HONOUR_LABELS[c.honour]} (${c.year})`;
+    case 'playedInCountry':
+      return c.country;
+    case 'continent':
+      return c.continent;
+    case 'managedBy':
+      return managerName(c.managerId);
   }
 }
 
@@ -220,6 +250,18 @@ export function criterionShortLabel(c: Criterion): string {
       return LEAGUE_SHORT[c.league] ?? LEAGUE_LABELS[c.league] ?? c.league;
     case 'treble':
       return 'Treble';
+    case 'bornDecade':
+      return `${String(c.decade).slice(2)}s`;
+    case 'oneClub':
+      return '1 club';
+    case 'honourYear':
+      return `${HONOUR_SHORT[c.honour] ?? HONOUR_LABELS[c.honour]} ${c.year}`;
+    case 'playedInCountry':
+      return NATION_SHORT[c.country] ?? c.country;
+    case 'continent':
+      return c.continent;
+    case 'managedBy':
+      return managerName(c.managerId);
   }
 }
 

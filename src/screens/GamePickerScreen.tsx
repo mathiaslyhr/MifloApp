@@ -12,7 +12,7 @@ import {
   Text,
   TopStatusFade,
 } from '../core/ui';
-import {colors, screenPadding, spacing} from '../theme';
+import {screenPadding, spacing, useColors} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {GAMES, GameType} from './gamesCatalog';
 
@@ -29,6 +29,7 @@ export function GamePickerScreen({route, navigation}: Props) {
   const {roomId, onPick} = route.params;
   const {t} = useTranslation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
   const [busy, setBusy] = useState(false);
 
   // Build the round via the Lobby's startGame, then REPLACE this page with the

@@ -16,15 +16,23 @@ import {
   TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
-import {colors, screenPadding, spacing} from '../theme';
+import {
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
   playMove,
+  recordGameResults,
   restartCultHeroGame,
   returnToLobby,
   submitCultHeroAnswer,
   subscribeRoom,
 } from '../core/rooms/roomService';
+import {entriesFromStandings, matchIdFrom} from '../core/stats/recordEntries';
 import {
   createConnectionNotifier,
   notifyPartyClosed,
@@ -51,6 +59,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CultHero'>;
 export function CultHeroScreen({route, navigation}: Props) {
   const {roomId} = route.params;
   const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [state, setState] = useState<CultHeroState | null>(null);
   const [hostId, setHostId] = useState<string | null>(null);
   const [myUserId, setMyUserId] = useState<string | null>(null);
@@ -88,6 +98,27 @@ export function CultHeroScreen({route, navigation}: Props) {
   }, [roomId, navigation]);
 
   const isHost = !!myUserId && myUserId === hostId;
+
+  // Host records the final result once the game reaches the 'final' phase
+  // (0031). Keyed by the game's prompts so a Play again (fresh prompts, same
+  // room) records as a distinct game; the ref stops it re-firing every render.
+  const recordedMatchRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isHost || !state || state.phase !== 'final') {
+      return;
+    }
+    const matchId = matchIdFrom(roomId, state.promptKeys.join('|'));
+    if (recordedMatchRef.current === matchId) {
+      return;
+    }
+    recordedMatchRef.current = matchId;
+    recordGameResults(
+      matchId,
+      roomId,
+      entriesFromStandings(standings(state)),
+      'cult-hero',
+    ).catch(() => {});
+  }, [isHost, state, roomId]);
 
   // Shared catch for room RPCs: the action never reached the server (offline,
   // timeout), so buzz and say so instead of failing silently.
@@ -264,6 +295,7 @@ function AnsweringPhase({
   onSubmit: (footballerId: string) => Promise<void>;
 }) {
   const {t, i18n} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const [searchOpen, setSearchOpen] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
 
@@ -347,6 +379,7 @@ function RoundRevealPhase({
   onAdvance: () => void;
 }) {
   const {t, i18n} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const results = state.results ?? [];
   const result = results[state.revealIndex];
   if (!result) {
@@ -398,6 +431,7 @@ function LeaderboardPhase({
   onAdvance: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const board = standings(state);
   const deltas: Record<string, number> = {};
   for (const result of state.results ?? []) {
@@ -438,6 +472,7 @@ function FinalPhase({
   onBackToLobby: () => void;
 }) {
   const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
   const board = standings(state);
   // The last round's scores double as the final deltas.
   const deltas: Record<string, number> = {};
@@ -480,7 +515,8 @@ function FinalPhase({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
   loading: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   loadingStack: {width: '100%', gap: 12},
   // Scroll-away wordmark row.
@@ -499,7 +535,7 @@ const styles = StyleSheet.create({
   phaseWrap: {flex: 1, justifyContent: 'center'},
   phaseWrapTop: {justifyContent: 'flex-start'},
   phase: {gap: spacing.lg, alignItems: 'stretch'},
-  headline: {color: colors.ink},
+  headline: {color: c.ink},
   resultActions: {gap: spacing.md, marginTop: spacing.sm},
   waiting: {marginTop: spacing.md},
-});
+  });

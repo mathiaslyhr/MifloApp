@@ -9,6 +9,7 @@ export {CATEGORIES, getCategory} from './categories';
 export type {Category} from './categories';
 export {FOOTBALLERS} from './footballers';
 export {MANAGERS} from './managers';
+export {CONTINENTS, continentOf} from './continents';
 export {TREBLE_SQUADS, TREBLE_WINNER_IDS} from './trebles';
 export type {TrebleSquad} from './trebles';
 export {
@@ -26,7 +27,9 @@ export type {
 export {
   all,
   getById,
+  getManagerById,
   leaguesOf,
+  clubCountriesOf,
   matches,
   find,
   intersection,

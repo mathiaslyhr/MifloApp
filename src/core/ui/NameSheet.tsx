@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Keyboard, Modal, Pressable, StyleSheet} from 'react-native';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {Button} from './Button';
 import {Text} from './Text';
 import {TextField} from './TextField';
@@ -35,6 +35,7 @@ export function NameSheet({
   maxLength = 15,
 }: Props) {
   const [value, setValue] = useState(initialValue);
+  const styles = useThemedStyles(makeStyles);
 
   // Reseed whenever the sheet (re)opens so rename shows the current name and
   // Create starts blank.
@@ -96,27 +97,28 @@ export function NameSheet({
   );
 }
 
-const styles = StyleSheet.create({
-  scrim: {
-    flex: 1,
-    backgroundColor: 'rgba(13,13,22,0.35)',
-    justifyContent: 'flex-start',
-    paddingTop: 150,
-    paddingHorizontal: spacing.xl,
-  },
-  card: {
-    alignSelf: 'center',
-    width: '100%',
-    maxWidth: 340,
-    backgroundColor: colors.surface,
-    borderRadius: radii.card,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
-    shadowColor: colors.shadowInk,
-    shadowOpacity: 0.24,
-    shadowOffset: {width: 0, height: 16},
-    shadowRadius: 32,
-    elevation: 12,
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    scrim: {
+      flex: 1,
+      backgroundColor: c.scrim,
+      justifyContent: 'flex-start',
+      paddingTop: 150,
+      paddingHorizontal: spacing.xl,
+    },
+    card: {
+      alignSelf: 'center',
+      width: '100%',
+      maxWidth: 340,
+      backgroundColor: c.surface,
+      borderRadius: radii.card,
+      paddingVertical: spacing.md,
+      paddingHorizontal: spacing.lg,
+      gap: spacing.sm,
+      shadowColor: c.shadowInk,
+      shadowOpacity: 0.24,
+      shadowOffset: {width: 0, height: 16},
+      shadowRadius: 32,
+      elevation: 12,
+    },
+  });

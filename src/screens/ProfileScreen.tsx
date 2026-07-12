@@ -30,7 +30,7 @@ import {
   toast,
   TopStatusFade,
 } from '../core/ui';
-import {colors, spacing} from '../theme';
+import {spacing, useColors} from '../theme';
 import {isBackendConfigured} from '../core/config';
 import {isNetworkError} from '../core/rooms/roomService';
 import {useAppNavigation} from '../core/navigation';
@@ -52,11 +52,13 @@ import {
   isNameTakenError,
   setAvatarPath,
   setDisplayName,
+  setFavorites,
   uploadAvatar,
 } from '../core/social/socialService';
 import type {SocialProfile} from '../core/social/types';
 import {CodeBlock} from './social/CodeBlock';
 import {ProfileHeader} from './profile/ProfileHeader';
+import {FavoritesShowcase, type Favorites} from './profile/FavoritesShowcase';
 import {StreaksSection} from './profile/StreaksSection';
 import {HistorySection, type HistoryDay} from './profile/HistorySection';
 
@@ -70,6 +72,7 @@ type Props = {
 
 export function ProfileScreen({isActive}: Props) {
   const {t} = useTranslation();
+  const colors = useColors();
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
@@ -301,6 +304,27 @@ export function ProfileScreen({isActive}: Props) {
     }
   }
 
+  /** Optimistic favorites update, mirroring rename: the server row is the
+   * truth, so a failure reverts and toasts. */
+  function updateFavorites(next: Favorites) {
+    if (!profile || profile === 'loading') {
+      return;
+    }
+    const before = profile;
+    setProfile({
+      ...profile,
+      favoritePlayerId: next.playerId,
+      favoriteClubId: next.clubId,
+      favoriteNation: next.nation,
+    });
+    setFavorites(next).catch(err => {
+      setProfile(before);
+      toast.error(
+        isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorFavorite'),
+      );
+    });
+  }
+
   async function create(name: string) {
     if (busy) {
       return;
@@ -388,11 +412,9 @@ export function ProfileScreen({isActive}: Props) {
               name={profile.displayName}
               tone="accent"
               friendCount={friendCount}
-              // The one friends list lives on the Friends tab — jump there
-              // (`at` keeps repeat taps distinct so the shell effect refires).
-              onPressFriends={() =>
-                navigation.navigate('Tabs', {tab: 'social', at: Date.now()})
-              }
+              // The friends list is its own page (Instagram-style): a plain
+              // list that taps through to each friend's profile.
+              onPressFriends={() => navigation.navigate('FriendsList')}
               onEditName={() => setSheet('rename')}
               avatarUri={avatarUrlFor(profile.avatarPath, avatarBust)}
               onPressAvatar={onAvatarPress}
@@ -400,6 +422,15 @@ export function ProfileScreen({isActive}: Props) {
             <GlassCard style={styles.codeCard}>
               <CodeBlock code={profile.friendCode} divider={false} />
             </GlassCard>
+            <FavoritesShowcase
+              favorites={{
+                playerId: profile.favoritePlayerId,
+                clubId: profile.favoriteClubId,
+                nation: profile.favoriteNation,
+              }}
+              editable
+              onChange={updateFavorites}
+            />
           </View>
         ) : profile === null ? (
           /* Not opted into Friends yet — the identity block becomes the same

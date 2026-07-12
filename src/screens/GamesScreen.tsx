@@ -14,7 +14,7 @@ import {
   toast,
   TopStatusFade,
 } from '../core/ui';
-import {colors, spacing} from '../theme';
+import {spacing, useColors} from '../theme';
 import {useAppNavigation} from '../core/navigation';
 import {Smartphone} from 'lucide-react-native';
 import {createRoom, BackendUnavailableError} from '../core/rooms/roomService';
@@ -43,6 +43,7 @@ export function GamesScreen() {
   const {t} = useTranslation();
   const navigation = useAppNavigation();
   const insets = useSafeAreaInsets();
+  const colors = useColors();
   const [busy, setBusy] = useState(false);
   // Handed to each tile so its swipe-right pan outranks the vertical scroll
   // (the scroll waits until the pan has failed).

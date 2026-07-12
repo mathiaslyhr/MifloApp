@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {Text} from './Text';
 
 type Props = {
@@ -16,6 +16,7 @@ type Props = {
  * them. The final child gets `isLast` injected so its divider is dropped.
  */
 export function MenuGroup({label, children}: Props) {
+  const styles = useThemedStyles(makeStyles);
   const items = React.Children.toArray(children);
   return (
     <View style={styles.wrap}>
@@ -37,19 +38,20 @@ export function MenuGroup({label, children}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  wrap: {gap: spacing.sm},
-  eyebrow: {
-    letterSpacing: 1,
-    marginLeft: spacing.md,
-  },
-  card: {
-    backgroundColor: colors.glass,
-    borderRadius: radii.card,
-    borderWidth: 1,
-    // Flat like all in-flow glass. (A lift here never rendered on iOS anyway:
-    // overflow:'hidden' clips the view's own shadow.)
-    borderColor: colors.glassRim,
-    overflow: 'hidden',
-  },
-});
+const makeStyles = (c: Palette) =>
+  StyleSheet.create({
+    wrap: {gap: spacing.sm},
+    eyebrow: {
+      letterSpacing: 1,
+      marginLeft: spacing.md,
+    },
+    card: {
+      backgroundColor: c.glass,
+      borderRadius: radii.card,
+      borderWidth: 1,
+      // Flat like all in-flow glass. (A lift here never rendered on iOS anyway:
+      // overflow:'hidden' clips the view's own shadow.)
+      borderColor: c.glassRim,
+      overflow: 'hidden',
+    },
+  });

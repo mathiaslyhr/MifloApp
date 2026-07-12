@@ -15,9 +15,14 @@ import i18n from '../i18n';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
 import {partitionRequests, type FriendRequestRow} from './requests';
+import type {HeadToHeadMatch} from './headToHead';
+import type {DailyGame} from '../daily/dailyLog';
 import type {
   FriendFeed,
   FriendRequests,
+  LeaderboardEntry,
+  LeaderboardMe,
+  LeaderboardView,
   PublishedResult,
   SendRequestOutcome,
   SendRequestResult,
@@ -46,6 +51,9 @@ function mapProfile(row: any): SocialProfile {
     friendCode: row.friend_code,
     lastSeenAt: row.last_seen_at ?? null,
     avatarPath: row.avatar_path ?? null,
+    favoritePlayerId: row.favorite_player_id ?? null,
+    favoriteClubId: row.favorite_club_id ?? null,
+    favoriteNation: row.favorite_nation ?? null,
   };
 }
 
@@ -135,6 +143,36 @@ export async function setDisplayName(name: string): Promise<void> {
   const cached = await getCachedProfile();
   if (cached) {
     await cacheProfile({...cached, displayName: name.trim()});
+  }
+}
+
+/**
+ * Set the caller's three showcase favorites (any of them null to clear) in one
+ * RPC (0029_favorites.sql), then update the cached profile. Mirrors
+ * setAvatarPath: the server row is the truth, the cache keeps the tab instant.
+ */
+export async function setFavorites(favorites: {
+  playerId: string | null;
+  clubId: string | null;
+  nation: string | null;
+}): Promise<void> {
+  const {client} = await requireClient();
+  const {error} = await client.rpc('set_favorites', {
+    p_player: favorites.playerId,
+    p_club: favorites.clubId,
+    p_nation: favorites.nation,
+  });
+  if (error) {
+    throw error;
+  }
+  const cached = await getCachedProfile();
+  if (cached) {
+    await cacheProfile({
+      ...cached,
+      favoritePlayerId: favorites.playerId,
+      favoriteClubId: favorites.clubId,
+      favoriteNation: favorites.nation,
+    });
   }
 }
 
@@ -463,6 +501,55 @@ export async function fetchFriendsFeed(fromDateKey: string): Promise<FriendFeed[
     .sort((a, b) => a.profile.displayName.localeCompare(b.profile.displayName));
 }
 
+// The worldwide board's snake_case rows → camelCase. Server guarantees the
+// shape (worldwide_leaderboard, 0030), so this is a straight rename.
+function mapLeaderboardRow(row: any): LeaderboardEntry {
+  return {
+    rank: row.rank,
+    displayName: row.display_name,
+    avatarPath: row.avatar_path ?? null,
+    status: row.status,
+    score: row.score ?? 0,
+    total: row.total ?? 0,
+    isMe: row.is_me ?? false,
+  };
+}
+
+/**
+ * The worldwide board for one daily game on one day: the top players plus the
+ * caller's own rank (for pinning when outside the top slice). Unlike the friend
+ * feeds this bypasses the friend-scoped RLS via the SECURITY DEFINER RPC, so a
+ * stranger's name and avatar are visible — the public board is the point. Never
+ * an answer, same as everything published.
+ */
+export async function fetchWorldwideLeaderboard(
+  dateKey: string,
+  game: DailyGame,
+): Promise<LeaderboardView> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('worldwide_leaderboard', {
+    p_date_key: dateKey,
+    p_game: game,
+    // Top 10 only; the caller's own rank rides back in `me` for pinning below.
+    p_limit: 10,
+  });
+  if (error) {
+    throw error;
+  }
+  const payload = (data ?? {}) as {rows?: any[]; me?: any};
+  return {
+    rows: (payload.rows ?? []).map(mapLeaderboardRow),
+    me: payload.me
+      ? ({
+          rank: payload.me.rank,
+          status: payload.me.status,
+          score: payload.me.score ?? 0,
+          total: payload.me.total ?? 0,
+        } as LeaderboardMe)
+      : null,
+  };
+}
+
 /** All friends' profiles, alphabetical — the invite sheet's cut of the feed
  * (no daily_results round trip). */
 export async function fetchFriends(): Promise<SocialProfile[]> {
@@ -489,6 +576,43 @@ export async function fetchFriends(): Promise<SocialProfile[]> {
   return (data ?? [])
     .map(mapProfile)
     .sort((a, b) => a.displayName.localeCompare(b.displayName));
+}
+
+// A head_to_head RPC row is jsonb — map it into the camelCase domain shape.
+function mapHeadToHead(row: any): HeadToHeadMatch {
+  return {
+    matchId: row.match_id,
+    gameType: row.game_type,
+    playedAt: row.played_at,
+    totalPlayers: row.total_players ?? 0,
+    mine: {
+      score: row.mine?.score ?? 0,
+      rank: row.mine?.rank ?? 0,
+      isWinner: row.mine?.is_winner ?? false,
+    },
+    theirs: {
+      score: row.theirs?.score ?? 0,
+      rank: row.theirs?.rank ?? 0,
+      isWinner: row.theirs?.is_winner ?? false,
+    },
+  };
+}
+
+/**
+ * The online party games this device and `friendUserId` have played against
+ * each other, newest first (0031). Friends-gated and two-party server-side, so
+ * it only ever returns games both of you were in; other players' results stay
+ * private. Pair with computeHeadToHead for the tally.
+ */
+export async function fetchHeadToHead(
+  friendUserId: string,
+): Promise<HeadToHeadMatch[]> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('head_to_head', {p_friend: friendUserId});
+  if (error) {
+    throw error;
+  }
+  return ((data ?? []) as any[]).map(mapHeadToHead);
 }
 
 /** Which of my friends can receive an invite push. Existence only — tokens

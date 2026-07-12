@@ -7,11 +7,13 @@ import type {RootStackParamList} from '../core/navigation';
 import {
   playMove,
   proposeTie,
+  recordGameResults,
   respondTie,
   restartBoardGame,
   returnToLobby,
   subscribeRoom,
 } from '../core/rooms/roomService';
+import {entriesFromStandings, matchIdFrom} from '../core/stats/recordEntries';
 import {
   createConnectionNotifier,
   notifyPartyClosed,
@@ -71,6 +73,32 @@ export function HattrickScreen({route, navigation}: Props) {
   }, [roomId, navigation, applyServer]);
 
   const isHost = !!myUserId && myUserId === hostId;
+
+  // Host records the result once the board has a winner (0031). Only individual
+  // games: in teams mode the side ids are 'A'/'B', not the user ids game_results
+  // is keyed on. Score is 1 for the winning side, 0 otherwise, so a tie records
+  // as a draw (0/0). Keyed by the grid's axis signature, so a Play again (fresh
+  // grid, same room) records as a distinct game.
+  const recordedMatchRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!isHost || !state || state.winner === null || state.mode !== 'individual') {
+      return;
+    }
+    const signature = state.signature ?? JSON.stringify([state.rows, state.cols]);
+    const matchId = matchIdFrom(roomId, signature);
+    if (recordedMatchRef.current === matchId) {
+      return;
+    }
+    recordedMatchRef.current = matchId;
+    const board = state.sides.map(side => ({
+      userId: side.id,
+      name: side.name,
+      score: state.winner === side.id ? 1 : 0,
+    }));
+    recordGameResults(matchId, roomId, entriesFromStandings(board), 'hattrick').catch(
+      () => {},
+    );
+  }, [isHost, state, roomId]);
 
   // Shared catch for room RPCs: the action never reached the server (offline,
   // timeout), so buzz and say so instead of failing silently.
