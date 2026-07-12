@@ -5,11 +5,25 @@
  */
 import type {Footballer} from '../../data/football';
 
-/** Letters NFD can't decompose because they're distinct glyphs, not an
- * ASCII base + combining accent. Without these, typing "yi" misses the Turkish
- * dotless "ı" in "Yılmaz", "o" misses "ø" in "Ødegaard", etc. */
+/** Strip accents and lowercase, so "João"/"Müller" match plain ASCII input.
+ * Curly apostrophes fold to straight ones — iOS smart punctuation types ’
+ * while data mostly carries ', and "Guivarc’h" must equal "Guivarc'h".
+ * NOTE: the curated Top Bins / Team sheet alias tables are pre-folded with THIS
+ * function, so it must stay stable; footballer name search uses foldSearch. */
+export function fold(s: string): string {
+  return s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[’ʼ]/g, "'")
+    .toLowerCase()
+    .trim();
+}
+
+/** Letters NFD can't decompose because they're distinct glyphs, not an ASCII
+ * base + combining accent — so "yi" would miss the Turkish dotless "ı" in
+ * "Yılmaz", "o" would miss "ø" in "Ødegaard". */
 const ATOMIC_LETTERS: Record<string, string> = {
-  ı: 'i', // Turkish dotless i (İ decomposes fine on its own)
+  ı: 'i',
   ø: 'o',
   ł: 'l',
   ß: 'ss',
@@ -20,20 +34,15 @@ const ATOMIC_LETTERS: Record<string, string> = {
   œ: 'oe',
   ħ: 'h',
   ŋ: 'n',
-  ə: 'e', // Azerbaijani schwa
+  ə: 'e',
 };
 
-/** Strip accents and lowercase, so "João"/"Müller"/"Yılmaz" match plain ASCII
- * input. Curly apostrophes fold to straight ones — iOS smart punctuation types ’
- * while data mostly carries ', and "Guivarc’h" must equal "Guivarc'h". */
-export function fold(s: string): string {
-  return s
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .replace(/[’ʼ]/g, "'")
-    .toLowerCase()
-    .replace(/[ıøłßđðþæœħŋə]/g, c => ATOMIC_LETTERS[c] ?? c)
-    .trim();
+/** Footballer-search fold: base fold plus the atomic-letter mapping, so typing
+ * "yi" finds "Yılmaz". Only the live footballer search uses this — the curated
+ * Top Bins / Team sheet alias tables stay on the plain `fold`, so they keep
+ * matching on older app builds without a data republish. */
+export function foldSearch(s: string): string {
+  return fold(s).replace(/[ıøłßđðþæœħŋə]/g, c => ATOMIC_LETTERS[c] ?? c);
 }
 
 /**
@@ -45,11 +54,11 @@ export function scoreFootballer(f: Footballer, q: string): number {
   if (!q) {
     return 0;
   }
-  const name = fold(f.name);
+  const name = foldSearch(f.name);
   const nameTokens = name.split(/\s+/);
-  const full = f.fullName ? fold(f.fullName) : '';
+  const full = f.fullName ? foldSearch(f.fullName) : '';
   const fullTokens = full ? full.split(/\s+/) : [];
-  const nicks = (f.nicknames ?? []).map(fold);
+  const nicks = (f.nicknames ?? []).map(foldSearch);
 
   if (name === q || nicks.includes(q)) {
     return 5;
@@ -79,7 +88,7 @@ export function searchPlayers(
   usedIds: readonly string[] = [],
   limit = 40,
 ): Footballer[] {
-  const q = fold(rawQuery);
+  const q = foldSearch(rawQuery);
   if (!q) {
     return [];
   }

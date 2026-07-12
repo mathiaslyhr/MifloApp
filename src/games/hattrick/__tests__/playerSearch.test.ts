@@ -1,4 +1,4 @@
-import {fold, scoreFootballer, searchPlayers} from '../playerSearch';
+import {fold, foldSearch, scoreFootballer, searchPlayers} from '../playerSearch';
 import type {Footballer} from '../../../data/football';
 
 function player(id: string, name: string, extra: Partial<Footballer> = {}): Footballer {
@@ -19,12 +19,14 @@ describe('fold', () => {
     expect(fold('Müller')).toBe('muller');
   });
 
-  it('folds atomic letters NFD leaves alone (Turkish ı, ø, ł, ß…)', () => {
-    expect(fold('Yılmaz')).toBe('yilmaz'); // so "yi" matches
-    expect(fold('Ødegaard')).toBe('odegaard');
-    expect(fold('Lewandowłski')).toBe('lewandowlski');
-    expect(fold('Weiß')).toBe('weiss');
-    expect(fold('Guðmundsson')).toBe('gudmundsson');
+  it('foldSearch also folds atomic letters NFD leaves alone (ı, ø, ł, ß…)', () => {
+    expect(foldSearch('Yılmaz')).toBe('yilmaz'); // so "yi" matches
+    expect(foldSearch('Ødegaard')).toBe('odegaard');
+    expect(foldSearch('Lewandowłski')).toBe('lewandowlski');
+    expect(foldSearch('Weiß')).toBe('weiss');
+    expect(foldSearch('Guðmundsson')).toBe('gudmundsson');
+    // Base fold leaves them alone (curated alias tables depend on this).
+    expect(fold('Yılmaz')).toBe('yılmaz');
   });
 });
 
