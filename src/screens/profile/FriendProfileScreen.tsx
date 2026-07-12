@@ -19,7 +19,7 @@ import {Button, Skeleton, toast} from '../../core/ui';
 import {spacing} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import type {RootStackParamList} from '../../core/navigation';
-import {dateKeyFor, pastDateKeys} from '../../games/scout/dailySeed';
+import {dateKeyFor, pastDateKeys, previousDateKey} from '../../games/scout/dailySeed';
 import {DAILY_GAMES} from '../../core/daily/dailyLog';
 import {presenceFor} from '../../core/social/presence';
 import {
@@ -118,22 +118,34 @@ export function FriendProfileScreen({navigation, route}: Props) {
       results?.find(r => r.dateKey === todayKey && r.game === game)?.streak ?? 0,
   }));
 
-  // Group published rows into day cards, newest first; games missing from a
-  // published day render as notPlayed rows inside the card.
+  // Today-anchored day cards, matching the own profile's buildDailyLog: always
+  // lead with Today (notPlayed if the friend hasn't played), then walk back to
+  // their earliest published day. Rows dated after today (a friend in a
+  // timezone ahead can publish tomorrow's key) are ignored so today stays on
+  // top and never reads as a second card.
   const historyDays: HistoryDay[] = useMemo(() => {
     if (!results) {
       return [];
     }
     const byDay = new Map<string, PublishedResult[]>();
+    let earliest = todayKey;
     for (const row of results) {
+      if (row.dateKey > todayKey) {
+        continue;
+      }
       const list = byDay.get(row.dateKey) ?? [];
       list.push(row);
       byDay.set(row.dateKey, list);
+      if (row.dateKey < earliest) {
+        earliest = row.dateKey;
+      }
     }
-    return [...byDay.entries()]
-      .sort(([a], [b]) => (a < b ? 1 : -1))
-      .map(([dateKey, rows]) => ({
-        dateKey,
+
+    const days: HistoryDay[] = [];
+    for (let key = todayKey; ; key = previousDateKey(key)) {
+      const rows = byDay.get(key) ?? [];
+      days.push({
+        dateKey: key,
         rows: DAILY_GAMES.map(game => {
           const row = rows.find(r => r.game === game);
           return {
@@ -146,8 +158,13 @@ export function FriendProfileScreen({navigation, route}: Props) {
             answer: null,
           };
         }),
-      }));
-  }, [results]);
+      });
+      if (key <= earliest) {
+        break;
+      }
+    }
+    return days;
+  }, [results, todayKey]);
 
   return (
     <MenuDetailScreen
