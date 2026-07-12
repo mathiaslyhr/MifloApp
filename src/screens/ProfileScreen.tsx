@@ -119,6 +119,24 @@ export function ProfileScreen({isActive}: Props) {
     };
   }, []);
 
+  // Deleting the profile (from the Menu) clears the cache. When this tab is
+  // looked at again, drop to the username-entry onboarding instead of the
+  // just-deleted profile. A no-op whenever a profile is still cached.
+  useEffect(() => {
+    if (!isActive || !isFocused) {
+      return;
+    }
+    let live = true;
+    getCachedProfile().then(cached => {
+      if (live && !cached) {
+        setProfile(null);
+      }
+    });
+    return () => {
+      live = false;
+    };
+  }, [isActive, isFocused]);
+
   // Reload the archive every time the page is looked at (tab switch or a
   // pushed screen popping back), so finishing a game flips today's rows.
   useEffect(() => {

@@ -189,6 +189,42 @@ export async function clearAvatar(): Promise<void> {
     .catch(() => {});
 }
 
+/** Local preferences kept on account deletion (not "the user's data"). */
+const PREFS_KEPT = new Set(['app.language', 'app.haptics']);
+
+/**
+ * Delete the account (App Store Guideline 5.1.1). Removes every server row keyed
+ * to this device's anonymous identity — profile (which cascades friendships,
+ * daily results and friend requests), push token, room memberships and the
+ * avatar object — then signs out and wipes local data so the app returns to
+ * first run. Language and haptics preferences are kept.
+ */
+export async function deleteAccount(): Promise<void> {
+  const {client, uid} = await requireClient();
+  // The RPC can't touch storage, so remove the avatar object here (the owner
+  // holds the avatars_delete policy). Best-effort: a miss is harmless.
+  await client.storage
+    .from(AVATAR_BUCKET)
+    .remove([`${uid}/avatar.jpg`])
+    .catch(() => {});
+
+  const {error} = await client.rpc('delete_my_account');
+  if (error) {
+    throw error;
+  }
+
+  // Drop the anonymous session (fresh identity next launch) and wipe local
+  // user data. The server rows are already gone, so this is best-effort.
+  await client.auth.signOut().catch(() => {});
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const toRemove = keys.filter(k => !PREFS_KEPT.has(k));
+    await Promise.all(toRemove.map(k => AsyncStorage.removeItem(k)));
+  } catch {
+    // Local reset only — the account itself is already deleted.
+  }
+}
+
 /**
  * Resolve a stored avatar object key to a displayable URL, or null for the
  * initials fallback. `bust` (a timestamp) appends a cache-buster so a fresh

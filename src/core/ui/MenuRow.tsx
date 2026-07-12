@@ -28,6 +28,8 @@ type Props = {
   selected?: boolean;
   /** The last row in a group drops its divider. */
   isLast?: boolean;
+  /** Destructive action (e.g. Delete account) — tints the icon and label red. */
+  danger?: boolean;
   accessibilityHint?: string;
 };
 
@@ -47,6 +49,7 @@ export function MenuRow({
   disabled = false,
   selected,
   isLast = false,
+  danger = false,
   accessibilityHint,
 }: Props) {
   const press = usePressScale();
@@ -73,10 +76,16 @@ export function MenuRow({
           press.animatedStyle,
         ]}>
         {Icon ? (
-          <Icon size={22} color={colors.primary} strokeWidth={2} />
+          <Icon
+            size={22}
+            color={danger ? colors.error : colors.primary}
+            strokeWidth={2}
+          />
         ) : null}
         <View style={styles.text}>
-          <Text variant="body">{label}</Text>
+          <Text variant="body" style={danger ? {color: colors.error} : undefined}>
+            {label}
+          </Text>
           {subtitle ? (
             <Text variant="caption" color="tertiary" numberOfLines={1}>
               {subtitle}

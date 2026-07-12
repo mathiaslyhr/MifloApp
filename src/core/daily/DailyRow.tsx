@@ -67,7 +67,14 @@ export function DailyRow({game, status, right, wrong, answer = null, isLast = fa
   const played = status !== 'notPlayed';
   const hasScore = played && right !== null && wrong !== null;
 
-  const parts = [t(STATUS_A11Y[status], {game: title})];
+  // The green check means "solved it", which is impossible without at least one
+  // correct answer. A 'won' row with a 0 right count (a legacy row from before
+  // right counts, or a guess-one-player win that never recorded its 1) shows the
+  // eye instead, never a hollow check. The surrender flag may still read 0.
+  const displayStatus: DayCellStatus =
+    status === 'won' && (right ?? 0) < 1 ? 'ongoing' : status;
+
+  const parts = [t(STATUS_A11Y[displayStatus], {game: title})];
   if (hasScore) {
     parts.push(t('dailyLog.a11yScore', {right, wrong}));
   }
@@ -102,9 +109,9 @@ export function DailyRow({game, status, right, wrong, answer = null, isLast = fa
         <View style={styles.state}>
           {/* Group 1: outcome + correct count, tight so they read as one unit. */}
           <View style={styles.group}>
-            {status === 'won' ? (
+            {displayStatus === 'won' ? (
               <Check size={14} color={colors.success} strokeWidth={2.5} />
-            ) : status === 'revealed' ? (
+            ) : displayStatus === 'revealed' ? (
               <Flag size={14} color={colors.error} strokeWidth={2.5} />
             ) : (
               <Eye size={14} color={colors.textSecondary} strokeWidth={2} />

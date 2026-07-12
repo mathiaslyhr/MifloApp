@@ -155,6 +155,24 @@ export function SocialScreen({isActive, addCode}: Props) {
     }
   }, [isActive, isFocused, profile, refreshFeed]);
 
+  // Deleting the profile (from the Menu) clears the cache; when this tab is
+  // looked at again, drop to onboarding. A no-op while a profile is cached.
+  useEffect(() => {
+    if (!isActive || !isFocused) {
+      return;
+    }
+    let live = true;
+    getCachedProfile().then(cached => {
+      if (live && !cached) {
+        setProfile(null);
+        setFeed(null);
+      }
+    });
+    return () => {
+      live = false;
+    };
+  }, [isActive, isFocused]);
+
   async function handleCreate() {
     const name = nameInput.trim();
     if (name.length === 0 || busy) {

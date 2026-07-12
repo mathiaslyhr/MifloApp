@@ -305,7 +305,14 @@
     "oneDevice": "Én enhed",
     "version": "Miflo v{{version}}",
     "playerCount": "{{n}} fodboldspillere",
-    "errorLink": "Kunne ikke åbne linket."
+    "errorLink": "Kunne ikke åbne linket.",
+    "profile": "Profil",
+    "deleteProfile": "Slet profil",
+    "deleteProfileTitle": "Slet profil?",
+    "deleteProfileBody": "Dette sletter permanent din profil, venner, profilbillede og statistik. Det kan ikke fortrydes.",
+    "deleteProfileConfirm": "Slet",
+    "deleteProfileDone": "Profil slettet",
+    "deleteProfileError": "Kunne ikke slette din profil. Prøv igen."
   },
   "hattrick": {
     "title": "Hattrick",

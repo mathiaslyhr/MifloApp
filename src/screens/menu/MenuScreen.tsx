@@ -6,7 +6,7 @@
  * page you came from.
  */
 import React from 'react';
-import {Linking, StyleSheet, View} from 'react-native';
+import {Alert, Linking, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BookOpen,
@@ -16,10 +16,12 @@ import {
   Settings,
   Shield,
   Smartphone,
+  Trash2,
 } from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {MenuGroup, MenuRow, Text, toast} from '../../core/ui';
 import {haptics} from '../../core/haptics';
+import {deleteAccount} from '../../core/social/socialService';
 import {
   APP_VERSION,
   FAQ_URL,
@@ -44,12 +46,48 @@ export function MenuScreen({navigation}: Props) {
     });
   }
 
+  async function runDelete() {
+    try {
+      await deleteAccount();
+      haptics.success();
+      toast.success(t('menu.deleteProfileDone'));
+      // Back to the tabs; the Profile tab re-checks on focus and, finding no
+      // profile, drops to the username-entry onboarding.
+      navigation.popToTop();
+    } catch {
+      haptics.error();
+      toast.error(t('menu.deleteProfileError'));
+    }
+  }
+
+  // Native confirm before wiping the profile (App Store 5.1.1 deletion flow).
+  function confirmDelete() {
+    Alert.alert(t('menu.deleteProfileTitle'), t('menu.deleteProfileBody'), [
+      {text: t('common.cancel'), style: 'cancel'},
+      {
+        text: t('menu.deleteProfileConfirm'),
+        style: 'destructive',
+        onPress: runDelete,
+      },
+    ]);
+  }
+
   return (
     <MenuDetailScreen
       title={t('menu.title')}
       onBack={() => navigation.goBack()}
       backLabel={t('common.back')}
       contentStyle={styles.body}>
+      <MenuGroup label={t('menu.profile')}>
+        <MenuRow
+          label={t('menu.deleteProfile')}
+          Icon={Trash2}
+          danger
+          onPress={confirmDelete}
+          accessibilityHint={t('menu.deleteProfileBody')}
+        />
+      </MenuGroup>
+
       <MenuGroup label={t('menu.app')}>
         <MenuRow
           label={t('menu.howToPlay')}
@@ -61,6 +99,11 @@ export function MenuScreen({navigation}: Props) {
           Icon={Settings}
           onPress={() => navigation.navigate('Settings')}
         />
+        <MenuRow
+          label={t('menu.oneDevice')}
+          Icon={Smartphone}
+          onPress={() => navigation.navigate('OneDevice')}
+        />
       </MenuGroup>
 
       <MenuGroup label={t('menu.about')}>
@@ -68,11 +111,6 @@ export function MenuScreen({navigation}: Props) {
           label={t('menu.aboutMiflo')}
           Icon={Info}
           onPress={() => navigation.navigate('About')}
-        />
-        <MenuRow
-          label={t('menu.oneDevice')}
-          Icon={Smartphone}
-          onPress={() => navigation.navigate('OneDevice')}
         />
         <MenuRow
           label={t('menu.faq')}

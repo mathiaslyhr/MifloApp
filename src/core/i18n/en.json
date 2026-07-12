@@ -307,7 +307,14 @@
     "oneDevice": "One device",
     "version": "Miflo v{{version}}",
     "playerCount": "{{n}} footballers",
-    "errorLink": "Couldn't open the link."
+    "errorLink": "Couldn't open the link.",
+    "profile": "Profile",
+    "deleteProfile": "Delete profile",
+    "deleteProfileTitle": "Delete profile?",
+    "deleteProfileBody": "This permanently deletes your profile, friends, profile picture and stats. It cannot be undone.",
+    "deleteProfileConfirm": "Delete",
+    "deleteProfileDone": "Profile deleted",
+    "deleteProfileError": "Couldn't delete your profile. Please try again."
   },
   "hattrick": {
     "title": "Hattrick",
