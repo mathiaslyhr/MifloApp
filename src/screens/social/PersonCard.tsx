@@ -19,10 +19,16 @@ import type {PublishedResult} from '../../core/social/types';
 
 /** What one row on a person card shows — a friend's published state, or my
  * local state (only mine may carry an answer; published rows never do). */
-export type ChipCell = {status: DayCellStatus; count: number | null; answer: string | null};
+export type ChipCell = {
+  status: DayCellStatus;
+  right: number | null;
+  wrong: number | null;
+  answer: string | null;
+};
 
-/** A friend's today cells from their published rows — status + tries only,
- * never an answer (the wire cannot carry one). */
+/** A friend's today cells from their published rows — status + right/wrong
+ * counts only, never an answer (the wire cannot carry one). The wire carries
+ * wrong in `score`, right in `total` (null on pre-right-count rows → 0). */
 export function friendCellsFor(
   results: PublishedResult[],
   todayKey: string,
@@ -30,7 +36,7 @@ export function friendCellsFor(
   const map = new Map<DailyGame, ChipCell>();
   for (const r of results) {
     if (r.dateKey === todayKey) {
-      map.set(r.game, {status: r.status, count: r.score, answer: null});
+      map.set(r.game, {status: r.status, right: r.total ?? 0, wrong: r.score, answer: null});
     }
   }
   return map;
@@ -192,7 +198,8 @@ export function PersonCard({name, streak, today, presence, avatarUri, onPress}: 
                 key={game}
                 game={game}
                 status={cell?.status ?? 'notPlayed'}
-                count={cell?.count ?? null}
+                right={cell?.right ?? null}
+                wrong={cell?.wrong ?? null}
                 answer={cell?.answer ?? null}
                 isLast={i === DAILY_GAMES.length - 1}
               />

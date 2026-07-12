@@ -49,6 +49,25 @@ export async function saveDailyProgress(progress: DailyProgress): Promise<void> 
   await AsyncStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
 }
 
+/**
+ * The stored progress regardless of which day it belongs to, or null. Unlike
+ * [[loadDailyProgress]] this does not drop a past day — the rollover reconcile
+ * uses it to fail a day left unfinished when the calendar moved on.
+ */
+export async function loadRawProgress(): Promise<DailyProgress | null> {
+  try {
+    const raw = await AsyncStorage.getItem(PROGRESS_KEY);
+    return raw ? (JSON.parse(raw) as DailyProgress) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Drop the saved progress slot (after a stale day has been reconciled). */
+export async function clearProgress(): Promise<void> {
+  await AsyncStorage.removeItem(PROGRESS_KEY);
+}
+
 export async function loadStreak(): Promise<StreakState> {
   try {
     const raw = await AsyncStorage.getItem(STREAK_KEY);

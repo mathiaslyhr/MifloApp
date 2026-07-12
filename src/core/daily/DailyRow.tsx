@@ -17,6 +17,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {
+  Ban,
   Check,
   ClipboardList,
   Eye,
@@ -30,16 +31,12 @@ import {Text} from '../ui';
 import {colors, spacing} from '../../theme';
 import type {DailyGame, DayCellStatus} from './dailyLog';
 
-/** Per-game presentation: the hub tile's icon (gamesCatalog) + title key, and
- * whether the count means guesses used or misses conceded. */
-export const GAME_META: Record<
-  DailyGame,
-  {Icon: LucideIcon; titleKey: string; countKey: 'a11yGuesses' | 'a11yMisses'}
-> = {
-  scout: {Icon: UserSearch, titleKey: 'games.scout.title', countKey: 'a11yGuesses'},
-  tenball: {Icon: ListOrdered, titleKey: 'games.tenball.title', countKey: 'a11yMisses'},
-  journeyman: {Icon: Route, titleKey: 'games.journeyman.title', countKey: 'a11yGuesses'},
-  teamsheet: {Icon: ClipboardList, titleKey: 'games.teamsheet.title', countKey: 'a11yMisses'},
+/** Per-game presentation: the hub tile's icon (gamesCatalog) + title key. */
+export const GAME_META: Record<DailyGame, {Icon: LucideIcon; titleKey: string}> = {
+  scout: {Icon: UserSearch, titleKey: 'games.scout.title'},
+  tenball: {Icon: ListOrdered, titleKey: 'games.tenball.title'},
+  journeyman: {Icon: Route, titleKey: 'games.journeyman.title'},
+  teamsheet: {Icon: ClipboardList, titleKey: 'games.teamsheet.title'},
 };
 
 const STATUS_A11Y: Record<DayCellStatus, string> = {
@@ -52,23 +49,26 @@ const STATUS_A11Y: Record<DayCellStatus, string> = {
 type Props = {
   game: DailyGame;
   status: DayCellStatus;
-  /** Tries so far (ongoing) or final tries (finished); null when not played. */
-  count: number | null;
+  /** Correct answers so far (ongoing) or final (finished); null when not played. */
+  right: number | null;
+  /** Wrong guesses so far (ongoing) or final (finished); null when not played. */
+  wrong: number | null;
   /** Owner-only: the finished day's player/team/list, shown as a second line. */
   answer?: string | null;
   /** The last row in a card drops its divider (MenuRow convention). */
   isLast?: boolean;
 };
 
-export function DailyRow({game, status, count, answer = null, isLast = false}: Props) {
+export function DailyRow({game, status, right, wrong, answer = null, isLast = false}: Props) {
   const {t} = useTranslation();
-  const {Icon, titleKey, countKey} = GAME_META[game];
+  const {Icon, titleKey} = GAME_META[game];
   const title = t(titleKey);
   const played = status !== 'notPlayed';
+  const hasScore = played && right !== null && wrong !== null;
 
   const parts = [t(STATUS_A11Y[status], {game: title})];
-  if (played && count !== null) {
-    parts.push(t(`dailyLog.${countKey}`, {count}));
+  if (hasScore) {
+    parts.push(t('dailyLog.a11yScore', {right, wrong}));
   }
   if (answer) {
     parts.push(answer);
@@ -106,10 +106,16 @@ export function DailyRow({game, status, count, answer = null, isLast = false}: P
           ) : (
             <Eye size={14} color={colors.textSecondary} strokeWidth={2} />
           )}
-          {count !== null ? (
-            <Text variant="secondary" color="secondary">
-              {count}
-            </Text>
+          {hasScore ? (
+            <>
+              <Text variant="secondary" color="secondary">
+                {right}
+              </Text>
+              <Ban size={13} color={colors.error} strokeWidth={2} />
+              <Text variant="secondary" color="secondary">
+                {wrong}
+              </Text>
+            </>
           ) : null}
         </View>
       ) : null}

@@ -139,7 +139,10 @@ export function FriendProfileScreen({navigation, route}: Props) {
           return {
             game,
             status: row?.status ?? ('notPlayed' as const),
-            count: row?.score ?? null,
+            // The wire carries wrong in `score`, right in `total` (Part C). Old
+            // rows predate `total` and read back null → shown as 0 right.
+            right: row ? (row.total ?? 0) : null,
+            wrong: row?.score ?? null,
             answer: null,
           };
         }),

@@ -246,7 +246,7 @@ export function ScoutScreen({navigation}: Props) {
       // Live "in progress" row for friends: the eye + the running guess
       // count. The finish row above replaces it (same day+game key).
       queueDailyResult(
-        ongoingResult('scout', dateKey, next.guesses.length, liveStreak(streak, dateKey)),
+        ongoingResult('scout', dateKey, 0, next.guesses.length, liveStreak(streak, dateKey)),
       ).catch(() => {});
     }
   }

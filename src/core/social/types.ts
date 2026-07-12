@@ -7,13 +7,13 @@ import type {DailyGame} from '../daily/dailyLog';
 
 /**
  * One published day of one daily game — the normalized cross-game shape the
- * backend stores. `score` is the tries metric friends see: guesses used for
- * Scout/Journeyman, misses for Top Bins/Team sheet — the same number the Log
- * tab shows, so a friend's card mirrors your own. `'ongoing'` rows are live
- * started-but-unfinished games, republished as the count grows and replaced
- * by the final row at finish. `total` is a legacy column, always null now.
- * `streak` is the streak at publish time; the UI only trusts it on today's
- * row.
+ * backend stores. Friends see the same right/wrong pair the Log tab shows:
+ * `score` is the wrong count (misses, or non-winning guesses) and `total` is
+ * the right count (found slots, or 1-on-a-win/0), so a friend's card mirrors
+ * your own. `'ongoing'` rows are live started-but-unfinished games, republished
+ * as the counts grow and replaced by the final row at finish. `total` reads
+ * back null on pre-right-count rows. `streak` is the streak at publish time;
+ * the UI only trusts it on today's row.
  */
 export type PublishedResult = {
   dateKey: string;

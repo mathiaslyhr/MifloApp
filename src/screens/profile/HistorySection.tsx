@@ -19,7 +19,8 @@ export type HistoryDay = {
   rows: {
     game: DailyGame;
     status: DayCellStatus;
-    count: number | null;
+    right: number | null;
+    wrong: number | null;
     answer: string | null;
   }[];
 };
@@ -71,7 +72,8 @@ export function HistorySection({days, todayKey, emptyLabel}: Props) {
                     key={row.game}
                     game={row.game}
                     status={row.status}
-                    count={row.count}
+                    right={row.right}
+                    wrong={row.wrong}
                     answer={row.answer}
                     isLast={i === day.rows.length - 1}
                   />

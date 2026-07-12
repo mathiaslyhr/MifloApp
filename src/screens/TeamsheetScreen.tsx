@@ -255,7 +255,13 @@ export function TeamsheetScreen({navigation}: Props) {
       // Live "in progress" row for friends: the eye + the running miss
       // count. The finish row replaces it (same day+game key).
       queueDailyResult(
-        ongoingResult('teamsheet', dateKey, missCount(next), liveStreak(streak, dateKey)),
+        ongoingResult(
+          'teamsheet',
+          dateKey,
+          foundSlots(next).size,
+          missCount(next),
+          liveStreak(streak, dateKey),
+        ),
       ).catch(() => {});
       if (outcome === 'hit') {
         haptics.tap();

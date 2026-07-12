@@ -225,7 +225,13 @@ export function TopBinsScreen({navigation}: Props) {
       // Live "in progress" row for friends: the eye + the running miss
       // count. The finish row replaces it (same day+game key).
       queueDailyResult(
-        ongoingResult('tenball', dateKey, missCount(next), liveStreak(streak, dateKey)),
+        ongoingResult(
+          'tenball',
+          dateKey,
+          foundRanks(next).size,
+          missCount(next),
+          liveStreak(streak, dateKey),
+        ),
       ).catch(() => {});
       if (outcome === 'hit') {
         haptics.tap();

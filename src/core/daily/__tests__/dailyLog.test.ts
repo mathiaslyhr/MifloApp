@@ -32,7 +32,11 @@ describe('buildDailyLog', () => {
     expect(log.days).toHaveLength(1);
     expect(log.days[0].dateKey).toBe(TODAY);
     for (const game of DAILY_GAMES) {
-      expect(log.days[0].cells[game]).toEqual({status: 'notPlayed', count: null});
+      expect(log.days[0].cells[game]).toEqual({
+        status: 'notPlayed',
+        right: null,
+        wrong: null,
+      });
     }
   });
 
@@ -64,7 +68,8 @@ describe('buildDailyLog', () => {
       '2026-07-08',
       '2026-07-07',
     ]);
-    expect(log.days[1].cells.scout).toEqual({status: 'won', count: 3});
+    // Scout win in 3: 1 right, the other 2 guesses wrong.
+    expect(log.days[1].cells.scout).toEqual({status: 'won', right: 1, wrong: 2});
     // The 9th and 8th are gap days: nothing played anywhere.
     for (const game of DAILY_GAMES) {
       expect(log.days[2].cells[game].status).toBe('notPlayed');
@@ -72,7 +77,8 @@ describe('buildDailyLog', () => {
     }
     expect(log.days[4].cells.teamsheet).toEqual({
       status: 'won',
-      count: 2,
+      right: 11,
+      wrong: 2,
       refId: 'lineup-1',
     });
   });
@@ -103,11 +109,16 @@ describe('buildDailyLog', () => {
       },
       NO_STREAKS,
     );
-    expect(log.days[0].cells.scout).toEqual({status: 'revealed', count: 6});
-    expect(log.days[0].cells.journeyman).toEqual({status: 'revealed', count: 9});
+    // Failed: 0 right, every guess wrong.
+    expect(log.days[0].cells.scout).toEqual({status: 'revealed', right: 0, wrong: 6});
+    expect(log.days[0].cells.journeyman).toEqual({
+      status: 'revealed',
+      right: 0,
+      wrong: 9,
+    });
   });
 
-  it('picks guesses for scout/journeyman and misses for tenball/teamsheet', () => {
+  it('maps right/wrong per game: found/misses, or 1-on-a-win/guesses', () => {
     const log = buildDailyLog(
       TODAY,
       {
@@ -129,10 +140,10 @@ describe('buildDailyLog', () => {
       NO_STREAKS,
     );
     expect(log.days[0].cells).toEqual({
-      scout: {status: 'won', count: 4},
-      journeyman: {status: 'revealed', count: 9},
-      tenball: {status: 'won', count: 5, refId: 'list-1'},
-      teamsheet: {status: 'revealed', count: 12, refId: 'lineup-1'},
+      scout: {status: 'won', right: 1, wrong: 3},
+      journeyman: {status: 'revealed', right: 0, wrong: 9},
+      tenball: {status: 'won', right: 10, wrong: 5, refId: 'list-1'},
+      teamsheet: {status: 'revealed', right: 8, wrong: 12, refId: 'lineup-1'},
     });
   });
 
@@ -153,15 +164,16 @@ describe('buildDailyLog', () => {
         },
       },
       NO_STREAKS,
-      {...NO_STARTS, scout: 2, tenball: 5},
+      {...NO_STARTS, scout: {right: 0, wrong: 2}, tenball: {right: 3, wrong: 5}},
     );
-    expect(log.days[0].cells.scout).toEqual({status: 'ongoing', count: 2});
-    expect(log.days[0].cells.tenball).toEqual({status: 'ongoing', count: 5});
+    expect(log.days[0].cells.scout).toEqual({status: 'ongoing', right: 0, wrong: 2});
+    expect(log.days[0].cells.tenball).toEqual({status: 'ongoing', right: 3, wrong: 5});
     expect(log.days[0].cells.journeyman.status).toBe('notPlayed');
     // Yesterday never reads the started tries — finished from history only.
     expect(log.days[1].cells.tenball).toEqual({
       status: 'won',
-      count: 3,
+      right: 10,
+      wrong: 3,
       refId: 'list-1',
     });
     expect(log.days[1].cells.scout.status).toBe('notPlayed');
@@ -175,9 +187,9 @@ describe('buildDailyLog', () => {
         scout: {[TODAY]: {dateKey: TODAY, status: 'won', guessCount: 2}},
       },
       NO_STREAKS,
-      {...NO_STARTS, scout: 4},
+      {...NO_STARTS, scout: {right: 0, wrong: 4}},
     );
-    expect(log.days[0].cells.scout).toEqual({status: 'won', count: 2});
+    expect(log.days[0].cells.scout).toEqual({status: 'won', right: 1, wrong: 1});
   });
 
   it('passes each game its own streak', () => {

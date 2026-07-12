@@ -34,6 +34,8 @@ import {
   syncPushToken,
 } from './src/core/notifications/pushInvites';
 import {flushOutbox} from './src/core/social/outbox';
+import {reconcileStaleDailyProgress} from './src/core/daily/reconcile';
+import {dateKeyFor} from './src/games/scout/dailySeed';
 import {startPresenceHeartbeat} from './src/core/social/presence';
 import {startRequestsRefresh} from './src/core/social/requestsStore';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
@@ -64,9 +66,14 @@ function App(): React.JSX.Element {
     // OTA game content: apply the cached pack, then poll for a newer one on
     // launch + every foreground. Fails silently — bundled data always works.
     initFootballDataSync().catch(() => {});
-    // Daily results finished offline (flight mode) wait in the social outbox;
-    // retry publishing them on every launch. No-op before opting into Friends.
-    flushOutbox().catch(() => {});
+    // A daily left unfinished when the calendar rolled over has no history
+    // entry and would vanish from the archive; promote it to a failed result
+    // (own log + friends' wire) before flushing, so it goes out in this flush.
+    // Daily results finished offline (flight mode) also wait in the social
+    // outbox; retry publishing them on every launch. No-op pre-opt-in.
+    reconcileStaleDailyProgress(dateKeyFor(new Date()))
+      .catch(() => {})
+      .finally(() => flushOutbox().catch(() => {}));
     // Friends presence: beat "I'm here" while foregrounded (green dot / last
     // active on friends' tabs). Also a no-op before opting into Friends.
     startPresenceHeartbeat();

@@ -241,8 +241,7 @@
     "a11ySurrendered": "{{game}}: gav op",
     "a11yOngoing": "{{game}}: i gang",
     "a11yNotPlayed": "{{game}}: ikke spillet",
-    "a11yGuesses": "{{count}} gæt",
-    "a11yMisses": "{{count}} forbiere"
+    "a11yScore": "{{right}} rigtige, {{wrong}} forkerte"
   },
   "social": {
     "title": "Venner",

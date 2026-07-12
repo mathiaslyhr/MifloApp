@@ -215,7 +215,7 @@ export function JourneymanScreen({navigation}: Props) {
       // Live "in progress" row for friends: the eye + the running guess
       // count. The finish row replaces it (same day+game key).
       queueDailyResult(
-        ongoingResult('journeyman', dateKey, next.guessedIds.length, liveStreak(streak, dateKey)),
+        ongoingResult('journeyman', dateKey, 0, next.guessedIds.length, liveStreak(streak, dateKey)),
       ).catch(() => {});
     }
   }

@@ -8,16 +8,29 @@ import {
 } from '../normalize';
 
 describe('normalize', () => {
-  it('maps a scout win to guess count with no total', () => {
+  it('maps a scout win to 1 right + the non-winning guesses wrong', () => {
     expect(
       fromScoutEntry({dateKey: '2026-07-11', status: 'won', guessCount: 4}, 3),
     ).toEqual({
       dateKey: '2026-07-11',
       game: 'scout',
       status: 'won',
-      score: 4,
-      total: null,
+      score: 3,
+      total: 1,
       streak: 3,
+    });
+  });
+
+  it('maps a failed scout day to 0 right + all guesses wrong', () => {
+    expect(
+      fromScoutEntry({dateKey: '2026-07-11', status: 'lost', guessCount: 5}, 0),
+    ).toEqual({
+      dateKey: '2026-07-11',
+      game: 'scout',
+      status: 'revealed',
+      score: 5,
+      total: 0,
+      streak: 0,
     });
   });
 
@@ -29,7 +42,7 @@ describe('normalize', () => {
     expect(result.status).toBe('revealed');
   });
 
-  it('maps journeyman to guess count with no total', () => {
+  it('maps a failed journeyman day to 0 right + all guesses wrong', () => {
     expect(
       fromJourneymanEntry({dateKey: '2026-07-11', status: 'revealed', guessCount: 9}, 0),
     ).toEqual({
@@ -37,12 +50,12 @@ describe('normalize', () => {
       game: 'journeyman',
       status: 'revealed',
       score: 9,
-      total: null,
+      total: 0,
       streak: 0,
     });
   });
 
-  it('maps tenball to its miss count', () => {
+  it('maps tenball to found (right) + misses (wrong)', () => {
     expect(
       fromTenballEntry(
         {dateKey: '2026-07-11', listId: 'list-1', status: 'won', found: 10, misses: 2},
@@ -53,12 +66,12 @@ describe('normalize', () => {
       game: 'tenball',
       status: 'won',
       score: 2,
-      total: null,
+      total: 10,
       streak: 7,
     });
   });
 
-  it('maps teamsheet to its miss count', () => {
+  it('maps teamsheet to found (right) + misses (wrong)', () => {
     expect(
       fromTeamsheetEntry(
         {
@@ -75,24 +88,24 @@ describe('normalize', () => {
       game: 'teamsheet',
       status: 'revealed',
       score: 9,
-      total: null,
+      total: 8,
       streak: 0,
     });
   });
 
-  it('builds an ongoing row with the running tries', () => {
-    expect(ongoingResult('scout', '2026-07-11', 3, 5)).toEqual({
+  it('builds an ongoing row with the running right/wrong counts', () => {
+    expect(ongoingResult('tenball', '2026-07-11', 2, 3, 5)).toEqual({
       dateKey: '2026-07-11',
-      game: 'scout',
+      game: 'tenball',
       status: 'ongoing',
       score: 3,
-      total: null,
+      total: 2,
       streak: 5,
     });
   });
 
-  it('clamps runaway counts so the backend never rejects a row', () => {
-    expect(ongoingResult('tenball', '2026-07-11', 9999, 0).score).toBe(500);
+  it('clamps a runaway wrong count so the backend never rejects a row', () => {
+    expect(ongoingResult('tenball', '2026-07-11', 5, 9999, 0).score).toBe(500);
   });
 
   it('only attaches a streak that is actually alive', () => {

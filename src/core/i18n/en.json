@@ -241,8 +241,7 @@
     "a11ySurrendered": "{{game}}: gave up",
     "a11yOngoing": "{{game}}: in progress",
     "a11yNotPlayed": "{{game}}: not played",
-    "a11yGuesses": "{{count}} guesses",
-    "a11yMisses": "{{count}} misses"
+    "a11yScore": "{{right}} correct, {{wrong}} wrong"
   },
   "social": {
     "title": "Friends",

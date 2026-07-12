@@ -48,10 +48,15 @@ export type DayCellStatus = 'won' | 'revealed' | 'ongoing' | 'notPlayed';
 export type DayCell = {
   status: DayCellStatus;
   /**
-   * The tries metric: guesses used (Scout/Journeyman) or misses (Top
-   * Bins/Team sheet). The running count while ongoing; null when not played.
+   * Correct answers: found slots (Top Bins/Team sheet) or 1-on-a-win/0
+   * (Scout/Journeyman). The running count while ongoing; null when not played.
    */
-  count: number | null;
+  right: number | null;
+  /**
+   * Wrong guesses: misses (Top Bins/Team sheet) or the non-winning guesses
+   * (Scout/Journeyman). The running count while ongoing; null when not played.
+   */
+  wrong: number | null;
   /**
    * The finished day's list/lineup id (Top Bins/Team sheet only) — lets the
    * owner's UI resolve the list or team title locally. Never published.
@@ -80,10 +85,10 @@ export type DailyHistories = {
 /** The log never reaches further back than this many days. */
 const MAX_DAYS = 30;
 
-const NOT_PLAYED: DayCell = {status: 'notPlayed', count: null};
+const NOT_PLAYED: DayCell = {status: 'notPlayed', right: null, wrong: null};
 
-/** Tries so far per started-but-unfinished game; null = not started. */
-export type OngoingTries = Record<DailyGame, number | null>;
+/** Right/wrong so far per started-but-unfinished game; null = not started. */
+export type OngoingTries = Record<DailyGame, {right: number; wrong: number} | null>;
 
 const NO_STARTS: OngoingTries = {
   scout: null,
@@ -92,8 +97,10 @@ const NO_STARTS: OngoingTries = {
   teamsheet: null,
 };
 
-function openCell(tries: number | null): DayCell {
-  return tries === null ? NOT_PLAYED : {status: 'ongoing', count: tries};
+function openCell(tries: {right: number; wrong: number} | null): DayCell {
+  return tries === null
+    ? NOT_PLAYED
+    : {status: 'ongoing', right: tries.right, wrong: tries.wrong};
 }
 
 function cellsFor(
@@ -107,16 +114,32 @@ function cellsFor(
   const teamsheet = histories.teamsheet[dateKey];
   return {
     scout: scout
-      ? {status: scout.status === 'won' ? 'won' : 'revealed', count: scout.guessCount}
+      ? {
+          status: scout.status === 'won' ? 'won' : 'revealed',
+          right: scout.status === 'won' ? 1 : 0,
+          wrong: scout.status === 'won' ? Math.max(0, scout.guessCount - 1) : scout.guessCount,
+        }
       : openCell(started.scout),
     tenball: tenball
-      ? {status: tenball.status, count: tenball.misses, refId: tenball.listId}
+      ? {status: tenball.status, right: tenball.found, wrong: tenball.misses, refId: tenball.listId}
       : openCell(started.tenball),
     journeyman: journeyman
-      ? {status: journeyman.status, count: journeyman.guessCount}
+      ? {
+          status: journeyman.status,
+          right: journeyman.status === 'won' ? 1 : 0,
+          wrong:
+            journeyman.status === 'won'
+              ? Math.max(0, journeyman.guessCount - 1)
+              : journeyman.guessCount,
+        }
       : openCell(started.journeyman),
     teamsheet: teamsheet
-      ? {status: teamsheet.status, count: teamsheet.misses, refId: teamsheet.lineupId}
+      ? {
+          status: teamsheet.status,
+          right: teamsheet.found,
+          wrong: teamsheet.misses,
+          refId: teamsheet.lineupId,
+        }
       : openCell(started.teamsheet),
   };
 }
@@ -209,16 +232,25 @@ export async function loadDailyLog(todayKey: string): Promise<DailyLog> {
     // "Started" is just saved progress; a finished game also has a history
     // entry for today, and the history check wins in cellsFor. The counts
     // mirror the engines exactly because no-op guesses are never persisted:
-    // stored tenball guesses without a rank / teamsheet guesses without a
-    // slot are precisely the engines' misses.
+    // stored tenball guesses with a rank / teamsheet guesses with a slot are
+    // precisely the engines' finds, the rest are misses. Scout/Journeyman have
+    // no "found" until the win, so their in-progress right count is always 0.
     {
-      scout: scoutProgress ? scoutProgress.guessedIds.length : null,
+      scout: scoutProgress ? {right: 0, wrong: scoutProgress.guessedIds.length} : null,
       tenball: tenballProgress
-        ? tenballProgress.guesses.filter(g => g.rank === undefined).length
+        ? {
+            right: tenballProgress.guesses.filter(g => g.rank !== undefined).length,
+            wrong: tenballProgress.guesses.filter(g => g.rank === undefined).length,
+          }
         : null,
-      journeyman: journeymanProgress ? journeymanProgress.guessedIds.length : null,
+      journeyman: journeymanProgress
+        ? {right: 0, wrong: journeymanProgress.guessedIds.length}
+        : null,
       teamsheet: teamsheetProgress
-        ? teamsheetProgress.guesses.filter(g => g.slot === undefined).length
+        ? {
+            right: teamsheetProgress.guesses.filter(g => g.slot !== undefined).length,
+            wrong: teamsheetProgress.guesses.filter(g => g.slot === undefined).length,
+          }
         : null,
     },
   );

@@ -321,7 +321,8 @@ export function ProfileScreen({isActive}: Props) {
           return {
             game,
             status: cell.status,
-            count: cell.count,
+            right: cell.right,
+            wrong: cell.wrong,
             answer: closed
               ? dailyAnswerFor(game, day.dateKey, cell.refId, t)
               : null,

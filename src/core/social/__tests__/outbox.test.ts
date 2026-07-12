@@ -125,22 +125,23 @@ describe('runBackfill', () => {
     expect(mockPublishResults).toHaveBeenCalledTimes(1);
     const sent: PublishedResult[] = mockPublishResults.mock.calls[0][0];
     expect(sent).toHaveLength(2);
-    // Streak rides only on the streak's lastCompletedDateKey entry.
+    // Streak rides only on the streak's lastCompletedDateKey entry. A scout win
+    // in 4: 1 right (total), 3 wrong (score).
     expect(sent).toContainEqual({
       dateKey: '2026-07-10',
       game: 'scout',
       status: 'won',
-      score: 4,
-      total: null,
+      score: 3,
+      total: 1,
       streak: 3,
     });
-    // Board games publish their miss count — the same number the Log shows.
+    // Board games publish found (right/total) + misses (wrong/score).
     expect(sent).toContainEqual({
       dateKey: '2026-07-09',
       game: 'tenball',
       status: 'revealed',
       score: 12,
-      total: null,
+      total: 7,
       streak: 0,
     });
   });
