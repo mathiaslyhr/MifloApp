@@ -935,4 +935,5 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-08': 'Gündoğan, İlkay',
   '2028-07-09': 'Wissa, Yoane',
   '2028-07-10': 'Kudus, Mohammed',
+  '2028-07-11': 'Gila, Mario',
 };
