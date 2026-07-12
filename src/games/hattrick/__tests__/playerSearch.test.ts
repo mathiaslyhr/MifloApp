@@ -18,6 +18,14 @@ describe('fold', () => {
     expect(fold('João Félix')).toBe('joao felix');
     expect(fold('Müller')).toBe('muller');
   });
+
+  it('folds atomic letters NFD leaves alone (Turkish ı, ø, ł, ß…)', () => {
+    expect(fold('Yılmaz')).toBe('yilmaz'); // so "yi" matches
+    expect(fold('Ødegaard')).toBe('odegaard');
+    expect(fold('Lewandowłski')).toBe('lewandowlski');
+    expect(fold('Weiß')).toBe('weiss');
+    expect(fold('Guðmundsson')).toBe('gudmundsson');
+  });
 });
 
 describe('scoreFootballer / searchPlayers ranking', () => {

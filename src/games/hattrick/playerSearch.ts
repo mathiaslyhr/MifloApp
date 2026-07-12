@@ -5,8 +5,26 @@
  */
 import type {Footballer} from '../../data/football';
 
-/** Strip accents and lowercase, so "João"/"Müller" match plain ASCII input.
- * Curly apostrophes fold to straight ones — iOS smart punctuation types ’
+/** Letters NFD can't decompose because they're distinct glyphs, not an
+ * ASCII base + combining accent. Without these, typing "yi" misses the Turkish
+ * dotless "ı" in "Yılmaz", "o" misses "ø" in "Ødegaard", etc. */
+const ATOMIC_LETTERS: Record<string, string> = {
+  ı: 'i', // Turkish dotless i (İ decomposes fine on its own)
+  ø: 'o',
+  ł: 'l',
+  ß: 'ss',
+  đ: 'd',
+  ð: 'd',
+  þ: 'th',
+  æ: 'ae',
+  œ: 'oe',
+  ħ: 'h',
+  ŋ: 'n',
+  ə: 'e', // Azerbaijani schwa
+};
+
+/** Strip accents and lowercase, so "João"/"Müller"/"Yılmaz" match plain ASCII
+ * input. Curly apostrophes fold to straight ones — iOS smart punctuation types ’
  * while data mostly carries ', and "Guivarc’h" must equal "Guivarc'h". */
 export function fold(s: string): string {
   return s
@@ -14,6 +32,7 @@ export function fold(s: string): string {
     .replace(/[̀-ͯ]/g, '')
     .replace(/[’ʼ]/g, "'")
     .toLowerCase()
+    .replace(/[ıøłßđðþæœħŋə]/g, c => ATOMIC_LETTERS[c] ?? c)
     .trim();
 }
 
