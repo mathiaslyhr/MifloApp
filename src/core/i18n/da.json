@@ -290,7 +290,9 @@
     "removeA11y": "Fjern {{name}}",
     "activeMinutes": "Aktiv for {{count}} min. siden",
     "activeHours": "Aktiv for {{count}} t. siden",
-    "activeDays": "Aktiv for {{count}} d. siden"
+    "activeHours_plural": "Aktiv for {{count}} t. siden",
+    "activeDays": "Aktiv for {{count}} d. siden",
+    "activeDays_plural": "Aktiv for {{count}} d. siden"
   },
   "menu": {
     "title": "Menu",
