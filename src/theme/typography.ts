@@ -22,24 +22,24 @@ type Variant = {
  * use Satoshi **Regular** (not Medium/bold) for the airy look; Medium is reserved
  * for small UI labels/wordmark where a little weight aids legibility.
  *
- * Standard sizes (per the design direction): header 32, body 16, small 14.
+ * Sizes/line-heights follow Apple's iOS Dynamic Type scale (weights kept thin).
  */
 export const type = {
-  /** Oversized landing hero. Thin. */
-  hero: {fontFamily: fonts.regular, fontSize: 40, lineHeight: 46, letterSpacing: -0.6},
-  /** Screen header — the standard 32px title. Thin. */
-  title: {fontFamily: fonts.regular, fontSize: 32, lineHeight: 38, letterSpacing: -0.5},
-  /** Section headings. Thin. */
+  /** Oversized landing hero. Thin. iOS Large Title metrics. */
+  hero: {fontFamily: fonts.regular, fontSize: 34, lineHeight: 41, letterSpacing: -0.6},
+  /** Screen header title. Thin. iOS Title 1 metrics. */
+  title: {fontFamily: fonts.regular, fontSize: 28, lineHeight: 34, letterSpacing: -0.5},
+  /** Section headings. Thin. iOS Headline/Body size. */
   section: {fontFamily: fonts.regular, fontSize: 17, lineHeight: 22, letterSpacing: -0.2},
-  /** The "Miflo" top-bar wordmark. */
-  wordmark: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, letterSpacing: -0.3},
-  /** Body copy — 16px. */
-  body: {fontFamily: fonts.regular, fontSize: 16, lineHeight: 24},
-  /** Secondary / smaller body — 14px. */
-  secondary: {fontFamily: fonts.regular, fontSize: 14, lineHeight: 20},
-  /** Button / control labels — 15px, a touch of weight. */
-  label: {fontFamily: fonts.medium, fontSize: 15, lineHeight: 19},
-  /** Captions / meta — 12px. */
+  /** The "Miflo" top-bar wordmark. iOS Title 3 metrics. */
+  wordmark: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 25, letterSpacing: -0.3},
+  /** Body copy. iOS Callout metrics. */
+  body: {fontFamily: fonts.regular, fontSize: 16, lineHeight: 21},
+  /** Secondary / smaller body. iOS Footnote metrics. */
+  secondary: {fontFamily: fonts.regular, fontSize: 13, lineHeight: 18},
+  /** Button / control labels — a touch of weight. iOS Subheadline size. */
+  label: {fontFamily: fonts.medium, fontSize: 15, lineHeight: 20},
+  /** Captions / meta. iOS Caption 1 metrics. */
   caption: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16},
 } as const satisfies Record<string, Variant>;
 
