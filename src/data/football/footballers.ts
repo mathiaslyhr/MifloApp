@@ -12172,7 +12172,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nationality: ['Serbia'],
     positions: ['DF', 'MF'],
     born: '1992-11-01',
-    shirtNumbers: [11, 17],
+    shirtNumbers: [10, 11, 17],
     clubs: [
       {clubId: 'vfb-stuttgart', from: 2015, to: 2016},
       {clubId: 'hamburg', from: 2016, to: 2018},
@@ -21114,7 +21114,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2003-04-21',
     shirtNumbers: [7, 10],
     clubs: [
-      {clubId: 'psg', from: 2019, to: 2023},
+      {clubId: 'psg', from: 2019, to: 2022},
+      {clubId: 'psv', from: 2022, to: 2023},
+      {clubId: 'psg', from: 2023, to: 2023},
       {clubId: 'rb-leipzig', from: 2023, to: 2025},
       {clubId: 'tottenham', from: 2025},
     ],
@@ -24071,6 +24073,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'european-championship', count: 1, years: [2004]},
     ],
+  },
+  {
+    id: 'Walcott, Theo',
+    name: 'Theo Walcott',
+    nationality: ['England'],
+    positions: ['FW'],
+    born: '1989-03-16',
+    shirtNumbers: [14, 32],
+    clubs: [
+      {clubId: 'southampton', from: 2005, to: 2006},
+      {clubId: 'arsenal', from: 2006, to: 2018},
+      {clubId: 'everton', from: 2018, to: 2021},
+      {clubId: 'southampton', from: 2020, to: 2021, loan: true},
+      {clubId: 'southampton', from: 2021, to: 2023},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 3, years: [2014, 2015, 2017], clubId: 'arsenal'},
+    ],
+    tags: ['legends'],
   },
   {
     id: 'Walker, Kyle',
