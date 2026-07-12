@@ -10126,7 +10126,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nationality: ['Denmark'],
     positions: ['MF'],
     born: '1995-08-05',
-    shirtNumbers: [23, 5],
+    shirtNumbers: [23, 5, 8],
     clubs: [
       {clubId: 'bayern', from: 2012, to: 2016},
       {clubId: 'southampton', from: 2016, to: 2020},
@@ -11236,7 +11236,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nationality: ['Japan'],
     positions: ['MF'],
     born: '1989-03-17',
-    shirtNumbers: [23, 26],
+    shirtNumbers: [23, 26, 8],
     clubs: [
       {clubId: 'dortmund', from: 2010, to: 2012},
       {clubId: 'man-utd', from: 2012, to: 2014},
@@ -14084,6 +14084,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'world-cup', count: 1, years: [2002]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Marcos Leonardo',
+    name: 'Marcos Leonardo',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    born: '2003-05-02',
+    shirtNumbers: [9],
+    clubs: [
+      {clubId: 'santos', from: 2020, to: 2024},
+      {clubId: 'benfica', from: 2024, to: 2024},
+      {clubId: 'al-hilal', from: 2024, to: 2026},
+      {clubId: 'ajax', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Marmoush, Omar',
@@ -22983,7 +22999,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'genk', from: 2012, to: 2019},
       {clubId: 'brighton', from: 2019, to: 2023},
-      {clubId: 'arsenal', from: 2023},
+      {clubId: 'arsenal', from: 2023, to: 2026},
+      {clubId: 'besiktas', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
