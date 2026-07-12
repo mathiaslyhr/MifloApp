@@ -755,4 +755,5 @@ export const JOURNEYMAN_SCHEDULE: Record<string, string> = {
   '2028-07-08': 'Bentancur, Rodrigo',
   '2028-07-09': 'Bellerín, Héctor',
   '2028-07-10': 'Sanabria, Antonio',
+  '2028-07-11': 'Trippier, Kieran',
 };
