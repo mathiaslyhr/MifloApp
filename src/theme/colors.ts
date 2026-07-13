@@ -182,6 +182,13 @@ export const dark: Palette = {
 };
 
 /**
+ * Skin 3's palette — the new default look, built page by page. Starts as a copy
+ * of `dark` (a blank canvas) and gets repainted token by token as each screen is
+ * rebuilt onto the new aesthetic. Nothing final is committed here yet.
+ */
+export const skin3: Palette = {...dark};
+
+/**
  * The light palette under the legacy name. New code should prefer `useColors()`
  * so it reacts to the active theme; this alias keeps un-migrated modules
  * (`import {colors}`) compiling and rendering light.

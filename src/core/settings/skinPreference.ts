@@ -24,7 +24,7 @@ export function resolveSkin(
   pref: SkinPreference,
   systemScheme: ColorSchemeName,
 ): SkinId {
-  if (pref === 'light' || pref === 'dark') {
+  if (pref !== 'system') {
     return pref;
   }
   return systemScheme === 'dark' ? SYSTEM_SKIN.dark : SYSTEM_SKIN.light;
@@ -34,7 +34,12 @@ export function resolveSkin(
 export async function getSkinPreference(): Promise<SkinPreference> {
   try {
     const saved = await AsyncStorage.getItem(STORAGE_KEY);
-    if (saved === 'light' || saved === 'dark' || saved === 'system') {
+    if (
+      saved === 'light' ||
+      saved === 'dark' ||
+      saved === 'skin3' ||
+      saved === 'system'
+    ) {
       return saved;
     }
   } catch {

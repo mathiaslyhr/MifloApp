@@ -9,10 +9,10 @@
  * tint, the status-bar glyphs, and which skin "System" resolves to. So a future
  * "Midnight" skin would still be `appearance: 'dark'`.
  */
-import {dark, light, type Palette} from './colors';
+import {dark, light, skin3 as skin3Palette, type Palette} from './colors';
 
-/** The two shipping skins. New skins extend this union. */
-export type SkinId = 'light' | 'dark';
+/** The shipping skins. New skins extend this union. */
+export type SkinId = 'light' | 'dark' | 'skin3';
 
 /** The light/dark axis a skin sits on (for chrome + system-follow). */
 export type Appearance = 'light' | 'dark';
@@ -81,6 +81,14 @@ const AURORA_MESH: Mesh = {
   ],
 };
 
+/**
+ * Skin 3 — the new default look being built page by page (the redesign). Its
+ * palette and mesh start as a copy of Aurora (a blank dark canvas) and get
+ * repainted as each screen is rebuilt; nothing about the final aesthetic is
+ * committed yet. Selectable in Settings, and the standard skin (see SYSTEM_SKIN).
+ */
+const SKIN3_MESH: Mesh = AURORA_MESH;
+
 export const SKINS: Record<SkinId, Skin> = {
   light: {
     id: 'light',
@@ -96,10 +104,21 @@ export const SKINS: Record<SkinId, Skin> = {
     palette: dark,
     mesh: AURORA_MESH,
   },
+  skin3: {
+    id: 'skin3',
+    name: 'Skin 3',
+    appearance: 'dark',
+    palette: skin3Palette,
+    mesh: SKIN3_MESH,
+  },
 };
 
-/** The skin "System" resolves to for each device appearance. */
+/**
+ * The skin "System" resolves to — skin 3 is the standard look now, so System
+ * (the default preference) lands on it for both device appearances. Pick
+ * Light/Dark explicitly in Settings to see the old skins.
+ */
 export const SYSTEM_SKIN: Record<Appearance, SkinId> = {
-  light: 'light',
-  dark: 'dark',
+  light: 'skin3',
+  dark: 'skin3',
 };

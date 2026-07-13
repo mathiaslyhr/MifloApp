@@ -36,7 +36,7 @@ const LANGUAGES: LanguagePreference[] = DANISH_ENABLED
 /** Settings — language and haptics. Both persist and apply immediately. */
 /** Light / Dark / System — the skin choices, in the order they're shown. The
  * user sees appearance labels; each maps to a skin (or "follow system"). */
-const APPEARANCES: SkinPreference[] = ['system', 'light', 'dark'];
+const APPEARANCES: SkinPreference[] = ['system', 'skin3', 'light', 'dark'];
 
 export function SettingsScreen({navigation}: Props) {
   const {t} = useTranslation();
@@ -60,6 +60,7 @@ export function SettingsScreen({navigation}: Props) {
 
   const appearanceLabel: Record<SkinPreference, string> = {
     system: t('settings.appearanceSystem'),
+    skin3: t('settings.appearanceSkin3'),
     light: t('settings.appearanceLight'),
     dark: t('settings.appearanceDark'),
   };
