@@ -29,6 +29,7 @@ import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
 import {AboutScreen} from '../../screens/menu/AboutScreen';
 import {OneDeviceScreen} from '../../screens/menu/OneDeviceScreen';
+import {MoveToPhoneScreen} from '../../screens/menu/MoveToPhoneScreen';
 import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +66,7 @@ export function RootNavigator() {
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="OneDevice" component={OneDeviceScreen} />
+      <Stack.Screen name="MoveToPhone" component={MoveToPhoneScreen} />
     </Stack.Navigator>
   );
 }

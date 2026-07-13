@@ -9,11 +9,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  InlineSuggestions,
-  type InlineSuggestion,
-} from '../games/shared/InlineSuggestions';
-import {searchSuggestions} from '../games/tenball/suggestions';
 import {ChevronLeft, Flag, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
@@ -23,7 +18,6 @@ import {
   FloatingBar,
   Screen,
   Text,
-  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
@@ -44,9 +38,11 @@ import {
   type Palette,
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FOOTBALLERS, getById, type Footballer} from '../data/football';
+import {getById, type Footballer} from '../data/football';
 import {flagImage} from '../games/hattrick/criterionIcon';
-import {fold, searchPlayers} from '../games/hattrick/playerSearch';
+import {fold} from '../games/hattrick/playerSearch';
+import {SearchField, useSearch} from '../games/shared/SearchScreen';
+import {playerSource, suggestionSource} from '../games/shared/searchSources';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyListFor} from '../games/tenball/dailyList';
 import {
@@ -87,8 +83,8 @@ export function TopBinsScreen({navigation}: Props) {
 
   const [state, setState] = useState<TenballState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
-  const [input, setInput] = useState('');
   const [showHelp, setShowHelp] = useState(false);
+  const openSearch = useSearch();
   const boardRef = useRef<ScrollView>(null);
   const slotYs = useRef<Record<number, number>>({});
 
@@ -195,7 +191,6 @@ export function TopBinsScreen({navigation}: Props) {
     if (!state || !list || isFinished(state)) {
       return;
     }
-    setInput('');
     const {state: next, outcome} = applyGuess(state, list, text);
     if (outcome === 'already-found') {
       haptics.warning();
@@ -252,8 +247,26 @@ export function TopBinsScreen({navigation}: Props) {
     }
   }
 
-  function submitGuess() {
-    submitText(input);
+  function openGuessSearch() {
+    if (!state || !list || isFinished(state)) {
+      return;
+    }
+    const kind = list.kind ?? 'player';
+    const source =
+      kind === 'player' ? playerSource() : suggestionSource(kind);
+    openSearch(source, {placeholder: inputPlaceholder}).then(item => {
+      if (!item) {
+        return;
+      }
+      if (kind === 'player') {
+        const player = getById(item.id);
+        if (player) {
+          submitSuggestion(player);
+        }
+      } else {
+        submitText(item.id);
+      }
+    });
   }
 
   /**
@@ -271,31 +284,6 @@ export function TopBinsScreen({navigation}: Props) {
     );
     submitText(best ?? player.name);
   }
-
-  // Suggestion pool follows the list's answer kind: player lists search the
-  // whole footballer dataset, club/nation/manager/other lists search their
-  // kind's pool (suggestions.ts). `kind` defaults to 'player' so old cached
-  // OTA packs keep working.
-  const suggestions = useMemo<(InlineSuggestion & {footballer?: Footballer})[]>(() => {
-    if (!state || !list || isFinished(state) || input.trim().length === 0) {
-      return [];
-    }
-    const kind = list.kind ?? 'player';
-    if (kind === 'player') {
-      return searchPlayers(FOOTBALLERS, input, [], 5).map(f => ({
-        key: f.id,
-        label: f.name,
-        flag: flagImage(f.nationality[0]) ?? undefined,
-        position: f.positions[0],
-        footballer: f,
-      }));
-    }
-    return searchSuggestions(kind, input).map(e => ({
-      key: fold(e.label),
-      label: e.label,
-      flag: e.flagCountry != null ? flagImage(e.flagCountry) ?? undefined : undefined,
-    }));
-  }, [input, state, list]);
 
   function confirmGiveUp() {
     if (!state || isFinished(state)) {
@@ -458,23 +446,9 @@ export function TopBinsScreen({navigation}: Props) {
             </View>
           ) : (
             <View style={styles.inputPanel}>
-              <InlineSuggestions
-                items={suggestions}
-                onPick={item =>
-                  item.footballer
-                    ? submitSuggestion(item.footballer)
-                    : submitText(item.label)
-                }
-              />
-              <TextField
-                value={input}
-                onChangeText={setInput}
+              <SearchField
                 placeholder={inputPlaceholder}
-                autoCapitalize="words"
-                returnKeyType="go"
-                submitBehavior="submit"
-                onSubmitEditing={submitGuess}
-                accessibilityLabel={inputPlaceholder}
+                onPress={openGuessSearch}
               />
               <Pressable
                 onPress={confirmGiveUp}

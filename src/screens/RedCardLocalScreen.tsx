@@ -32,7 +32,8 @@ import {
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {getById} from '../data/football';
-import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
+import {useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {
   LOCAL_MAX_PLAYERS,
   PassGate,
@@ -87,8 +88,8 @@ export function RedCardLocalScreen({navigation}: Props) {
   const [state, setState] = useState<LocalRedCardState | null>(null);
   const [names, setNames] = useState<string[]>(['', '', '']);
   const [rounds, setRounds] = useState(DEFAULT_ROUNDS);
-  const [guessOpen, setGuessOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const openSearch = useSearch();
 
   const namesReady =
     names.filter(n => n.trim().length > 0).length >= LOCAL_MIN_PLAYERS;
@@ -101,8 +102,20 @@ export function RedCardLocalScreen({navigation}: Props) {
     setState(createLocalGame(names, rounds));
   }
 
+  function openGuess() {
+    openSearch(playerSource(), {
+      title: t('redCard.redeem.button'),
+      placeholder: t('redCard.searchPlaceholder'),
+      emptyHint: t('redCard.searchHint'),
+      noMatch: t('redCard.noPlayers'),
+    }).then(item => {
+      if (item) {
+        submitGuess(item.id);
+      }
+    });
+  }
+
   function submitGuess(footballerId: string) {
-    setGuessOpen(false);
     haptics.press();
     setState(s => (s ? applyLocalRedemption(s, footballerId) : s));
   }
@@ -161,7 +174,7 @@ export function RedCardLocalScreen({navigation}: Props) {
             <RevealStage
               state={state}
               onShowContent={() => setState(s => (s ? showContent(s) : s))}
-              onGuess={() => setGuessOpen(true)}
+              onGuess={openGuess}
               onPlayAgain={() => {
                 haptics.press();
                 setState(s => (s ? createLocalRematch(s) : s));
@@ -193,18 +206,6 @@ export function RedCardLocalScreen({navigation}: Props) {
         </View>
       </FloatingBar>
       <TopStatusFade />
-
-      {/* Imposter redemption — a blind search over every footballer. */}
-      <FootballerSearchModal
-        visible={guessOpen}
-        title={t('redCard.redeem.button')}
-        titleVariant="section"
-        placeholder={t('redCard.searchPlaceholder')}
-        hint={t('redCard.searchHint')}
-        empty={t('redCard.noPlayers')}
-        onPick={submitGuess}
-        onClose={() => setGuessOpen(false)}
-      />
 
       <HowToPlayModal
         visible={showHelp}

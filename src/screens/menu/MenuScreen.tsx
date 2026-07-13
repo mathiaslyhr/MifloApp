@@ -16,6 +16,7 @@ import {
   Settings,
   Shield,
   Smartphone,
+  SmartphoneNfc,
   Trash2,
 } from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
@@ -79,6 +80,11 @@ export function MenuScreen({navigation}: Props) {
       backLabel={t('common.back')}
       contentStyle={styles.body}>
       <MenuGroup label={t('menu.profile')}>
+        <MenuRow
+          label={t('transfer.menuRow')}
+          Icon={SmartphoneNfc}
+          onPress={() => navigation.navigate('MoveToPhone')}
+        />
         <MenuRow
           label={t('menu.deleteProfile')}
           Icon={Trash2}

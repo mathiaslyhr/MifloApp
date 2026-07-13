@@ -54,6 +54,8 @@ export type RootStackParamList = {
   HowToPlay: undefined;
   About: undefined;
   OneDevice: undefined;
+  /** Explains moving a profile to a new phone (the device-linking flow). */
+  MoveToPhone: undefined;
 };
 
 /** Typed navigation prop for screens that push/pop the root stack. */

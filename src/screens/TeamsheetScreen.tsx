@@ -6,7 +6,6 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import {
@@ -25,7 +24,6 @@ import {
   FloatingBar,
   Screen,
   Text,
-  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
@@ -46,15 +44,15 @@ import {
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 import {
-  FOOTBALLERS,
+  getById,
   getLineupById,
   type FamousLineup,
   type Footballer,
   type LineupPlayer,
 } from '../data/football';
-import {flagImage} from '../games/hattrick/criterionIcon';
-import {fold, searchPlayers} from '../games/hattrick/playerSearch';
-import {InlineSuggestions} from '../games/shared/InlineSuggestions';
+import {fold} from '../games/hattrick/playerSearch';
+import {SearchField, useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyLineupFor} from '../games/teamsheet/dailySeed';
 import {formationRows, positionLabels} from '../games/teamsheet/positions';
@@ -109,10 +107,9 @@ export function TeamsheetScreen({navigation}: Props) {
 
   const [state, setState] = useState<TeamsheetState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
-  const [input, setInput] = useState('');
   const [selected, setSelected] = useState<number | null>(null);
   const [showHelp, setShowHelp] = useState(false);
-  const inputRef = useRef<TextInput>(null);
+  const openSearch = useSearch();
 
   // One-time reminder offer, shown the moment a sheet is finished — shared
   // with the other dailies (same asked/pref keys), so whichever game the
@@ -225,7 +222,6 @@ export function TeamsheetScreen({navigation}: Props) {
       setSelected(null);
     } else {
       setSelected(slot);
-      inputRef.current?.focus();
     }
   }
 
@@ -233,7 +229,6 @@ export function TeamsheetScreen({navigation}: Props) {
     if (!state || !lineup || isFinished(state)) {
       return;
     }
-    setInput('');
     const target = selected ?? undefined;
     const {state: next, outcome, slot} = applyGuess(state, lineup, text, target);
     if (outcome === 'already-found') {
@@ -285,8 +280,22 @@ export function TeamsheetScreen({navigation}: Props) {
     }
   }
 
-  function submitGuess() {
-    submitText(input);
+  function openGuessSearch() {
+    if (!state || !lineup || isFinished(state)) {
+      return;
+    }
+    const placeholder =
+      selected !== null
+        ? t('teamsheet.targetPlaceholder', {shirt: lineup.players[selected].shirt})
+        : t('teamsheet.inputPlaceholder');
+    openSearch(playerSource(), {placeholder}).then(item => {
+      if (item) {
+        const player = getById(item.id);
+        if (player) {
+          submitSuggestion(player);
+        }
+      }
+    });
   }
 
   /**
@@ -304,21 +313,6 @@ export function TeamsheetScreen({navigation}: Props) {
     );
     submitText(best ?? player.name);
   }
-
-  // Whole-dataset search on purpose: suggesting from the XI would leak the
-  // answers. Mapped to the shared suggestion card's row shape.
-  const suggestions = useMemo(() => {
-    if (!state || isFinished(state) || input.trim().length === 0) {
-      return [];
-    }
-    return searchPlayers(FOOTBALLERS, input, [], 5).map(f => ({
-      key: f.id,
-      label: f.name,
-      flag: flagImage(f.nationality[0]) ?? undefined,
-      position: f.positions[0],
-      footballer: f,
-    }));
-  }, [input, state]);
 
   function confirmGiveUp() {
     if (!state || isFinished(state)) {
@@ -498,14 +492,7 @@ export function TeamsheetScreen({navigation}: Props) {
             </View>
           ) : (
             <View style={styles.inputPanel}>
-              <InlineSuggestions
-                items={suggestions}
-                onPick={item => submitSuggestion(item.footballer)}
-              />
-              <TextField
-                ref={inputRef}
-                value={input}
-                onChangeText={setInput}
+              <SearchField
                 placeholder={
                   selected !== null
                     ? t('teamsheet.targetPlaceholder', {
@@ -513,11 +500,7 @@ export function TeamsheetScreen({navigation}: Props) {
                       })
                     : t('teamsheet.inputPlaceholder')
                 }
-                autoCapitalize="words"
-                returnKeyType="go"
-                submitBehavior="submit"
-                onSubmitEditing={submitGuess}
-                accessibilityLabel={t('teamsheet.inputPlaceholder')}
+                onPress={openGuessSearch}
               />
               <Pressable
                 onPress={confirmGiveUp}

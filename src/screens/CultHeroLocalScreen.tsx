@@ -29,7 +29,8 @@ import {
   type Palette,
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
+import {useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {
   LOCAL_MAX_PLAYERS,
   PassGate,
@@ -266,13 +267,27 @@ function AnsweringStage({
 }) {
   const {t, i18n} = useTranslation();
   const styles = useThemedStyles(makeStyles);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const openSearch = useSearch();
   const [draft, setDraft] = useState<string | null>(null);
   const player = handoffPlayer(state);
   if (!player) {
     return null;
   }
   const prompt = promptText(state.promptKeys[state.round - 1], t, i18n.language);
+
+  function openPicker() {
+    openSearch(playerSource(), {
+      title: prompt,
+      placeholder: t('cultHero.searchPlaceholder'),
+      emptyHint: t('cultHero.searchHint'),
+      noMatch: t('cultHero.noPlayers'),
+    }).then(item => {
+      if (item) {
+        haptics.press();
+        setDraft(item.id);
+      }
+    });
+  }
 
   function lockIn() {
     if (!draft) {
@@ -300,7 +315,7 @@ function AnsweringStage({
           <Button
             label={t('cultHero.answer.change')}
             variant="secondary"
-            onPress={() => setSearchOpen(true)}
+            onPress={openPicker}
           />
           <Button
             label={t('cultHero.local.lockIn')}
@@ -316,25 +331,11 @@ function AnsweringStage({
           <Button
             label={t('cultHero.answer.pick')}
             variant="primary"
-            onPress={() => setSearchOpen(true)}
+            onPress={openPicker}
           />
         </>
       )}
 
-      <FootballerSearchModal
-        visible={searchOpen}
-        title={prompt}
-        titleVariant="section"
-        placeholder={t('cultHero.searchPlaceholder')}
-        hint={t('cultHero.searchHint')}
-        empty={t('cultHero.noPlayers')}
-        onPick={footballerId => {
-          setSearchOpen(false);
-          haptics.press();
-          setDraft(footballerId);
-        }}
-        onClose={() => setSearchOpen(false)}
-      />
     </View>
   );
 }

@@ -12,6 +12,13 @@
     "stepperDown": "Færre",
     "stepperUp": "Flere"
   },
+  "search": {
+    "placeholder": "Søg",
+    "hint": "Begynd at skrive for at søge.",
+    "noMatch": "Ingen resultater.",
+    "clear": "Ryd søgning",
+    "close": "Luk søgning"
+  },
   "home": {
     "help": "Sådan spiller du",
     "createParty": "Opret et rum",
@@ -984,5 +991,42 @@
     "step2Desc": "En rund 1 enhed-knap dukker op til venstre på kortet. Tryk på den for at starte.",
     "step3Title": "Send telefonen rundt",
     "step3Desc": "I skiftes på én telefon. Skærmen fortæller altid, hvem der må kigge, før noget hemmeligt vises."
+  },
+  "transfer": {
+    "title": "Skift til ny telefon",
+    "intro": "Din profil bor på denne telefon, ikke i en konto. For at flytte den til en ny telefon skal du åbne Miflo der, indtaste din kode og derefter godkende flytningen her. Hav denne telefon i nærheden, indtil det er færdigt.",
+    "step1Title": "Åbn Miflo på den nye telefon",
+    "step1Desc": "Installér og åbn Miflo på den nye telefon, og tryk på \"Har du allerede en profil?\" på profilsiden.",
+    "step2Title": "Indtast din kode",
+    "step2Desc": "Skriv denne telefons kode på den nye telefon. En kort matchkode vises på begge skærme.",
+    "step3Title": "Godkend her",
+    "step3Desc": "Denne telefon beder dig godkende. Tjek at matchkoden passer, og godkend. Dine venner, statistik og streaks flytter med, og denne telefon logger ud.",
+    "haveProfile": "Har du allerede en profil?",
+    "enterCodeTitle": "Flyt en profil hertil",
+    "enterCodeBody": "Indtast koden fra din anden telefon. Du godkender flytningen derovre.",
+    "enterCodePlaceholder": "Din kode",
+    "enterCodeConfirm": "Fortsæt",
+    "waitingTitle": "Godkend på din gamle telefon",
+    "waitingBody": "Godkend flytningen på din gamle telefon. Tjek at denne matchkode passer:",
+    "waitingHint": "Hold begge telefoner åbne. Anmodningen udløber om et par minutter.",
+    "movingTitle": "Flytter din profil",
+    "movedTitle": "Færdig",
+    "movedBody": "Din profil er flyttet til denne telefon.",
+    "errorNotFound": "Ingen profil har den kode.",
+    "errorSelf": "Det er denne telefons egen kode.",
+    "errorTooMany": "For mange anmodninger for den profil lige nu. Prøv igen om lidt.",
+    "errorDenied": "Flytningen blev afvist på den gamle telefon.",
+    "errorExpired": "Anmodningen udløb. Start forfra for at prøve igen.",
+    "errorGeneric": "Kunne ikke flytte profilen. Prøv igen.",
+    "approveTitle": "Skift til ny telefon?",
+    "approveBody": "Nogen har indtastet din kode på en ny telefon og vil flytte din profil dertil. Godkend kun, hvis det var dig.",
+    "approveMatch": "Matchkode på den nye telefon:",
+    "approveConfirm": "Godkend flytning",
+    "approveDecline": "Ikke nu",
+    "approveWaiting": "Venter på, at den nye telefon bliver færdig…",
+    "approveDoneTitle": "Profil flyttet",
+    "approveDoneBody": "Din profil bor nu på din nye telefon. Denne telefon er logget ud.",
+    "approveError": "Kunne ikke fuldføre flytningen. Prøv igen.",
+    "menuRow": "Skift til ny telefon"
   }
 }

@@ -21,6 +21,7 @@ import {
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {SearchProvider} from './src/games/shared/SearchScreen';
 import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
@@ -39,6 +40,8 @@ import {reconcileStaleDailyProgress} from './src/core/daily/reconcile';
 import {dateKeyFor} from './src/games/scout/dailySeed';
 import {startPresenceHeartbeat} from './src/core/social/presence';
 import {startRequestsRefresh} from './src/core/social/requestsStore';
+import {startTransferWatch} from './src/core/transfer/transferStore';
+import {TransferApprovalModal} from './src/screens/transfer/TransferApprovalModal';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -85,6 +88,10 @@ function App(): React.JSX.Element {
     // Friend requests: load them now and on every foreground, so the Friends
     // tab badge is honest even if the push was dismissed. No-op pre-opt-in.
     startRequestsRefresh();
+    // Move-to-a-new-phone: watch for an incoming request to hand this profile
+    // over (the global approval modal below pops when one arrives). No-op before
+    // a profile exists, like the other social watchers.
+    startTransferWatch();
     return initPushInviteListeners();
   }, []);
 
@@ -119,6 +126,7 @@ function App(): React.JSX.Element {
         <SkinProvider>
           <SafeAreaProvider>
             <ThemedStatusBar />
+            <SearchProvider>
             <UpdateGate>
               {/* navigationRef + onStateChange let the OTA content sync apply a
                   downloaded pack the moment the user leaves a game screen. */}
@@ -131,6 +139,10 @@ function App(): React.JSX.Element {
               </NavigationContainer>
             </UpdateGate>
             <ToastHost />
+            {/* Old-phone approval prompt for a profile move — global so it pops
+                wherever the owner is when their new phone asks. */}
+            <TransferApprovalModal />
+            </SearchProvider>
           </SafeAreaProvider>
         </SkinProvider>
       </GestureHandlerRootView>

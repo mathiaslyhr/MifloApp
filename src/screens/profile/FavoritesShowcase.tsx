@@ -11,7 +11,7 @@
  * component only reports the new favorites triple through `onChange`, so the own
  * Profile keeps the one optimistic-update path (mirroring the avatar flow).
  */
-import React, {useState} from 'react';
+import React from 'react';
 import {ActionSheetIOS, Image, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Plus} from 'lucide-react-native';
@@ -24,15 +24,15 @@ import {
   useThemedStyles,
   type Palette,
 } from '../../theme';
-import {CLUBS, FOOTBALLERS, derivedFromData, getById, getClub} from '../../data/football';
+import {getById, getClub} from '../../data/football';
 import {flagImage, logoImage} from '../../games/hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../../games/hattrick/assets/playerAvatars';
-import {fold} from '../../games/hattrick/playerSearch';
-import {FootballerSearchModal} from '../../games/shared/FootballerSearchModal';
+import {useSearch} from '../../games/shared/SearchScreen';
 import {
-  EntityPickerModal,
-  type EntityOption,
-} from '../../games/shared/EntityPickerModal';
+  clubSource,
+  nationSource,
+  playerSource,
+} from '../../games/shared/searchSources';
 
 /** The three showcase picks; null for an unset slot. */
 export type Favorites = {
@@ -51,30 +51,6 @@ type Props = {
 
 type Slot = 'player' | 'club' | 'nation';
 
-// Searchable pools for the club/nation pickers, memoized against OTA hydration
-// (CLUBS/FOOTBALLERS mutate in place). Nations are limited to those with a
-// bundled flag so every row shows art.
-const clubOptions = derivedFromData<EntityOption[]>(() =>
-  CLUBS.map(c => ({
-    id: c.id,
-    label: c.name,
-    flag: logoImage(c.id) ?? undefined,
-    searchTexts: [fold(c.name)],
-  })),
-);
-
-const nationOptions = derivedFromData<EntityOption[]>(() =>
-  [...new Set(FOOTBALLERS.flatMap(f => f.nationality))]
-    .filter(n => flagImage(n) != null)
-    .sort()
-    .map(n => ({
-      id: n,
-      label: n,
-      flag: flagImage(n) ?? undefined,
-      searchTexts: [fold(n)],
-    })),
-);
-
 /** Portrait for a footballer id, falling back to their nationality flag. */
 function playerImage(id: string): number | null {
   return PLAYER_AVATARS[id] ?? flagImage(getById(id)?.nationality[0]) ?? null;
@@ -83,7 +59,7 @@ function playerImage(id: string): number | null {
 export function FavoritesShowcase({favorites, editable = false, onChange}: Props) {
   const {t} = useTranslation();
   const styles = useThemedStyles(makeStyles);
-  const [editing, setEditing] = useState<Slot | null>(null);
+  const openSearch = useSearch();
 
   const playerName = favorites.playerId
     ? getById(favorites.playerId)?.name ?? favorites.playerId
@@ -111,13 +87,37 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
     }
   }
 
+  /** Open the FotMob search for a slot and store the pick. */
+  function openPicker(slot: Slot) {
+    const source =
+      slot === 'player'
+        ? playerSource()
+        : slot === 'club'
+          ? clubSource()
+          : nationSource();
+    const title =
+      slot === 'player'
+        ? t('profile.favoritePlayerPick')
+        : slot === 'club'
+          ? t('profile.favoriteClubPick')
+          : t('profile.favoriteNationPick');
+    openSearch(source, {
+      title,
+      placeholder: t('profile.favoriteSearchPlaceholder'),
+    }).then(item => {
+      if (item) {
+        set(slot, item.id);
+      }
+    });
+  }
+
   /** Tap a tile: empty → open the picker; set → change or remove (avatar UX). */
   function onTilePress(slot: Slot, hasValue: boolean) {
     if (!editable) {
       return;
     }
     if (!hasValue) {
-      setEditing(slot);
+      openPicker(slot);
       return;
     }
     ActionSheetIOS.showActionSheetWithOptions(
@@ -132,7 +132,7 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
       },
       index => {
         if (index === 0) {
-          setEditing(slot);
+          openPicker(slot);
         } else if (index === 1) {
           set(slot, null);
         }
@@ -168,49 +168,6 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
           onPress={() => onTilePress('nation', !!favorites.nation)}
         />
       </View>
-
-      {editable ? (
-        <>
-          <FootballerSearchModal
-            visible={editing === 'player'}
-            title={t('profile.favoritePlayerPick')}
-            placeholder={t('profile.favoriteSearchPlaceholder')}
-            hint={t('profile.favoritePlayerHint')}
-            empty={t('profile.favoriteEmpty')}
-            onPick={id => {
-              set('player', id);
-              setEditing(null);
-            }}
-            onClose={() => setEditing(null)}
-          />
-          <EntityPickerModal
-            visible={editing === 'club'}
-            title={t('profile.favoriteClubPick')}
-            placeholder={t('profile.favoriteSearchPlaceholder')}
-            hint={t('profile.favoriteClubHint')}
-            empty={t('profile.favoriteEmpty')}
-            options={clubOptions()}
-            onPick={id => {
-              set('club', id);
-              setEditing(null);
-            }}
-            onClose={() => setEditing(null)}
-          />
-          <EntityPickerModal
-            visible={editing === 'nation'}
-            title={t('profile.favoriteNationPick')}
-            placeholder={t('profile.favoriteSearchPlaceholder')}
-            hint={t('profile.favoriteNationHint')}
-            empty={t('profile.favoriteEmpty')}
-            options={nationOptions()}
-            onPick={id => {
-              set('nation', id);
-              setEditing(null);
-            }}
-            onClose={() => setEditing(null)}
-          />
-        </>
-      ) : null}
     </GlassCard>
   );
 }
