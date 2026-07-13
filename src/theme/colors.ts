@@ -20,6 +20,9 @@ export type Palette = {
   surface: string;
   /** Muted fill for chips, inactive tabs, answer rows, fields. */
   surface2: string;
+  /** Sunken/inset fill for input fields and icon wells — darker than the card,
+   * so the accent stays reserved (skin 3: the near-black #0B0B0B). */
+  surfaceSunken: string;
 
   /** The one near-black (light) / near-white (dark). Solid buttons, headings. */
   ink: string;
@@ -83,6 +86,7 @@ export const light: Palette = {
   background: '#F5F3FB',
   surface: '#FFFFFF',
   surface2: '#F1EEFB',
+  surfaceSunken: '#E7E4F2',
 
   ink: '#0D0D16',
   onInk: '#FFFFFF',
@@ -139,6 +143,7 @@ export const dark: Palette = {
   background: '#0B0B12',
   surface: '#17171F',
   surface2: '#20202B',
+  surfaceSunken: '#0E0E16',
 
   ink: '#F4F3FA',
   onInk: '#0D0D16',
@@ -182,11 +187,44 @@ export const dark: Palette = {
 };
 
 /**
- * Skin 3's palette — the new default look, built page by page. Starts as a copy
- * of `dark` (a blank canvas) and gets repainted token by token as each screen is
- * rebuilt onto the new aesthetic. Nothing final is committed here yet.
+ * Skin 3's palette — the new default look, repainted from the Figma color guide
+ * (near-black grounds + a single #8280FF purple accent). Built page by page: the
+ * structural tokens below are the guide's exact swatches; functional tokens
+ * (guess/timer/success/error/toast) inherit `dark` until a screen needs them.
+ *
+ * Guide → token map:
+ *   #000100 Baggrund 1 (bottom)      → background
+ *   #2C2C35 Kort baggrund (card)     → surface
+ *   #353449 Pille baggrund (pill)    → surface2
+ *   #8280FF Border/pill selected     → primary + ink (primary Buttons go purple)
+ *   #FFFFFF Hvid tekst               → onInk + textPrimary
+ *   #9F9F9F Placeholder / secondary  → textSecondary + muted
+ *   #141414 Borders (cards/buttons)  → divider
+ * Guide extras with no clean token yet, applied per-component as screens are
+ * rebuilt: #0B0B0B (container behind cards), #212021 (selected row/card),
+ * #333333 + white text (neutral count/badge pills, e.g. the "12" example).
  */
-export const skin3: Palette = {...dark};
+export const skin3: Palette = {
+  ...dark,
+
+  background: '#000100',
+  surface: '#2C2C35',
+  surface2: '#353449',
+  surfaceSunken: '#0B0B0B',
+
+  ink: '#8280FF',
+  onInk: '#FFFFFF',
+
+  textPrimary: '#FFFFFF',
+  textSecondary: '#9F9F9F',
+  textTertiary: 'rgba(255,255,255,0.45)',
+  muted: '#9F9F9F',
+
+  divider: '#141414',
+
+  primary: '#8280FF',
+  primaryInk: '#A6A4FF',
+};
 
 /**
  * The light palette under the legacy name. New code should prefer `useColors()`

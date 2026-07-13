@@ -4,6 +4,7 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native';
 import {radii, type as typeScale, useColors, type Palette} from '../../theme';
@@ -26,6 +27,8 @@ type Props = {
    * The caller owns the feedback; no confirm haptic or press-scale fires.
    */
   onDisabledPress?: () => void;
+  /** Optional icon pinned to the right edge; the label stays centered. */
+  trailingIcon?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   accessibilityHint?: string;
 };
@@ -45,6 +48,7 @@ export function Button({
   fullWidth = true,
   disabled = false,
   onDisabledPress,
+  trailingIcon,
   style,
   accessibilityHint,
 }: Props) {
@@ -86,6 +90,7 @@ export function Button({
           ]}>
           {label}
         </Animated.Text>
+        {trailingIcon ? <View style={styles.trailing}>{trailingIcon}</View> : null}
       </Animated.View>
     </Pressable>
   );
@@ -121,4 +126,5 @@ const styles = StyleSheet.create({
   },
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
+  trailing: {position: 'absolute', right: 20, top: 0, bottom: 0, justifyContent: 'center'},
 });

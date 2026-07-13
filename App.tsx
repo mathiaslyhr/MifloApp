@@ -144,7 +144,16 @@ function App(): React.JSX.Element {
 function AppBody(): React.JSX.Element {
   const {skin} = useSkin();
   if (skin.id === 'skin3') {
-    return <WelcomeScreen />;
+    // SearchProvider so the quick-setup favorites step can open the shared FotMob
+    // search; ToastHost so the welcome/setup flows can surface errors;
+    // TransferApprovalModal for the old-phone side of a move.
+    return (
+      <SearchProvider>
+        <WelcomeScreen />
+        <ToastHost />
+        <TransferApprovalModal />
+      </SearchProvider>
+    );
   }
   return (
     <SearchProvider>

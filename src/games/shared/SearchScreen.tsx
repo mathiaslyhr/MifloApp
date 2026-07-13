@@ -30,7 +30,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {Search, X} from 'lucide-react-native';
-import {Avatar, Text} from '../../core/ui';
+import {Avatar, PressableScale, Text} from '../../core/ui';
 import {
   fonts,
   radii,
@@ -212,13 +212,13 @@ function SearchScreen({
             </Pressable>
           ) : null}
         </View>
-        <Pressable
+        <PressableScale
           style={styles.closeBtn}
           onPress={onClose}
           accessibilityRole="button"
           accessibilityLabel={t('search.close')}>
-          <X size={22} color={colors.ink} strokeWidth={2} />
-        </Pressable>
+          <X size={22} color={colors.textPrimary} strokeWidth={2} />
+        </PressableScale>
       </View>
 
       {opts.title ? (
@@ -345,21 +345,21 @@ const makeStyles = (c: Palette) =>
       minHeight: 48,
       paddingHorizontal: spacing.md,
       borderRadius: radii.pill,
-      backgroundColor: c.surface2,
+      backgroundColor: c.surfaceSunken,
     },
     input: {
       flex: 1,
       fontFamily: fonts.regular,
       fontSize: 16,
       letterSpacing: -0.2,
-      color: c.ink,
+      color: c.textPrimary,
       padding: 0,
     },
     closeBtn: {
       width: 44,
       height: 44,
       borderRadius: radii.pill,
-      backgroundColor: c.surface2,
+      backgroundColor: c.surfaceSunken,
       alignItems: 'center',
       justifyContent: 'center',
     },

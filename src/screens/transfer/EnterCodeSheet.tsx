@@ -231,7 +231,7 @@ const makeStyles = (c: Palette) =>
       fontSize: 28,
       letterSpacing: 6,
       textAlign: 'center',
-      color: c.ink,
+      color: c.textPrimary,
       paddingVertical: spacing.xs,
     },
   });
