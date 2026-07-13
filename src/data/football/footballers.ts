@@ -3145,8 +3145,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1996-12-20',
     shirtNumbers: [20, 7],
     clubs: [
-      {clubId: 'west-ham', from: 2020, to: 2025},
-      {clubId: 'hoffenheim', from: 2025},
+      {clubId: 'west-ham', from: 2020},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -17677,6 +17676,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Pereira, Andreas',
+    name: 'Andreas Pereira',
+    nationality: ['Brazil'],
+    positions: ['MF'],
+    born: '1996-01-01',
+    shirtNumbers: [18, 10],
+    clubs: [
+      {clubId: 'man-utd', from: 2015, to: 2022},
+      {clubId: 'valencia', from: 2017, to: 2018, loan: true},
+      {clubId: 'lazio', from: 2018, to: 2019, loan: true},
+      {clubId: 'flamengo', from: 2019, to: 2020, loan: true},
+      {clubId: 'fulham', from: 2022, to: 2025},
+      {clubId: 'palmeiras', from: 2025},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Pereira, Danilo',
     name: 'Danilo Pereira',
     nationality: ['Portugal'],
@@ -20251,6 +20268,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2019], clubId: 'man-city'},
       {type: 'league-title', count: 7, years: [2018, 2019, 2021, 2022, 2023, 2025, 2026]},
     ],
+  },
+  {
+    id: 'Sangaré, Ibrahim',
+    name: 'Ibrahim Sangaré',
+    nationality: ['Ivory Coast'],
+    positions: ['MF'],
+    born: '1997-12-02',
+    shirtNumbers: [6, 26],
+    clubs: [
+      {clubId: 'toulouse', from: 2016, to: 2020},
+      {clubId: 'psv', from: 2020, to: 2023},
+      {clubId: 'nottingham-forest', from: 2023},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2022], clubId: 'psv'},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Santillana, Carlos',
@@ -24305,6 +24339,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Wieffer, Mats',
+    name: 'Mats Wieffer',
+    nationality: ['Netherlands'],
+    positions: ['MF'],
+    born: '1999-11-16',
+    shirtNumbers: [8, 20],
+    clubs: [
+      {clubId: 'feyenoord', from: 2022, to: 2025},
+      {clubId: 'brighton', from: 2025},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023], clubId: 'feyenoord'},
+      {type: 'domestic-cup', count: 1, years: [2024], clubId: 'feyenoord'},
     ],
     tags: ['current-stars'],
   },
