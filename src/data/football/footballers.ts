@@ -10877,6 +10877,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Jensen, Mathias',
+    name: 'Mathias Jensen',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    born: '1996-01-01',
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'celta-vigo', from: 2017, to: 2019},
+      {clubId: 'brentford', from: 2019},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Jeremies, Jens',
     name: 'Jens Jeremies',
     nationality: ['Germany'],
@@ -13967,6 +13981,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Manzambi, Johan',
+    name: 'Johan Manzambi',
+    nationality: ['Switzerland'],
+    positions: ['MF'],
+    born: '2005-10-14',
+    shirtNumbers: [42, 8],
+    clubs: [
+      {clubId: 'freiburg', from: 2024, to: 2026},
+      {clubId: 'aston-villa', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Maradona, Diego',
     name: 'Diego Maradona',
     nationality: ['Argentina'],
@@ -14719,6 +14747,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'copa-america', count: 2, years: [2015, 2016]},
     ],
+  },
+  {
+    id: 'Mee, Ben',
+    name: 'Ben Mee',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '1989-09-21',
+    shirtNumbers: [6, 16],
+    clubs: [
+      {clubId: 'man-city', from: 2009, to: 2012},
+      {clubId: 'burnley', from: 2012, to: 2022},
+      {clubId: 'brentford', from: 2022, to: 2025},
+      {clubId: 'sheffield-united', from: 2025, to: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Meireles, Raúl',
@@ -15639,6 +15682,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2018], clubId: 'chelsea'},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
       {type: 'champions-league', count: 1, years: [2021]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Moura, Lucas',
+    name: 'Lucas Moura',
+    nationality: ['Brazil'],
+    positions: ['FW'],
+    born: '1992-08-13',
+    shirtNumbers: [7, 27],
+    clubs: [
+      {clubId: 'psg', from: 2013, to: 2018},
+      {clubId: 'tottenham', from: 2018, to: 2023},
+    ],
+    honours: [
+      {type: 'league-title', count: 4, years: [2014, 2015, 2016, 2018]},
+      {type: 'domestic-cup', count: 4, years: [2015, 2016, 2017, 2018], clubId: 'psg'},
     ],
     tags: ['current-stars'],
   },
@@ -21436,7 +21496,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'basel', from: 2009, to: 2014},
       {clubId: 'monchengladbach', from: 2014, to: 2023},
       {clubId: 'bayern', from: 2023, to: 2023},
-      {clubId: 'inter', from: 2023},
+      {clubId: 'inter', from: 2023, to: 2026},
+      {clubId: 'club-brugge', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2010, 2012], clubId: 'basel'},
@@ -22964,7 +23025,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'barcelona', from: 2020, to: 2021},
       {clubId: 'wolves', from: 2021, to: 2022, loan: true},
-      {clubId: 'sporting', from: 2022},
+      {clubId: 'sporting', from: 2022, to: 2026},
+      {clubId: 'al-ahli', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'sporting'},
@@ -24090,6 +24152,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'european-championship', count: 1, years: [2004]},
     ],
+  },
+  {
+    id: 'Vušković, Luka',
+    name: 'Luka Vušković',
+    nationality: ['Croatia'],
+    positions: ['DF'],
+    born: '2007-02-24',
+    shirtNumbers: [4],
+    clubs: [
+      {clubId: 'tottenham', from: 2025, to: 2026},
+      {clubId: 'hamburg', from: 2025, to: 2026, loan: true},
+      {clubId: 'brighton', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Walcott, Theo',
