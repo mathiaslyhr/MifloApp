@@ -9,7 +9,7 @@
  * "Enter code" link for people who already made a profile (moving to a new phone).
  *
  *   Quick setup → QuickSetupFlow (multi-step: name → code → favorites)
- *   Enter code  → EnterCodeSheet (move a profile onto this phone)
+ *   Enter code  → EnterCodeFlow (move a profile onto this phone)
  * Both work without a navigator (skin 3 renders outside NavigationContainer).
  * The wordmark long-press opens a skin picker (temporary A/B dev affordance).
  */
@@ -19,12 +19,18 @@ import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronRight} from 'lucide-react-native';
 import {Button, Text} from '../../core/ui';
-import {EnterCodeSheet} from '../transfer/EnterCodeSheet';
 import {spacing, useColors, useSkin, useThemedStyles, type Palette} from '../../theme';
+import {EnterCodeFlow} from './EnterCodeFlow';
 import {GlowBackground} from './GlowBackground';
 import {QuickSetupFlow} from './setup/QuickSetupFlow';
 
-export function WelcomeScreen(): React.JSX.Element {
+export function WelcomeScreen({
+  onProfileReady,
+}: {
+  /** A profile now exists on this device (setup finished, or a move landed) —
+   * AppBody re-checks the gate and swaps the welcome overlay for the app. */
+  onProfileReady?: () => void;
+} = {}): React.JSX.Element {
   const styles = useThemedStyles(makeStyles);
   const colors = useColors();
   const insets = useSafeAreaInsets();
@@ -86,19 +92,28 @@ export function WelcomeScreen(): React.JSX.Element {
             </Pressable>
           </View>
         </View>
-
-        <EnterCodeSheet
-          visible={codeOpen}
-          onCancel={() => setCodeOpen(false)}
-          onRestored={() => setCodeOpen(false)}
-        />
       </GlowBackground>
 
       {setupActive ? (
         <View style={StyleSheet.absoluteFill}>
           <QuickSetupFlow
             onClose={() => setSetupActive(false)}
-            onComplete={() => setSetupActive(false)}
+            onComplete={() => {
+              setSetupActive(false);
+              onProfileReady?.();
+            }}
+          />
+        </View>
+      ) : null}
+
+      {codeOpen ? (
+        <View style={StyleSheet.absoluteFill}>
+          <EnterCodeFlow
+            onClose={() => setCodeOpen(false)}
+            onRestored={() => {
+              setCodeOpen(false);
+              onProfileReady?.();
+            }}
           />
         </View>
       ) : null}

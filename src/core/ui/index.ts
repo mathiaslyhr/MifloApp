@@ -29,6 +29,7 @@ export {AppBlur} from './Blur';
 export {TopStatusFade} from './TopStatusFade';
 export {QrCard} from './QrCard';
 export {PressableScale} from './PressableScale';
+export {AppMark} from './AppMark';
 export {usePressScale} from './usePressScale';
 export {ToastHost} from './toast/ToastHost';
 export {toast, useToast, useToastStore} from './toast/toastStore';

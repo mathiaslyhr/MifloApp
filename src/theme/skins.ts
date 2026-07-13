@@ -82,12 +82,20 @@ const AURORA_MESH: Mesh = {
 };
 
 /**
- * Skin 3 — the new default look being built page by page (the redesign). Its
- * palette and mesh start as a copy of Aurora (a blank dark canvas) and get
- * repainted as each screen is rebuilt; nothing about the final aesthetic is
- * committed yet. Selectable in Settings, and the standard skin (see SYSTEM_SKIN).
+ * Skin 3 — the new default look being built page by page (the redesign). It
+ * drops the rainbow canvas entirely: the mesh is a flat near-black wash (the
+ * palette's `background` #000100, no blooms), so every not-yet-rebuilt screen on
+ * `<Screen canvas>` sits on the same solid black ground as the redesigned ones
+ * instead of the old aurora fields. The purple accents come from the palette;
+ * the only glow lives on the welcome front door (its own `GlowBackground`).
  */
-const SKIN3_MESH: Mesh = AURORA_MESH;
+const SKIN3_MESH: Mesh = {
+  base: [
+    {offset: 0, color: '#000100'},
+    {offset: 1, color: '#000100'},
+  ],
+  blooms: [],
+};
 
 export const SKINS: Record<SkinId, Skin> = {
   light: {

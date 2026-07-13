@@ -64,7 +64,15 @@
     "creating": "Opretter…",
     "joinParty": "Deltag i et rum",
     "errorUnavailable": "Rum er ikke tilgængelige lige nu.",
-    "errorCreate": "Kunne ikke oprette et rum. Prøv igen."
+    "errorCreate": "Kunne ikke oprette et rum. Prøv igen.",
+    "today": "I dag",
+    "playWithFriends": "Spil med venner",
+    "friendsToday": "Venner i dag",
+    "friendCardA11y": "{{name}}s daglige resultater",
+    "addFriends": "Tilføj venner",
+    "addFriendsBody": "Se hvordan venner klarer de daglige spil",
+    "scanApp": "Scan for at hente appen",
+    "streakLabel": "{{count}} dages stime"
   },
   "join": {
     "title": "Deltag i et rum",
@@ -1042,7 +1050,7 @@
     "step3Title": "Godkend her",
     "step3Desc": "Denne telefon beder dig godkende. Tjek at matchkoden passer, og godkend. Dine venner, statistik og streaks flytter med, og denne telefon logger ud.",
     "haveProfile": "Har du allerede en profil?",
-    "enterCodeTitle": "Flyt en profil hertil",
+    "enterCodeTitle": "Flyt din profil til denne telefon.",
     "enterCodeBody": "Indtast koden fra din anden telefon. Du godkender flytningen derovre.",
     "enterCodePlaceholder": "Din kode",
     "enterCodeConfirm": "Fortsæt",

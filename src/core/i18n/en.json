@@ -64,7 +64,15 @@
     "creating": "Creating…",
     "joinParty": "Join a party",
     "errorUnavailable": "Parties aren't available right now.",
-    "errorCreate": "Couldn't create a party. Please try again."
+    "errorCreate": "Couldn't create a party. Please try again.",
+    "today": "Today",
+    "playWithFriends": "Play with friends",
+    "friendsToday": "Friends today",
+    "friendCardA11y": "{{name}}'s daily results",
+    "addFriends": "Add friends",
+    "addFriendsBody": "See how friends do daily",
+    "scanApp": "Scan to get the app",
+    "streakLabel": "{{count}} day streak"
   },
   "join": {
     "title": "Join a party",
@@ -1042,7 +1050,7 @@
     "step3Title": "Approve here",
     "step3Desc": "This phone asks you to approve. Check the match code matches, then approve. Your friends, stats and streaks move over and this phone signs out.",
     "haveProfile": "Already have a profile?",
-    "enterCodeTitle": "Move a profile here",
+    "enterCodeTitle": "Move your profile to this phone.",
     "enterCodeBody": "Enter the code from your other phone. You will approve the move over there.",
     "enterCodePlaceholder": "Your code",
     "enterCodeConfirm": "Continue",

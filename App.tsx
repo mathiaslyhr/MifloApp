@@ -7,8 +7,8 @@
  *
  * @format
  */
-import React, {useEffect} from 'react';
-import {Alert, StatusBar, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -26,6 +26,7 @@ import {WelcomeScreen} from './src/screens/skin3/WelcomeScreen';
 import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
+import {getCachedProfile} from './src/core/social/socialService';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
@@ -136,25 +137,60 @@ function App(): React.JSX.Element {
 }
 
 /**
- * The app body, chosen by the active skin. Skin 3 is the greenfield redesign
- * being rebuilt page by page — until a screen exists for it, it renders a blank
- * black canvas (`Skin3Shell`). Every other skin renders the full existing app.
+ * The app body, chosen by the active skin. Skin 3 gates on whether this device
+ * has a profile yet: no profile → the self-contained onboarding overlay
+ * (WelcomeScreen); profile → the full navigator app, same as every other skin.
  * Lives under `SkinProvider` so switching skins swaps the whole body live.
  */
 function AppBody(): React.JSX.Element {
   const {skin} = useSkin();
   if (skin.id === 'skin3') {
-    // SearchProvider so the quick-setup favorites step can open the shared FotMob
-    // search; ToastHost so the welcome/setup flows can surface errors;
-    // TransferApprovalModal for the old-phone side of a move.
-    return (
-      <SearchProvider>
-        <WelcomeScreen />
-        <ToastHost />
-        <TransferApprovalModal />
-      </SearchProvider>
-    );
+    return <Skin3Body />;
   }
+  return <NavigatorApp />;
+}
+
+/**
+ * Skin 3's gate. Home is the first post-profile screen, so skin 3 joins the
+ * real navigator here: once a profile exists we render `NavigatorApp` (landing
+ * on the Home dashboard); before that, the onboarding overlay. The gate is
+ * skin-3-only, so the legacy light/dark app and RootNavigator's initial route
+ * are untouched.
+ */
+function Skin3Body(): React.JSX.Element {
+  const [gate, setGate] = useState<'loading' | 'welcome' | 'app'>('loading');
+  useEffect(() => {
+    let alive = true;
+    getCachedProfile()
+      .then(profile => alive && setGate(profile ? 'app' : 'welcome'))
+      .catch(() => alive && setGate('welcome'));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (gate === 'loading') {
+    // Brief near-black while the cached-profile read resolves (no flash).
+    return <View style={styles.gate} />;
+  }
+  if (gate === 'app') {
+    return <NavigatorApp />;
+  }
+  // SearchProvider so the quick-setup favorites step can open the shared FotMob
+  // search; ToastHost so the welcome/setup flows can surface errors;
+  // TransferApprovalModal for the old-phone side of a move. onProfileReady flips
+  // the gate the moment setup finishes or a moved profile lands.
+  return (
+    <SearchProvider>
+      <WelcomeScreen onProfileReady={() => setGate('app')} />
+      <ToastHost />
+      <TransferApprovalModal />
+    </SearchProvider>
+  );
+}
+
+/** The full navigator app — shared by every skin once there's a profile. */
+function NavigatorApp(): React.JSX.Element {
   return (
     <SearchProvider>
       <UpdateGate>
@@ -192,6 +228,8 @@ function ThemedStatusBar(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   root: {flex: 1},
+  // The skin-3 gate's loading frame: near-black so the profile check never flashes.
+  gate: {flex: 1, backgroundColor: '#000100'},
 });
 
 export default App;
