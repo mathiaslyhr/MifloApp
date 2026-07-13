@@ -117,7 +117,19 @@
     "errorRename": "Kunne ikke skifte dit navn.",
     "errorStart": "Kunne ikke starte spillet. Prøv igen.",
     "needPlayers": "Dette spil kræver mindst {{count}} spillere.",
-    "needPlayersPick": "I skal være mindst {{count}} spillere for at vælge et spil."
+    "needPlayersPick": "I skal være mindst {{count}} spillere for at vælge et spil.",
+    "share": "Del kode",
+    "waitingPlayers": "Venter på at andre spillere deltager",
+    "players": "Spillere",
+    "joined": "{{count}} deltager",
+    "you": "Dig",
+    "hostLabel": "Vært",
+    "hostYou": "Vært · Dig",
+    "kick": "Smid ud",
+    "addFriend": "Tilføj ven",
+    "requested": "Anmodet",
+    "friends": "Venner",
+    "viewProfile": "Se profil"
   },
   "invite": {
     "title": "Inviter venner",

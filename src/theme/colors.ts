@@ -69,6 +69,8 @@ export type Palette = {
   /** Functional status (gameplay). */
   success: string;
   error: string;
+  /** Informational accent (neutral toasts) — blue, distinct from the purple brand. */
+  info: string;
 
   /** Toast icon-chip fills. */
   toastTintNeutral: string;
@@ -119,8 +121,9 @@ export const light: Palette = {
 
   success: '#32C36C',
   error: '#F0544A',
+  info: '#2F6FED',
 
-  toastTintNeutral: '#E6E6FE',
+  toastTintNeutral: '#E2ECFD',
   toastTintSuccess: '#DEF5E8',
   toastTintError: '#FDE4E2',
 
@@ -176,8 +179,9 @@ export const dark: Palette = {
 
   success: '#3FD07C',
   error: '#FF6A61',
+  info: '#5B9CFF',
 
-  toastTintNeutral: '#26263A',
+  toastTintNeutral: '#16233B',
   toastTintSuccess: '#173325',
   toastTintError: '#3A1F1E',
 
@@ -194,7 +198,7 @@ export const dark: Palette = {
  *
  * Guide → token map:
  *   #000100 Baggrund 1 (bottom)      → background
- *   #2C2C35 Kort baggrund (card)     → surface
+ *   #0B0B0B Kort baggrund (card)     → surface (was #2C2C35, retired)
  *   #353449 Pille baggrund (pill)    → surface2
  *   #8280FF Border/pill selected     → primary + ink (primary Buttons go purple)
  *   #FFFFFF Hvid tekst               → onInk + textPrimary
@@ -208,7 +212,8 @@ export const skin3: Palette = {
   ...dark,
 
   background: '#000100',
-  surface: '#2C2C35',
+  // Cards use the same near-black as the sunken ground now (#2C2C35 retired).
+  surface: '#0B0B0B',
   surface2: '#353449',
   surfaceSunken: '#0B0B0B',
 

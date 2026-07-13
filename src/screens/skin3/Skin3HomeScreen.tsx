@@ -280,7 +280,7 @@ const makeStyles = (c: Palette) =>
     },
     sectionHeading: {marginTop: spacing.xxl, marginBottom: spacing.md},
     // Skin-3 content card: the sunken near-black ground + a hairline inset
-    // border (the default card recipe; #2C2C35 surface is only used on request).
+    // border (the default card recipe; surface is now the same near-black too).
     card: {
       backgroundColor: c.surfaceSunken,
       borderWidth: 1,

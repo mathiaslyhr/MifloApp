@@ -61,7 +61,7 @@ const SWIPE_VELOCITY = 0.3;
 const toneChip = (
   c: Palette,
 ): Record<ToastTone, {Icon: typeof Info; color: string; tint: string}> => ({
-  neutral: {Icon: Info, color: c.primary, tint: c.toastTintNeutral},
+  neutral: {Icon: Info, color: c.info, tint: c.toastTintNeutral},
   success: {Icon: Check, color: c.success, tint: c.toastTintSuccess},
   error: {Icon: X, color: c.error, tint: c.toastTintError},
 });

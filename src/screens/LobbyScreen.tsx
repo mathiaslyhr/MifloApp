@@ -1,37 +1,41 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
-  Pressable,
   ScrollView,
   Share,
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, UserPlus} from 'lucide-react-native';
+import {Check, ChevronLeft, User, UserMinus, UserPlus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {JOIN_URL_BASE} from '../core/config';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useFocusEffect} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   Avatar,
   Button,
-  CircleButton,
   FloatingBar,
-  GlassCard,
-  GlassTag,
   initialsFor,
   NameSheet,
+  PressableScale,
   Screen,
   Skeleton,
   Text,
-  TopStatusFade,
   toast,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {Sentry, isSentryEnabled} from '../core/observability/sentry';
 import {GAMES, isBuiltGame} from './gamesCatalog';
 import {InviteFriendsSheet} from './lobby/InviteFriendsSheet';
-import {avatarUrlFor} from '../core/social/socialService';
+import {
+  avatarUrlFor,
+  fetchFriends,
+  sendFriendPush,
+  sendFriendRequestByUserId,
+} from '../core/social/socialService';
+import type {SocialProfile} from '../core/social/types';
+import {requestPushPermissionAndSync} from '../core/notifications/pushInvites';
 import {
   radii,
   screenPadding,
@@ -115,6 +119,17 @@ export function LobbyScreen({route, navigation}: Props) {
   const insets = useSafeAreaInsets();
   // Measured height of the floating bottom bar, so scroll content clears it.
   const [botH, setBotH] = useState(0);
+  // Host selection: the roster card whose actions (kick / add friend / profile)
+  // are open. Only the host ever selects another player; null = nothing open.
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  // My friends, keyed by their uid — drives the "Friends ✓ + view profile" vs
+  // "Add friend" fork, and supplies the full profile for the profile screen.
+  const [friends, setFriends] = useState<Record<string, SocialProfile>>({});
+  // Players I've just sent a request to this session (uid → true), so the button
+  // reads "Requested" without waiting for a refetch.
+  const [requested, setRequested] = useState<Record<string, true>>({});
+  // Guards a double-tap on Add friend while the RPC is in flight.
+  const [adding, setAdding] = useState<string | null>(null);
 
   // Track membership so we can detect being kicked (present → gone).
   const wasPresentRef = useRef(false);
@@ -199,6 +214,30 @@ export function LobbyScreen({route, navigation}: Props) {
   const isHost = !!room && !!myUserId && room.hostId === myUserId;
   const me = players.find(p => p.userId === myUserId);
 
+  // Load my friends once per focus so the roster can tell friends (Friends ✓ +
+  // view profile) from strangers (Add friend). Silent on failure — an empty map
+  // just means everyone reads as "not yet a friend".
+  useFocusEffect(
+    useCallback(() => {
+      let alive = true;
+      fetchFriends()
+        .then(list => {
+          if (!alive) {
+            return;
+          }
+          const byId: Record<string, SocialProfile> = {};
+          for (const f of list) {
+            byId[f.userId] = f;
+          }
+          setFriends(byId);
+        })
+        .catch(() => {});
+      return () => {
+        alive = false;
+      };
+    }, []),
+  );
+
   // Kicked-out detection: once we've been seen in the roster, disappearing from
   // it means the host removed us — leave the lobby.
   useEffect(() => {
@@ -249,21 +288,79 @@ export function LobbyScreen({route, navigation}: Props) {
 
   function onPressPlayer(p: RoomPlayer) {
     if (p.userId === myUserId) {
+      // Tapping yourself renames — no action row.
+      setSelectedId(null);
       setRenameOpen(true);
     } else if (isHost) {
-      Alert.alert(t('lobby.removeTitle'), t('lobby.removeConfirm', {name: p.name}), [
-        {text: t('common.cancel'), style: 'cancel'},
-        {
-          text: t('common.remove'),
-          style: 'destructive',
-          onPress: () => {
-            kickPlayer(roomId, p.userId).catch(() =>
-              Alert.alert(t('common.miflo'), t('lobby.errorRemove', {name: p.name})),
-            );
-          },
-        },
-      ]);
+      // Toggle this player's action row (kick / add friend / view profile).
+      setSelectedId(cur => (cur === p.id ? null : p.id));
     }
+  }
+
+  // Host removes a player — same confirm as before, now from the card's actions.
+  function confirmKick(p: RoomPlayer) {
+    Alert.alert(t('lobby.removeTitle'), t('lobby.removeConfirm', {name: p.name}), [
+      {text: t('common.cancel'), style: 'cancel'},
+      {
+        text: t('common.remove'),
+        style: 'destructive',
+        onPress: () => {
+          setSelectedId(null);
+          kickPlayer(roomId, p.userId).catch(() =>
+            Alert.alert(t('common.miflo'), t('lobby.errorRemove', {name: p.name})),
+          );
+        },
+      },
+    ]);
+  }
+
+  // Host befriends a roster player. 0033 lets us request by uid (the roster has
+  // no friend code); outcomes mirror the Friends-tab send flow.
+  async function addFriend(p: RoomPlayer) {
+    if (adding) {
+      return;
+    }
+    setAdding(p.id);
+    try {
+      const {outcome, friend} = await sendFriendRequestByUserId(p.userId);
+      const name = friend.displayName || p.name;
+      switch (outcome) {
+        case 'requested':
+          haptics.success();
+          toast.success(t('social.requestSent', {name}));
+          sendFriendPush('friend_request', friend.userId).catch(() => {});
+          setRequested(cur => ({...cur, [p.userId]: true}));
+          break;
+        case 'autoAccepted':
+          // Their pending ask + ours fused into a friendship on the spot.
+          haptics.success();
+          toast.success(t('social.friendAdded', {name}));
+          sendFriendPush('request_accepted', friend.userId).catch(() => {});
+          setFriends(cur => ({...cur, [friend.userId]: friend}));
+          break;
+        case 'alreadyRequested':
+          toast.neutral(t('social.requestAlreadySent', {name}));
+          setRequested(cur => ({...cur, [p.userId]: true}));
+          break;
+        case 'alreadyFriends':
+          toast.neutral(t('social.alreadyFriends', {name}));
+          setFriends(cur => ({...cur, [friend.userId]: friend}));
+          break;
+      }
+      // Sending is also when this phone becomes push-reachable for the reply.
+      requestPushPermissionAndSync().catch(() => {});
+    } catch {
+      haptics.error();
+      toast.error(t('social.errorRequest'));
+    } finally {
+      setAdding(null);
+    }
+  }
+
+  // Open an existing friend's profile (only friends have a fetchable profile).
+  function viewProfile(profile: SocialProfile) {
+    setSelectedId(null);
+    navigation.navigate('FriendProfile', {profile});
   }
 
   async function submitRename(name: string) {
@@ -398,83 +495,159 @@ export function LobbyScreen({route, navigation}: Props) {
           {paddingTop: insets.top + spacing.sm, paddingBottom: botH + spacing.xl},
         ]}
         showsVerticalScrollIndicator={false}>
-        {/* Wordmark header — in the scroll flow, so it scrolls off the top. */}
-        <View style={styles.header}>
-          <Text variant="wordmark" align="center">
-            {t('lobby.title')}
-          </Text>
-        </View>
-
-        {/* Party code — tapping it still opens the share sheet, quietly. */}
-        <Pressable
-          style={styles.codeWrap}
+        {/* Code card — one full-round pill showing the code; the whole card is
+            the share button (tap it to open the share sheet). */}
+        <PressableScale
           onPress={shareCode}
           accessibilityRole="button"
           accessibilityLabel={t('lobby.shareCode')}>
-          <GlassCard radius="pill" style={styles.codeCard}>
-            <Text variant="caption" color="muted" align="center" style={styles.codeLabel}>
-              {t('lobby.code')}
+          <View style={styles.codeCard}>
+            <Text
+              variant="hero"
+              align="center"
+              color="accent"
+              style={styles.code}
+              accessibilityLabel={t('lobby.code')}>
+              {room?.code ?? '····'}
             </Text>
-            <Text variant="hero" align="center" style={styles.code}>
-              {room?.code ?? '· · · ·'}
+          </View>
+        </PressableScale>
+
+        {/* Players — section header + a joined count. */}
+        <View style={styles.playersHeader}>
+          <Text variant="caption" color="secondary" style={styles.playersLabel}>
+            {t('lobby.players').toUpperCase()}
+          </Text>
+          {players.length > 0 ? (
+            <Text variant="caption" color="secondary">
+              {t('lobby.joined', {count: players.length})}
             </Text>
-          </GlassCard>
-        </Pressable>
+          ) : null}
+        </View>
 
-        <Text variant="secondary" color="secondary" align="center">
-          {players.length <= 1
-            ? t('lobby.waitingFriends')
-            : t('lobby.inParty', {count: players.length})}
-        </Text>
-
-        {/* Live name list (Kahoot-style). Tap your own name to rename; the host
-            taps another name to remove them. */}
+        {/* Roster — a vertical list of player cards. Tap yours to rename; the
+            host taps another to open kick / add friend / view profile. */}
         <View style={styles.roster}>
           {players.length === 0 ? (
-            // Ghost pills while the roster primes over realtime.
+            // Ghost cards while the roster primes over realtime.
             <View
               style={styles.roster}
               accessibilityLabel={t('lobby.waitingFriends')}>
-              <Skeleton width={110} height={40} radius={999} />
-              <Skeleton width={88} height={40} radius={999} />
+              <Skeleton height={72} radius={radii.card} />
+              <Skeleton height={72} radius={radii.card} />
             </View>
           ) : null}
           {players.map(p => {
             const isMe = p.userId === myUserId;
             const actionable = isMe || isHost;
+            const selected = selectedId === p.id;
+            const friendProfile = friends[p.userId];
+            const badge =
+              p.isHost && isMe
+                ? t('lobby.hostYou')
+                : p.isHost
+                ? t('lobby.hostLabel')
+                : isMe
+                ? t('lobby.you')
+                : null;
             return (
-              <GlassTag
-                key={p.id}
-                size="sm"
-                borderWidth={2}
-                accent={isMe}
-                disabled={!actionable}
-                onPress={() => onPressPlayer(p)}
-                accessibilityRole={actionable ? 'button' : undefined}
-                accessibilityLabel={
-                  (isMe
-                    ? t('lobby.changeName')
-                    : isHost
-                    ? t('lobby.removeName', {name: p.name})
-                    : p.name) + (p.isHost ? `, ${t('lobby.host')}` : '')
-                }>
-                <Avatar
-                  initials={initialsFor(p.name)}
-                  tone={isMe ? 'accent' : 'soft'}
-                  size={20}
-                  uri={avatarUrlFor(p.avatarPath)}
-                />
-                <Text variant="section" style={styles.nameText}>
-                  {p.name}
-                </Text>
-                {p.isHost ? (
-                  <View style={styles.hostBadge}>
-                    <Text variant="caption" color="onInk" style={styles.hostBadgeText}>
-                      {t('lobby.hostBadge')}
+              <View key={p.id}>
+                <PressableScale
+                  onPress={() => onPressPlayer(p)}
+                  disabled={!actionable}
+                  accessibilityRole={actionable ? 'button' : undefined}
+                  accessibilityLabel={
+                    (isMe
+                      ? t('lobby.changeName')
+                      : isHost
+                      ? t('lobby.removeName', {name: p.name})
+                      : p.name) + (p.isHost ? `, ${t('lobby.host')}` : '')
+                  }>
+                  <View
+                    style={[
+                      styles.playerCard,
+                      selected && styles.playerCardSelected,
+                    ]}>
+                    <Avatar
+                      initials={initialsFor(p.name)}
+                      tone={isMe ? 'accent' : 'soft'}
+                      size={44}
+                      uri={avatarUrlFor(p.avatarPath)}
+                    />
+                    <Text
+                      variant="section"
+                      style={styles.nameText}
+                      numberOfLines={1}>
+                      {p.name}
                     </Text>
+                    {badge ? (
+                      <View style={styles.badge}>
+                        <Text
+                          variant="caption"
+                          color="accent"
+                          style={styles.badgeText}>
+                          {badge}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </View>
+                </PressableScale>
+
+                {/* Host action row for the selected (non-self) player. */}
+                {selected && isHost && !isMe ? (
+                  <View style={styles.actionRow}>
+                    {friendProfile ? (
+                      <>
+                        <View style={[styles.actionPill, styles.friendsPill]}>
+                          <Check size={16} color={colors.primary} strokeWidth={2.25} />
+                          <Text variant="label" color="primary">
+                            {t('lobby.friends')}
+                          </Text>
+                        </View>
+                        <PressableScale
+                          onPress={() => viewProfile(friendProfile)}
+                          accessibilityRole="button">
+                          <View style={styles.actionPill}>
+                            <User size={16} color={colors.primary} strokeWidth={2.25} />
+                            <Text variant="label" color="primary">
+                              {t('lobby.viewProfile')}
+                            </Text>
+                          </View>
+                        </PressableScale>
+                      </>
+                    ) : requested[p.userId] ? (
+                      <View style={[styles.actionPill, styles.friendsPill]}>
+                        <Check size={16} color={colors.textSecondary} strokeWidth={2.25} />
+                        <Text variant="label" color="secondary">
+                          {t('lobby.requested')}
+                        </Text>
+                      </View>
+                    ) : (
+                      <PressableScale
+                        onPress={() => addFriend(p)}
+                        disabled={adding === p.id}
+                        accessibilityRole="button">
+                        <View style={styles.actionPill}>
+                          <UserPlus size={16} color={colors.primary} strokeWidth={2.25} />
+                          <Text variant="label" color="primary">
+                            {t('lobby.addFriend')}
+                          </Text>
+                        </View>
+                      </PressableScale>
+                    )}
+                    <PressableScale
+                      onPress={() => confirmKick(p)}
+                      accessibilityRole="button">
+                      <View style={[styles.actionPill, styles.kickPill]}>
+                        <UserMinus size={16} color={colors.error} strokeWidth={2.25} />
+                        <Text variant="label" style={{color: colors.error}}>
+                          {t('lobby.kick')}
+                        </Text>
+                      </View>
+                    </PressableScale>
                   </View>
                 ) : null}
-              </GlassTag>
+              </View>
             );
           })}
         </View>
@@ -484,18 +657,24 @@ export function LobbyScreen({route, navigation}: Props) {
           both stay reachable while the wordmark scrolls away. */}
       <FloatingBar edge="top" style={styles.backBar}>
         <View style={styles.backRow}>
-          <CircleButton
-            size={36}
+          <PressableScale
+            onPress={() => navigation.goBack()}
+            accessibilityRole="button"
             accessibilityLabel={t('lobby.leave')}
-            onPress={() => navigation.goBack()}>
-            <ChevronLeft size={20} color={colors.ink} strokeWidth={2} />
-          </CircleButton>
-          <CircleButton
-            size={36}
+            hitSlop={8}>
+            <View style={styles.cornerButton}>
+              <ChevronLeft size={20} color={colors.textPrimary} strokeWidth={2} />
+            </View>
+          </PressableScale>
+          <PressableScale
+            onPress={() => setInviteOpen(true)}
+            accessibilityRole="button"
             accessibilityLabel={t('lobby.inviteFriends')}
-            onPress={() => setInviteOpen(true)}>
-            <UserPlus size={20} color={colors.ink} strokeWidth={2} />
-          </CircleButton>
+            hitSlop={8}>
+            <View style={styles.cornerButton}>
+              <UserPlus size={20} color={colors.textPrimary} strokeWidth={2} />
+            </View>
+          </PressableScale>
         </View>
       </FloatingBar>
 
@@ -534,6 +713,16 @@ export function LobbyScreen({route, navigation}: Props) {
               label={t('cultHero.roundsPicker.label')}
             />
           </View>
+        ) : null}
+        {isHost && players.length <= 1 ? (
+          // Alone in the lobby — nudge the host that the game needs others.
+          <Text
+            variant="secondary"
+            color="secondary"
+            align="center"
+            style={styles.waitingHint}>
+            {t('lobby.waitingPlayers')}
+          </Text>
         ) : null}
         {isHost ? (
           <Button
@@ -583,10 +772,6 @@ export function LobbyScreen({route, navigation}: Props) {
         )}
       </FloatingBar>
 
-      {/* Seamless frosted fade behind the status bar — the wordmark dissolves
-          under it as it scrolls up. */}
-      <TopStatusFade />
-
       <InviteFriendsSheet
         visible={inviteOpen}
         code={room?.code ?? null}
@@ -613,12 +798,7 @@ export function LobbyScreen({route, navigation}: Props) {
 
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
-  header: {
-    height: 44,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // Pinned floating chrome, aligned to the wordmark's row: back left, invite right.
+  // Pinned floating chrome, aligned to the top row: back left, invite right.
   backBar: {paddingHorizontal: screenPadding},
   backRow: {
     height: 44,
@@ -627,40 +807,94 @@ const makeStyles = (c: Palette) =>
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  // Skin-3 corner action button: near-black circle with a hairline rim (the
+  // card recipe), no glass/shadow.
+  cornerButton: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: c.surfaceSunken,
+    borderWidth: 1,
+    borderColor: c.divider,
+  },
   scroll: {flex: 1},
   body: {
     gap: spacing.xl,
   },
-  // Party code on a frosted "liquid glass" pill that lifts off the rainbow canvas.
-  codeWrap: {alignSelf: 'center'},
+  // Code card — one full-round pill (surface2 #353449) with purple code; the
+  // whole pill is the share button. Dropped well below the top chrome.
   codeCard: {
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.xxl,
-    gap: spacing.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.xxxl,
+    backgroundColor: c.surface2,
+    borderRadius: radii.pill,
+    paddingVertical: spacing.xl,
+    paddingHorizontal: spacing.xl,
   },
-  codeLabel: {letterSpacing: 1},
-  code: {letterSpacing: 6},
-  roster: {
+  code: {letterSpacing: 8},
+  // Players section header: label left, joined count right.
+  playersHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  playersLabel: {letterSpacing: 1},
+  // Vertical roster of player cards.
+  roster: {gap: spacing.sm},
+  // Player card: sunken near-black ground + hairline inset border.
+  playerCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    backgroundColor: c.surfaceSunken,
+    borderWidth: 1,
+    borderColor: c.divider,
+    borderRadius: radii.card,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  // Tapped (host-selected) card gets the purple rim.
+  playerCardSelected: {borderColor: c.primary},
+  nameText: {flex: 1},
+  // Host · You badge on the right of the card (surface2 fill, purple label).
+  badge: {
+    backgroundColor: c.surface2,
+    borderRadius: radii.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 4,
+  },
+  badgeText: {letterSpacing: 0.2},
+  // Action row under a host-selected player card.
+  actionRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
     gap: spacing.sm,
+    marginTop: spacing.sm,
+    paddingLeft: spacing.xs,
   },
-  // Smaller than the 20pt "section" default so more players fit per row.
-  nameText: {color: c.ink, fontSize: 15, lineHeight: 19},
-  // Small accent pill marking the host — straddles the tag's top border,
-  // centered then nudged a bit left.
-  hostBadge: {
-    position: 'absolute',
-    top: -10,
-    // Left-anchored to the name's text inset so it lines up with the name below.
-    left: spacing.lg,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
+  actionPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    backgroundColor: c.surface2,
     borderRadius: radii.pill,
-    backgroundColor: c.primary,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
-  hostBadgeText: {fontSize: 10, lineHeight: 13, letterSpacing: 0.5},
+  // Neutral (non-primary) pills sit on the sunken ground with a hairline rim.
+  friendsPill: {
+    backgroundColor: c.surfaceSunken,
+    borderWidth: 1,
+    borderColor: c.divider,
+  },
+  kickPill: {
+    backgroundColor: c.surfaceSunken,
+    borderWidth: 1,
+    borderColor: c.divider,
+  },
   // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area
   // inset. Horizontal padding matches the scrolled content.
   footer: {
@@ -669,4 +903,6 @@ const makeStyles = (c: Palette) =>
   },
   // Breathing room between the Red Card rounds picker and the start button.
   roundsPickerWrap: {marginBottom: spacing.md},
+  // "Waiting for other players" line sitting above the (disabled) start button.
+  waitingHint: {marginBottom: spacing.md},
 });

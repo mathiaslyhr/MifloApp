@@ -117,7 +117,19 @@
     "errorRename": "Couldn't change your name.",
     "errorStart": "Couldn't start the game. Please try again.",
     "needPlayers": "This game needs at least {{count}} players.",
-    "needPlayersPick": "You need at least {{count}} players to pick a game."
+    "needPlayersPick": "You need at least {{count}} players to pick a game.",
+    "share": "Share code",
+    "waitingPlayers": "Waiting for other players to join",
+    "players": "Players",
+    "joined": "{{count}} joined",
+    "you": "You",
+    "hostLabel": "Host",
+    "hostYou": "Host · You",
+    "kick": "Kick",
+    "addFriend": "Add friend",
+    "requested": "Requested",
+    "friends": "Friends",
+    "viewProfile": "View profile"
   },
   "invite": {
     "title": "Invite friends",
