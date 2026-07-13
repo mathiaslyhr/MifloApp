@@ -22,6 +22,7 @@ import {
 } from './src/data/football/remote/datasetSync';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
 import {SearchProvider} from './src/games/shared/SearchScreen';
+import {WelcomeScreen} from './src/screens/skin3/WelcomeScreen';
 import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
@@ -126,27 +127,43 @@ function App(): React.JSX.Element {
         <SkinProvider>
           <SafeAreaProvider>
             <ThemedStatusBar />
-            <SearchProvider>
-            <UpdateGate>
-              {/* navigationRef + onStateChange let the OTA content sync apply a
-                  downloaded pack the moment the user leaves a game screen. */}
-              <NavigationContainer
-                ref={navigationRef}
-                linking={linking}
-                onReady={flushPendingNavigation}
-                onStateChange={maybeApplyPending}>
-                <RootNavigator />
-              </NavigationContainer>
-            </UpdateGate>
-            <ToastHost />
-            {/* Old-phone approval prompt for a profile move — global so it pops
-                wherever the owner is when their new phone asks. */}
-            <TransferApprovalModal />
-            </SearchProvider>
+            <AppBody />
           </SafeAreaProvider>
         </SkinProvider>
       </GestureHandlerRootView>
     </ErrorBoundary>
+  );
+}
+
+/**
+ * The app body, chosen by the active skin. Skin 3 is the greenfield redesign
+ * being rebuilt page by page — until a screen exists for it, it renders a blank
+ * black canvas (`Skin3Shell`). Every other skin renders the full existing app.
+ * Lives under `SkinProvider` so switching skins swaps the whole body live.
+ */
+function AppBody(): React.JSX.Element {
+  const {skin} = useSkin();
+  if (skin.id === 'skin3') {
+    return <WelcomeScreen />;
+  }
+  return (
+    <SearchProvider>
+      <UpdateGate>
+        {/* navigationRef + onStateChange let the OTA content sync apply a
+            downloaded pack the moment the user leaves a game screen. */}
+        <NavigationContainer
+          ref={navigationRef}
+          linking={linking}
+          onReady={flushPendingNavigation}
+          onStateChange={maybeApplyPending}>
+          <RootNavigator />
+        </NavigationContainer>
+      </UpdateGate>
+      <ToastHost />
+      {/* Old-phone approval prompt for a profile move — global so it pops
+          wherever the owner is when their new phone asks. */}
+      <TransferApprovalModal />
+    </SearchProvider>
   );
 }
 
