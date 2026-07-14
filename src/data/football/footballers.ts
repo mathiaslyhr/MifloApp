@@ -8896,6 +8896,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Gosens, Robin',
+    name: 'Robin Gosens',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    born: '1994-07-05',
+    clubs: [
+      {clubId: 'atalanta', from: 2017, to: 2022},
+      {clubId: 'inter', from: 2022, to: 2023},
+      {clubId: 'union-berlin', from: 2023, to: 2024},
+      {clubId: 'fiorentina', from: 2024, to: 2026},
+      {clubId: 'schalke', from: 2026},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 2, years: [2022, 2023], clubId: 'inter'},
+    ],
+  },
+  {
     id: 'Götze, Mario',
     name: 'Mario Götze',
     nationality: ['Germany'],
@@ -14230,7 +14247,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nationality: ['Argentina'],
     positions: ['FW'],
     born: '1997-08-22',
-    shirtNumbers: [10],
+    shirtNumbers: [9],
     clubs: [
       {clubId: 'inter', from: 2018},
     ],
@@ -15696,6 +15713,17 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2019], clubId: 'shakhtar'},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Muharemović, Tarik',
+    name: 'Tarik Muharemović',
+    nationality: ['Bosnia and Herzegovina'],
+    positions: ['DF'],
+    born: '2003-03-01',
+    clubs: [
+      {clubId: 'leeds', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Mukiele, Nordi',
@@ -17349,6 +17377,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'copa-america', count: 2, years: [2021, 2024]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Parejo, Dani',
+    name: 'Dani Parejo',
+    fullName: 'Daniel Parejo Muñoz',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    born: '1989-04-16',
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'real-madrid', from: 2008, to: 2010},
+      {clubId: 'qpr', from: 2009, to: 2010, loan: true},
+      {clubId: 'getafe', from: 2010, to: 2011},
+      {clubId: 'valencia', from: 2011, to: 2020},
+      {clubId: 'villarreal', from: 2020},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2019], clubId: 'valencia'},
+      {type: 'europa-league', count: 1, years: [2021], clubId: 'villarreal'},
+    ],
   },
   {
     id: 'Park, Ji-sung',
