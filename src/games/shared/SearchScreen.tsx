@@ -161,6 +161,8 @@ function SearchScreen({
   const insets = useSafeAreaInsets();
   const {width} = useWindowDimensions();
   const [query, setQuery] = useState('');
+  // Focus lifts the pill's border to the brand color (the TextField recipe).
+  const [inputFocused, setInputFocused] = useState(false);
 
   const trimmed = query.trim();
   const results = useMemo(
@@ -188,7 +190,7 @@ function SearchScreen({
   return (
     <View style={[styles.root, {paddingTop: insets.top + spacing.sm}]}>
       <View style={styles.topBar}>
-        <View style={styles.field}>
+        <View style={[styles.field, inputFocused && styles.fieldFocused]}>
           <Search size={18} color={colors.textTertiary} strokeWidth={2} />
           <TextInput
             style={styles.input}
@@ -200,6 +202,8 @@ function SearchScreen({
             autoCorrect={false}
             autoCapitalize={opts.autoCapitalize ?? 'words'}
             returnKeyType="search"
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
             accessibilityLabel={opts.placeholder ?? t('search.placeholder')}
           />
           {query.length > 0 ? (
@@ -346,6 +350,9 @@ const makeStyles = (c: Palette) =>
       paddingHorizontal: spacing.md,
       borderRadius: radii.pill,
       backgroundColor: c.surfaceSunken,
+      // 2px border always reserved so focus doesn't shift the layout.
+      borderWidth: 2,
+      borderColor: c.divider,
     },
     input: {
       flex: 1,
@@ -363,6 +370,7 @@ const makeStyles = (c: Palette) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
+    fieldFocused: {borderColor: c.primary},
     title: {paddingBottom: spacing.md, paddingHorizontal: spacing.lg},
     message: {paddingTop: spacing.xxl, paddingHorizontal: spacing.lg},
     grid: {paddingTop: spacing.xs},

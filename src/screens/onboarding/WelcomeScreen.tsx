@@ -15,7 +15,7 @@ import {Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronRight, X} from 'lucide-react-native';
-import {Button, CircleButton, Text} from '../../core/ui';
+import {AppMark, Button, CircleButton, Text} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {EnterCodeFlow} from './EnterCodeFlow';
 import {QuickSetupFlow} from './setup/QuickSetupFlow';
@@ -54,10 +54,17 @@ export function WelcomeScreen({
             styles.body,
             {paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl},
           ]}>
-          {/* Group 1 — the wordmark, on its own. */}
-          <Text variant="wordmark" accessibilityRole="header">
-            MifloBall
-          </Text>
+          {/* Group 1 — the wordmark, on its own: the logo m stands in for the
+              M (FotMob-style), the rest set in the wordmark type. */}
+          <View
+            style={styles.wordmark}
+            accessibilityRole="header"
+            accessibilityLabel="MifloBall">
+            <View style={styles.wordmarkMark}>
+              <AppMark size={21} />
+            </View>
+            <Text variant="wordmark">ifloBall</Text>
+          </View>
 
           {/* Group 2 — tagline + subtitle, tight together. */}
           <Text variant="hero" style={styles.groupGap}>
@@ -121,6 +128,14 @@ const makeStyles = (c: Palette) =>
     // Preview-only close button, floating in the top-right corner.
     close: {position: 'absolute', right: spacing.xl, zIndex: 1},
     body: {flex: 1, justifyContent: 'flex-end', paddingHorizontal: spacing.xl},
+    // Logo m + "ifloBall": the mark's ball sits on the text baseline (the text
+    // box keeps ~5px of descender room below it, hence the nudge).
+    wordmark: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      gap: 3,
+    },
+    wordmarkMark: {marginBottom: 5},
     // Big gap = a new group (wordmark → text, text → CTA). Small gaps below
     // keep each group's own members tight so the three read as three.
     groupGap: {marginTop: spacing.xxl},
