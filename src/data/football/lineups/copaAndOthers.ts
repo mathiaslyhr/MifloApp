@@ -166,7 +166,7 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
       {name: 'César Azpilicueta', position: 'DF', shirt: 28, aliases: ['Azpilicueta'], captain: true},
       {name: 'Andreas Christensen', position: 'DF', shirt: 27, yellowCard: true},
       {name: 'David Luiz', position: 'DF', shirt: 30},
-      {name: 'Emerson Palmieri', position: 'DF', shirt: 33, aliases: ['Emerson']},
+      {name: 'Emerson', position: 'DF', shirt: 33, aliases: ['Emerson Palmieri', 'Palmieri']},
       {name: "N'Golo Kanté", position: 'MF', shirt: 7, aliases: ['Ngolo Kante']},
       {name: 'Jorginho', position: 'MF', shirt: 5},
       {name: 'Mateo Kovačić', position: 'MF', shirt: 17, aliases: ['Kovacic'], subbedOff: true},

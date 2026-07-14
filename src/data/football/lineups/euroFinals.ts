@@ -351,7 +351,7 @@ export const EURO_FINALS: readonly FamousLineup[] = [
       {name: 'Giovanni Di Lorenzo', position: 'DF', shirt: 2, aliases: ['Di Lorenzo']},
       {name: 'Leonardo Bonucci', position: 'DF', shirt: 19, goals: 1, yellowCard: true},
       {name: 'Giorgio Chiellini', position: 'DF', shirt: 3, captain: true, yellowCard: true},
-      {name: 'Emerson Palmieri', position: 'DF', shirt: 13, aliases: ['Emerson'], subbedOff: true},
+      {name: 'Emerson', position: 'DF', shirt: 13, aliases: ['Emerson Palmieri', 'Palmieri'], subbedOff: true},
       {name: 'Nicolò Barella', position: 'MF', shirt: 18, aliases: ['Barella'], subbedOff: true, yellowCard: true},
       {name: 'Jorginho', position: 'MF', shirt: 8, yellowCard: true},
       {name: 'Marco Verratti', position: 'MF', shirt: 6, subbedOff: true},
