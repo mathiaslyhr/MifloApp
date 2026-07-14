@@ -205,4 +205,6 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-06': 'liverpool-top-scorers',
   '2027-01-07': 'last-10-ballon-dor',
   '2027-01-08': 'dk-most-caps',
+  '2027-01-09': 'last-10-pfa-poty',
+  '2027-01-10': 'last-10-wc-golden-ball',
 };
