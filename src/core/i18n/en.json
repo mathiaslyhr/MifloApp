@@ -1012,11 +1012,6 @@
   },
   "settings": {
     "title": "Settings",
-    "appearance": "Appearance",
-    "appearanceSystem": "System default",
-    "appearanceSkin3": "Skin 3",
-    "appearanceLight": "Light",
-    "appearanceDark": "Dark",
     "language": "Language",
     "languageSystem": "System default",
     "languageEn": "English",

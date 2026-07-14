@@ -2,13 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useRequestsStore} from '../core/social/requestsStore';
-import {HomeScreen} from './HomeScreen';
-import {Skin3HomeScreen} from './skin3/Skin3HomeScreen';
+import {HomeScreen} from './home/HomeScreen';
 import {GamesScreen} from './GamesScreen';
 import {SocialScreen} from './SocialScreen';
 import {ProfileScreen} from './ProfileScreen';
 import {FloatingBar, IslandTabBar, type TabId} from '../core/ui';
-import {useSkin} from '../theme';
 import type {RootStackParamList} from '../core/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
@@ -16,8 +14,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
 /**
  * The tab shell — the stack's home route. A minimal, hand-rolled toggle between
  * Home, Games, Friends and Profile. All four stay mounted; we flip visibility
- * instead of swapping, so switching tabs never re-rasterizes a screen's rainbow
- * mesh SVG (a visible flash otherwise).
+ * instead of swapping, so switching tabs never tears down and re-renders a
+ * page's native views (a visible flash otherwise).
  *
  * Hidden pages are faded (`opacity: 0`), NOT `display: none`: Fabric culls
  * `display: none` subtrees — their native views are destroyed and recreated on
@@ -33,7 +31,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
  */
 export function TabsScreen({route}: Props) {
   const [tab, setTab] = useState<TabId>('home');
-  const {skin} = useSkin();
   // Friend pushes deep-link into a tab: a tap navigates to Tabs with
   // {tab, at} and this effect flips the local toggle. Keyed on the params
   // object (`at` keeps repeat taps distinct) so every tap lands. An `addCode`
@@ -60,13 +57,7 @@ export function TabsScreen({route}: Props) {
   return (
     <View style={styles.root}>
       <View {...pageProps('home')}>
-        {/* Skin 3 replaces the launcher Home with the "Today" dashboard; every
-            other skin keeps the original launch hub. */}
-        {skin.id === 'skin3' ? (
-          <Skin3HomeScreen onOpenFriends={() => setTab('social')} />
-        ) : (
-          <HomeScreen />
-        )}
+        <HomeScreen onOpenFriends={() => setTab('social')} />
       </View>
       <View {...pageProps('games')}>
         <GamesScreen />

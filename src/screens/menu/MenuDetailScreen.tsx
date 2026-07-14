@@ -21,7 +21,7 @@ type Props = {
 
 /**
  * Shared layout for the menu detail pages (Profile, Settings, How to play,
- * About). The content sits in a full-height ScrollView on the rainbow canvas.
+ * About). The content sits in a full-height ScrollView on the page background.
  * The wordmark title lives in the scroll flow, so it scrolls up and dissolves
  * under the frosted top fade; only the back button stays pinned as a floating
  * corner button so back is always reachable.

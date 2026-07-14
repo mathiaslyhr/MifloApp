@@ -1,10 +1,9 @@
 /**
- * Skin 3 — one friend's day, as a fixed-width card for the Home "Friends today"
+ * One friend's day, as a fixed-width card for the Home "Friends today"
  * carousel. Same content as the Friends tab's PersonCard when expanded (avatar +
- * name + streak, then the four DailyRows), but always unfolded and painted on the
- * skin-3 sunken card (#0B0B0B + #141414 hairline) instead of glass. It reuses the
- * `friendCellsFor`/`friendStreak` helpers and `DailyRow`, so it becomes the
- * template for reskinning PersonCard itself later.
+ * name + streak, then the four DailyRows), but always unfolded and painted on
+ * the sunken card recipe. It reuses the `friendCellsFor`/`friendStreak` helpers
+ * and `DailyRow`.
  */
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -97,7 +96,7 @@ const makeStyles = (c: Palette) =>
     name: {flex: 1},
     streak: {flexDirection: 'row', alignItems: 'center', gap: 2},
     // Green presence disc pinned to the avatar corner, rimmed in the card fill
-    // so it reads on the near-black surface.
+    // so it reads on the card surface.
     onlineDot: {
       position: 'absolute',
       right: 0,

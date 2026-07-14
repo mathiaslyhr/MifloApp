@@ -19,7 +19,7 @@ export const TRANSFER_KEYS = [
   'tenball.progress', 'tenball.streak', 'tenball.history',
   'teamsheet.progress', 'teamsheet.streak', 'teamsheet.history',
   'journeyman.progress', 'journeyman.streak', 'journeyman.history',
-  'app.skin', 'app.haptics', 'app.scoutReminder', 'app.scoutReminderAsked',
+  'app.haptics', 'app.scoutReminder', 'app.scoutReminderAsked',
   'social.backfilled',
   'miflo.nickname',
 ] as const;

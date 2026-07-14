@@ -11,7 +11,7 @@ type Props = {
 };
 
 /**
- * An iOS-style grouped list card on the rainbow canvas: an optional eyebrow
+ * An iOS-style grouped list card: an optional eyebrow
  * label above a glass card that wraps `MenuRow`s with hairline dividers between
  * them. The final child gets `isLast` injected so its divider is dropped.
  */

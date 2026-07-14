@@ -1,5 +1,5 @@
 /**
- * Corner radii (design.md §10). Cards 16, pills fully round (buttons are pills).
+ * Corner radii. Cards 16, pills fully round (buttons are pills).
  */
 export const radii = {
   card: 16,

@@ -4,8 +4,7 @@ import {Check} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MenuGroup, MenuRow, Text, toast} from '../../core/ui';
-import {spacing, useColors, useSkin} from '../../theme';
-import type {SkinPreference} from '../../core/settings/skinPreference';
+import {spacing, useColors} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
 import {
@@ -34,14 +33,9 @@ const LANGUAGES: LanguagePreference[] = DANISH_ENABLED
   : ['en', 'da'];
 
 /** Settings — language and haptics. Both persist and apply immediately. */
-/** Light / Dark / System — the skin choices, in the order they're shown. The
- * user sees appearance labels; each maps to a skin (or "follow system"). */
-const APPEARANCES: SkinPreference[] = ['system', 'skin3', 'light', 'dark'];
-
 export function SettingsScreen({navigation}: Props) {
   const {t} = useTranslation();
   const colors = useColors();
-  const {preference: appearance, setPreference: setAppearance} = useSkin();
   const [lang, setLang] = useState<LanguagePreference>('system');
   const [haptics, setHaptics] = useState(true);
   const [reminder, setReminder] = useState(false);
@@ -57,23 +51,6 @@ export function SettingsScreen({navigation}: Props) {
     en: t('settings.languageEn'),
     da: t('settings.languageDa'),
   };
-
-  const appearanceLabel: Record<SkinPreference, string> = {
-    system: t('settings.appearanceSystem'),
-    skin3: t('settings.appearanceSkin3'),
-    light: t('settings.appearanceLight'),
-    dark: t('settings.appearanceDark'),
-  };
-
-  // Applies instantly (the skin re-renders live); a failed write just means it
-  // won't survive a relaunch, so warn the same way language/haptics do.
-  async function pickAppearance(pref: SkinPreference) {
-    try {
-      await setAppearance(pref);
-    } catch {
-      toast.error(t('settings.errorSave'));
-    }
-  }
 
   // Both changes apply in-session even when the write fails — the toast warns
   // that the choice won't survive a relaunch. No haptic on purpose: a buzz
@@ -124,25 +101,6 @@ export function SettingsScreen({navigation}: Props) {
       onBack={() => navigation.goBack()}
       backLabel={t('common.back')}
       contentStyle={styles.body}>
-      <MenuGroup label={t('settings.appearance')}>
-        {APPEARANCES.map(pref => {
-          const active = appearance === pref;
-          return (
-            <MenuRow
-              key={pref}
-              label={appearanceLabel[pref]}
-              onPress={() => pickAppearance(pref)}
-              selected={active}
-              accessory={
-                active ? (
-                  <Check size={20} color={colors.primary} strokeWidth={2.5} />
-                ) : null
-              }
-            />
-          );
-        })}
-      </MenuGroup>
-
       <MenuGroup label={t('settings.language')}>
         {LANGUAGES.map(pref => {
           // Danish is not selectable while disabled; English is always the

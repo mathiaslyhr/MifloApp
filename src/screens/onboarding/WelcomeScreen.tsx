@@ -1,27 +1,23 @@
 /**
- * Skin 3 — screen 1: the welcome screen. Skin 3 is the ground-up redesign, so
- * the app starts here as its front door; every other screen gets rebuilt onto
- * this new look one at a time.
+ * The welcome screen — the app's front door on a fresh install.
  *
- * Layout follows a landing-page shape: the shared purple glow at the top of a
- * near-black canvas (GlowBackground), then a bottom-anchored block — MifloBall
- * wordmark, a hero tagline, a subtitle, the primary "Quick setup" CTA, and an
- * "Enter code" link for people who already made a profile (moving to a new phone).
+ * Layout follows a landing-page shape: a bottom-anchored block with the
+ * MifloBall wordmark, a hero tagline, a subtitle, the primary "Quick setup"
+ * CTA, and an "Enter code" link for people who already made a profile
+ * (moving to a new phone).
  *
  *   Quick setup → QuickSetupFlow (multi-step: name → code → favorites)
  *   Enter code  → EnterCodeFlow (move a profile onto this phone)
- * Both work without a navigator (skin 3 renders outside NavigationContainer).
- * The wordmark long-press opens a skin picker (temporary A/B dev affordance).
+ * Both work without a navigator (this renders outside NavigationContainer).
  */
 import React, {useState} from 'react';
-import {ActionSheetIOS, Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronRight} from 'lucide-react-native';
 import {Button, Text} from '../../core/ui';
-import {spacing, useColors, useSkin, useThemedStyles, type Palette} from '../../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {EnterCodeFlow} from './EnterCodeFlow';
-import {GlowBackground} from './GlowBackground';
 import {QuickSetupFlow} from './setup/QuickSetupFlow';
 
 export function WelcomeScreen({
@@ -34,36 +30,23 @@ export function WelcomeScreen({
   const styles = useThemedStyles(makeStyles);
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const {setPreference} = useSkin();
   const {t} = useTranslation();
 
   const [setupActive, setSetupActive] = useState(false);
   const [codeOpen, setCodeOpen] = useState(false);
 
-  const switchSkin = () => {
-    ActionSheetIOS.showActionSheetWithOptions(
-      {title: 'Switch skin', options: ['Skin 3', 'Light', 'Dark', 'Cancel'], cancelButtonIndex: 3},
-      index => {
-        const pick = index === 0 ? 'skin3' : index === 1 ? 'light' : index === 2 ? 'dark' : null;
-        if (pick) {
-          setPreference(pick).catch(() => {});
-        }
-      },
-    );
-  };
-
   return (
     <>
-      <GlowBackground>
+      <View style={styles.canvas}>
         <View
           style={[
             styles.body,
             {paddingTop: insets.top, paddingBottom: insets.bottom + spacing.xl},
           ]}>
           {/* Group 1 — the wordmark, on its own. */}
-          <Pressable onLongPress={switchSkin} delayLongPress={600} accessibilityRole="header">
-            <Text variant="wordmark">MifloBall</Text>
-          </Pressable>
+          <Text variant="wordmark" accessibilityRole="header">
+            MifloBall
+          </Text>
 
           {/* Group 2 — tagline + subtitle, tight together. */}
           <Text variant="hero" style={styles.groupGap}>
@@ -92,7 +75,7 @@ export function WelcomeScreen({
             </Pressable>
           </View>
         </View>
-      </GlowBackground>
+      </View>
 
       {setupActive ? (
         <View style={StyleSheet.absoluteFill}>
@@ -123,6 +106,7 @@ export function WelcomeScreen({
 
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
+    canvas: {flex: 1, backgroundColor: c.background},
     body: {flex: 1, justifyContent: 'flex-end', paddingHorizontal: spacing.xl},
     // Big gap = a new group (wordmark → text, text → CTA). Small gaps below
     // keep each group's own members tight so the three read as three.

@@ -43,7 +43,7 @@ type Props = {
  * A single row inside a grouped `MenuGroup` card: a leading icon, a label (with
  * optional subtitle), and a trailing glyph — a chevron for in-app navigation or
  * an up-right arrow for rows that open the web. Carries the shared springy
- * press-feel (design.md §5) like every other control.
+ * press-feel like every other control.
  */
 export function MenuRow({
   label,

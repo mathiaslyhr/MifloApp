@@ -1,7 +1,6 @@
 /**
- * Skin 3 — the Home screen: the app's daily face for a returning player, and
- * the first screen rebuilt onto the new look that lives *inside* the navigator
- * (so it can launch the dailies and the party Lobby).
+ * The Home screen: the app's daily face for a returning player. Lives inside
+ * the navigator so it can launch the dailies and the party Lobby.
  *
  * It's a "Today" dashboard, not a social feed:
  *   Header            wordmark + a streak flame (best current daily streak)
@@ -9,14 +8,11 @@
  *   Play with friends Create / Join party
  *   Friends today     a horizontal carousel of friends' unfolded day cards
  *
- * Plain near-black canvas — the purple glow stays reserved for the front door
- * (WelcomeScreen). Reuses the daily-status language (DailyRow), the shared
- * create-party hook, and the skin-3 card recipe.
+ * Reuses the daily-status language (DailyRow) and the shared create-party hook.
  */
 import React, {useCallback, useState} from 'react';
 import {
   ScrollView,
-  StatusBar,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -51,7 +47,7 @@ const ROUTE: Record<DailyGame, keyof RootStackParamList> = {
   teamsheet: 'Teamsheet',
 };
 
-export function Skin3HomeScreen({
+export function HomeScreen({
   onOpenFriends,
 }: {
   /** Jump the tab shell to the Friends tab (from the carousel / add-friends card). */
@@ -114,7 +110,6 @@ export function Skin3HomeScreen({
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" />
       <ScrollView
         style={styles.flex}
         contentContainerStyle={[
@@ -251,8 +246,7 @@ export function Skin3HomeScreen({
           </>
         ) : null}
 
-        {/* Scan to get the app — the App Store QR, same affordance as the old
-            Home; a white card reads as scannable on the black canvas. */}
+        {/* Scan to get the app — the App Store QR. */}
         <View style={styles.qr}>
           <QrCard value={APP_STORE_URL} caption={t('home.scanApp')} />
         </View>
@@ -279,8 +273,7 @@ const makeStyles = (c: Palette) =>
       gap: spacing.xs,
     },
     sectionHeading: {marginTop: spacing.xxl, marginBottom: spacing.md},
-    // Skin-3 content card: the sunken near-black ground + a hairline inset
-    // border (the default card recipe; surface is now the same near-black too).
+    // Content card: sunken ground + a hairline inset border.
     card: {
       backgroundColor: c.surfaceSunken,
       borderWidth: 1,

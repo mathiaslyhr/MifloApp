@@ -4,7 +4,6 @@
  */
 export {Screen} from './Screen';
 export {ErrorBoundary} from './ErrorBoundary';
-export {MeshBackground} from './MeshBackground';
 export {Text} from './Text';
 export {Button} from './Button';
 export type {ButtonVariant} from './Button';

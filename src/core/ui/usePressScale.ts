@@ -3,7 +3,7 @@ import {AccessibilityInfo, Animated, Easing} from 'react-native';
 
 /**
  * The one interaction language shared by every control (buttons, tiles, chips,
- * rows, tabs) — a springy press (design.md §5).
+ * rows, tabs) — a springy press.
  *
  * Press-in: scale → 0.96 & opacity → 0.9. Press-out: back to 1. Duration 200ms,
  * `Easing.bezier(0.34,1.25,0.64,1)` — the >1 control point gives the springy

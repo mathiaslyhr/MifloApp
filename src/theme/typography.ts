@@ -1,5 +1,5 @@
 /**
- * Typography (design.md §2). Typeface **Satoshi** — only Regular (400) and
+ * Typography. Typeface **Satoshi** — only Regular (400) and
  * Medium (500) are bundled; never bold, emphasis comes from size/color.
  *
  * `fontFamily` uses the fonts' iOS PostScript names (verified from the .otf):

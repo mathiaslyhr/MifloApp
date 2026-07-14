@@ -1,24 +1,21 @@
 /**
- * Skin 3 — the "Enter code" flow, launched from the welcome screen's footer link
+ * The "Enter code" flow, launched from the welcome screen's footer link
  * ("Already have a profile?"). Moves an existing profile ONTO this (new) phone;
  * the other half of the handshake lives on the old phone (TransferApprovalModal).
  *
  *   entry   → type the old phone's code → requestTransfer
  *   waiting → show the match code, poll until the old phone approves/declines
  *   moving  → redeem the handover (setSession + restore local state)
- *   done    → onRestored() (no skin-3 home to land on yet, so this just closes)
+ *   done    → onRestored() (closes; AppBody swaps in the app)
  *
- * This is the full-screen skin-3 rebuild of the old dimmed-modal EnterCodeSheet
- * (still used by the legacy ProfileScreen). Skin 3 has no navigator, so it's a
- * self-contained component with internal phase state, rendered full-screen over
- * the welcome screen and reached through WelcomeScreen's `codeOpen` flag. It
- * reuses the same transfer services, so nothing new touches the backend.
- *
- * Like QuickSetupFlow it sits on a plain near-black canvas — the purple glow is
- * reserved for the app's front door.
+ * The full-screen sibling of the old dimmed-modal EnterCodeSheet (still used by
+ * ProfileScreen). Onboarding has no navigator, so it's a self-contained
+ * component with internal phase state, rendered full-screen over the welcome
+ * screen and reached through WelcomeScreen's `codeOpen` flag. It reuses the
+ * same transfer services, so nothing new touches the backend.
  */
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Keyboard, Pressable, StatusBar, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Keyboard, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronLeft, ChevronRight} from 'lucide-react-native';
@@ -142,7 +139,6 @@ export function EnterCodeFlow({
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" />
       <View
         style={[
           styles.container,
@@ -248,7 +244,7 @@ const makeStyles = (c: Palette) =>
     body: {flex: 1, marginTop: spacing.xxl},
     subtitle: {marginTop: spacing.sm},
     field: {marginTop: spacing.xl},
-    // Skin 3 card: sunken near-black fill + hairline divider border (not glass).
+    // Card: sunken fill + hairline divider border.
     codeCard: {
       marginTop: spacing.xl,
       alignItems: 'center',

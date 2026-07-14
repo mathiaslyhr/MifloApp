@@ -34,10 +34,10 @@ type Props = {
 };
 
 /**
- * The pill button — three variants, all fully round (design.md §3), all sharing
+ * The pill button — three variants, all fully round, all sharing
  * the springy press-scale:
- *  - `primary`   solid black ink, white hairline rim, fully flat (no shadow —
- *                the ink fill alone carries the hierarchy on the pastel mesh)
+ *  - `primary`   solid ink fill, hairline rim, fully flat (no shadow —
+ *                the ink fill alone carries the hierarchy)
  *  - `secondary` frosted white glass, ink text (the "Join a party" pill)
  *  - `outline`   ink-hairline border on light glass (tertiary CTA)
  */

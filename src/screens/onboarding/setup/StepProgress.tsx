@@ -1,5 +1,5 @@
 /**
- * The onboarding progress bar: a chunky rounded track with a purple fill that
+ * The onboarding progress bar: a chunky rounded track with an accent fill that
  * animates its width as the user moves between steps. RN `Animated` on the width
  * (layout prop → `useNativeDriver: false`); reanimated isn't a dependency.
  * Modelled on offside's `CountdownBar`.

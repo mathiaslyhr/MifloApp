@@ -25,9 +25,8 @@ type Props = {
 };
 
 /**
- * The shared glass surface (design.md §3): translucent white fill + bright rim
- * on the rainbow canvas. Every glass card in the app reads from this recipe so
- * the material stays one piece across screens.
+ * The shared glass surface: translucent fill + rim. Every glass card in the
+ * app reads from this recipe so the material stays one piece across screens.
  */
 export function GlassCard({
   children,

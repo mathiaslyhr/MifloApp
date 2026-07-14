@@ -34,7 +34,7 @@ export function initialsFor(name: string): string {
     .join('');
 }
 
-/** Round initials avatar (design.md — the app-mock Avatar atom), or a profile
+/** Round initials avatar, or a profile
  * photo when `uri` is set and loads. */
 export function Avatar({
   initials,

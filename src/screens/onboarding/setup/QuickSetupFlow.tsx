@@ -1,5 +1,5 @@
 /**
- * Skin 3 — the "Quick setup" onboarding flow, launched from the welcome screen's
+ * The "Quick setup" onboarding flow, launched from the welcome screen's
  * primary CTA. Three steps behind a progress bar:
  *
  *   0 Name       required — this is the call that creates the profile server-side
@@ -8,13 +8,10 @@
  *   1 Code       reveal the freshly minted friend code + share it.
  *   2 Favorites  pick one favorite player, club and national team — all optional.
  *
- * Skin 3 has no navigator, so this is a self-contained component with internal
- * step state, rendered full-screen over the welcome screen. It reuses the shared
- * social services (optInToSocial / setDisplayName / setFavorites) and the unified
- * FotMob search (useSearch), so nothing new touches the backend.
- *
- * Unlike the welcome screen, the setup steps sit on a plain near-black canvas —
- * the purple glow is reserved for the app's front door.
+ * Onboarding has no navigator, so this is a self-contained component with
+ * internal step state, rendered full-screen over the welcome screen. It reuses
+ * the shared social services (optInToSocial / setDisplayName / setFavorites)
+ * and the unified FotMob search (useSearch), so nothing new touches the backend.
  */
 import React, {useState} from 'react';
 import {
@@ -23,7 +20,6 @@ import {
   Keyboard,
   Pressable,
   Share,
-  StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
@@ -60,7 +56,7 @@ export function QuickSetupFlow({
 }: {
   /** Abandon setup → back to the welcome screen. */
   onClose: () => void;
-  /** Setup finished → close the flow (no skin-3 home to land on yet). */
+  /** Setup finished → close the flow (AppBody swaps in the app). */
   onComplete: () => void;
 }): React.JSX.Element {
   const styles = useThemedStyles(makeStyles);
@@ -184,7 +180,6 @@ export function QuickSetupFlow({
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" />
       <View
         style={[
           styles.container,
@@ -382,7 +377,7 @@ const makeStyles = (c: Palette) =>
     subtitle: {marginTop: spacing.sm},
     field: {marginTop: spacing.xl},
     errorText: {marginTop: spacing.sm},
-    // Skin 3 card: solid surface + hairline divider border (NOT the old glass).
+    // Card: solid surface + hairline divider border.
     codeCardWrap: {marginTop: spacing.xl},
     codeCard: {
       flexDirection: 'row',
@@ -413,7 +408,7 @@ const makeStyles = (c: Palette) =>
     tiles: {flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xl},
     tilePress: {flex: 1},
     tileInner: {alignItems: 'center', gap: spacing.xs},
-    // Icon well: the sunken near-black fill + hairline border, not the accent.
+    // Icon well: the sunken fill + hairline border, not the accent.
     badge: {
       width: 64,
       height: 64,

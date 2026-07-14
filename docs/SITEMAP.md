@@ -1,15 +1,13 @@
 # Miflo Sitemap
 
 The whole app at a glance: how you move through it, and the exact order of play for
-all eight games. Reflects the **skin 3** branch (skin 3 is the current default look).
-
-For the deeper per-screen rebuild status, see [SCREENS.md](./SCREENS.md).
+all eight games.
 
 ---
 
 ## 01 · Getting in (first launch)
 
-On the skin 3 look the app checks for a saved profile before anything else.
+The app checks for a saved profile before anything else.
 
 - **No profile** → Welcome → **Quick setup** (Name → Code → Favorites) → **Home**
 - **Already have a profile** → Welcome → **Enter code** (move from old phone) → **Home**
@@ -62,7 +60,7 @@ Screens that open on top of the tab shell with their own back button.
 - Game screens: Hattrick · Red Card · Offside · Cult Hero
 
 **Menu — settings & info**
-- **Settings** — language, haptics, reminders, skin preference
+- **Settings** — language, haptics, reminders
 - **How to play** · **About**
 - **One device** — pass-and-play explainer
 - **Move to a new phone** · delete profile

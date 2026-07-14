@@ -22,8 +22,8 @@ import {
 } from './src/data/football/remote/datasetSync';
 import {ErrorBoundary, ToastHost} from './src/core/ui';
 import {SearchProvider} from './src/games/shared/SearchScreen';
-import {WelcomeScreen} from './src/screens/skin3/WelcomeScreen';
-import {SkinProvider, useSkin} from './src/theme';
+import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
+import {SkinProvider, colors, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
 import {getCachedProfile} from './src/core/social/socialService';
@@ -137,27 +137,11 @@ function App(): React.JSX.Element {
 }
 
 /**
- * The app body, chosen by the active skin. Skin 3 gates on whether this device
- * has a profile yet: no profile → the self-contained onboarding overlay
- * (WelcomeScreen); profile → the full navigator app, same as every other skin.
- * Lives under `SkinProvider` so switching skins swaps the whole body live.
+ * The app body: a profile gate. No profile on this device → the self-contained
+ * onboarding overlay (WelcomeScreen); profile → the full navigator app, landing
+ * on the Home dashboard.
  */
 function AppBody(): React.JSX.Element {
-  const {skin} = useSkin();
-  if (skin.id === 'skin3') {
-    return <Skin3Body />;
-  }
-  return <NavigatorApp />;
-}
-
-/**
- * Skin 3's gate. Home is the first post-profile screen, so skin 3 joins the
- * real navigator here: once a profile exists we render `NavigatorApp` (landing
- * on the Home dashboard); before that, the onboarding overlay. The gate is
- * skin-3-only, so the legacy light/dark app and RootNavigator's initial route
- * are untouched.
- */
-function Skin3Body(): React.JSX.Element {
   const [gate, setGate] = useState<'loading' | 'welcome' | 'app'>('loading');
   useEffect(() => {
     let alive = true;
@@ -170,7 +154,7 @@ function Skin3Body(): React.JSX.Element {
   }, []);
 
   if (gate === 'loading') {
-    // Brief near-black while the cached-profile read resolves (no flash).
+    // Brief background-colored frame while the cached-profile read resolves.
     return <View style={styles.gate} />;
   }
   if (gate === 'app') {
@@ -189,7 +173,7 @@ function Skin3Body(): React.JSX.Element {
   );
 }
 
-/** The full navigator app — shared by every skin once there's a profile. */
+/** The full navigator app, rendered once there's a profile. */
 function NavigatorApp(): React.JSX.Element {
   return (
     <SearchProvider>
@@ -228,8 +212,8 @@ function ThemedStatusBar(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   root: {flex: 1},
-  // The skin-3 gate's loading frame: near-black so the profile check never flashes.
-  gate: {flex: 1, backgroundColor: '#000100'},
+  // The profile gate's loading frame: app background so the check never flashes.
+  gate: {flex: 1, backgroundColor: colors.background},
 });
 
 export default App;

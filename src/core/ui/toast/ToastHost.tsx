@@ -415,7 +415,7 @@ const makeStyles = (c: Palette) =>
     backgroundColor: c.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: c.glassRim,
-    // Soft lift so the glass reads above the busy rainbow canvas.
+    // Soft lift so the toast reads above the page content.
     shadowColor: c.shadow,
     shadowOpacity: 1,
     shadowRadius: 16,

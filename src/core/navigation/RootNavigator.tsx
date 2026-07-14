@@ -1,7 +1,7 @@
 /**
  * The root native-stack. `Tabs` (the Home/Games/Menu chrome) is the initial
  * route; native-stack keeps it mounted when a screen is pushed on top, so
- * returning from the Lobby never re-rasterizes the tab shell's rainbow mesh.
+ * returning from the Lobby never tears down the tab shell's native views.
  */
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';

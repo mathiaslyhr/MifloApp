@@ -20,7 +20,7 @@ describe('transfer payload allowlist', () => {
 
   it('snapshots the daily/settings keys but not identity/device keys', async () => {
     await AsyncStorage.setItem('mystery.streak', '7');
-    await AsyncStorage.setItem('app.skin', 'aurora');
+    await AsyncStorage.setItem('app.haptics', 'off');
     await AsyncStorage.setItem('miflo.nickname', 'Ada');
     // Present but excluded — must not appear in the snapshot.
     await AsyncStorage.setItem('social.outbox', '[{"secret":true}]');
@@ -30,7 +30,7 @@ describe('transfer payload allowlist', () => {
     const snap = await snapshotLocal();
 
     expect(snap['mystery.streak']).toBe('7');
-    expect(snap['app.skin']).toBe('aurora');
+    expect(snap['app.haptics']).toBe('off');
     expect(snap['miflo.nickname']).toBe('Ada');
     for (const key of MUST_NOT_TRAVEL) {
       expect(snap[key]).toBeUndefined();

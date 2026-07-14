@@ -9,11 +9,12 @@ import {
 } from 'react-native';
 import {Edge, SafeAreaView} from 'react-native-safe-area-context';
 import {screenPadding, useColors} from '../../theme';
-import {MeshBackground} from './MeshBackground';
 
 type Props = {
   children: React.ReactNode;
-  /** Render the rainbow canvas behind content (chrome screens). */
+  /** Marks a chrome screen. Was the rainbow mesh; now inert (plain background)
+   * so screens keep declaring it and the next skin can reintroduce a canvas
+   * treatment in one place. */
   canvas?: boolean;
   /** Solid background color when not a canvas screen (defaults to the theme `background`). */
   background?: string;
@@ -29,8 +30,8 @@ const TAP_SLOP = 8;
 const TAP_MS = 300;
 
 /**
- * Base screen wrapper: safe-area inset, background (solid or rainbow canvas),
- * default side padding, and tap-anywhere keyboard dismissal.
+ * Base screen wrapper: safe-area inset, solid background, default side
+ * padding, and tap-anywhere keyboard dismissal.
  *
  * The dismissal listens to the bubbled touch events only — it never enters
  * responder negotiation (a wrapping Touchable steals the gesture and kills
@@ -39,7 +40,6 @@ const TAP_MS = 300;
  */
 export function Screen({
   children,
-  canvas = false,
   background,
   edges = ['top', 'left', 'right', 'bottom'],
   padded = true,
@@ -81,11 +81,7 @@ export function Screen({
           }
         });
       }}>
-      {canvas ? (
-        <MeshBackground />
-      ) : (
-        <View style={[StyleSheet.absoluteFill, {backgroundColor: bg}]} />
-      )}
+      <View style={[StyleSheet.absoluteFill, {backgroundColor: bg}]} />
       <SafeAreaView
         edges={edges}
         style={[
