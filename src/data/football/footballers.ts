@@ -19186,6 +19186,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars', 'wordle'],
   },
   {
+    id: 'Rodríguez, Álvaro',
+    name: 'Álvaro Rodríguez',
+    fullName: 'Álvaro Rodríguez Suárez',
+    nationality: ['Uruguay'],
+    positions: ['FW'],
+    born: '2004-07-14',
+    clubs: [
+      {clubId: 'real-madrid', from: 2022, to: 2025},
+      {clubId: 'getafe', from: 2024, to: 2025, loan: true},
+      {clubId: 'elche', from: 2025, to: 2026},
+      {clubId: 'bournemouth', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Rodríguez, James',
     name: 'James Rodríguez',
     nationality: ['Colombia'],
