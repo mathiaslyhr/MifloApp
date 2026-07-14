@@ -40,13 +40,14 @@ const X2 = X1 + 2 * R; // middle leg
 const X3 = X2 + 2 * R; // right leg
 const Y_ARC = 430; // hump center height (centerline)
 const Y_BOT = 660; // left/middle leg bottom (centerline)
-const Y_BOT_R = 540; // the short right leg bottom (centerline)
+const Y_BOT_R = 528; // the short right leg bottom (centerline) — trimmed a
+// few px vs the old mark so the ball below gets air without moving away
 
-// The ball: brand purple, resting at the baseline with clear air between it
-// and the right leg (the gap used to be almost nothing).
+// The ball: brand purple, tucked below the short right leg like the
+// wordmark's period.
 const BALL_R = 54;
-const BALL_CX = X3 + 78;
-const BALL_CY = 648;
+const BALL_CX = X3 + 12;
+const BALL_CY = 650;
 
 const M_PATH = [
   `M ${X1} ${Y_BOT} L ${X1} ${Y_ARC} A ${R} ${R} 0 0 1 ${X2} ${Y_ARC} L ${X2} ${Y_BOT}`,
