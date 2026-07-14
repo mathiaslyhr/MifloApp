@@ -35,7 +35,7 @@ const Y_ARC = 430;
 const Y_BOT = 660;
 const Y_BOT_R = 510;
 const BALL_R = 54;
-const BALL_CX = X3 + 12;
+const BALL_CX = X3; // straight under the right leg
 const BALL_CY = 650;
 
 // The pen path INCLUDES the middle-leg retrace so the dash reveal and the
@@ -154,15 +154,12 @@ export function BootSplash({onDone}: {onDone?: () => void}) {
   // Ball position: pen tip while drawing, then the fall-and-settle keyframes.
   const drawCx = draw.interpolate({inputRange: DIST, outputRange: XS});
   const drawCy = draw.interpolate({inputRange: DIST, outputRange: YS});
-  const hopCx = hop.interpolate({
-    inputRange: [0, 0.6, 0.8, 1],
-    outputRange: [X3, BALL_CX - 3, BALL_CX, BALL_CX],
-  });
+  // The drop is a straight fall under the leg: overshoot, bounce up, settle.
   const hopCy = hop.interpolate({
     inputRange: [0, 0.6, 0.8, 1],
     outputRange: [Y_BOT_R, BALL_CY + 16, BALL_CY - 8, BALL_CY],
   });
-  const cx = phase === 'draw' ? drawCx : hopCx;
+  const cx = phase === 'draw' ? drawCx : BALL_CX;
   const cy = phase === 'draw' ? drawCy : hopCy;
 
   const dashOffset = draw.interpolate({

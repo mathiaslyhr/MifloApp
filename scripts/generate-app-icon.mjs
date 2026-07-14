@@ -46,7 +46,7 @@ const Y_BOT_R = 510; // the short right leg bottom (centerline) — trimmed vs
 // The ball: brand purple, tucked below the short right leg like the
 // wordmark's period.
 const BALL_R = 54;
-const BALL_CX = X3 + 12;
+const BALL_CX = X3; // straight under the right leg (matches the boot splash)
 const BALL_CY = 650;
 
 const M_PATH = [
