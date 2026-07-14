@@ -60,8 +60,10 @@ export function WelcomeScreen({
             style={styles.wordmark}
             accessibilityRole="header"
             accessibilityLabel="MifloBall">
+            {/* Thin stroke (~Satoshi Medium's weight at 20pt) + cap height, so
+                the mark reads as the word's first letter, not a pasted logo. */}
             <View style={styles.wordmarkMark}>
-              <AppMark size={21} />
+              <AppMark size={15} stroke={60} />
             </View>
             <Text variant="wordmark">ifloBall</Text>
           </View>
@@ -133,7 +135,7 @@ const makeStyles = (c: Palette) =>
     wordmark: {
       flexDirection: 'row',
       alignItems: 'flex-end',
-      gap: 3,
+      gap: 2,
     },
     wordmarkMark: {marginBottom: 5},
     // Big gap = a new group (wordmark → text, text → CTA). Small gaps below
