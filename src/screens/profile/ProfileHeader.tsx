@@ -3,7 +3,7 @@
  * friend's profile page: initials avatar on the left, then the name with the
  * presence and friends lines stacked beside it, and a slot for actions below
  * (the friend page puts its Friends/Invite buttons there). Sits directly on
- * the rainbow mesh — no glass, no shadow — so it reads as the page's
+ * the page background — no glass, no shadow — so it reads as the page's
  * identity, not another card in the list.
  */
 import React from 'react';

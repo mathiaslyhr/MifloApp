@@ -7,8 +7,8 @@
  *
  * @format
  */
-import React, {useEffect} from 'react';
-import {Alert, StatusBar, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -20,10 +20,14 @@ import {
   initFootballDataSync,
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
-import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {BootSplash, ErrorBoundary, ToastHost} from './src/core/ui';
+import {useWelcomePreview} from './src/core/ui/welcomePreview';
+import {SearchProvider} from './src/games/shared/SearchScreen';
+import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
 import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
+import {getCachedProfile} from './src/core/social/socialService';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
@@ -39,6 +43,8 @@ import {reconcileStaleDailyProgress} from './src/core/daily/reconcile';
 import {dateKeyFor} from './src/games/scout/dailySeed';
 import {startPresenceHeartbeat} from './src/core/social/presence';
 import {startRequestsRefresh} from './src/core/social/requestsStore';
+import {startTransferWatch} from './src/core/transfer/transferStore';
+import {TransferApprovalModal} from './src/screens/transfer/TransferApprovalModal';
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
@@ -85,6 +91,10 @@ function App(): React.JSX.Element {
     // Friend requests: load them now and on every foreground, so the Friends
     // tab badge is honest even if the push was dismissed. No-op pre-opt-in.
     startRequestsRefresh();
+    // Move-to-a-new-phone: watch for an incoming request to hand this profile
+    // over (the global approval modal below pops when one arrives). No-op before
+    // a profile exists, like the other social watchers.
+    startTransferWatch();
     return initPushInviteListeners();
   }, []);
 
@@ -119,22 +129,84 @@ function App(): React.JSX.Element {
         <SkinProvider>
           <SafeAreaProvider>
             <ThemedStatusBar />
-            <UpdateGate>
-              {/* navigationRef + onStateChange let the OTA content sync apply a
-                  downloaded pack the moment the user leaves a game screen. */}
-              <NavigationContainer
-                ref={navigationRef}
-                linking={linking}
-                onReady={flushPendingNavigation}
-                onStateChange={maybeApplyPending}>
-                <RootNavigator />
-              </NavigationContainer>
-            </UpdateGate>
-            <ToastHost />
+            <AppBody />
           </SafeAreaProvider>
         </SkinProvider>
       </GestureHandlerRootView>
     </ErrorBoundary>
+  );
+}
+
+/**
+ * The app body: the boot splash (the ball draws the m), then a profile gate.
+ * No profile on this device → the self-contained onboarding overlay
+ * (WelcomeScreen); profile → the full navigator app, landing on Home.
+ */
+function AppBody(): React.JSX.Element {
+  const [gate, setGate] = useState<'loading' | 'welcome' | 'app'>('loading');
+  // The splash always plays through once; the profile read resolves behind it.
+  const [splashDone, setSplashDone] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    getCachedProfile()
+      .then(profile => alive && setGate(profile ? 'app' : 'welcome'))
+      .catch(() => alive && setGate('welcome'));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  if (gate === 'loading' || !splashDone) {
+    return <BootSplash onDone={() => setSplashDone(true)} />;
+  }
+  if (gate === 'app') {
+    return <NavigatorApp />;
+  }
+  // SearchProvider so the quick-setup favorites step can open the shared FotMob
+  // search; ToastHost so the welcome/setup flows can surface errors;
+  // TransferApprovalModal for the old-phone side of a move. onProfileReady flips
+  // the gate the moment setup finishes or a moved profile lands.
+  return (
+    <SearchProvider>
+      <WelcomeScreen onProfileReady={() => setGate('app')} />
+      <ToastHost />
+      <TransferApprovalModal />
+    </SearchProvider>
+  );
+}
+
+/** The full navigator app, rendered once there's a profile. */
+function NavigatorApp(): React.JSX.Element {
+  // Design preview: Settings can overlay the onboarding front door on top of
+  // the running app (close button returns here with nav state intact).
+  const welcomePreview = useWelcomePreview(s => s.visible);
+  const closeWelcomePreview = useWelcomePreview(s => s.close);
+  return (
+    <SearchProvider>
+      <UpdateGate>
+        {/* navigationRef + onStateChange let the OTA content sync apply a
+            downloaded pack the moment the user leaves a game screen. */}
+        <NavigationContainer
+          ref={navigationRef}
+          linking={linking}
+          onReady={flushPendingNavigation}
+          onStateChange={maybeApplyPending}>
+          <RootNavigator />
+        </NavigationContainer>
+      </UpdateGate>
+      {welcomePreview ? (
+        <View style={StyleSheet.absoluteFill}>
+          <WelcomeScreen
+            onClose={closeWelcomePreview}
+            onProfileReady={closeWelcomePreview}
+          />
+        </View>
+      ) : null}
+      <ToastHost />
+      {/* Old-phone approval prompt for a profile move — global so it pops
+          wherever the owner is when their new phone asks. */}
+      <TransferApprovalModal />
+    </SearchProvider>
   );
 }
 

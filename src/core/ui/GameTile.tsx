@@ -53,15 +53,15 @@ type Props = {
   daily?: string;
   /**
    * How the trailing `badge` renders:
-   * - `'pill'` (default): off-white pill with purple text, matching the left
-   *   icon badge — for the glassy Games hub on the rainbow canvas.
+   * - `'pill'` (default): filled pill with accent text, matching the left
+   *   icon badge — for the Games hub tiles.
    * - `'text'`: plain muted label — for the picker popup, where a filled pill
    *   would clash with the glass tiles.
    */
   badgeVariant?: 'pill' | 'text';
   /**
    * Surface treatment:
-   * - `'glass'` (default): clear frosted fill for the rainbow canvas.
+   * - `'glass'` (default): clear frosted fill for in-flow tiles.
    * - `'floating'`: near-solid frosted white for a tile floating on a dimmed
    *   (dark) scrim — e.g. the game-picker popup, which has no card behind it.
    */
@@ -342,7 +342,7 @@ const makeStyles = (c: Palette) =>
     borderRadius: radii.card,
     borderWidth: 1,
     // "Clear" frosted glass — matches the nav island / secondary button. Flat
-    // on purpose: in-flow glass carries no shadow (it smears the pastel mesh
+    // on purpose: in-flow glass carries no shadow (it smears the background
     // and bleeds into the gaps between stacked tiles).
     backgroundColor: c.glassLight,
     borderColor: c.glassRim,

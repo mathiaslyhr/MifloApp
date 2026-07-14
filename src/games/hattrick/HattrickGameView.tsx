@@ -34,7 +34,8 @@ import {HelpModal} from './HelpModal';
 import {getById} from '../../data/football';
 import {criterionLabel, criterionShortLabel} from './grid';
 import {criterionIcon, criterionImage} from './criterionIcon';
-import {FootballerSearchModal} from '../shared/FootballerSearchModal';
+import {useSearch} from '../shared/SearchScreen';
+import {playerSource} from '../shared/searchSources';
 import {
   applyMove,
   cellCriteria,
@@ -105,6 +106,7 @@ export function HattrickGameView({
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
+  const openSearch = useSearch();
   const [pickCell, setPickCell] = useState<number | null>(null);
   const [explain, setExplain] = useState<Criterion | null>(null);
   const [showHelp, setShowHelp] = useState(false);
@@ -201,13 +203,26 @@ export function HattrickGameView({
   const cornerEmpty = !!state.winner || (!myTurn && !!tieOffer);
 
   function openPicker(index: number) {
+    if (!state) {
+      return;
+    }
     setPickCell(index);
+    const criteria = cellCriteria(state, index);
+    openSearch(playerSource(state.usedFootballerIds), {
+      title: `${criterionLabel(criteria.row)}  ×  ${criterionLabel(criteria.col)}`,
+      placeholder: t('hattrick.searchPlaceholder'),
+      emptyHint: t('hattrick.searchHint'),
+      noMatch: t('hattrick.noPlayers'),
+    }).then(item => {
+      setPickCell(null);
+      if (item) {
+        submitPick(item.id, index);
+      }
+    });
   }
 
-  function submitPick(footballerId: string) {
-    const cell = pickCell;
-    setPickCell(null);
-    if (cell === null || !actingUserId || !state) {
+  function submitPick(footballerId: string, cell: number) {
+    if (!actingUserId || !state) {
       return;
     }
     if (validatePick(state, cell, footballerId)) {
@@ -462,24 +477,6 @@ export function HattrickGameView({
           </View>
         )}
       </View>
-
-      {/* Footballer picker — light scrim so the selected (purple) cell stays visible */}
-      <FootballerSearchModal
-        visible={pickCell !== null}
-        title={
-          pickCell !== null
-            ? `${criterionLabel(cellCriteria(state, pickCell).row)}  ×  ${criterionLabel(
-                cellCriteria(state, pickCell).col,
-              )}`
-            : ''
-        }
-        placeholder={t('hattrick.searchPlaceholder')}
-        hint={t('hattrick.searchHint')}
-        empty={t('hattrick.noPlayers')}
-        excludedIds={state.usedFootballerIds}
-        onPick={submitPick}
-        onClose={() => setPickCell(null)}
-      />
 
       {/* Tie prompt floats above the board so it never reflows the grid. */}
       {tieOffer ? (

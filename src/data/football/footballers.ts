@@ -5317,6 +5317,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Darlow, Karl',
+    name: 'Karl Darlow',
+    nationality: ['Wales'],
+    positions: ['GK'],
+    born: '1990-10-08',
+    shirtNumbers: [26],
+    clubs: [
+      {clubId: 'nottingham-forest', from: 2012, to: 2014},
+      {clubId: 'newcastle', from: 2014, to: 2023},
+      {clubId: 'nottingham-forest', from: 2014, to: 2015, loan: true},
+      {clubId: 'leeds', from: 2023, to: 2026},
+      {clubId: 'man-utd', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Darmian, Matteo',
     name: 'Matteo Darmian',
     nationality: ['Italy'],
@@ -14981,7 +14997,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'club-brugge', from: 2011, to: 2016},
       {clubId: 'psg', from: 2016, to: 2020},
       {clubId: 'dortmund', from: 2020, to: 2024},
-      {clubId: 'lille', from: 2024},
+      {clubId: 'lille', from: 2024, to: 2026},
+      {clubId: 'sunderland', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 3, years: [2017, 2018, 2020], clubId: 'psg'},

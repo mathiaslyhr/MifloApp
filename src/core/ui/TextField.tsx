@@ -96,7 +96,9 @@ const makeStyles = (c: Palette) =>
     backgroundColor: c.surface,
     borderWidth: 2,
     borderColor: c.divider,
-    color: c.ink,
+    // Typed text uses the primary text token (identical to `ink` in light/dark;
+    // white — not the purple `ink` — under skin 3).
+    color: c.textPrimary,
     // Explicit font WITHOUT a lineHeight — a tight lineHeight clips descenders
     // (g/y/p) on a single-line TextInput.
     fontFamily: fonts.regular,

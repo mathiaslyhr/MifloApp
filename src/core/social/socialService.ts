@@ -307,6 +307,28 @@ export async function sendFriendRequest(code: string): Promise<SendRequestResult
 }
 
 /**
+ * Ask to be friends with the roster player who owns `userId`. Same server logic
+ * and outcomes as `sendFriendRequest`, but the target is resolved by uid — a
+ * lobby player carries their uid, never a friend code (0033).
+ */
+export async function sendFriendRequestByUserId(
+  userId: string,
+): Promise<SendRequestResult> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('send_friend_request_by_userid', {
+    p_user_id: userId,
+  });
+  if (error) {
+    throw error;
+  }
+  const row = (Array.isArray(data) ? data[0] : data) as {status: string};
+  return {
+    outcome: OUTCOME_BY_STATUS[row.status] ?? 'requested',
+    friend: mapProfile(row),
+  };
+}
+
+/**
  * My pending requests, both directions, counterpart profiles attached
  * (the widened profiles_select from 0024 lets both ends read each other).
  */

@@ -23,7 +23,7 @@ type Props = {
   borderWidth?: 1 | 2;
   /** Brand-purple rim — "you" in the lobby, selected states. */
   accent?: boolean;
-  /** Glass fill: `'regular'` → `colors.glass`, `'light'` → `colors.glassLight`. */
+  /** Legacy prop from the glass era; both values now render surface-2. */
   tint?: 'light' | 'regular';
   style?: StyleProp<ViewStyle>;
   accessibilityRole?: AccessibilityRole;
@@ -31,9 +31,10 @@ type Props = {
 };
 
 /**
- * A glass pill tag — the wearable unit of the glass language (player names,
- * vote targets, round counters). No `overflow: 'hidden'` anywhere so children
- * may straddle the rim (the lobby's HOST badge sits above the top border).
+ * A pill tag — the wearable unit (player names, vote targets, round
+ * counters). Surface-2 fill: one step above the card it usually sits on
+ * (design.md). No `overflow: 'hidden'` anywhere so children may straddle the
+ * rim (the lobby's HOST badge sits above the top border).
  */
 export function GlassTag({
   children,
@@ -42,7 +43,7 @@ export function GlassTag({
   size = 'md',
   borderWidth = 1,
   accent = false,
-  tint = 'regular',
+  tint: _tint = 'regular',
   style,
   accessibilityRole,
   accessibilityLabel,
@@ -52,9 +53,9 @@ export function GlassTag({
     styles.tag,
     size === 'sm' ? styles.sm : styles.md,
     {
-      backgroundColor: tint === 'light' ? colors.glassLight : colors.glass,
+      backgroundColor: colors.surface2,
       borderWidth,
-      borderColor: accent ? colors.primary : colors.glassRim,
+      borderColor: accent ? colors.primary : colors.divider,
     },
     style,
   ];

@@ -2,10 +2,10 @@
  * Design tokens barrel — the single import surface for the theme.
  * `import {colors, radii, spacing, type} from '../theme';`
  */
-export {colors, light, dark} from './colors';
+export {colors, skin1} from './colors';
 export type {ColorToken, Palette} from './colors';
-export {SKINS, SYSTEM_SKIN} from './skins';
-export type {Skin, SkinId, Appearance, Mesh, Bloom} from './skins';
+export {SKINS} from './skins';
+export type {Skin, SkinId, Appearance} from './skins';
 export {
   SkinProvider,
   useSkin,

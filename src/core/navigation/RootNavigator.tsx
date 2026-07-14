@@ -1,7 +1,7 @@
 /**
  * The root native-stack. `Tabs` (the Home/Games/Menu chrome) is the initial
  * route; native-stack keeps it mounted when a screen is pushed on top, so
- * returning from the Lobby never re-rasterizes the tab shell's rainbow mesh.
+ * returning from the Lobby never tears down the tab shell's native views.
  */
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -29,6 +29,7 @@ import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
 import {AboutScreen} from '../../screens/menu/AboutScreen';
 import {OneDeviceScreen} from '../../screens/menu/OneDeviceScreen';
+import {MoveToPhoneScreen} from '../../screens/menu/MoveToPhoneScreen';
 import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +66,7 @@ export function RootNavigator() {
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="OneDevice" component={OneDeviceScreen} />
+      <Stack.Screen name="MoveToPhone" component={MoveToPhoneScreen} />
     </Stack.Navigator>
   );
 }

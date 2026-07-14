@@ -20,7 +20,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'GamePicker'>;
 
 /**
  * The host's game picker — the Games-hub layout on a real pushed page instead of
- * a dimmed modal. Same rainbow canvas, scroll-away wordmark header, and full
+ * a dimmed modal. Same canvas, scroll-away wordmark header, and full
  * glass tiles, but with a pinned floating back button in place of the nav island
  * (this sits on top of the tab shell, so no navbar shows). Only multiplayer games
  * appear; the choice is handed back to the Lobby, which owns starting the round.

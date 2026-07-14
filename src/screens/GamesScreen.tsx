@@ -30,7 +30,7 @@ const LOCAL_ROUTES = {
 } as const;
 
 /**
- * Games — the hub on the rainbow canvas. The wordmark header is the first item
+ * Games — the hub. The wordmark header is the first item
  * in the scroll content, so it slides up and off the top as you scroll
  * (Instagram-style); only a faint blurred status strip stays pinned. The shared
  * nav island (in the tab shell) blurs the catalog beneath it.

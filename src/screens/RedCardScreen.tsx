@@ -53,7 +53,8 @@ import {
 } from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
 import {getById} from '../data/football';
-import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
+import {useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {FootballerCard} from '../games/red-card/FootballerCard';
 import {
   AnswerRevealBlock,
@@ -88,8 +89,8 @@ export function RedCardScreen({route, navigation}: Props) {
   const [role, setRole] = useState<ImposterRoleResult | null>(null);
   const [roleDismissed, setRoleDismissed] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
-  const [guessOpen, setGuessOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+  const openSearch = useSearch();
   const insets = useSafeAreaInsets();
   const leftRef = useRef(false);
   const prevPhaseRef = useRef<string | undefined>(undefined);
@@ -277,8 +278,20 @@ export function RedCardScreen({route, navigation}: Props) {
     });
   }
 
+  function openGuess() {
+    openSearch(playerSource(), {
+      title: t('redCard.redeem.button'),
+      placeholder: t('redCard.searchPlaceholder'),
+      emptyHint: t('redCard.searchHint'),
+      noMatch: t('redCard.noPlayers'),
+    }).then(item => {
+      if (item) {
+        submitGuess(item.id);
+      }
+    });
+  }
+
   function submitGuess(footballerId: string) {
-    setGuessOpen(false);
     haptics.press();
     redCardGuess(roomId, footballerId).catch(() => {
       toast.error(t('redCard.errorGuess'));
@@ -361,7 +374,7 @@ export function RedCardScreen({route, navigation}: Props) {
               state={state}
               isHost={isHost}
               amImposter={role?.role === 'imposter'}
-              onGuess={() => setGuessOpen(true)}
+              onGuess={openGuess}
               onPlayAgain={playAgain}
               onBackToLobby={() => returnToLobby(roomId).catch(notifyNetworkError)}
             />
@@ -435,18 +448,6 @@ export function RedCardScreen({route, navigation}: Props) {
           </GlassCard>
         </View>
       </Modal>
-
-      {/* Imposter redemption — search any footballer. */}
-      <FootballerSearchModal
-        visible={guessOpen}
-        title={t('redCard.redeem.button')}
-        titleVariant="section"
-        placeholder={t('redCard.searchPlaceholder')}
-        hint={t('redCard.searchHint')}
-        empty={t('redCard.noPlayers')}
-        onPick={submitGuess}
-        onClose={() => setGuessOpen(false)}
-      />
 
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>

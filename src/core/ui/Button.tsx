@@ -4,6 +4,7 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
 } from 'react-native';
 import {radii, type as typeScale, useColors, type Palette} from '../../theme';
@@ -26,17 +27,19 @@ type Props = {
    * The caller owns the feedback; no confirm haptic or press-scale fires.
    */
   onDisabledPress?: () => void;
+  /** Optional icon pinned to the right edge; the label stays centered. */
+  trailingIcon?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   accessibilityHint?: string;
 };
 
 /**
- * The pill button — three variants, all fully round (design.md §3), all sharing
- * the springy press-scale:
- *  - `primary`   solid black ink, white hairline rim, fully flat (no shadow —
- *                the ink fill alone carries the hierarchy on the pastel mesh)
- *  - `secondary` frosted white glass, ink text (the "Join a party" pill)
- *  - `outline`   ink-hairline border on light glass (tertiary CTA)
+ * The pill button — three variants, all fully round, all sharing
+ * the springy press-scale (design.md §5):
+ *  - `primary`   solid brand fill, hairline rim, fully flat (no shadow —
+ *                the fill alone carries the hierarchy)
+ *  - `secondary` surface fill with a brand border (the "Join a party" pill)
+ *  - `outline`   divider-hairline border on faint glass (tertiary CTA)
  */
 export function Button({
   label,
@@ -45,6 +48,7 @@ export function Button({
   fullWidth = true,
   disabled = false,
   onDisabledPress,
+  trailingIcon,
   style,
   accessibilityHint,
 }: Props) {
@@ -82,10 +86,11 @@ export function Button({
         <Animated.Text
           style={[
             styles.label,
-            {color: isPrimary ? colors.onInk : colors.ink},
+            {color: isPrimary ? colors.onInk : colors.textPrimary},
           ]}>
           {label}
         </Animated.Text>
+        {trailingIcon ? <View style={styles.trailing}>{trailingIcon}</View> : null}
       </Animated.View>
     </Pressable>
   );
@@ -93,14 +98,14 @@ export function Button({
 
 const variantStyles = (c: Palette): Record<ButtonVariant, ViewStyle> => ({
   primary: {
-    backgroundColor: c.ink,
+    backgroundColor: c.primary,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: c.solidRim,
   },
   secondary: {
-    backgroundColor: c.glassLight,
+    backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: c.glassRim,
+    borderColor: c.primary,
   },
   outline: {
     backgroundColor: c.glassLight,
@@ -121,4 +126,5 @@ const styles = StyleSheet.create({
   },
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
+  trailing: {position: 'absolute', right: 20, top: 0, bottom: 0, justifyContent: 'center'},
 });

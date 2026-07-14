@@ -18,7 +18,6 @@ import {
   FloatingBar,
   Screen,
   Text,
-  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
@@ -33,7 +32,7 @@ import {
   type Palette,
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FOOTBALLERS, getById, getClub, POSITION_LABELS} from '../data/football';
+import {getById, getClub, POSITION_LABELS} from '../data/football';
 import {
   enableScoutReminder,
   markScoutReminderOffered,
@@ -41,8 +40,8 @@ import {
   syncScoutReminder,
 } from '../core/notifications/scoutReminder';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
-import {searchPlayers} from '../games/hattrick/playerSearch';
-import {InlineSuggestions} from '../games/shared/InlineSuggestions';
+import {SearchField, useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {ageOn} from '../games/scout/compare';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailySecretFor} from '../games/journeyman/dailySeed';
@@ -86,8 +85,8 @@ export function JourneymanScreen({navigation}: Props) {
 
   const [state, setState] = useState<JourneymanState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
-  const [query, setQuery] = useState('');
   const [showHelp, setShowHelp] = useState(false);
+  const openSearch = useSearch();
 
   // One-time reminder offer, shown the moment a puzzle is finished — shared
   // with Scout and Top Bins (same asked/pref keys), so whichever daily game
@@ -163,19 +162,18 @@ export function JourneymanScreen({navigation}: Props) {
     };
   }, [dateKey]);
 
-  // Inline type-ahead (the Top Bins pattern): top five matches above the
-  // field, already-guessed players excluded.
-  const suggestions = useMemo(() => {
-    if (!state || isFinished(state)) {
-      return [];
+  function openGuessSearch() {
+    if (!state) {
+      return;
     }
-    return searchPlayers(FOOTBALLERS, query, state.guessedIds, 5).map(f => ({
-      key: f.id,
-      label: f.name,
-      flag: flagImage(f.nationality[0]) ?? undefined,
-      position: f.positions[0],
-    }));
-  }, [query, state]);
+    openSearch(playerSource(state.guessedIds), {
+      placeholder: t('journeyman.searchPlaceholder'),
+    }).then(item => {
+      if (item) {
+        submitGuess(item.id);
+      }
+    });
+  }
 
   function persist(next: JourneymanState, gaveUpFlag: boolean) {
     saveDailyProgress({
@@ -215,7 +213,6 @@ export function JourneymanScreen({navigation}: Props) {
     }
     const next = applyGuess(state, footballerId);
     setState(next);
-    setQuery('');
     persist(next, false);
     if (isFinished(next)) {
       haptics.success();
@@ -466,16 +463,9 @@ export function JourneymanScreen({navigation}: Props) {
           </View>
         ) : (
           <View style={styles.inputPanel}>
-            <InlineSuggestions
-              items={suggestions}
-              onPick={item => submitGuess(item.key)}
-            />
-            <TextField
-              value={query}
-              onChangeText={setQuery}
+            <SearchField
               placeholder={t('journeyman.searchPlaceholder')}
-              autoCapitalize="words"
-              accessibilityLabel={t('journeyman.searchPlaceholder')}
+              onPress={openGuessSearch}
             />
             <Pressable
               onPress={confirmGiveUp}

@@ -11,9 +11,9 @@ type Props = {
 };
 
 /**
- * An iOS-style grouped list card on the rainbow canvas: an optional eyebrow
- * label above a glass card that wraps `MenuRow`s with hairline dividers between
- * them. The final child gets `isLast` injected so its divider is dropped.
+ * An iOS-style grouped list card: an optional eyebrow
+ * label above a surface card that wraps `MenuRow`s with hairline dividers
+ * between them. The final child gets `isLast` injected so its divider drops.
  */
 export function MenuGroup({label, children}: Props) {
   const styles = useThemedStyles(makeStyles);
@@ -45,13 +45,12 @@ const makeStyles = (c: Palette) =>
       letterSpacing: 1,
       marginLeft: spacing.md,
     },
+    // Surface-1 card + the standard hairline (design.md); flat, no lift.
     card: {
-      backgroundColor: c.glass,
+      backgroundColor: c.surface,
       borderRadius: radii.card,
       borderWidth: 1,
-      // Flat like all in-flow glass. (A lift here never rendered on iOS anyway:
-      // overflow:'hidden' clips the view's own shadow.)
-      borderColor: c.glassRim,
+      borderColor: c.divider,
       overflow: 'hidden',
     },
   });

@@ -38,7 +38,8 @@ import {
   notifyPartyClosed,
 } from '../core/rooms/connectionStatus';
 import {ensureSession} from '../core/supabase/client';
-import {FootballerSearchModal} from '../games/shared/FootballerSearchModal';
+import {useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {Scoreboard} from '../games/offside/components';
 import {
   PickedAnswerCard,
@@ -296,11 +297,23 @@ function AnsweringPhase({
 }) {
   const {t, i18n} = useTranslation();
   const styles = useThemedStyles(makeStyles);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const openSearch = useSearch();
   const [picked, setPicked] = useState<string | null>(null);
 
+  function openPicker() {
+    openSearch(playerSource(), {
+      title: prompt,
+      placeholder: t('cultHero.searchPlaceholder'),
+      emptyHint: t('cultHero.searchHint'),
+      noMatch: t('cultHero.noPlayers'),
+    }).then(item => {
+      if (item) {
+        submit(item.id);
+      }
+    });
+  }
+
   function submit(footballerId: string) {
-    setSearchOpen(false);
     const previous = picked;
     setPicked(footballerId);
     haptics.press();
@@ -334,7 +347,7 @@ function AnsweringPhase({
           <Button
             label={t('cultHero.answer.change')}
             variant="secondary"
-            onPress={() => setSearchOpen(true)}
+            onPress={openPicker}
           />
         </>
       ) : (
@@ -345,21 +358,11 @@ function AnsweringPhase({
           <Button
             label={t('cultHero.answer.pick')}
             variant="primary"
-            onPress={() => setSearchOpen(true)}
+            onPress={openPicker}
           />
         </>
       )}
 
-      <FootballerSearchModal
-        visible={searchOpen}
-        title={prompt}
-        titleVariant="section"
-        placeholder={t('cultHero.searchPlaceholder')}
-        hint={t('cultHero.searchHint')}
-        empty={t('cultHero.noPlayers')}
-        onPick={submit}
-        onClose={() => setSearchOpen(false)}
-      />
     </View>
   );
 }

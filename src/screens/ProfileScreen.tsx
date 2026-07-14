@@ -57,6 +57,7 @@ import {
 } from '../core/social/socialService';
 import type {SocialProfile} from '../core/social/types';
 import {CodeBlock} from './social/CodeBlock';
+import {EnterCodeSheet} from './transfer/EnterCodeSheet';
 import {ProfileHeader} from './profile/ProfileHeader';
 import {FavoritesShowcase, type Favorites} from './profile/FavoritesShowcase';
 import {StreaksSection} from './profile/StreaksSection';
@@ -85,6 +86,8 @@ export function ProfileScreen({isActive}: Props) {
     null,
   );
   const [sheet, setSheet] = useState<'rename' | 'create' | null>(null);
+  // The "move a profile onto this phone" flow (new-phone side of a transfer).
+  const [transferOpen, setTransferOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [avatarBusy, setAvatarBusy] = useState(false);
   // Bumped after a fresh upload so the new photo beats the CDN's cache of the
@@ -347,6 +350,19 @@ export function ProfileScreen({isActive}: Props) {
     }
   }
 
+  // A profile just moved ONTO this phone (EnterCodeSheet finished): the session,
+  // cached profile and local streaks are already in place — repaint from them.
+  async function onProfileMovedHere() {
+    setTransferOpen(false);
+    const moved = await getCachedProfile();
+    setProfile(moved);
+    const todayKey = dateKeyFor(new Date());
+    loadDailyLog(todayKey)
+      .then(log => setState({log, todayKey}))
+      .catch(() => {});
+    toast.success(t('transfer.movedBody'));
+  }
+
   // The own log with answers behind finished days — the owner's privilege;
   // the published copies friends see never carry answers.
   const historyDays: HistoryDay[] = state
@@ -453,6 +469,14 @@ export function ProfileScreen({isActive}: Props) {
               onPress={() => setSheet('create')}
               disabled={busy}
             />
+            {/* New-phone path: bring an existing profile over from another
+                phone (the move is approved on that phone). */}
+            <Button
+              label={t('transfer.haveProfile')}
+              variant="secondary"
+              onPress={() => setTransferOpen(true)}
+              disabled={busy}
+            />
           </View>
         ) : null}
 
@@ -482,6 +506,12 @@ export function ProfileScreen({isActive}: Props) {
         confirmLabel={sheet === 'create' ? t('social.create') : t('common.save')}
         onConfirm={name => (sheet === 'create' ? create(name) : rename(name))}
         onCancel={() => setSheet(null)}
+      />
+
+      <EnterCodeSheet
+        visible={transferOpen}
+        onCancel={() => setTransferOpen(false)}
+        onRestored={onProfileMovedHere}
       />
 
       {/* Seamless frosted fade behind the status bar — content dissolves under

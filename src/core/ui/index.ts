@@ -3,8 +3,8 @@
  * `import {Screen, Button, Text} from '../core/ui';`
  */
 export {Screen} from './Screen';
+export {BootSplash} from './BootSplash';
 export {ErrorBoundary} from './ErrorBoundary';
-export {MeshBackground} from './MeshBackground';
 export {Text} from './Text';
 export {Button} from './Button';
 export type {ButtonVariant} from './Button';
@@ -29,6 +29,7 @@ export {AppBlur} from './Blur';
 export {TopStatusFade} from './TopStatusFade';
 export {QrCard} from './QrCard';
 export {PressableScale} from './PressableScale';
+export {AppMark} from './AppMark';
 export {usePressScale} from './usePressScale';
 export {ToastHost} from './toast/ToastHost';
 export {toast, useToast, useToastStore} from './toast/toastStore';

@@ -18,7 +18,6 @@ import {
   FloatingBar,
   Screen,
   Text,
-  TextField,
   toast,
   TopStatusFade,
 } from '../core/ui';
@@ -32,7 +31,7 @@ import {
   type Palette,
 } from '../theme';
 import type {RootStackParamList} from '../core/navigation';
-import {FOOTBALLERS, getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
+import {getById, getClub, POSITION_LABELS, type Footballer} from '../data/football';
 import {
   enableScoutReminder,
   markScoutReminderOffered,
@@ -43,8 +42,8 @@ import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {queueDailyResult} from '../core/social/outbox';
 import {fromScoutEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
-import {searchPlayers} from '../games/hattrick/playerSearch';
-import {InlineSuggestions} from '../games/shared/InlineSuggestions';
+import {SearchField, useSearch} from '../games/shared/SearchScreen';
+import {playerSource} from '../games/shared/searchSources';
 import {COLUMNS, deriveAttributes} from '../games/scout/compare';
 import {
   applyGuess,
@@ -121,8 +120,8 @@ export function ScoutScreen({navigation}: Props) {
 
   const [state, setState] = useState<MysteryState | null>(null);
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
-  const [query, setQuery] = useState('');
   const [showHelp, setShowHelp] = useState(false);
+  const openSearch = useSearch();
   const [cellInfo, setCellInfo] = useState<CellInfo | null>(null);
 
   function showCellInfo(info: CellInfo) {
@@ -202,20 +201,16 @@ export function ScoutScreen({navigation}: Props) {
   }, [dateKey]);
 
   const guessedIds = state ? state.guesses.map(g => g.footballerId) : [];
-  // Inline type-ahead (the Top Bins pattern): top five matches above the
-  // field, already-guessed players excluded.
-  const suggestions = useMemo(() => {
-    if (!state || isFinished(state)) {
-      return [];
-    }
-    return searchPlayers(FOOTBALLERS, query, guessedIds, 5).map(f => ({
-      key: f.id,
-      label: f.name,
-      flag: flagImage(f.nationality[0]) ?? undefined,
-      position: f.positions[0],
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, state]);
+
+  function openGuessSearch() {
+    openSearch(playerSource(guessedIds), {
+      placeholder: t('scout.searchPlaceholder'),
+    }).then(item => {
+      if (item) {
+        submitGuess(item.id);
+      }
+    });
+  }
 
   function submitGuess(footballerId: string) {
     if (!state || isFinished(state)) {
@@ -227,7 +222,6 @@ export function ScoutScreen({navigation}: Props) {
     }
     const next = applyGuess(state, footballerId);
     setState(next);
-    setQuery('');
     // The game keeps playing in-session either way; the toast warns that this
     // guess won't be there after a relaunch.
     const saveFailed = () => toast.error(t('scout.errorSave'));
@@ -445,16 +439,9 @@ export function ScoutScreen({navigation}: Props) {
           </View>
         ) : (
           <View style={styles.inputPanel}>
-            <InlineSuggestions
-              items={suggestions}
-              onPick={item => submitGuess(item.key)}
-            />
-            <TextField
-              value={query}
-              onChangeText={setQuery}
+            <SearchField
               placeholder={t('scout.searchPlaceholder')}
-              autoCapitalize="words"
-              accessibilityLabel={t('scout.searchPlaceholder')}
+              onPress={openGuessSearch}
             />
           </View>
         )}

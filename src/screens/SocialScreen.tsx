@@ -17,19 +17,20 @@
  * identity, code and results live on the Profile tab.
  */
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Alert, LayoutAnimation, Pressable, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 // gesture-handler's ScrollView, not RN's: the swipe-reveal pan claims
 // priority over it via blocksExternalGesture (see GamesScreen).
 import {ScrollView} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
-import {Clock, Search, UserPlus, X} from 'lucide-react-native';
+import {Clock, Search, X} from 'lucide-react-native';
 import {
   Button,
   CircleButton,
   GlassCard,
   GlassTag,
+  initialsFor,
   NAV_HEIGHT,
   Screen,
   Skeleton,
@@ -47,7 +48,6 @@ import {useAppNavigation} from '../core/navigation';
 import {dateKeyFor, pastDateKeys} from '../games/scout/dailySeed';
 import {optInToSocial} from '../core/social/onboarding';
 import {flushOutbox} from '../core/social/outbox';
-import {filterFriends, shouldOfferRequest} from '../core/social/friendSearch';
 import {presenceFor} from '../core/social/presence';
 import {refreshFriendRequests, useRequestsStore} from '../core/social/requestsStore';
 import {
@@ -59,11 +59,12 @@ import {
   removeFriend,
 } from '../core/social/socialService';
 import type {FriendFeed, SocialProfile} from '../core/social/types';
-import {AddFriendSheet} from './social/AddFriendSheet';
 import {PersonCard, friendCellsFor, friendStreak} from './social/PersonCard';
 import {RequestsSection} from './social/RequestsSection';
 import {WorldwideBoard} from './social/WorldwideBoard';
 import {useSendFriendRequest} from './social/useSendFriendRequest';
+import {useSearch} from '../games/shared/SearchScreen';
+import {ADD_FRIEND_PREFIX, friendSource} from '../games/shared/searchSources';
 
 /** The feed window: today plus the six days before it. */
 const WEEK_DAYS = 7;
@@ -94,10 +95,8 @@ export function SocialScreen({isActive, addCode}: Props) {
   const [feed, setFeed] = useState<FriendFeed[] | null>(null);
   const [nameInput, setNameInput] = useState('');
   const [busy, setBusy] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const [addOpen, setAddOpen] = useState(false);
   const requests = useRequestsStore(s => s.requests);
+  const openSearch = useSearch();
 
   // Resolve the profile once: cache first (instant, works offline), then the
   // server as the truth when reachable. A stale "no cache" worst case just
@@ -199,25 +198,8 @@ export function SocialScreen({isActive, addCode}: Props) {
     }
   }
 
-  function toggleSearch() {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    if (searchOpen) {
-      setSearchOpen(false);
-      setQuery('');
-    } else {
-      setSearchOpen(true);
-    }
-  }
-
-  const closeSearch = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setSearchOpen(false);
-    setQuery('');
-  }, []);
-
   const {send, busy: sending} = useSendFriendRequest({
     onFriendAdded: refreshFeed,
-    onSent: closeSearch,
   });
 
   // A shared friend-code link (miflo.dk/add/CODE) lands here with `addCode`:
@@ -238,17 +220,38 @@ export function SocialScreen({isActive, addCode}: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addCode, profile]);
 
-  const searching = query.trim().length > 0;
-  const visibleFeed = useMemo(
-    () => filterFriends(feed ?? [], query),
-    [feed, query],
-  );
-  // A query spelling a friend code nobody on the list owns becomes an offer
-  // to send the request — adding a friend IS searching for them.
-  const offerCode = useMemo(
-    () => (feed === null ? null : shouldOfferRequest(feed, query)),
-    [feed, query],
-  );
+  // The search button opens the shared FotMob grid over the friend list. A
+  // pick opens that friend's profile; a query spelling an unknown code appends
+  // an "add" tile that sends the request (adding IS searching for them).
+  function openFriendSearch() {
+    openSearch(
+      friendSource(
+        feed ?? [],
+        friend => ({
+          id: friend.profile.userId,
+          label: friend.profile.displayName,
+          avatar: {
+            initials: initialsFor(friend.profile.displayName),
+            uri: avatarUrlFor(friend.profile.avatarPath),
+          },
+        }),
+        code => t('social.sendRequestTo', {code}),
+      ),
+      {placeholder: t('social.searchPlaceholder'), autoCapitalize: 'none'},
+    ).then(item => {
+      if (!item) {
+        return;
+      }
+      if (item.id.startsWith(ADD_FRIEND_PREFIX)) {
+        send(item.id.slice(ADD_FRIEND_PREFIX.length));
+        return;
+      }
+      const friend = (feed ?? []).find(f => f.profile.userId === item.id);
+      if (friend) {
+        navigation.navigate('FriendProfile', {profile: friend.profile});
+      }
+    });
+  }
 
   /** Swipe action: confirm, then remove optimistically (server is truth). */
   function confirmRemove(friend: SocialProfile) {
@@ -318,38 +321,22 @@ export function SocialScreen({isActive, addCode}: Props) {
         keyboardShouldPersistTaps="handled"
         onScrollBeginDrag={closeOpenSwipeReveal}
         showsVerticalScrollIndicator={false}>
-        {/* Wordmark header — in the scroll flow, slides off the top. Search on
-            the left filters the list; the plus on the right adds a friend by
-            code, so finding and adding each have their own affordance. */}
+        {/* Wordmark header — in the scroll flow, slides off the top. One search
+            button opens the shared grid, which both finds friends and adds one
+            by code. */}
         <View style={styles.header}>
           <Text variant="wordmark" align="center">
             {t('social.title')}
           </Text>
           {profile !== 'loading' && profile !== null && view === 'friends' ? (
-            <>
-              <View style={styles.headerLeft}>
-                <CircleButton
-                  size={30}
-                  accessibilityLabel={
-                    searchOpen ? t('social.searchCloseA11y') : t('social.searchA11y')
-                  }
-                  onPress={toggleSearch}>
-                  {searchOpen ? (
-                    <X size={16} color={colors.ink} strokeWidth={2} />
-                  ) : (
-                    <Search size={16} color={colors.ink} strokeWidth={2} />
-                  )}
-                </CircleButton>
-              </View>
-              <View style={styles.headerRight}>
-                <CircleButton
-                  size={30}
-                  accessibilityLabel={t('social.addA11y')}
-                  onPress={() => setAddOpen(true)}>
-                  <UserPlus size={16} color={colors.ink} strokeWidth={2} />
-                </CircleButton>
-              </View>
-            </>
+            <View style={styles.headerRight}>
+              <CircleButton
+                size={30}
+                accessibilityLabel={t('social.searchA11y')}
+                onPress={openFriendSearch}>
+                <Search size={16} color={colors.ink} strokeWidth={2} />
+              </CircleButton>
+            </View>
           ) : null}
         </View>
 
@@ -395,12 +382,7 @@ export function SocialScreen({isActive, addCode}: Props) {
               {(['friends', 'worldwide'] as const).map(v => (
                 <GlassTag
                   key={v}
-                  onPress={() => {
-                    if (v === 'worldwide' && searchOpen) {
-                      closeSearch();
-                    }
-                    setView(v);
-                  }}
+                  onPress={() => setView(v)}
                   accent={view === v}
                   accessibilityRole="button"
                   accessibilityLabel={t(`leaderboard.${v}`)}
@@ -424,62 +406,16 @@ export function SocialScreen({isActive, addCode}: Props) {
               />
             ) : (
           <>
-            {searchOpen ? (
-              <TextField
-                value={query}
-                onChangeText={setQuery}
-                placeholder={t('social.searchPlaceholder')}
-                autoFocus
-                autoCapitalize="none"
-                returnKeyType="search"
-                accessibilityLabel={t('social.searchPlaceholder')}
-              />
-            ) : null}
-
-            {offerCode !== null ? (
-              <Pressable
-                onPress={() => send(offerCode)}
-                disabled={sending}
-                accessibilityRole="button"
-                accessibilityLabel={t('social.sendRequestTo', {code: offerCode})}>
-                <GlassCard
-                  style={[styles.offerCard, sending && styles.offerBusy]}>
-                  <UserPlus size={18} color={colors.textSecondary} strokeWidth={2} />
-                  <Text variant="secondary" color="secondary">
-                    {t('social.sendRequestTo', {code: offerCode})}
-                  </Text>
-                </GlassCard>
-              </Pressable>
-            ) : null}
-
-            {/* People asking to be friends — only exists while pending, and
-                steps aside while a search query owns the page. */}
-            {!searching ? (
-              <RequestsSection
-                requests={requests?.incoming ?? []}
-                onAccepted={refreshFeed}
-              />
-            ) : null}
+            {/* People asking to be friends — only exists while pending. */}
+            <RequestsSection
+              requests={requests?.incoming ?? []}
+              onAccepted={refreshFeed}
+            />
 
             {feed === null ? (
               <Skeleton height={140} />
-            ) : searching ? (
-              visibleFeed.length > 0 ? (
-                <View style={styles.section}>
-                  <Text variant="caption" color="tertiary" style={styles.eyebrow}>
-                    {t('social.friendsDailyEyebrow').toUpperCase()}
-                  </Text>
-                  {friendCards(visibleFeed)}
-                </View>
-              ) : offerCode === null ? (
-                <GlassCard style={styles.messageCard}>
-                  <Text variant="secondary" color="secondary" align="center">
-                    {t('social.searchEmpty')}
-                  </Text>
-                </GlassCard>
-              ) : null
             ) : (
-              /* Friends, alphabetically. */
+              /* Friends, alphabetically. Search lives in the grid overlay. */
               <View style={styles.section}>
                 <Text variant="caption" color="tertiary" style={styles.eyebrow}>
                   {t('social.friendsDailyEyebrow').toUpperCase()}
@@ -513,17 +449,6 @@ export function SocialScreen({isActive, addCode}: Props) {
 
       {/* Seamless frosted fade behind the status bar. */}
       <TopStatusFade />
-
-      {/* The plus button's add-by-code sheet. */}
-      <AddFriendSheet
-        visible={addOpen}
-        busy={sending}
-        onSubmit={code => {
-          setAddOpen(false);
-          send(code);
-        }}
-        onCancel={() => setAddOpen(false)}
-      />
     </Screen>
   );
 }
@@ -538,13 +463,6 @@ const makeStyles = (c: Palette) =>
   headerRight: {
     position: 'absolute',
     right: 0,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'center',
-  },
-  headerLeft: {
-    position: 'absolute',
-    left: 0,
     top: 0,
     bottom: 0,
     justifyContent: 'center',
@@ -573,14 +491,6 @@ const makeStyles = (c: Palette) =>
     padding: spacing.xl,
     gap: spacing.md,
   },
-  offerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.xs,
-    padding: spacing.lg,
-  },
-  offerBusy: {opacity: 0.5},
   section: {gap: spacing.sm},
   eyebrow: {
     letterSpacing: 1,

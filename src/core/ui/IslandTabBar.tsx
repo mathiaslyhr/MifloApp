@@ -39,7 +39,7 @@ type Props = {
 /**
  * The floating navigation island — Home · Games · Friends · Profile as a
  * centered, "clear" frosted pill. Icons only (the labels live on as
- * accessibility text); the active tab is tinted the accent purple, inactive
+ * accessibility text); the active tab is tinted the accent color, inactive
  * tabs are muted.
  *
  * The springy press-scale is shared by the WHOLE island (Instagram-style): a
@@ -51,8 +51,8 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
   const {t} = useTranslation();
   const {colors, skin} = useSkin();
   const styles = useThemedStyles(makeStyles);
-  // A faint white tint over the blur keeps the "clear" frosted look; on the dark
-  // canvas it drops so the pill doesn't glow brighter than the aurora behind it.
+  // A faint white tint over the blur keeps the "clear" frosted look; on a dark
+  // canvas it drops so the pill doesn't glow brighter than the ground behind it.
   const pillTint =
     skin.appearance === 'dark'
       ? 'rgba(255,255,255,0.08)'
