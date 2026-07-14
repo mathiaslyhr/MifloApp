@@ -190,7 +190,6 @@ export function HomeScreen({
             label={t('home.joinParty')}
             variant="secondary"
             onPress={() => navigation.navigate('Join')}
-            style={{borderColor: colors.primary}}
           />
         </View>
 

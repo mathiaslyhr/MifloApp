@@ -21,7 +21,7 @@ const SkinContext = createContext<SkinContextValue | null>(null);
 
 export function SkinProvider({children}: {children: React.ReactNode}) {
   const value = useMemo<SkinContextValue>(
-    () => ({skin: SKINS.neutral, colors: SKINS.neutral.palette}),
+    () => ({skin: SKINS.skin1, colors: SKINS.skin1.palette}),
     [],
   );
 
@@ -33,8 +33,8 @@ export function SkinProvider({children}: {children: React.ReactNode}) {
  * rendered in isolation — e.g. a unit test — or before the tree is wrapped).
  */
 const FALLBACK: SkinContextValue = {
-  skin: SKINS.neutral,
-  colors: SKINS.neutral.palette,
+  skin: SKINS.skin1,
+  colors: SKINS.skin1.palette,
 };
 
 function useSkinContext(): SkinContextValue {

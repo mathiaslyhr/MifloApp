@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {colors, radii, spacing} from '../../theme';
+import {radii, spacing} from '../../theme';
 import {Text} from './Text';
 
 type Props = {
@@ -19,12 +19,9 @@ export function QrCard({value, caption = 'Scan to get the app', size = 108}: Pro
   return (
     <View style={styles.wrap}>
       <View style={styles.card}>
-        <QRCode
-          value={value}
-          size={size}
-          color={colors.ink}
-          backgroundColor={colors.surface}
-        />
+        {/* Deliberately theme-fixed: scanners need dark modules on a light
+            ground, so the QR stays black-on-white on every skin. */}
+        <QRCode value={value} size={size} color="#000000" backgroundColor="#FFFFFF" />
       </View>
       {caption ? (
         <Text variant="caption" color="muted" align="center">
@@ -37,14 +34,10 @@ export function QrCard({value, caption = 'Scan to get the app', size = 108}: Pro
 
 const styles = StyleSheet.create({
   wrap: {alignItems: 'center', gap: spacing.md},
+  // White on purpose (scannable ground); no shadow — cards never carry shadow.
   card: {
     padding: 12,
     borderRadius: radii.card,
-    backgroundColor: colors.surface,
-    shadowColor: colors.shadowInk,
-    shadowOpacity: 0.12,
-    shadowOffset: {width: 0, height: 8},
-    shadowRadius: 20,
-    elevation: 4,
+    backgroundColor: '#FFFFFF',
   },
 });

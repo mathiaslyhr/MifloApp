@@ -35,11 +35,11 @@ type Props = {
 
 /**
  * The pill button — three variants, all fully round, all sharing
- * the springy press-scale:
- *  - `primary`   solid ink fill, hairline rim, fully flat (no shadow —
- *                the ink fill alone carries the hierarchy)
- *  - `secondary` frosted white glass, ink text (the "Join a party" pill)
- *  - `outline`   ink-hairline border on light glass (tertiary CTA)
+ * the springy press-scale (design.md §5):
+ *  - `primary`   solid brand fill, hairline rim, fully flat (no shadow —
+ *                the fill alone carries the hierarchy)
+ *  - `secondary` surface fill with a brand border (the "Join a party" pill)
+ *  - `outline`   divider-hairline border on faint glass (tertiary CTA)
  */
 export function Button({
   label,
@@ -86,7 +86,7 @@ export function Button({
         <Animated.Text
           style={[
             styles.label,
-            {color: isPrimary ? colors.onInk : colors.ink},
+            {color: isPrimary ? colors.onInk : colors.textPrimary},
           ]}>
           {label}
         </Animated.Text>
@@ -98,14 +98,14 @@ export function Button({
 
 const variantStyles = (c: Palette): Record<ButtonVariant, ViewStyle> => ({
   primary: {
-    backgroundColor: c.ink,
+    backgroundColor: c.primary,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: c.solidRim,
   },
   secondary: {
-    backgroundColor: c.glassLight,
+    backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: c.glassRim,
+    borderColor: c.primary,
   },
   outline: {
     backgroundColor: c.glassLight,

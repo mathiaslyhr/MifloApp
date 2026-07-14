@@ -3,14 +3,13 @@
  * the `appearance` axis it sits on (light/dark), which drives the blur tint
  * and the status-bar glyphs.
  *
- * SINGLE-SKIN REGISTRY. The old looks were removed for the visual reset; the
- * one `neutral` entry is a grayscale placeholder. The next skin replaces it
- * here (and its colors in `colors.ts`).
+ * Single-skin registry: Skin 1, the dark elevation-by-brightness system
+ * (spec: docs/design.md). A future skin extends the union and adds an entry.
  */
-import {neutral, type Palette} from './colors';
+import {skin1, type Palette} from './colors';
 
 /** The shipping skins. New skins extend this union. */
-export type SkinId = 'neutral';
+export type SkinId = 'skin1';
 
 /** The light/dark axis a skin sits on (drives chrome + status bar). */
 export type Appearance = 'light' | 'dark';
@@ -24,10 +23,10 @@ export type Skin = {
 };
 
 export const SKINS: Record<SkinId, Skin> = {
-  neutral: {
-    id: 'neutral',
-    name: 'Neutral',
-    appearance: 'light',
-    palette: neutral,
+  skin1: {
+    id: 'skin1',
+    name: 'Skin 1',
+    appearance: 'dark',
+    palette: skin1,
   },
 };
