@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {
-  Alert,
-  ScrollView,
-  Share,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Alert, ScrollView, Share, StyleSheet, View} from 'react-native';
 import {Check, ChevronLeft, User, UserMinus, UserPlus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {JOIN_URL_BASE} from '../core/config';
@@ -15,6 +9,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   Avatar,
   Button,
+  CircleButton,
   FloatingBar,
   initialsFor,
   NameSheet,
@@ -26,7 +21,6 @@ import {
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {Sentry, isSentryEnabled} from '../core/observability/sentry';
-import {GAMES, isBuiltGame} from './gamesCatalog';
 import {InviteFriendsSheet} from './lobby/InviteFriendsSheet';
 import {
   avatarUrlFor,
@@ -65,26 +59,15 @@ import {generateGrid, gridSignature} from '../games/hattrick/grid';
 import {createIndividualState} from '../games/hattrick/engine';
 import {buildFootballerPool} from '../games/red-card/engine';
 import {takeSessionQuestions} from '../games/red-card/questions';
-import {RoundsStepper} from '../games/shared/RoundsStepper';
 import {
-  DEFAULT_ROUNDS,
-  MAX_ROUNDS as RED_CARD_MAX_ROUNDS,
+  DEFAULT_ROUNDS as RED_CARD_DEFAULT_ROUNDS,
   MIN_PLAYERS as IMPOSTER_MIN,
-  MIN_ROUNDS as RED_CARD_MIN_ROUNDS,
 } from '../games/red-card/types';
 import {buildRounds} from '../games/offside/questions';
-import {
-  DEFAULT_ROUNDS as OFFSIDE_DEFAULT_ROUNDS,
-  MAX_ROUNDS as OFFSIDE_MAX_ROUNDS,
-  MIN_ROUNDS as OFFSIDE_MIN_ROUNDS,
-} from '../games/offside/types';
+import {DEFAULT_ROUNDS as OFFSIDE_DEFAULT_ROUNDS} from '../games/offside/types';
 import {buildPromptPayloads} from '../games/cult-hero/famePrior';
 import {takeSessionPrompts} from '../games/cult-hero/prompts';
-import {
-  DEFAULT_ROUNDS as CULT_HERO_DEFAULT_ROUNDS,
-  MAX_ROUNDS as CULT_HERO_MAX_ROUNDS,
-  MIN_ROUNDS as CULT_HERO_MIN_ROUNDS,
-} from '../games/cult-hero/types';
+import {DEFAULT_ROUNDS as CULT_HERO_DEFAULT_ROUNDS} from '../games/cult-hero/types';
 import type {Room, RoomPlayer} from '../core/rooms/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
@@ -93,10 +76,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Lobby'>;
 export type GameRoute = 'Hattrick' | 'RedCard' | 'Offside' | 'CultHero';
 
 /**
- * Lobby — where players gather after a party is created. Shows the party code and
- * a live, Kahoot-style list of player names (no avatars). Tap your own name to
- * rename yourself for the round; the host taps another name to remove them. The
- * host later picks the game from here (stubbed — games aren't built).
+ * Lobby — where players gather after a match is created. Shows the join code (the
+ * whole pill shares it) and a live list of players. Tap your own name to rename
+ * yourself; the host taps another name to kick or add them as a friend. The host
+ * picks the game from here — "Pick game" opens the games screen, which builds the
+ * round and drops every device into it.
+ *
+ * A match is always free-pick (created game-less from Home); there's no locked
+ * mode here. Free-pick starts each game on its default round count.
  */
 export function LobbyScreen({route, navigation}: Props) {
   const {roomId} = route.params;
@@ -109,13 +96,6 @@ export function LobbyScreen({route, navigation}: Props) {
   const [renameOpen, setRenameOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [starting, setStarting] = useState(false);
-  // Host-picked Red Card question rounds (the selector only shows for a locked
-  // Red Card party; a free-pick party starts with the default).
-  const [redCardRounds, setRedCardRounds] = useState(DEFAULT_ROUNDS);
-  // Host-picked Offside round count (same locked-party rule as Red Card's).
-  const [offsideRounds, setOffsideRounds] = useState(OFFSIDE_DEFAULT_ROUNDS);
-  // Host-picked Cult Hero prompt count (same locked-party rule).
-  const [cultHeroRounds, setCultHeroRounds] = useState(CULT_HERO_DEFAULT_ROUNDS);
   const insets = useSafeAreaInsets();
   // Measured height of the floating bottom bar, so scroll content clears it.
   const [botH, setBotH] = useState(0);
@@ -134,12 +114,12 @@ export function LobbyScreen({route, navigation}: Props) {
   // Track membership so we can detect being kicked (present → gone).
   const wasPresentRef = useRef(false);
   const kickedRef = useRef(false);
-  // Guards the one-shot exit to the menu when the party closes (host left).
+  // Guards the one-shot exit to the menu when the match closes (host left).
   const closedRef = useRef(false);
   // Guards the one-shot navigation into the game when it starts.
   const inGameRef = useRef(false);
-  // Party-session memory (host device): who opened the last game and the last
-  // few grids, so consecutive rounds don't repeat the starter or the board.
+  // Match-session memory (host device): who opened the last game and the last few
+  // grids, so consecutive rounds don't repeat the starter or the board.
   const lastStarterRef = useRef<string | null>(null);
   const recentGridsRef = useRef<string[]>([]);
 
@@ -150,7 +130,7 @@ export function LobbyScreen({route, navigation}: Props) {
     // One notifier for both channels, so a single outage toasts once.
     const notifyStatus = createConnectionNotifier();
     const unsubPlayers = subscribePlayers(roomId, setPlayers, notifyStatus);
-    // Host left → the room is deleted; no host, no party. Return to the menu.
+    // Host left → the room is deleted; no host, no match. Return to the menu.
     const unsubRoom = subscribeRoom(
       roomId,
       setRoom,
@@ -169,9 +149,9 @@ export function LobbyScreen({route, navigation}: Props) {
     };
   }, [roomId, navigation]);
 
-  // Leave the party whenever this screen is popped (back button, swipe, or the
+  // Leave the match whenever this screen is popped (back button, swipe, or the
   // kicked auto-goBack). Fire-and-forget; the RPC is idempotent, so the already
-  // kicked/gone case is harmless. Host leaving closes the party for everyone.
+  // kicked/gone case is harmless. Host leaving closes the match for everyone.
   useEffect(() => {
     const unsub = navigation.addListener('beforeRemove', () => {
       leaveRoom(roomId).catch(() => {});
@@ -297,7 +277,7 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }
 
-  // Host removes a player — same confirm as before, now from the card's actions.
+  // Host removes a player.
   function confirmKick(p: RoomPlayer) {
     Alert.alert(t('lobby.removeTitle'), t('lobby.removeConfirm', {name: p.name}), [
       {text: t('common.cancel'), style: 'cancel'},
@@ -372,24 +352,10 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }
 
-  // Whether this party is locked to a pre-chosen game (came from the Games tab)
-  // or free to pick (came from Home, where the room is created as `'unset'`).
-  const locked = room ? isBuiltGame(room.gameType) : false;
-
-  // Fewest players the start button accepts: a locked Red Card party needs its
-  // own minimum; everything else (including free-pick) starts at 2.
-  const minPlayers =
-    locked && room?.gameType === 'red-card' ? IMPOSTER_MIN : 2;
-
-  // Human title for a game type, via the presentation catalog.
-  function gameTitle(gameType: string): string {
-    const entry = GAMES.find(g => g.gameType === gameType);
-    return entry ? t(`games.${entry.i18nKey}.title`) : gameType;
-  }
-
   // Host starts a specific game: build its initial state from the roster, then
-  // hand every device into the game via the room. Only hattrick has an engine
-  // today; the picker/lock never offers an unbuilt game, so that's the one case.
+  // hand every device into the game via the room. Called by the game picker,
+  // which navigates the host into the returned screen; guests follow via the
+  // auto-nav effect. Free-pick uses each game's default round count.
   async function startGame(gameType: string): Promise<GameRoute | undefined> {
     if (players.length < 2 || starting) {
       return undefined;
@@ -416,9 +382,9 @@ export function LobbyScreen({route, navigation}: Props) {
           return 'Hattrick';
         }
         case 'red-card': {
-          // Needs more players than Tic-Tac-Toe (1 imposter + ≥2 detectives to
-          // make voting meaningful). Roles are assigned server-side; the host
-          // only ships the candidate footballer pool.
+          // Needs more players than Hattrick (1 imposter + ≥2 detectives to make
+          // voting meaningful). Roles are assigned server-side; the host only
+          // ships the candidate footballer pool.
           if (players.length < IMPOSTER_MIN) {
             setStarting(false);
             haptics.warning();
@@ -428,8 +394,8 @@ export function LobbyScreen({route, navigation}: Props) {
           await startRedCardGame(
             roomId,
             buildFootballerPool(),
-            redCardRounds,
-            takeSessionQuestions(roomId, redCardRounds),
+            RED_CARD_DEFAULT_ROUNDS,
+            takeSessionQuestions(roomId, RED_CARD_DEFAULT_ROUNDS),
           );
           inGameRef.current = true;
           return 'RedCard';
@@ -437,7 +403,7 @@ export function LobbyScreen({route, navigation}: Props) {
         case 'offside': {
           // The host builds the deck; the generator never reuses a player, so a
           // capped pool just means a shorter game — ship the actual length.
-          const deck = buildRounds(offsideRounds);
+          const deck = buildRounds(OFFSIDE_DEFAULT_ROUNDS);
           if (deck.length === 0) {
             throw new Error('Offside deck came back empty');
           }
@@ -446,12 +412,12 @@ export function LobbyScreen({route, navigation}: Props) {
           return 'Offside';
         }
         case 'cult-hero': {
-          // The host deals the prompts and ships each one's eligible players
-          // with fame priors; picks are collected and scored server-side.
+          // The host deals the prompts and ships each one's eligible players with
+          // fame priors; picks are collected and scored server-side.
           await startCultHeroGame(
             roomId,
-            cultHeroRounds,
-            buildPromptPayloads(takeSessionPrompts(roomId, cultHeroRounds)),
+            CULT_HERO_DEFAULT_ROUNDS,
+            buildPromptPayloads(takeSessionPrompts(roomId, CULT_HERO_DEFAULT_ROUNDS)),
           );
           inGameRef.current = true;
           return 'CultHero';
@@ -470,23 +436,10 @@ export function LobbyScreen({route, navigation}: Props) {
     }
   }
 
-  // Push the host into a freshly built game (narrowed so each route gets its
-  // own params). Guests get there via the auto-nav effect above instead.
-  function enterGame(target: GameRoute) {
-    if (target === 'Hattrick') {
-      navigation.navigate('Hattrick', {roomId});
-    } else if (target === 'RedCard') {
-      navigation.navigate('RedCard', {roomId});
-    } else if (target === 'Offside') {
-      navigation.navigate('Offside', {roomId});
-    } else {
-      navigation.navigate('CultHero', {roomId});
-    }
-  }
-
   return (
     // Drop top/bottom safe-area edges — the scroll content owns the top inset
-    // (the wordmark scrolls away) and the bottom bar owns the bottom inset.
+    // (the code pill scrolls under the chrome) and the bottom bar owns the
+    // bottom inset.
     <Screen canvas edges={['left', 'right']}>
       <ScrollView
         style={styles.scroll}
@@ -654,68 +607,29 @@ export function LobbyScreen({route, navigation}: Props) {
       </ScrollView>
 
       {/* Pinned floating chrome (top) — back on the left, invite on the right,
-          both stay reachable while the wordmark scrolls away. */}
+          both stay reachable while the code pill scrolls away. */}
       <FloatingBar edge="top" style={styles.backBar}>
         <View style={styles.backRow}>
-          <PressableScale
-            onPress={() => navigation.goBack()}
-            accessibilityRole="button"
+          <CircleButton
+            size={40}
             accessibilityLabel={t('lobby.leave')}
-            hitSlop={8}>
-            <View style={styles.cornerButton}>
-              <ChevronLeft size={20} color={colors.textPrimary} strokeWidth={2} />
-            </View>
-          </PressableScale>
-          <PressableScale
-            onPress={() => setInviteOpen(true)}
-            accessibilityRole="button"
+            onPress={() => navigation.goBack()}>
+            <ChevronLeft size={20} color={colors.textPrimary} strokeWidth={2} />
+          </CircleButton>
+          <CircleButton
+            size={40}
             accessibilityLabel={t('lobby.inviteFriends')}
-            hitSlop={8}>
-            <View style={styles.cornerButton}>
-              <UserPlus size={20} color={colors.textPrimary} strokeWidth={2} />
-            </View>
-          </PressableScale>
+            onPress={() => setInviteOpen(true)}>
+            <UserPlus size={20} color={colors.textPrimary} strokeWidth={2} />
+          </CircleButton>
         </View>
       </FloatingBar>
 
-      {/* Floating footer — the host's game button (or guest hint) floats over
-          the roster with no box behind it. Host picks the game; guests wait. */}
+      {/* Floating footer — the host's "Pick game" button (or guest hint) floats
+          over the roster with no box behind it. */}
       <FloatingBar edge="bottom" onHeight={setBotH} style={styles.footer}>
-        {isHost && locked && room?.gameType === 'red-card' ? (
-          <View style={styles.roundsPickerWrap}>
-            <RoundsStepper
-              value={redCardRounds}
-              onChange={setRedCardRounds}
-              min={RED_CARD_MIN_ROUNDS}
-              max={RED_CARD_MAX_ROUNDS}
-              label={t('redCard.roundsPicker.label')}
-            />
-          </View>
-        ) : null}
-        {isHost && locked && room?.gameType === 'offside' ? (
-          <View style={styles.roundsPickerWrap}>
-            <RoundsStepper
-              value={offsideRounds}
-              onChange={setOffsideRounds}
-              min={OFFSIDE_MIN_ROUNDS}
-              max={OFFSIDE_MAX_ROUNDS}
-              label={t('offside.roundsPicker.label')}
-            />
-          </View>
-        ) : null}
-        {isHost && locked && room?.gameType === 'cult-hero' ? (
-          <View style={styles.roundsPickerWrap}>
-            <RoundsStepper
-              value={cultHeroRounds}
-              onChange={setCultHeroRounds}
-              min={CULT_HERO_MIN_ROUNDS}
-              max={CULT_HERO_MAX_ROUNDS}
-              label={t('cultHero.roundsPicker.label')}
-            />
-          </View>
-        ) : null}
         {isHost && players.length <= 1 ? (
-          // Alone in the lobby — nudge the host that the game needs others.
+          // Alone in the lobby — nudge the host that a game needs others.
           <Text
             variant="secondary"
             color="secondary"
@@ -726,48 +640,25 @@ export function LobbyScreen({route, navigation}: Props) {
         ) : null}
         {isHost ? (
           <Button
-            label={
-              starting
-                ? t('lobby.starting')
-                : locked && room
-                ? t('lobby.startGame', {game: gameTitle(room.gameType)})
-                : t('lobby.pickGame')
-            }
+            label={starting ? t('lobby.starting') : t('lobby.pickGame')}
             variant="primary"
-            disabled={players.length < minPlayers || starting}
+            disabled={players.length < 2 || starting}
             onDisabledPress={() => {
               if (starting) {
                 return;
               }
               haptics.warning();
-              // A locked party talks about "this game"; a free party is still
-              // picking, so the message talks about picking instead.
-              toast.neutral(
-                locked && room
-                  ? t('lobby.needPlayers', {count: minPlayers})
-                  : t('lobby.needPlayersPick', {count: minPlayers}),
-              );
+              toast.neutral(t('lobby.needPlayersPick', {count: 2}));
             }}
-            onPress={async () => {
-              if (locked && room) {
-                const target = await startGame(room.gameType);
-                if (target) {
-                  enterGame(target);
-                }
-              } else {
-                navigation.navigate('GamePicker', {roomId, onPick: startGame});
-              }
-            }}
+            onPress={() =>
+              navigation.navigate('GamePicker', {roomId, onPick: startGame})
+            }
           />
         ) : room?.status === 'in_progress' ? (
-          <Button
-            label={t('lobby.rejoin')}
-            variant="primary"
-            onPress={rejoinGame}
-          />
+          <Button label={t('lobby.rejoin')} variant="primary" onPress={rejoinGame} />
         ) : (
           <Text variant="secondary" color="secondary" align="center">
-            {locked ? t('lobby.waitingHostStart') : t('lobby.waitingHostPick')}
+            {t('lobby.waitingHostPick')}
           </Text>
         )}
       </FloatingBar>
@@ -798,111 +689,97 @@ export function LobbyScreen({route, navigation}: Props) {
 
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
-  // Pinned floating chrome, aligned to the top row: back left, invite right.
-  backBar: {paddingHorizontal: screenPadding},
-  backRow: {
-    height: 44,
-    marginTop: spacing.sm,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  // Skin-3 corner action button: near-black circle with a hairline rim (the
-  // card recipe), no glass/shadow.
-  cornerButton: {
-    width: 40,
-    height: 40,
-    borderRadius: radii.pill,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: c.surfaceSunken,
-    borderWidth: 1,
-    borderColor: c.divider,
-  },
-  scroll: {flex: 1},
-  body: {
-    gap: spacing.xl,
-  },
-  // Code card — one full-round pill (surface2 #353449) with purple code; the
-  // whole pill is the share button. Dropped well below the top chrome.
-  codeCard: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.xxxl,
-    backgroundColor: c.surface2,
-    borderRadius: radii.pill,
-    paddingVertical: spacing.xl,
-    paddingHorizontal: spacing.xl,
-  },
-  code: {letterSpacing: 8},
-  // Players section header: label left, joined count right.
-  playersHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  playersLabel: {letterSpacing: 1},
-  // Vertical roster of player cards.
-  roster: {gap: spacing.sm},
-  // Player card: sunken near-black ground + hairline inset border.
-  playerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    backgroundColor: c.surfaceSunken,
-    borderWidth: 1,
-    borderColor: c.divider,
-    borderRadius: radii.card,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  // Tapped (host-selected) card gets the purple rim.
-  playerCardSelected: {borderColor: c.primary},
-  nameText: {flex: 1},
-  // Host · You badge on the right of the card (surface2 fill, purple label).
-  badge: {
-    backgroundColor: c.surface2,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 4,
-  },
-  badgeText: {letterSpacing: 0.2},
-  // Action row under a host-selected player card.
-  actionRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: spacing.sm,
-    paddingLeft: spacing.xs,
-  },
-  actionPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    backgroundColor: c.surface2,
-    borderRadius: radii.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-  },
-  // Neutral (non-primary) pills sit on the sunken ground with a hairline rim.
-  friendsPill: {
-    backgroundColor: c.surfaceSunken,
-    borderWidth: 1,
-    borderColor: c.divider,
-  },
-  kickPill: {
-    backgroundColor: c.surfaceSunken,
-    borderWidth: 1,
-    borderColor: c.divider,
-  },
-  // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area
-  // inset. Horizontal padding matches the scrolled content.
-  footer: {
-    paddingTop: spacing.md,
-    paddingHorizontal: screenPadding,
-  },
-  // Breathing room between the Red Card rounds picker and the start button.
-  roundsPickerWrap: {marginBottom: spacing.md},
-  // "Waiting for other players" line sitting above the (disabled) start button.
-  waitingHint: {marginBottom: spacing.md},
-});
+    // Pinned floating chrome, aligned to the top row: back left, invite right.
+    backBar: {paddingHorizontal: screenPadding},
+    backRow: {
+      height: 44,
+      marginTop: spacing.sm,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    scroll: {flex: 1},
+    body: {
+      gap: spacing.xl,
+    },
+    // Code card — one full-round pill (surface2) with the purple code; the whole
+    // pill is the share button. Dropped well below the top chrome.
+    codeCard: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.xxxl,
+      backgroundColor: c.surface2,
+      borderRadius: radii.pill,
+      paddingVertical: spacing.xl,
+      paddingHorizontal: spacing.xl,
+    },
+    code: {letterSpacing: 8},
+    // Players section header: label left, joined count right.
+    playersHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    playersLabel: {letterSpacing: 1},
+    // Vertical roster of player cards.
+    roster: {gap: spacing.sm},
+    // Player card: sunken near-black ground + hairline inset border.
+    playerCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.md,
+      backgroundColor: c.surfaceSunken,
+      borderWidth: 1,
+      borderColor: c.divider,
+      borderRadius: radii.card,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.md,
+    },
+    // Tapped (host-selected) card gets the purple rim.
+    playerCardSelected: {borderColor: c.primary},
+    nameText: {flex: 1},
+    // Host · You badge on the right of the card (surface2 fill, purple label).
+    badge: {
+      backgroundColor: c.surface2,
+      borderRadius: radii.pill,
+      paddingHorizontal: spacing.md,
+      paddingVertical: 4,
+    },
+    badgeText: {letterSpacing: 0.2},
+    // Action row under a host-selected player card.
+    actionRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: spacing.sm,
+      marginTop: spacing.sm,
+      paddingLeft: spacing.xs,
+    },
+    actionPill: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      backgroundColor: c.surface2,
+      borderRadius: radii.pill,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+    },
+    // Neutral (non-primary) pills sit on the sunken ground with a hairline rim.
+    friendsPill: {
+      backgroundColor: c.surfaceSunken,
+      borderWidth: 1,
+      borderColor: c.divider,
+    },
+    kickPill: {
+      backgroundColor: c.surfaceSunken,
+      borderWidth: 1,
+      borderColor: c.divider,
+    },
+    // Only top padding for vertical rhythm — FloatingBar owns the bottom safe-area
+    // inset. Horizontal padding matches the scrolled content.
+    footer: {
+      paddingTop: spacing.md,
+      paddingHorizontal: screenPadding,
+    },
+    // "Waiting for other players" line sitting above the (disabled) button.
+    waitingHint: {marginBottom: spacing.md},
+  });

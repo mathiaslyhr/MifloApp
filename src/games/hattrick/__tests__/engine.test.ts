@@ -1,6 +1,10 @@
 import {
+  advanceBoard,
   applyMove,
+  createNextBoardState,
   createRematchState,
+  MATCH_BOARDS,
+  matchScores,
   passTurn,
   proposeTie,
   respondTie,
@@ -149,6 +153,100 @@ describe('validatePick', () => {
 
     const used = {...s, usedFootballerIds: ['Agüero, Sergio']};
     expect(validatePick(used, 0, 'Agüero, Sergio')).toBe(false);
+  });
+});
+
+/** Play A to a top-row win from a fresh-ish state. */
+function winBoard(s: GridState): GridState {
+  s = applyMove(s, 0, `f${Math.random()}`, 'A');
+  s = applyMove(s, 3, `f${Math.random()}`, 'B');
+  s = applyMove(s, 1, `f${Math.random()}`, 'A');
+  s = applyMove(s, 4, `f${Math.random()}`, 'B');
+  return applyMove(s, 2, `f${Math.random()}`, 'A');
+}
+
+describe('match scores + commentary beats', () => {
+  it('a won board scores a goal and announces GOAL for the scorer', () => {
+    const s = winBoard(twoPlayerState());
+    expect(matchScores(s)).toEqual({A: 1, B: 0});
+    expect(s.beat).toEqual({kind: 'goal', sideId: 'A', seq: 1});
+    expect(s.matchWinner ?? null).toBeNull();
+  });
+
+  it('a goal that pulls the scores level announces LEVEL', () => {
+    const s = winBoard(
+      twoPlayerState({scores: {A: 0, B: 1}, boardNumber: 2}),
+    );
+    expect(matchScores(s)).toEqual({A: 1, B: 1});
+    expect(s.beat?.kind).toBe('level');
+    expect(s.beat?.sideId).toBe('A');
+  });
+
+  it('the final board decides the match for the leader (WINNER)', () => {
+    const s = winBoard(
+      twoPlayerState({scores: {A: 1, B: 1}, boardNumber: MATCH_BOARDS}),
+    );
+    expect(matchScores(s)).toEqual({A: 2, B: 1});
+    expect(s.matchWinner).toBe('A');
+    expect(s.beat?.kind).toBe('winner');
+    expect(s.beat?.sideId).toBe('A');
+  });
+
+  it('level scores after the final board is a DRAW', () => {
+    const s = winBoard(
+      twoPlayerState({scores: {A: 0, B: 1}, boardNumber: MATCH_BOARDS}),
+    );
+    expect(matchScores(s)).toEqual({A: 1, B: 1});
+    expect(s.matchWinner).toBe('draw');
+    expect(s.beat?.kind).toBe('draw');
+  });
+
+  it('an agreed tie on the final board also decides the match', () => {
+    let s = twoPlayerState({scores: {A: 2, B: 0}, boardNumber: MATCH_BOARDS});
+    s = proposeTie(s, 'A');
+    s = respondTie(s, 'B', true);
+    expect(s.winner).toBe('tie');
+    expect(s.matchWinner).toBe('A');
+    expect(s.beat?.kind).toBe('winner');
+  });
+
+  it('a mid-match board tie scores nobody and stays quiet', () => {
+    let s = twoPlayerState({scores: {A: 1, B: 0}, boardNumber: 2});
+    s = proposeTie(s, 'A');
+    s = respondTie(s, 'B', true);
+    expect(matchScores(s)).toEqual({A: 1, B: 0});
+    expect(s.matchWinner ?? null).toBeNull();
+    expect(s.beat ?? null).toBeNull();
+  });
+
+  it('a wrong answer announces MISSED and a timeout OUT OF TIME', () => {
+    const missed = passTurn(twoPlayerState(), 'A', 'missed');
+    expect(missed.beat).toEqual({kind: 'missed', sideId: 'A', seq: 1});
+    const timedOut = passTurn(missed, 'B', 'timeout');
+    expect(timedOut.beat).toEqual({kind: 'timeout', sideId: 'B', seq: 2});
+    // A deliberate skip stays quiet (keeps the last beat, no replay: same seq).
+    const skipped = passTurn(timedOut, 'A');
+    expect(skipped.beat).toEqual(timedOut.beat);
+  });
+
+  it('the next board carries the scoreline and beat seq; a rematch resets', () => {
+    const done = winBoard(twoPlayerState({scores: {A: 0, B: 2}, boardNumber: 3}));
+    const next = createNextBoardState(done);
+    expect(matchScores(next)).toEqual({A: 1, B: 2});
+    expect(next.boardNumber).toBe(4);
+    expect(next.winner).toBeNull();
+    // The finished board's beat rides along unchanged — clients de-dupe on seq.
+    expect(next.beat).toEqual(done.beat);
+
+    // advanceBoard: mid-match → next board; decided match → fresh match.
+    expect(advanceBoard(done).boardNumber).toBe(4);
+    const decided = winBoard(
+      twoPlayerState({scores: {A: 2, B: 2}, boardNumber: MATCH_BOARDS}),
+    );
+    const fresh = advanceBoard(decided);
+    expect(matchScores(fresh)).toEqual({A: 0, B: 0});
+    expect(fresh.boardNumber).toBe(1);
+    expect(fresh.matchWinner ?? null).toBeNull();
   });
 });
 

@@ -43,6 +43,14 @@ export function applyGuess(state: MysteryState, footballerId: string): MysterySt
   return {...state, guesses, status};
 }
 
+/** Throw in the towel: the secret is revealed and the day ends unsolved. */
+export function giveUp(state: MysteryState): MysteryState {
+  if (isFinished(state)) {
+    return state;
+  }
+  return {...state, status: 'revealed'};
+}
+
 /** The zero streak used before any puzzle is completed. */
 export const EMPTY_STREAK: StreakState = {
   current: 0,
@@ -61,8 +69,9 @@ export function recordResult(
   streak: StreakState,
   dateKey: string,
   guessCount: number,
+  gaveUp = false,
 ): StreakState {
-  if (guessCount > STREAK_GUESS_LIMIT) {
+  if (gaveUp || guessCount > STREAK_GUESS_LIMIT) {
     return {...streak, current: 0};
   }
   const continues = streak.lastCompletedDateKey === previousDateKey(dateKey);
@@ -74,11 +83,11 @@ export function recordResult(
   };
 }
 
-/** Build the history entry for a finished puzzle (always a win now). */
+/** Build the history entry for a finished puzzle (won, or revealed on give-up). */
 export function historyEntryFor(state: MysteryState): HistoryEntry {
   return {
     dateKey: state.dateKey,
-    status: 'won',
+    status: state.status === 'won' ? 'won' : 'revealed',
     guessCount: state.guesses.length,
   };
 }

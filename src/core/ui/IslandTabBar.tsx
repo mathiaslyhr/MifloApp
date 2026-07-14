@@ -11,7 +11,6 @@ import {
 } from '../../theme';
 import {usePressScale} from './usePressScale';
 import {AppBlur} from './Blur';
-import {Text} from './Text';
 
 export type TabId = 'home' | 'daily' | 'play' | 'profile';
 
@@ -20,7 +19,7 @@ export type TabId = 'home' | 'daily' | 'play' | 'profile';
  * height plus its top breathing room. Screens add this (+ safe-area inset) to
  * their content's bottom padding so nothing hides behind the shell nav.
  */
-export const NAV_HEIGHT = 82;
+export const NAV_HEIGHT = 70;
 
 const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
   {id: 'home', labelKey: 'tabs.home', Icon: Home},
@@ -38,9 +37,9 @@ type Props = {
 
 /**
  * The floating navigation island — Home · Daily · Play · Profile as a
- * centered, "clear" frosted pill. Each item is an icon with a small title
- * under it; the active tab is tinted the accent color, inactive tabs are
- * muted.
+ * centered, "clear" frosted pill. Icons only (the labels live on as
+ * accessibility text); the active tab is tinted the accent color, inactive
+ * tabs are muted.
  *
  * The springy press-scale is shared by the WHOLE island (Instagram-style): a
  * single animated value scales the entire bar, and pressing any item drives it,
@@ -85,9 +84,6 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
                   <Icon size={22} color={color} strokeWidth={2} />
                   {dotted ? <View style={styles.badgeDot} /> : null}
                 </View>
-                <Text variant="caption" style={{color}}>
-                  {label}
-                </Text>
               </Pressable>
             );
           })}
@@ -117,14 +113,13 @@ const makeStyles = (c: Palette) =>
     borderColor: c.glassRim,
     overflow: 'hidden',
   },
-  // Icon over title; 22pt icon + gap + caption + padding clears a 44pt tap target.
+  // paddingVertical 11 + the 22pt icon = a 44pt tap target (HIG minimum).
   item: {
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
     minWidth: 60,
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 11,
   },
   iconWrap: {position: 'relative'},
   // "Something new" marker: a small accent disc pinned to the icon's top-right

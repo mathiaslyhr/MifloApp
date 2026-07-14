@@ -1,17 +1,22 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   Image,
   KeyboardAvoidingView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import {ChevronLeft, HelpCircle} from 'lucide-react-native';
+import {ChevronLeft, Flag, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
+import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CircleButton,
@@ -19,11 +24,11 @@ import {
   Screen,
   Text,
   toast,
-  TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {
   fonts,
+  radii,
   screenPadding,
   spacing,
   useColors,
@@ -49,6 +54,7 @@ import {
   applyGuess,
   createInitialState,
   EMPTY_STREAK,
+  giveUp,
   historyEntryFor,
   isFinished,
   recordResult,
@@ -124,6 +130,51 @@ export function ScoutScreen({navigation}: Props) {
   const openSearch = useSearch();
   const [cellInfo, setCellInfo] = useState<CellInfo | null>(null);
 
+  // Scroll-aware edge fades: each scrim only shows when there's list content
+  // scrolled past that edge, so the first/last card is never dimmed at rest.
+  const fadeTopOpacity = useRef(new Animated.Value(0)).current;
+  const fadeBottomOpacity = useRef(new Animated.Value(0)).current;
+  const fadeTopShown = useRef(false);
+  const fadeBottomShown = useRef(false);
+  const viewportH = useRef(0);
+  const contentH = useRef(0);
+  const lastOffsetY = useRef(0);
+
+  function toggleFade(
+    value: Animated.Value,
+    shownRef: React.MutableRefObject<boolean>,
+    show: boolean,
+  ) {
+    if (shownRef.current === show) {
+      return;
+    }
+    shownRef.current = show;
+    Animated.timing(value, {
+      toValue: show ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function refreshFades(offsetY: number) {
+    const maxY = Math.max(0, contentH.current - viewportH.current);
+    toggleFade(fadeTopOpacity, fadeTopShown, offsetY > 2);
+    toggleFade(fadeBottomOpacity, fadeBottomShown, offsetY < maxY - 2);
+  }
+
+  const onBoardScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    lastOffsetY.current = e.nativeEvent.contentOffset.y;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardLayout = (e: LayoutChangeEvent) => {
+    viewportH.current = e.nativeEvent.layout.height;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardContentSize = (_w: number, h: number) => {
+    contentH.current = h;
+    refreshFades(lastOffsetY.current);
+  };
+
   function showCellInfo(info: CellInfo) {
     haptics.tap();
     setCellInfo(info);
@@ -180,6 +231,9 @@ export function ScoutScreen({navigation}: Props) {
         for (const id of progress.guessedIds) {
           s = applyGuess(s, id);
         }
+        if (progress.gaveUp) {
+          s = giveUp(s);
+        }
       }
       if (!pinned) {
         // Silent on failure — the player took no action; a failed pin only
@@ -233,19 +287,7 @@ export function ScoutScreen({navigation}: Props) {
 
     if (isFinished(next)) {
       haptics.success();
-      const updated = recordResult(streak, dateKey, next.guesses.length);
-      setStreak(updated);
-      // History data is still recorded (the archive button is removed for
-      // now). One toast covers both writes failing.
-      const entry = historyEntryFor(next);
-      Promise.all([saveStreak(updated), recordHistory(entry)])
-        // Solved: drop tonight's rescue nudge and skip tomorrow-morning's
-        // "new player" ping past today.
-        .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
-        .catch(saveFailed);
-      // Share the score-only result with friends — a local queue write plus a
-      // fire-and-forget flush; a no-op until the player opts into Friends.
-      queueDailyResult(fromScoutEntry(entry, updated.current)).catch(() => {});
+      finishDay(next, false);
     } else {
       haptics.tap();
       // Live "in progress" row for friends: the eye + the running guess
@@ -254,6 +296,48 @@ export function ScoutScreen({navigation}: Props) {
         ongoingResult('scout', dateKey, 0, next.guesses.length, liveStreak(streak, dateKey)),
       ).catch(() => {});
     }
+  }
+
+  // Fold a finished day (a win, or a give-up) into the streak, archive, and
+  // friend feed. Shared by a winning guess and by surrendering.
+  function finishDay(next: MysteryState, gaveUp: boolean) {
+    const updated = recordResult(streak, dateKey, next.guesses.length, gaveUp);
+    setStreak(updated);
+    const entry = historyEntryFor(next);
+    Promise.all([saveStreak(updated), recordHistory(entry)])
+      // Finished: drop tonight's rescue nudge and skip tomorrow-morning's
+      // "new player" ping past today.
+      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
+      .catch(() => toast.error(t('scout.errorSave')));
+    // Share the score-only result with friends — a local queue write plus a
+    // fire-and-forget flush; a no-op until the player opts into Friends.
+    queueDailyResult(fromScoutEntry(entry, updated.current)).catch(() => {});
+  }
+
+  // Give up: reveal the secret and end the day unsolved (breaks the streak).
+  function confirmGiveUp() {
+    if (!state || isFinished(state)) {
+      return;
+    }
+    Alert.alert(t('scout.giveUpTitle'), t('scout.giveUpMessage'), [
+      {text: t('scout.giveUpCancel'), style: 'cancel'},
+      {
+        text: t('scout.giveUpConfirm'),
+        style: 'destructive',
+        onPress: () => {
+          const next = giveUp(state);
+          setState(next);
+          saveDailyProgress({
+            dateKey,
+            guessedIds: next.guesses.map(g => g.footballerId),
+            secretId: next.secretId,
+            gaveUp: true,
+          }).catch(() => toast.error(t('scout.errorSave')));
+          haptics.warning();
+          finishDay(next, true);
+        },
+      },
+    ]);
   }
 
   if (!state) {
@@ -271,17 +355,17 @@ export function ScoutScreen({navigation}: Props) {
             </CircleButton>
           </View>
         </FloatingBar>
-        <TopStatusFade />
       </Screen>
     );
   }
 
   const finished = isFinished(state);
+  const won = state.status === 'won';
   const guessesUsed = state.guesses.length;
   // The streak survives when the solve lands within STREAK_GUESS_LIMIT guesses
   // (10 or under); alive = the next guess could still be within the limit.
   const streakStillAlive = guessesUsed < STREAK_GUESS_LIMIT;
-  const keptStreak = guessesUsed <= STREAK_GUESS_LIMIT;
+  const keptStreak = won && guessesUsed <= STREAK_GUESS_LIMIT;
   const secretPlayer = getById(state.secretId);
   // The answer reveal (shown once finished): flag + crest + position.
   const secretAttrs = secretPlayer
@@ -311,11 +395,16 @@ export function ScoutScreen({navigation}: Props) {
         <Text
           variant="section"
           align="center"
-          style={[styles.instruction, finished && {color: colors.success}]}>
+          style={[
+            styles.instruction,
+            finished && {color: won ? colors.success : colors.error},
+          ]}>
           {finished
-            ? keptStreak
-              ? t('scout.won', {count: guessesUsed})
-              : t('scout.wonNoStreak', {count: guessesUsed})
+            ? won
+              ? keptStreak
+                ? t('scout.won', {count: guessesUsed})
+                : t('scout.wonNoStreak', {count: guessesUsed})
+              : t('scout.revealedTitle')
             : t('scout.instruction')}
         </Text>
         {!finished ? (
@@ -335,56 +424,80 @@ export function ScoutScreen({navigation}: Props) {
           </Text>
         ) : null}
 
-        {/* Column headers — same flex+gap as the cell rows so each label centres
-            over its column. */}
+        {/* Colour key — chips inside each card carry the signal now. */}
+        <View style={styles.legend}>
+          <LegendItem color={colors.guessHit} label={t('scout.legend.match')} />
+          <LegendItem color={colors.guessNear} label={t('scout.legend.partial')} />
+          <LegendItem color={colors.guessMiss} label={t('scout.legend.off')} />
+        </View>
+
+        {/* Column key: labels line up with the chip columns inside every card,
+            so each chip (incl. the bare age number) reads unambiguously. */}
         <View style={styles.columnHeader}>
           {COLUMNS.map(key => (
-            <View key={key} style={styles.columnCell}>
-              <Text style={styles.columnLabel} numberOfLines={1} adjustsFontSizeToFit>
-                {t(`scout.columns.${key}`)}
-              </Text>
-            </View>
+            <Text
+              key={key}
+              style={styles.columnLabel}
+              numberOfLines={1}
+              adjustsFontSizeToFit>
+              {t(`scout.columns.${key}`)}
+            </Text>
           ))}
         </View>
-        <View style={styles.headerRule} />
 
-        <ScrollView
-          style={styles.board}
-          contentContainerStyle={styles.boardContent}
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          showsVerticalScrollIndicator={false}>
-          {/* Newest guess first. */}
-          {state.guesses
-            .slice()
-            .reverse()
-            .map(g => {
-              const player = getById(g.footballerId);
-              return (
-                <View key={g.footballerId} style={styles.guess}>
-                  <Text variant="body" numberOfLines={1} style={styles.guessName}>
-                    {player?.name ?? g.footballerId}
-                  </Text>
-                  <View style={styles.cellRow}>
-                    {g.cells.map(cell => (
-                      <Cell
-                        key={cell.key}
-                        cell={cell}
-                        player={player}
-                        dateKey={state.dateKey}
-                        onInfo={showCellInfo}
-                      />
-                    ))}
+        {/* The guess list dissolves into the canvas at both edges (no frost, no
+            borders) so cards never bleed into the header or the search pill. */}
+        <View style={styles.boardWrap}>
+          <ScrollView
+            style={styles.board}
+            contentContainerStyle={styles.boardContent}
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={onBoardScroll}
+            onLayout={onBoardLayout}
+            onContentSizeChange={onBoardContentSize}>
+            {/* Newest guess first; the badge counts the real guess ordinal. */}
+            {state.guesses
+              .slice()
+              .reverse()
+              .map((g, i) => {
+                const player = getById(g.footballerId);
+                const guessNumber = state.guesses.length - i;
+                return (
+                  <View key={g.footballerId} style={styles.card}>
+                    <View style={styles.cardTop}>
+                      <Text variant="body" numberOfLines={1} style={styles.cardName}>
+                        {player?.name ?? g.footballerId}
+                      </Text>
+                      <Text variant="caption" style={styles.cardNumber}>
+                        {t('scout.guessNumber', {n: guessNumber})}
+                      </Text>
+                    </View>
+                    <View style={styles.chipRow}>
+                      {g.cells.map(cell => (
+                        <Cell
+                          key={cell.key}
+                          cell={cell}
+                          player={player}
+                          dateKey={state.dateKey}
+                          onInfo={showCellInfo}
+                        />
+                      ))}
+                    </View>
                   </View>
-                </View>
-              );
-            })}
-          {state.guesses.length === 0 ? (
-            <Text variant="secondary" color="secondary" align="center" style={styles.emptyHint}>
-              {t('scout.searchHint')}
-            </Text>
-          ) : null}
-        </ScrollView>
+                );
+              })}
+            {state.guesses.length === 0 ? (
+              <Text variant="secondary" color="secondary" align="center" style={styles.emptyHint}>
+                {t('scout.searchHint')}
+              </Text>
+            ) : null}
+          </ScrollView>
+          <EdgeFade edge="top" opacity={fadeTopOpacity} />
+          <EdgeFade edge="bottom" opacity={fadeBottomOpacity} />
+        </View>
 
         {finished ? (
           <View style={styles.finishPanel}>
@@ -443,6 +556,17 @@ export function ScoutScreen({navigation}: Props) {
               placeholder={t('scout.searchPlaceholder')}
               onPress={openGuessSearch}
             />
+            <Pressable
+              onPress={confirmGiveUp}
+              accessibilityRole="button"
+              accessibilityLabel={t('scout.giveUp')}
+              hitSlop={8}
+              style={styles.giveUp}>
+              <Text variant="caption" color="muted">
+                {t('scout.giveUp')}
+              </Text>
+              <Flag size={12} color={colors.muted} strokeWidth={2} />
+            </Pressable>
           </View>
         )}
       </View>
@@ -460,7 +584,6 @@ export function ScoutScreen({navigation}: Props) {
           </CircleButton>
         </View>
       </FloatingBar>
-      <TopStatusFade />
 
       <MysteryHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
       <CellInfoModal info={cellInfo} onClose={() => setCellInfo(null)} />
@@ -557,6 +680,52 @@ function CellText({children}: {children: React.ReactNode}) {
   );
 }
 
+/** One swatch + label in the colour key under the header. */
+function LegendItem({color, label}: {color: string; label: string}) {
+  const styles = useThemedStyles(makeStyles);
+  return (
+    <View style={styles.legendItem}>
+      <View style={[styles.legendSwatch, {backgroundColor: color}]} />
+      <Text variant="caption" color="muted">
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+/**
+ * A solid-colour edge fade (no blur): the canvas colour ramping to transparent
+ * over the list's top/bottom edge so cards dissolve into the background instead
+ * of hard-cutting against the header or the search pill.
+ */
+function EdgeFade({
+  edge,
+  opacity,
+}: {
+  edge: 'top' | 'bottom';
+  opacity: Animated.Value;
+}) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const top = edge === 'top';
+  const gradId = `scoutFade-${edge}`;
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[styles.fade, top ? styles.fadeTop : styles.fadeBottom, {opacity}]}>
+      <Svg width="100%" height="100%">
+        <Defs>
+          <LinearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <Stop offset={0} stopColor={colors.background} stopOpacity={top ? 1 : 0} />
+            <Stop offset={1} stopColor={colors.background} stopOpacity={top ? 0 : 1} />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill={`url(#${gradId})`} />
+      </Svg>
+    </Animated.View>
+  );
+}
+
 function Stat({
   label,
   value,
@@ -615,7 +784,8 @@ function Countdown() {
   );
 }
 
-const CELL_GAP = 4;
+/** Height of each edge-fade scrim over the guess list. */
+const FADE_HEIGHT = 36;
 
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
@@ -633,46 +803,66 @@ const makeStyles = (c: Palette) =>
   chromeSpacer: {flex: 1},
   body: {flex: 1},
   instruction: {marginBottom: spacing.xs},
+  // Colour key under the header.
+  legend: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.lg,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
+  },
+  legendItem: {flexDirection: 'row', alignItems: 'center', gap: 6},
+  legendSwatch: {width: 12, height: 12, borderRadius: 4},
+  // Column key, aligned to the chip columns inside every card (same side inset
+  // as the card padding + same flex:1 columns + same gap).
   columnHeader: {
     flexDirection: 'row',
-    gap: CELL_GAP,
-    marginTop: spacing.md,
-  },
-  columnCell: {
-    flex: 1,
-    paddingVertical: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 6,
+    paddingHorizontal: spacing.lg,
+    marginTop: spacing.xs,
   },
   columnLabel: {
+    flex: 1,
     fontFamily: fonts.medium,
     fontSize: 10,
+    letterSpacing: 0.3,
     color: c.muted,
     textAlign: 'center',
   },
-  // Divider separating the header row from the guesses.
-  headerRule: {
-    height: 1,
-    backgroundColor: c.textTertiary,
-    marginTop: spacing.xs,
+  // The list + its two edge-fade scrims.
+  boardWrap: {flex: 1},
+  board: {flex: 1},
+  boardContent: {gap: spacing.md, paddingVertical: spacing.md},
+  fade: {position: 'absolute', left: 0, right: 0, height: FADE_HEIGHT},
+  fadeTop: {top: 0},
+  fadeBottom: {bottom: 0},
+  // One guess = one card (surface fill + hairline rim, no shadow).
+  card: {
+    backgroundColor: c.surface,
+    borderRadius: radii.card,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    gap: spacing.sm,
   },
-  board: {flex: 1, marginTop: spacing.xs},
-  boardContent: {gap: spacing.md, paddingVertical: spacing.sm},
-  guess: {gap: 4},
-  guessName: {fontFamily: fonts.medium},
-  cellRow: {flexDirection: 'row', gap: CELL_GAP},
+  cardTop: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  cardName: {flex: 1, fontFamily: fonts.medium},
+  cardNumber: {color: c.textTertiary},
+  chipRow: {flexDirection: 'row', gap: 6},
+  // Five equal columns on one row (aligns under the column header).
   cell: {
     flex: 1,
-    height: 40,
+    height: 36,
     borderRadius: 10,
+    paddingHorizontal: 4,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 2,
   },
   cellText: {
     fontFamily: fonts.regular,
-    fontSize: 12,
-    // White always: the guess tiles are fixed bold colours in both themes.
+    fontSize: 13,
+    // White always: the guess chips are fixed bold colours in both themes.
     color: '#FFFFFF',
     textAlign: 'center',
   },
@@ -694,4 +884,11 @@ const makeStyles = (c: Palette) =>
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
   inputPanel: {gap: spacing.sm, paddingBottom: spacing.sm},
+  giveUp: {
+    alignSelf: 'center',
+    paddingVertical: spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   });

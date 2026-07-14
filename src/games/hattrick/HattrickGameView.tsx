@@ -38,7 +38,10 @@ import {useSearch} from '../shared/SearchScreen';
 import {playerSource} from '../shared/searchSources';
 import {
   applyMove,
+  boardNumberOf,
   cellCriteria,
+  MATCH_BOARDS,
+  matchScores,
   passTurn,
   sideOfUser,
   TURN_SECONDS,
@@ -46,7 +49,7 @@ import {
 } from './engine';
 import {tieExampleAnswers} from './tieExamples';
 import type {Criterion, Footballer} from '../../data/football';
-import type {GridState} from './types';
+import type {Beat, GridState} from './types';
 
 /**
  * Who is looking at the board:
@@ -161,9 +164,32 @@ export function HattrickGameView({
       timedOutFor.current = state.turnDeadline;
       // Dismiss the player picker if it's still open — the turn is gone.
       setPickCell(null);
-      onCommit(passTurn(state, actingUserId));
+      onCommit(passTurn(state, actingUserId, 'timeout'));
     }
   }, [nowTs, state, actingUserId, onCommit]);
+
+  // Commentary beats: replay a beat exactly once per seq change. The first
+  // snapshot only primes the counter — a rejoining device must not re-announce
+  // a moment that already happened. The haptic fires here too, so the moment
+  // lands physically on EVERY device (the watcher's phone, not just the
+  // actor's).
+  const [activeBeat, setActiveBeat] = useState<Beat | null>(null);
+  const seenBeatSeq = useRef<number | null>(null);
+  useEffect(() => {
+    if (!state) {
+      return;
+    }
+    const beat = state.beat ?? null;
+    if (seenBeatSeq.current === null) {
+      seenBeatSeq.current = beat?.seq ?? 0;
+      return;
+    }
+    if (beat && beat.seq !== seenBeatSeq.current) {
+      seenBeatSeq.current = beat.seq;
+      BEAT_HAPTIC[beat.kind]();
+      setActiveBeat(beat);
+    }
+  }, [state]);
 
   if (!state) {
     // Ghost board while the room state primes over realtime.
@@ -226,12 +252,17 @@ export function HattrickGameView({
       return;
     }
     if (validatePick(state, cell, footballerId)) {
-      haptics.success();
-      onCommit(applyMove(state, cell, footballerId, actingUserId));
+      const next = applyMove(state, cell, footballerId, actingUserId);
+      // A plain claim buzzes here; a claim that triggers a beat (goal/level/
+      // winner) leaves the buzz to the beat effect so it never fires twice.
+      if ((next.beat?.seq ?? 0) === (state.beat?.seq ?? 0)) {
+        haptics.success();
+      }
+      onCommit(next);
     } else {
-      haptics.error();
-      toast.error(t('hattrick.notMatch'));
-      onCommit(passTurn(state, actingUserId));
+      // The "MISSED!" beat announces (and buzzes) on every device — no local
+      // toast or haptic needed.
+      onCommit(passTurn(state, actingUserId, 'missed'));
     }
   }
 
@@ -261,24 +292,39 @@ export function HattrickGameView({
 
   // Result is coloured by the winner's side; a tie shows in the viewer's own
   // colour (neutral ink on a shared phone). No blocking pop-up — the finished
-  // grid stays fully visible.
-  const winnerColor =
-    state.winner === 'tie'
+  // grid stays fully visible. A decided MATCH outranks the board result.
+  const matchDone = !!state.matchWinner;
+  const winnerColor = state.matchWinner
+    ? state.matchWinner === 'draw'
+      ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
+      : state.sides.find(s => s.id === state.matchWinner)?.color ?? colors.ink
+    : state.winner === 'tie'
       ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
       : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
-  const winnerText = state.winner
-    ? state.winner === 'tie'
-      ? t('hattrick.tie')
-      : t('hattrick.won', {
-          name: state.sides.find(s => s.id === state.winner)?.name ?? t('hattrick.someone'),
+  const winnerText = state.matchWinner
+    ? state.matchWinner === 'draw'
+      ? t('hattrick.matchDrawn')
+      : t('hattrick.wonMatch', {
+          name:
+            state.sides.find(s => s.id === state.matchWinner)?.name ??
+            t('hattrick.someone'),
         })
-    : '';
+    : state.winner
+      ? state.winner === 'tie'
+        ? t('hattrick.tie')
+        : t('hattrick.won', {
+            name: state.sides.find(s => s.id === state.winner)?.name ?? t('hattrick.someone'),
+          })
+      : '';
 
   return (
     <Screen canvas>
       <Header onBack={onBack} onHelp={() => setShowHelp(true)} />
 
       <View style={styles.center}>
+        {/* The match scoreline + board count — always in view. */}
+        <ScoreStrip state={state} />
+
         {/* Turn indicator — on a shared phone it always names the side up next. */}
         <View style={styles.turnRow}>
           {!state.winner ? (
@@ -459,7 +505,13 @@ export function HattrickGameView({
         {state.winner ? (
           showResultActions ? (
             <View style={styles.resultActions}>
-              <Button label={t('hattrick.playAgain')} variant="primary" onPress={onPlayAgain} />
+              {/* Mid-match a finished board leads to the next one; only a
+                  decided match offers a true rematch. */}
+              <Button
+                label={matchDone ? t('hattrick.playAgain') : t('hattrick.nextBoard')}
+                variant="primary"
+                onPress={onPlayAgain}
+              />
               <Button label={exitLabel} variant="secondary" onPress={onExit} />
             </View>
           ) : (
@@ -486,6 +538,16 @@ export function HattrickGameView({
           total={state.sides.length}
           proposerName={tieProposerName}
           onRespond={handleRespondTie}
+        />
+      ) : null}
+
+      {/* Commentary beat — the synced full-screen moment both devices show. */}
+      {activeBeat ? (
+        <CommentaryOverlay
+          key={`${boardNumberOf(state)}:${activeBeat.seq}`}
+          beat={activeBeat}
+          state={state}
+          onDone={() => setActiveBeat(null)}
         />
       ) : null}
 
@@ -622,6 +684,166 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
   );
 }
 
+/** The match scoreline ("Mathias 2 – Test 1") + the board count, always in
+ * view above the board — colored per side, tallies in tabular figures. */
+function ScoreStrip({state}: {state: GridState}) {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(makeStyles);
+  const scores = matchScores(state);
+  return (
+    <View style={styles.scoreStrip} accessibilityRole="text">
+      <View style={styles.scoreRow}>
+        {state.sides.map((s, i) => (
+          <React.Fragment key={s.id}>
+            {i > 0 ? (
+              <Text variant="section" color="tertiary">
+                {'  –  '}
+              </Text>
+            ) : null}
+            <Text
+              variant="section"
+              numberOfLines={1}
+              style={[styles.scoreName, {color: s.color}]}>
+              {s.name} {scores[s.id] ?? 0}
+            </Text>
+          </React.Fragment>
+        ))}
+      </View>
+      <Text variant="caption" color="tertiary" align="center">
+        {t('hattrick.board', {n: boardNumberOf(state), total: MATCH_BOARDS})}
+      </Text>
+    </View>
+  );
+}
+
+/** How long each beat holds before fading — score moments linger. */
+const BEAT_HOLD_MS: Record<Beat['kind'], number> = {
+  goal: 1900,
+  level: 1900,
+  winner: 2600,
+  draw: 2600,
+  missed: 1400,
+  timeout: 1700,
+};
+
+/** The buzz each beat lands with — on every device, actor and watcher alike. */
+const BEAT_HAPTIC: Record<Beat['kind'], () => void> = {
+  goal: haptics.success,
+  level: haptics.success,
+  winner: haptics.success,
+  draw: haptics.tap,
+  missed: haptics.error,
+  timeout: haptics.warning,
+};
+
+/**
+ * A commentary beat: full-screen scrim, the call in huge type ("GOAL! …"),
+ * and — for score moments — the scoreline popping in underneath. Purely
+ * decorative and non-blocking (`pointerEvents: none`); it plays once and
+ * reports back through `onDone`.
+ */
+function CommentaryOverlay({
+  beat,
+  state,
+  onDone,
+}: {
+  beat: Beat;
+  state: GridState;
+  onDone: () => void;
+}) {
+  const {t} = useTranslation();
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.82)).current;
+  const scoreScale = useRef(new Animated.Value(0.5)).current;
+
+  const side = beat.sideId
+    ? state.sides.find(s => s.id === beat.sideId)
+    : undefined;
+  const name = side?.name ?? t('hattrick.someone');
+  const copy = {
+    goal: t('hattrick.beatGoal', {name}),
+    level: t('hattrick.beatLevel', {name}),
+    winner: t('hattrick.beatWinner', {name}),
+    draw: t('hattrick.beatDraw'),
+    missed: t('hattrick.beatMissed'),
+    timeout: t('hattrick.beatTimeout'),
+  }[beat.kind];
+  const showScore =
+    beat.kind === 'goal' ||
+    beat.kind === 'level' ||
+    beat.kind === 'winner' ||
+    beat.kind === 'draw';
+  const scores = matchScores(state);
+
+  useEffect(() => {
+    const anim = Animated.sequence([
+      Animated.parallel([
+        Animated.timing(opacity, {toValue: 1, duration: 160, useNativeDriver: true}),
+        Animated.spring(scale, {
+          toValue: 1,
+          friction: 6,
+          tension: 120,
+          useNativeDriver: true,
+        }),
+        // The scoreline lands a breath after the call.
+        Animated.spring(scoreScale, {
+          toValue: 1,
+          friction: 5,
+          tension: 90,
+          delay: 220,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.delay(BEAT_HOLD_MS[beat.kind]),
+      Animated.timing(opacity, {toValue: 0, duration: 220, useNativeDriver: true}),
+    ]);
+    anim.start(({finished}) => {
+      if (finished) {
+        onDone();
+      }
+    });
+    return () => anim.stop();
+    // Play exactly once per mount — the parent keys this component per beat.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      accessibilityRole="text"
+      accessibilityLabel={copy}
+      style={[styles.beatOverlay, {opacity}]}>
+      <Animated.View style={[styles.beatContent, {transform: [{scale}]}]}>
+        <Text
+          variant="hero"
+          align="center"
+          style={[styles.beatText, {color: side?.color ?? colors.ink}]}>
+          {copy}
+        </Text>
+        {showScore ? (
+          <Animated.View
+            style={[styles.beatScoreRow, {transform: [{scale: scoreScale}]}]}>
+            {state.sides.map((s, i) => (
+              <React.Fragment key={s.id}>
+                {i > 0 ? (
+                  <Text variant="hero" style={styles.beatScoreDash}>
+                    –
+                  </Text>
+                ) : null}
+                <Text variant="hero" style={[styles.beatScore, {color: s.color}]}>
+                  {scores[s.id] ?? 0}
+                </Text>
+              </React.Fragment>
+            ))}
+          </Animated.View>
+        ) : null}
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
 /** Tie prompt as a floating card pinned to the bottom. Rendered outside the
  * centered game column so it never reflows the board (fades/slides in like a
  * toast). Non-blocking: the grid stays interactive underneath. */
@@ -720,6 +942,15 @@ const makeStyles = (c: Palette) =>
   },
   title: {flex: 1},
   center: {flex: 1, justifyContent: 'center'},
+  // Match scoreline + board count, sitting quietly above the turn line.
+  scoreStrip: {alignItems: 'center', gap: 2, paddingTop: spacing.sm},
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    maxWidth: '100%',
+    paddingHorizontal: spacing.lg,
+  },
+  scoreName: {fontVariant: ['tabular-nums']},
   turnRow: {paddingVertical: spacing.lg, alignItems: 'center'},
   topRow: {flexDirection: 'row', alignSelf: 'center', marginBottom: LABEL_GAP},
   bottomRow: {flexDirection: 'row', alignSelf: 'center'},
@@ -807,4 +1038,25 @@ const makeStyles = (c: Palette) =>
     gap: spacing.sm,
     padding: spacing.md,
   },
+  // Commentary beat: full-screen scrim with the call + scoreline centered.
+  beatOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: c.scrim,
+  },
+  beatContent: {alignItems: 'center', gap: spacing.md, padding: spacing.xl},
+  // The call gets a touch of tracking so the caps read like a chyron.
+  beatText: {letterSpacing: 0.5},
+  beatScoreRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: spacing.md,
+  },
+  beatScore: {fontVariant: ['tabular-nums']},
+  beatScoreDash: {color: c.textTertiary},
   });

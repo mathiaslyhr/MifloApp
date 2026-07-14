@@ -28,6 +28,10 @@ export type DerivedAttributes = {
   /** The club with an open-ended spell (`to` undefined), i.e. the current club. */
   activeClubId: string | undefined;
   league: string | undefined;
+  /** Every club the player has ever played at (loans included). */
+  careerClubIds: Set<string>;
+  /** Every league the player has ever played in (loans included). */
+  careerLeagues: Set<string>;
   /** Whole years old on the puzzle's day. */
   age: number | undefined;
 };
@@ -53,11 +57,22 @@ export function deriveAttributes(f: Footballer, dateKey: string): DerivedAttribu
     f.clubs.find(s => s.to === undefined) ?? f.clubs[f.clubs.length - 1];
   const activeClubId = active?.clubId;
   const league = activeClubId ? getClub(activeClubId)?.league : undefined;
+  // Whole career (loans included) so a former club/league can turn yellow.
+  const careerClubIds = new Set(f.clubs.map(s => s.clubId));
+  const careerLeagues = new Set<string>();
+  for (const clubId of careerClubIds) {
+    const l = getClub(clubId)?.league;
+    if (l !== undefined) {
+      careerLeagues.add(l);
+    }
+  }
   return {
     nationality: f.nationality,
     position: f.positions[0],
     activeClubId,
     league,
+    careerClubIds,
+    careerLeagues,
     age: ageOn(dateKey, f.born),
   };
 }
@@ -103,25 +118,34 @@ export function compareCell(
             ? 'hit'
             : 'miss',
       };
-    case 'club':
-      // Exact club only — the separate League column carries the league, so a
-      // different club (even same league) is a plain miss.
+    case 'club': {
+      // Green for the exact current club; yellow if the secret has ever played
+      // at the guess's current club (a former club of the secret); else grey.
+      if (guess.activeClubId === undefined) {
+        return {key, status: 'miss'};
+      }
+      if (guess.activeClubId === secret.activeClubId) {
+        return {key, status: 'hit'};
+      }
       return {
         key,
-        status:
-          guess.activeClubId !== undefined &&
-          guess.activeClubId === secret.activeClubId
-            ? 'hit'
-            : 'miss',
+        status: secret.careerClubIds.has(guess.activeClubId) ? 'partial' : 'miss',
       };
-    case 'league':
+    }
+    case 'league': {
+      // Green for the exact current league; yellow if the secret has ever played
+      // in the guess's current league; else grey.
+      if (guess.league === undefined) {
+        return {key, status: 'miss'};
+      }
+      if (guess.league === secret.league) {
+        return {key, status: 'hit'};
+      }
       return {
         key,
-        status:
-          guess.league !== undefined && guess.league === secret.league
-            ? 'hit'
-            : 'miss',
+        status: secret.careerLeagues.has(guess.league) ? 'partial' : 'miss',
       };
+    }
     case 'age':
       return numeric(key, guess.age, secret.age);
   }

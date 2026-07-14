@@ -29,6 +29,8 @@ type Props = {
   onDisabledPress?: () => void;
   /** Optional icon pinned to the right edge; the label stays centered. */
   trailingIcon?: React.ReactNode;
+  /** Optional icon pinned to the left edge; the label stays centered. */
+  leadingIcon?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   accessibilityHint?: string;
 };
@@ -38,7 +40,7 @@ type Props = {
  * the springy press-scale (design.md §5):
  *  - `primary`   solid brand fill, hairline rim, fully flat (no shadow —
  *                the fill alone carries the hierarchy)
- *  - `secondary` surface fill with a brand border (the "Join a party" pill)
+ *  - `secondary` surface fill with an ink border (the "Join match" pill)
  *  - `outline`   divider-hairline border on faint glass (tertiary CTA)
  */
 export function Button({
@@ -49,6 +51,7 @@ export function Button({
   disabled = false,
   onDisabledPress,
   trailingIcon,
+  leadingIcon,
   style,
   accessibilityHint,
 }: Props) {
@@ -83,6 +86,7 @@ export function Button({
           press.animatedStyle,
           style,
         ]}>
+        {leadingIcon ? <View style={styles.leading}>{leadingIcon}</View> : null}
         <Animated.Text
           style={[
             styles.label,
@@ -105,7 +109,7 @@ const variantStyles = (c: Palette): Record<ButtonVariant, ViewStyle> => ({
   secondary: {
     backgroundColor: c.surface,
     borderWidth: 1,
-    borderColor: c.primary,
+    borderColor: c.ink,
   },
   outline: {
     backgroundColor: c.glassLight,
@@ -127,4 +131,5 @@ const styles = StyleSheet.create({
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
   trailing: {position: 'absolute', right: 20, top: 0, bottom: 0, justifyContent: 'center'},
+  leading: {position: 'absolute', left: 20, top: 0, bottom: 0, justifyContent: 'center'},
 });

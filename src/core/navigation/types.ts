@@ -32,6 +32,9 @@ export type RootStackParamList = {
   RedCard: {roomId: string};
   Offside: {roomId: string};
   CultHero: {roomId: string};
+  /** Competitive Hattrick (ranked/ELO) — matchmaking then the live 1v1 match. */
+  RankedSearch: undefined;
+  RankedHattrick: {roomId: string};
   // Pass-and-play on one shared phone — roomless, fully offline.
   HattrickLocal: undefined;
   RedCardLocal: undefined;

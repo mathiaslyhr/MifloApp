@@ -34,12 +34,12 @@ const EXPIRY_SECONDS = 600;
 // what the push is); the host's name lives in the body.
 const COPY = {
   en: {
-    title: () => 'Party invite',
-    body: (name: string) => `${name} invited you. Tap to join their party.`,
+    title: () => 'Match invite',
+    body: (name: string) => `${name} invited you. Tap to join their match.`,
   },
   da: {
-    title: () => 'Ruminvitation',
-    body: (name: string) => `${name} har inviteret dig. Tryk for at deltage i rummet.`,
+    title: () => 'Kampinvitation',
+    body: (name: string) => `${name} har inviteret dig. Tryk for at deltage i kampen.`,
   },
 } as const;
 

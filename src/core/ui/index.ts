@@ -14,6 +14,8 @@ export {SwipeReveal, closeOpenSwipeReveal} from './SwipeReveal';
 export {GlassCard} from './GlassCard';
 export {Skeleton} from './Skeleton';
 export {GlassTag} from './GlassTag';
+export {Segmented} from './Segmented';
+export type {SegmentedOption} from './Segmented';
 export {MenuRow} from './MenuRow';
 export type {MenuRowKind} from './MenuRow';
 export {MenuGroup} from './MenuGroup';

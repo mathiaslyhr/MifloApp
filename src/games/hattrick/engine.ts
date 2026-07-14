@@ -5,7 +5,7 @@
  */
 import {getById, matches} from '../../data/football';
 import {generateGrid, gridSignature, type Grid} from './grid';
-import type {Cell, GridState, Side} from './types';
+import type {Beat, Cell, GridState, Side} from './types';
 
 /** Distinct side colours (individual mode uses one per player). */
 export const PALETTE = [
@@ -22,6 +22,84 @@ export const PALETTE = [
 /** Seconds each player gets to make a move before their turn passes. */
 export const TURN_SECONDS = 120;
 const TURN_MS = TURN_SECONDS * 1000;
+
+/** Boards per match: whoever leads after the last board wins the match. */
+export const MATCH_BOARDS = 5;
+
+/** The match scoreline, with every side present (0 for pre-match states). */
+export function matchScores(state: GridState): Record<string, number> {
+  const scores: Record<string, number> = {};
+  for (const s of state.sides) {
+    scores[s.id] = state.scores?.[s.id] ?? 0;
+  }
+  return scores;
+}
+
+/** 1-based board number (states from before matches count as board 1). */
+export function boardNumberOf(state: GridState): number {
+  return state.boardNumber ?? 1;
+}
+
+function nextBeat(state: GridState, beat: Omit<Beat, 'seq'>): Beat {
+  return {...beat, seq: (state.beat?.seq ?? 0) + 1};
+}
+
+/** The leading sideId, or 'draw' when the top score is shared. */
+function decideMatch(scores: Record<string, number>): string | 'draw' {
+  let leader: string | 'draw' = 'draw';
+  let best = -1;
+  let shared = false;
+  for (const [id, score] of Object.entries(scores)) {
+    if (score > best) {
+      leader = id;
+      best = score;
+      shared = false;
+    } else if (score === best) {
+      shared = true;
+    }
+  }
+  return shared ? 'draw' : leader;
+}
+
+/**
+ * Settle a finished board into match terms: bump the scorer's goal tally, and
+ * on the final board decide the match. Returns the fields to merge plus the
+ * commentary beat for the moment (null for a mid-match board tie — the
+ * existing tie presentation carries that).
+ */
+function settleBoard(
+  state: GridState,
+  boardWinner: string | 'tie',
+): Pick<GridState, 'scores' | 'matchWinner' | 'beat'> {
+  const scores = matchScores(state);
+  if (boardWinner !== 'tie') {
+    scores[boardWinner] = (scores[boardWinner] ?? 0) + 1;
+  }
+  if (boardNumberOf(state) >= MATCH_BOARDS) {
+    const matchWinner = decideMatch(scores);
+    return {
+      scores,
+      matchWinner,
+      beat:
+        matchWinner === 'draw'
+          ? nextBeat(state, {kind: 'draw'})
+          : nextBeat(state, {kind: 'winner', sideId: matchWinner}),
+    };
+  }
+  if (boardWinner === 'tie') {
+    return {scores, matchWinner: null, beat: state.beat ?? null};
+  }
+  // An equaliser is the goal that pulls the scorer level with the best rival.
+  const rivals = state.sides
+    .filter(s => s.id !== boardWinner)
+    .map(s => scores[s.id] ?? 0);
+  const level = rivals.length > 0 && scores[boardWinner] === Math.max(...rivals);
+  return {
+    scores,
+    matchWinner: null,
+    beat: nextBeat(state, {kind: level ? 'level' : 'goal', sideId: boardWinner}),
+  };
+}
 
 /** Fisher–Yates shuffle (used to randomise who starts). */
 function shuffled<T>(items: readonly T[]): T[] {
@@ -78,8 +156,36 @@ export function createIndividualState(
     turnDeadline: Date.now() + TURN_MS,
     usedFootballerIds: [],
     winner: null,
+    scores: Object.fromEntries(roster.map(p => [p.userId, 0])),
+    boardNumber: 1,
+    matchWinner: null,
+    beat: null,
     signature: gridSignature(grid),
   };
+}
+
+/**
+ * The next board of the SAME match: fresh grid, scores carried, board count
+ * up one. The finished board's beat rides along (same seq) so clients keep a
+ * comparable de-dupe counter without replaying the moment.
+ */
+export function createNextBoardState(state: GridState): GridState {
+  return {
+    ...createRematchState(state),
+    scores: matchScores(state),
+    boardNumber: boardNumberOf(state) + 1,
+    beat: state.beat ?? null,
+  };
+}
+
+/**
+ * What the "play again / next board" action means right now: mid-match it
+ * advances to the next board; after a decided match it starts a fresh match.
+ */
+export function advanceBoard(state: GridState): GridState {
+  return state.matchWinner
+    ? {...createRematchState(state), beat: state.beat ?? null}
+    : createNextBoardState(state);
 }
 
 /**
@@ -167,13 +273,23 @@ export function applyMove(
     board,
     usedFootballerIds: [...state.usedFootballerIds, footballerId],
     winner,
+    // A decided board scores a goal and may decide the match (final board).
+    ...(winner ? settleBoard(state, winner) : null),
     turnUserId: winner ? state.turnUserId : nextTurn(state.order, userId),
     turnDeadline: winner ? state.turnDeadline : Date.now() + TURN_MS,
   };
 }
 
-/** A wrong guess or a timeout: no claim, the turn simply passes on. */
-export function passTurn(state: GridState, userId: string): GridState {
+/**
+ * A wrong guess, a timeout or a deliberate skip: no claim, the turn passes.
+ * `reason` announces the moment to every device ("MISSED!" / "OUT OF TIME");
+ * a plain skip stays quiet.
+ */
+export function passTurn(
+  state: GridState,
+  userId: string,
+  reason?: 'missed' | 'timeout',
+): GridState {
   if (state.winner) {
     return state;
   }
@@ -181,6 +297,9 @@ export function passTurn(state: GridState, userId: string): GridState {
     ...state,
     turnUserId: nextTurn(state.order, userId),
     turnDeadline: Date.now() + TURN_MS,
+    beat: reason
+      ? nextBeat(state, {kind: reason, sideId: sideOfUser(state, userId)?.id})
+      : state.beat ?? null,
   };
 }
 
@@ -231,7 +350,9 @@ export function respondTie(
 function finalizeTie(state: GridState, offer: NonNullable<GridState['tieOffer']>): GridState {
   const everyoneAccepted = state.sides.every(s => offer.accepted.includes(s.id));
   if (everyoneAccepted) {
-    return {...state, winner: 'tie', tieOffer: null};
+    // An agreed tie still settles the board — on the final board it decides
+    // the match exactly like a played-out tie would.
+    return {...state, winner: 'tie', tieOffer: null, ...settleBoard(state, 'tie')};
   }
   return {...state, tieOffer: offer};
 }

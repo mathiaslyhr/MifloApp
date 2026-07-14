@@ -193,13 +193,11 @@ const makeStyles = (c: Palette) =>
   StyleSheet.create({
     // A new group under the scroll-away header, then the cards stack tight.
     list: {marginTop: spacing.xl, gap: spacing.md},
-    // Elevation = brightness: a surface-1 fill lifted by a lighter hairline
-    // rim, never a shadow.
+    // Elevation = brightness: the surface-1 fill on the darker page already
+    // reads as lifted, so no rim — the card needs no outline.
     card: {
       backgroundColor: c.surface,
       borderRadius: radii.card,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: c.divider,
       paddingHorizontal: spacing.lg,
       paddingTop: spacing.md,
       paddingBottom: spacing.sm + 2,

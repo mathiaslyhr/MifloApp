@@ -21,7 +21,7 @@ import {
 import {useOptimisticRoomState} from '../core/rooms/useOptimisticRoomState';
 import {ensureSession} from '../core/supabase/client';
 import {HattrickGameView} from '../games/hattrick/HattrickGameView';
-import {createRematchState} from '../games/hattrick/engine';
+import {advanceBoard} from '../games/hattrick/engine';
 import type {GridState} from '../games/hattrick/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Hattrick'>;
@@ -123,8 +123,9 @@ export function HattrickScreen({route, navigation}: Props) {
       return;
     }
     try {
-      // Avoid repeating this exact grid or letting the same player start again.
-      await restartBoardGame(roomId, createRematchState(state));
+      // Mid-match: the next board (scores carried). Decided match: a fresh
+      // match. Either way a new grid + rotated starter.
+      await restartBoardGame(roomId, advanceBoard(state));
     } catch {
       toast.error(t('hattrick.newGameError'));
     }

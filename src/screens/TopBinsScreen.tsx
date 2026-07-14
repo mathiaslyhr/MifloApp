@@ -1,8 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   Image,
   KeyboardAvoidingView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Platform,
   Pressable,
   ScrollView,
@@ -12,6 +16,7 @@ import {
 import {ChevronLeft, Flag, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
+import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CircleButton,
@@ -19,7 +24,6 @@ import {
   Screen,
   Text,
   toast,
-  TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {
@@ -87,6 +91,51 @@ export function TopBinsScreen({navigation}: Props) {
   const openSearch = useSearch();
   const boardRef = useRef<ScrollView>(null);
   const slotYs = useRef<Record<number, number>>({});
+
+  // Scroll-aware edge fades: each scrim only shows when there's list content
+  // scrolled past that edge, so the first/last slot is never dimmed at rest.
+  const fadeTopOpacity = useRef(new Animated.Value(0)).current;
+  const fadeBottomOpacity = useRef(new Animated.Value(0)).current;
+  const fadeTopShown = useRef(false);
+  const fadeBottomShown = useRef(false);
+  const viewportH = useRef(0);
+  const contentH = useRef(0);
+  const lastOffsetY = useRef(0);
+
+  function toggleFade(
+    value: Animated.Value,
+    shownRef: React.MutableRefObject<boolean>,
+    show: boolean,
+  ) {
+    if (shownRef.current === show) {
+      return;
+    }
+    shownRef.current = show;
+    Animated.timing(value, {
+      toValue: show ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function refreshFades(offsetY: number) {
+    const maxY = Math.max(0, contentH.current - viewportH.current);
+    toggleFade(fadeTopOpacity, fadeTopShown, offsetY > 2);
+    toggleFade(fadeBottomOpacity, fadeBottomShown, offsetY < maxY - 2);
+  }
+
+  const onBoardScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    lastOffsetY.current = e.nativeEvent.contentOffset.y;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardLayout = (e: LayoutChangeEvent) => {
+    viewportH.current = e.nativeEvent.layout.height;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardContentSize = (_w: number, h: number) => {
+    contentH.current = h;
+    refreshFades(lastOffsetY.current);
+  };
 
   // One-time reminder offer, shown the moment a board is finished — shared
   // with Scout (same asked/pref keys), so whichever daily game the player
@@ -320,7 +369,6 @@ export function TopBinsScreen({navigation}: Props) {
             </CircleButton>
           </View>
         </FloatingBar>
-        <TopStatusFade />
       </Screen>
     );
   }
@@ -383,13 +431,20 @@ export function TopBinsScreen({navigation}: Props) {
             </Text>
           ) : null}
 
+          {/* The list dissolves into the canvas at both edges (no frost, no
+              borders) so slots never bleed into the header or the search pill. */}
+          <View style={styles.boardWrap}>
           <ScrollView
             ref={boardRef}
             style={styles.board}
             contentContainerStyle={styles.boardContent}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"
-            showsVerticalScrollIndicator={false}>
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={16}
+            onScroll={onBoardScroll}
+            onLayout={onBoardLayout}
+            onContentSizeChange={onBoardContentSize}>
             {list.entries.map(entry => {
               const earned = found.has(entry.rank);
               const shown = earned || finished;
@@ -430,6 +485,9 @@ export function TopBinsScreen({navigation}: Props) {
               );
             })}
           </ScrollView>
+            <EdgeFade edge="top" opacity={fadeTopOpacity} />
+            <EdgeFade edge="bottom" opacity={fadeBottomOpacity} />
+          </View>
 
           {finished ? (
             <View style={styles.finishPanel}>
@@ -478,10 +536,42 @@ export function TopBinsScreen({navigation}: Props) {
           </CircleButton>
         </View>
       </FloatingBar>
-      <TopStatusFade />
 
       <TenballHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>
+  );
+}
+
+/**
+ * A solid-colour edge fade (no blur): the canvas colour ramping to transparent
+ * over the list's top/bottom edge so slots dissolve into the background instead
+ * of hard-cutting against the header or the search pill.
+ */
+function EdgeFade({
+  edge,
+  opacity,
+}: {
+  edge: 'top' | 'bottom';
+  opacity: Animated.Value;
+}) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const top = edge === 'top';
+  const gradId = `tenballFade-${edge}`;
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[styles.fade, top ? styles.fadeTop : styles.fadeBottom, {opacity}]}>
+      <Svg width="100%" height="100%">
+        <Defs>
+          <LinearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <Stop offset={0} stopColor={colors.background} stopOpacity={top ? 1 : 0} />
+            <Stop offset={1} stopColor={colors.background} stopOpacity={top ? 0 : 1} />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill={`url(#${gradId})`} />
+      </Svg>
+    </Animated.View>
   );
 }
 
@@ -543,6 +633,9 @@ function Countdown() {
   );
 }
 
+/** Height of each edge-fade scrim over the list. */
+const FADE_HEIGHT = 36;
+
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
   flex: {flex: 1},
@@ -559,9 +652,14 @@ const makeStyles = (c: Palette) =>
   chromeSpacer: {flex: 1},
   body: {flex: 1},
   listTitle: {marginBottom: spacing.xs},
-  board: {flex: 1, marginTop: spacing.md},
-  boardContent: {gap: spacing.sm, paddingBottom: spacing.sm},
-  // One rank slot: glass row, blank while hidden, name + value once shown.
+  boardWrap: {flex: 1, marginTop: spacing.md},
+  board: {flex: 1},
+  boardContent: {gap: spacing.sm, paddingVertical: spacing.md},
+  fade: {position: 'absolute', left: 0, right: 0, height: FADE_HEIGHT},
+  fadeTop: {top: 0},
+  fadeBottom: {bottom: 0},
+  // One rank slot: surface card (no frost), blank while hidden, name + value
+  // once shown.
   slot: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -569,9 +667,9 @@ const makeStyles = (c: Palette) =>
     minHeight: 44,
     paddingHorizontal: spacing.md,
     borderRadius: radii.card,
-    backgroundColor: c.glassLight,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    backgroundColor: c.surface,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   // Slots exposed by giving up read as "shown, not earned".
   slotRevealed: {opacity: 0.55},
@@ -582,8 +680,8 @@ const makeStyles = (c: Palette) =>
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: c.surface2,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   rankBadgeEarned: {backgroundColor: c.primary, borderColor: c.primary},
   // Explicit tight lineHeight: without it the themed body lineHeight (24)

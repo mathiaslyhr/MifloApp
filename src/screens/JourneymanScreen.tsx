@@ -1,8 +1,12 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   Image,
   KeyboardAvoidingView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   Platform,
   Pressable,
   ScrollView,
@@ -12,6 +16,7 @@ import {
 import {ChevronLeft, Flag, HelpCircle, Lock} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
+import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CircleButton,
@@ -19,7 +24,6 @@ import {
   Screen,
   Text,
   toast,
-  TopStatusFade,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {
@@ -87,6 +91,51 @@ export function JourneymanScreen({navigation}: Props) {
   const [streak, setStreak] = useState<StreakState>(EMPTY_STREAK);
   const [showHelp, setShowHelp] = useState(false);
   const openSearch = useSearch();
+
+  // Scroll-aware edge fades: each scrim only shows when there's list content
+  // scrolled past that edge, so the first/last step is never dimmed at rest.
+  const fadeTopOpacity = useRef(new Animated.Value(0)).current;
+  const fadeBottomOpacity = useRef(new Animated.Value(0)).current;
+  const fadeTopShown = useRef(false);
+  const fadeBottomShown = useRef(false);
+  const viewportH = useRef(0);
+  const contentH = useRef(0);
+  const lastOffsetY = useRef(0);
+
+  function toggleFade(
+    value: Animated.Value,
+    shownRef: React.MutableRefObject<boolean>,
+    show: boolean,
+  ) {
+    if (shownRef.current === show) {
+      return;
+    }
+    shownRef.current = show;
+    Animated.timing(value, {
+      toValue: show ? 1 : 0,
+      duration: 150,
+      useNativeDriver: true,
+    }).start();
+  }
+
+  function refreshFades(offsetY: number) {
+    const maxY = Math.max(0, contentH.current - viewportH.current);
+    toggleFade(fadeTopOpacity, fadeTopShown, offsetY > 2);
+    toggleFade(fadeBottomOpacity, fadeBottomShown, offsetY < maxY - 2);
+  }
+
+  const onBoardScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    lastOffsetY.current = e.nativeEvent.contentOffset.y;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardLayout = (e: LayoutChangeEvent) => {
+    viewportH.current = e.nativeEvent.layout.height;
+    refreshFades(lastOffsetY.current);
+  };
+  const onBoardContentSize = (_w: number, h: number) => {
+    contentH.current = h;
+    refreshFades(lastOffsetY.current);
+  };
 
   // One-time reminder offer, shown the moment a puzzle is finished — shared
   // with Scout and Top Bins (same asked/pref keys), so whichever daily game
@@ -262,7 +311,6 @@ export function JourneymanScreen({navigation}: Props) {
             </CircleButton>
           </View>
         </FloatingBar>
-        <TopStatusFade />
       </Screen>
     );
   }
@@ -354,12 +402,19 @@ export function JourneymanScreen({navigation}: Props) {
           </Text>
         ) : null}
 
+        {/* The career path dissolves into the canvas at both edges (no frost, no
+            borders) so steps never bleed into the header or the hint row. */}
+        <View style={styles.boardWrap}>
         <ScrollView
           style={styles.board}
           contentContainerStyle={styles.boardContent}
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={onBoardScroll}
+          onLayout={onBoardLayout}
+          onContentSizeChange={onBoardContentSize}>
           {/* The career path — every club spell, oldest first, always visible. */}
           {(secretPlayer?.clubs ?? []).map((spell, index) => {
             const club = getClub(spell.clubId);
@@ -400,6 +455,9 @@ export function JourneymanScreen({navigation}: Props) {
             );
           })}
         </ScrollView>
+          <EdgeFade edge="top" opacity={fadeTopOpacity} />
+          <EdgeFade edge="bottom" opacity={fadeBottomOpacity} />
+        </View>
 
         {/* Hint chips: one unlocks per wrong guess, in a fixed order. Hidden
             once the day is over — the answer reveal says it all. */}
@@ -495,10 +553,42 @@ export function JourneymanScreen({navigation}: Props) {
           </CircleButton>
         </View>
       </FloatingBar>
-      <TopStatusFade />
 
       <JourneymanHelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>
+  );
+}
+
+/**
+ * A solid-colour edge fade (no blur): the canvas colour ramping to transparent
+ * over the list's top/bottom edge so career steps dissolve into the background
+ * instead of hard-cutting against the header or the hint row.
+ */
+function EdgeFade({
+  edge,
+  opacity,
+}: {
+  edge: 'top' | 'bottom';
+  opacity: Animated.Value;
+}) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const top = edge === 'top';
+  const gradId = `journeymanFade-${edge}`;
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[styles.fade, top ? styles.fadeTop : styles.fadeBottom, {opacity}]}>
+      <Svg width="100%" height="100%">
+        <Defs>
+          <LinearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <Stop offset={0} stopColor={colors.background} stopOpacity={top ? 1 : 0} />
+            <Stop offset={1} stopColor={colors.background} stopOpacity={top ? 0 : 1} />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill={`url(#${gradId})`} />
+      </Svg>
+    </Animated.View>
   );
 }
 
@@ -560,6 +650,9 @@ function Countdown() {
   );
 }
 
+/** Height of each edge-fade scrim over the career path. */
+const FADE_HEIGHT = 36;
+
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
   flex: {flex: 1},
@@ -576,9 +669,14 @@ const makeStyles = (c: Palette) =>
   chromeSpacer: {flex: 1},
   body: {flex: 1},
   instruction: {marginBottom: spacing.xs},
-  board: {flex: 1, marginTop: spacing.md},
-  boardContent: {gap: spacing.sm, paddingBottom: spacing.sm},
-  // One career step: glass row — step number, crest, club, loan tag, years.
+  boardWrap: {flex: 1, marginTop: spacing.md},
+  board: {flex: 1},
+  boardContent: {gap: spacing.sm, paddingVertical: spacing.md},
+  fade: {position: 'absolute', left: 0, right: 0, height: FADE_HEIGHT},
+  fadeTop: {top: 0},
+  fadeBottom: {bottom: 0},
+  // One career step: surface card (no frost) — step number, crest, club, loan
+  // tag, years.
   spell: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -586,9 +684,9 @@ const makeStyles = (c: Palette) =>
     minHeight: 44,
     paddingHorizontal: spacing.md,
     borderRadius: radii.card,
-    backgroundColor: c.glassLight,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    backgroundColor: c.surface,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   stepBadge: {
     width: 26,
@@ -597,8 +695,8 @@ const makeStyles = (c: Palette) =>
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: c.surface2,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   // Explicit tight lineHeight: without it the themed body lineHeight (24)
   // pushes the digit off-centre inside the 26pt circle.
@@ -610,8 +708,8 @@ const makeStyles = (c: Palette) =>
     paddingVertical: 1,
     borderRadius: radii.pill,
     backgroundColor: c.surface2,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   loanText: {fontSize: 11, lineHeight: 14},
   spellYears: {fontVariant: ['tabular-nums']},
@@ -624,9 +722,9 @@ const makeStyles = (c: Palette) =>
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.xs,
     borderRadius: radii.card,
-    backgroundColor: c.glassLight,
-    borderWidth: 1,
-    borderColor: c.glassRim,
+    backgroundColor: c.surface,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.divider,
   },
   hintChipLocked: {opacity: 0.55},
   hintLabel: {letterSpacing: 0.3},

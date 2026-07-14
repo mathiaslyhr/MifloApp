@@ -146,6 +146,100 @@ describe('compareAttributes', () => {
     ).toBe('miss');
   });
 
+  it('club: yellow when the guess plays at a former club of the secret', () => {
+    // Secret came up at arsenal, now at chelsea.
+    const secret = derive(
+      footballer({
+        clubs: [
+          {clubId: 'arsenal', from: 2012, to: 2018},
+          {clubId: 'chelsea', from: 2018},
+        ],
+      }),
+    );
+    // Guess currently at arsenal (a former club of the secret) = yellow.
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'arsenal', from: 2020}]})),
+          secret,
+        ),
+        'club',
+      ),
+    ).toBe('partial');
+    // Guess currently at chelsea (the secret's current club) still wins green.
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'chelsea', from: 2020}]})),
+          secret,
+        ),
+        'club',
+      ),
+    ).toBe('hit');
+    // A club the secret never played at stays grey.
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'ac-milan', from: 2020}]})),
+          secret,
+        ),
+        'club',
+      ),
+    ).toBe('miss');
+  });
+
+  it('club: a loan spell still counts as having played there (yellow)', () => {
+    const secret = derive(
+      footballer({
+        clubs: [
+          {clubId: 'ac-milan', from: 2016, to: 2017, loan: true},
+          {clubId: 'chelsea', from: 2017},
+        ],
+      }),
+    );
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'ac-milan', from: 2020}]})),
+          secret,
+        ),
+        'club',
+      ),
+    ).toBe('partial');
+  });
+
+  it('league: green for current, yellow for a former league, grey otherwise', () => {
+    // Secret played in serie-a (ac-milan), now premier-league (chelsea).
+    const secret = derive(
+      footballer({
+        clubs: [
+          {clubId: 'ac-milan', from: 2014, to: 2019},
+          {clubId: 'chelsea', from: 2019},
+        ],
+      }),
+    );
+    // Guess in the current league (arsenal = premier-league) = green.
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'arsenal', from: 2020}]})),
+          secret,
+        ),
+        'league',
+      ),
+    ).toBe('hit');
+    // Guess in a former league (ac-milan = serie-a) = yellow.
+    expect(
+      status(
+        compareAttributes(
+          derive(footballer({clubs: [{clubId: 'ac-milan', from: 2020}]})),
+          secret,
+        ),
+        'league',
+      ),
+    ).toBe('partial');
+  });
+
   it('age: same age hit, and arrows point toward the secret', () => {
     const secret = derive(footballer({born: '1996-03-01'})); // 30 on DATE_KEY
     // Different birthday, same whole-year age = hit.

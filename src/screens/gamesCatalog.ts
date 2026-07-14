@@ -77,6 +77,27 @@ export type GameEntry = {
    * "Daily" pill next to the audience pill.
    */
   daily?: boolean;
+  /** Multiplayer player range, for the Play-tab card badge (omitted for solo). */
+  minPlayers?: number;
+  maxPlayers?: number;
+};
+
+/**
+ * Per-game identity colours for the Play-tab colored-square icon badges. These
+ * are fixed brand tones (like the guess-feedback colours), not theme tokens, so
+ * a game reads the same in both appearances. Tweak freely.
+ */
+export const GAME_COLORS: Record<GameType, string> = {
+  hattrick: '#6260FF',
+  'red-card': '#FF6A61',
+  offside: '#5B9CFF',
+  'cult-hero': '#C77DFF',
+  scout: '#4FB477',
+  tenball: '#E0A94A',
+  journeyman: '#5BC8C0',
+  teamsheet: '#E06C9F',
+  heatmap: '#8B93A7',
+  matchday: '#8B93A7',
 };
 
 /**
@@ -128,6 +149,8 @@ export const GAMES: GameEntry[] = [
     category: 'duel',
     available: true,
     localPlay: true,
+    minPlayers: 2,
+    maxPlayers: 2,
   },
   {
     gameType: 'offside',
@@ -136,6 +159,8 @@ export const GAMES: GameEntry[] = [
     category: 'group',
     available: true,
     localPlay: true,
+    minPlayers: 2,
+    maxPlayers: 8,
   },
   {
     gameType: 'cult-hero',
@@ -144,6 +169,8 @@ export const GAMES: GameEntry[] = [
     category: 'group',
     available: true,
     localPlay: true,
+    minPlayers: 2,
+    maxPlayers: 8,
   },
   {
     gameType: 'red-card',
@@ -152,6 +179,8 @@ export const GAMES: GameEntry[] = [
     category: 'party',
     available: true,
     localPlay: true,
+    minPlayers: 3,
+    maxPlayers: 8,
   },
   {
     gameType: 'heatmap',

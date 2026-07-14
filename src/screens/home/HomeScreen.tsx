@@ -87,18 +87,31 @@ export function HomeScreen({
           );
         })
         .catch(() => {});
-      // All friends, ordered so whoever played today leads the carousel. Silent
-      // on failure (keeps whatever's shown); [] means "no friends" → add card.
+      // Only friends who played or started a game today, most games first (then
+      // highest streak). Silent on failure (keeps whatever's shown); [] means
+      // "nobody's played yet" → empty-state card.
       fetchFriendsFeed(today)
         .then(feed => {
           if (!alive) {
             return;
           }
-          const playedToday = (f: FriendFeed) =>
-            f.results.some(r => r.dateKey === today);
-          const sorted = [...feed].sort(
-            (a, b) => Number(playedToday(b)) - Number(playedToday(a)),
-          );
+          const todayRows = (f: FriendFeed) =>
+            f.results.filter(r => r.dateKey === today);
+          const sorted = feed
+            .filter(f => todayRows(f).length > 0)
+            .sort((a, b) => {
+              const ga = todayRows(a).length;
+              const gb = todayRows(b).length;
+              if (gb !== ga) {
+                return gb - ga;
+              }
+              const sa = friendStreak(a.results, today);
+              const sb = friendStreak(b.results, today);
+              if (sb !== sa) {
+                return sb - sa;
+              }
+              return a.profile.displayName.localeCompare(b.profile.displayName);
+            });
           setFriends(sorted);
         })
         .catch(() => {});

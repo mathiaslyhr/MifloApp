@@ -1,22 +1,24 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {AppMark, NAV_HEIGHT, Screen, Text, TopStatusFade} from '../../core/ui';
+import {AppMark, NAV_HEIGHT, Screen, Text} from '../../core/ui';
 import {spacing} from '../../theme';
 
 type Props = {
   /** Scroll-away page title; omit it to show the brand mark instead (Home). */
   title?: string;
+  /** Optional corner element pinned to the header row's right edge. */
+  right?: React.ReactNode;
   children?: React.ReactNode;
 };
 
 /**
  * The bare tab-page scaffold every shell page starts from: a scroll view whose
  * header (title or brand mark) is the first content item so it slides off the
- * top (Instagram-style), a pinned frosted status-bar fade, and bottom padding
- * that clears the shared nav island.
+ * top (Instagram-style), and bottom padding that clears the shared nav island.
+ * No status-bar blur strip — content scrolls clean under the clock.
  */
-export function TabPage({title, children}: Props) {
+export function TabPage({title, right, children}: Props) {
   const insets = useSafeAreaInsets();
   return (
     // Drop top/bottom safe-area edges — the scroll content owns the top inset
@@ -37,10 +39,10 @@ export function TabPage({title, children}: Props) {
           ) : (
             <AppMark size={28} />
           )}
+          {right ? <View style={styles.headerRight}>{right}</View> : null}
         </View>
         {children}
       </ScrollView>
-      <TopStatusFade />
     </Screen>
   );
 }
@@ -55,4 +57,12 @@ const styles = StyleSheet.create({
   // The brand mark sits at the leading edge (the Home convention); titled
   // pages center their wordmark.
   headerMark: {alignItems: 'flex-start'},
+  // Corner element pinned to the header row's right edge (GamesScreen style).
+  headerRight: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
 });

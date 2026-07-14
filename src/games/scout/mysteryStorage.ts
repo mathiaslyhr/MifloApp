@@ -27,6 +27,8 @@ export type DailyProgress = {
    * for progress saved by older builds.
    */
   secretId?: string;
+  /** True once the player gave up, so a relaunch rehydrates the revealed state. */
+  gaveUp?: boolean;
 };
 
 /** Today's saved progress, or null if none / it belongs to a different day. */

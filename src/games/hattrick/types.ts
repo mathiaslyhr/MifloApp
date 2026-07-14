@@ -40,8 +40,26 @@ export type GridState = {
   turnDeadline: number;
   /** Footballers already used this game — can't be reused. */
   usedFootballerIds: string[];
-  /** Winning sideId, 'tie', or null while in progress. */
+  /** Winning sideId, 'tie', or null while in progress — for THIS board. */
   winner: string | 'tie' | null;
+  /**
+   * Goals per sideId across the match (a won board = a goal). Absent on
+   * states written before matches existed — read via `matchScores()`.
+   */
+  scores?: Record<string, number>;
+  /** 1-based board number within the match (a match = MATCH_BOARDS boards). */
+  boardNumber?: number;
+  /**
+   * The decided match: the leading sideId after the final board, or 'draw'
+   * when the scores are level. Null/absent while boards remain.
+   */
+  matchWinner?: string | 'draw' | null;
+  /**
+   * The latest commentary beat — synced state, so every device renders the
+   * same moment ("GOAL! …", "MISSED!"). Clients de-dupe on `seq`; the beat is
+   * carried (not cleared) between boards so the sequence stays comparable.
+   */
+  beat?: Beat | null;
   /**
    * A pending "agree to a tie" offer. Any player may propose (e.g. when nobody
    * knows another answer); the proposer pre-accepts. When every side has
@@ -59,4 +77,23 @@ export type TieOffer = {
   by: string;
   /** sideIds that have accepted (includes the proposer). */
   accepted: string[];
+};
+
+/** The commentary vocabulary. ("TAKEN" waits for a simultaneous-claim mode —
+ * Hattrick is strictly turn-based, so no lock race exists to announce.) */
+export type BeatKind =
+  | 'goal' // a line completed → a goal for that side
+  | 'level' // a goal that brings the scores level
+  | 'winner' // the match decided after the final board
+  | 'draw' // final board done with level scores
+  | 'missed' // a wrong answer (turn passes)
+  | 'timeout'; // the turn clock ran out (turn passes)
+
+/** One synced commentary moment, rendered identically on every device. */
+export type Beat = {
+  kind: BeatKind;
+  /** The side the beat is about (name/color lookups); absent for neutral beats. */
+  sideId?: string;
+  /** Monotonic-enough counter; clients replay a beat only when seq changes. */
+  seq: number;
 };

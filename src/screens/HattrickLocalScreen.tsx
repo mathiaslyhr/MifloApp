@@ -5,8 +5,8 @@ import type {RootStackParamList} from '../core/navigation';
 import {HattrickGameView} from '../games/hattrick/HattrickGameView';
 import {generateGrid} from '../games/hattrick/grid';
 import {
+  advanceBoard,
   createIndividualState,
-  createRematchState,
   proposeTie,
   respondTie,
 } from '../games/hattrick/engine';
@@ -52,7 +52,7 @@ export function HattrickLocalScreen({navigation}: Props) {
       onCommit={setState}
       onProposeTie={handleProposeTie}
       onRespondTie={handleRespondTie}
-      onPlayAgain={() => setState(s => createRematchState(s))}
+      onPlayAgain={() => setState(s => advanceBoard(s))}
       onExit={() => navigation.goBack()}
       exitLabel={t('hattrick.local.exit')}
       onBack={() => navigation.goBack()}
