@@ -24,11 +24,7 @@ import {
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import type {RootStackParamList} from '../core/navigation';
-import {
-  leaveRoom,
-  subscribePlayers,
-  subscribeRoom,
-} from '../core/rooms/roomService';
+import {subscribePlayers, subscribeRoom} from '../core/rooms/roomService';
 import {
   rhAdvance,
   rhClaimAbandon,
@@ -355,12 +351,17 @@ export function RankedHattrickScreen({route, navigation}: Props) {
       .catch(() => {});
   }
 
+  /**
+   * Walk away without touching the room. We deliberately do NOT leaveRoom: the
+   * host leaving CLOSES the room, which would destroy the result before the
+   * opponent's device ever reads it (a surrender looked like a hang to them).
+   * The match is already settled server-side; the room goes stale on its own.
+   */
   function leave() {
     if (leftRef.current) {
       return;
     }
     leftRef.current = true;
-    leaveRoom(roomId).catch(() => {});
     navigation.popToTop();
   }
 

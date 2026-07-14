@@ -7,7 +7,7 @@ import {
   nextBoard,
   starterForBoard,
 } from '../engine';
-import {MATCH_CLOCK_MS, TURN_GRACE_MS} from '../constants';
+import {DEAD_BOARD_TURNS, MATCH_CLOCK_MS, TURN_GRACE_MS} from '../constants';
 import type {RankedCell, RankedState} from '../types';
 
 function state(overrides: Partial<RankedState> = {}): RankedState {
@@ -95,6 +95,28 @@ describe('the chess clock (with a free grace each turn)', () => {
     expect(next.matchWinner).toBe('b');
     expect(next.endReason).toBe('timeout');
     expect(next.board[0]).toBeNull(); // move didn't land — flag fell
+  });
+});
+
+describe('dead board — nobody can crack the grid', () => {
+  it('dies 0-0 once neither player claims for DEAD_BOARD_TURNS in a row', () => {
+    let s = state();
+    // Trade misses back and forth; nobody ever claims a square.
+    for (let i = 0; i < DEAD_BOARD_TURNS; i++) {
+      s = applyMove(s, s.turnUserId, 0, undefined, false, s.turnStartedAt + 1000);
+      if (i < DEAD_BOARD_TURNS - 1) {
+        expect(s.boardWinner).toBeNull(); // still alive
+      }
+    }
+    expect(s.boardWinner).toBe('dead');
+    expect(s.scores).toEqual({a: 0, b: 0}); // no goal for anyone
+  });
+
+  it('a successful claim resets the dead-board counter', () => {
+    let s = state({noClaimTurns: 3});
+    s = applyMove(s, 'a', 0, 'f1', true, s.turnStartedAt + 1000);
+    expect(s.noClaimTurns).toBe(0);
+    expect(s.boardWinner).toBeNull();
   });
 });
 

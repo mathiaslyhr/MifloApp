@@ -10,7 +10,7 @@
  */
 import {getById, matches, type Criterion} from '../../data/football';
 import {gridSignature, type Grid} from '../hattrick/grid';
-import {MATCH_CLOCK_MS, TURN_GRACE_MS} from './constants';
+import {DEAD_BOARD_TURNS, MATCH_CLOCK_MS, TURN_GRACE_MS} from './constants';
 import type {
   RankedBeat,
   RankedBeatKind,
@@ -137,11 +137,17 @@ export function applyMove(
   }
 
   if (!correct || !footballerId) {
-    // Miss → turn passes.
+    // Miss → turn passes. If neither player can claim anything for a few turns
+    // running, the grid is unsolvable for them: kill it 0-0 rather than let it
+    // become a clock trap.
+    const noClaimTurns = (state.noClaimTurns ?? 0) + 1;
+    const dead = noClaimTurns >= DEAD_BOARD_TURNS;
     return {
       ...state,
       clocks,
-      turnUserId: opp ?? state.turnUserId,
+      noClaimTurns,
+      boardWinner: dead ? 'dead' : state.boardWinner,
+      turnUserId: dead ? state.turnUserId : opp ?? state.turnUserId,
       turnStartedAt: now,
       beat: bumpBeat(state, 'missed', userId),
     };
@@ -166,6 +172,7 @@ export function applyMove(
     clocks,
     scores,
     boardWinner,
+    noClaimTurns: 0, // a claim proves the board is alive
     // Board decided → hold turn for the host to advance; else pass turn.
     turnUserId: boardWinner ? state.turnUserId : opp ?? state.turnUserId,
     turnStartedAt: now,
@@ -232,6 +239,7 @@ export function createMatchState(
     usedFootballerIds: [],
     boardNumber: 1,
     boardWinner: null,
+    noClaimTurns: 0,
     matchWinner: null,
     beat: null,
     signature: gridSignature(grid),
@@ -252,6 +260,7 @@ export function nextBoard(state: RankedState, grid: Grid, now: number): RankedSt
     board: Array(9).fill(null),
     boardNumber,
     boardWinner: null,
+    noClaimTurns: 0,
     turnUserId,
     turnStartedAt: now,
     signature: gridSignature(grid),

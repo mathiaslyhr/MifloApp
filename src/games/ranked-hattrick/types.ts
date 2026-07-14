@@ -59,6 +59,8 @@ export type RankedState = {
   boardNumber: number;
   /** The current board's result: winner userId, 'dead' (no line), or null. */
   boardWinner: string | 'dead' | null;
+  /** Consecutive turns on this board with no square claimed → dead board. */
+  noClaimTurns?: number;
   /** Goals per userId across the match. */
   scores: Record<string, number>;
   /** The decided match: leading userId, 'draw', or null while boards remain. */

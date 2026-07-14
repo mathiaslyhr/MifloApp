@@ -19,6 +19,14 @@ export const TURN_GRACE_MS = 15_000;
 export const MATCH_BOARDS = 5;
 
 /**
+ * A board nobody can crack is a DEAD BOARD: after this many consecutive turns
+ * with no square claimed (2 each), it ends 0-0 and the next board loads. Without
+ * it, a grid neither player knows becomes a clock trap — you'd trade wrong
+ * answers forever, or sit until your flag falls and lose the whole match.
+ */
+export const DEAD_BOARD_TURNS = 4;
+
+/**
  * Value (€) — the single competitive metric, Clash-Royale-trophies style but
  * denominated as a footballer market value. Win → up, loss → down, capped at
  * €250M (the best player in the world). Opponent-weighted (ELO math over the
