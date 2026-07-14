@@ -110,6 +110,8 @@ describe('dead board — nobody can crack the grid', () => {
     }
     expect(s.boardWinner).toBe('dead');
     expect(s.scores).toEqual({a: 0, b: 0}); // no goal for anyone
+    // …and it says so, rather than silently swapping the grid.
+    expect(s.beat?.kind).toBe('deadBoard');
   });
 
   it('a successful claim resets the dead-board counter', () => {

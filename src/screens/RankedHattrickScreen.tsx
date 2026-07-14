@@ -316,6 +316,9 @@ export function RankedHattrickScreen({route, navigation}: Props) {
     } else if (activeBeat.kind === 'missed') {
       haptics.error();
       toast.neutral(t('rankedHattrick.missed', {name: ''}));
+    } else if (activeBeat.kind === 'deadBoard') {
+      haptics.warning();
+      toast.neutral(t('rankedHattrick.deadBoard'));
     }
     // winner / draw / outOfTime → shown by the finish panel.
   }, [activeBeat, t]);

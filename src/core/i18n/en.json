@@ -233,6 +233,7 @@
     "winner": "WINNER! {{name}}",
     "draw": "DRAW",
     "missed": "MISSED",
+    "deadBoard": "Nobody could crack that one. New board, 0-0.",
     "outOfTime": "OUT OF TIME",
     "resultWon": "You won",
     "resultLost": "You lost",

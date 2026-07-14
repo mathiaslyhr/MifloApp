@@ -149,7 +149,9 @@ export function applyMove(
       boardWinner: dead ? 'dead' : state.boardWinner,
       turnUserId: dead ? state.turnUserId : opp ?? state.turnUserId,
       turnStartedAt: now,
-      beat: bumpBeat(state, 'missed', userId),
+      // Say WHY the grid is being abandoned — otherwise it just swaps and both
+      // players wonder what happened.
+      beat: dead ? bumpBeat(state, 'deadBoard') : bumpBeat(state, 'missed', userId),
     };
   }
 

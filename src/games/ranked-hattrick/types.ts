@@ -26,6 +26,7 @@ export type RankedBeatKind =
   | 'winner'
   | 'draw'
   | 'missed'
+  | 'deadBoard' // nobody could crack the grid → 0-0, next board
   | 'outOfTime';
 
 export type RankedBeat = {

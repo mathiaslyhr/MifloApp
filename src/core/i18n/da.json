@@ -233,6 +233,7 @@
     "winner": "VINDER! {{name}}",
     "draw": "UAFGJORT",
     "missed": "FORBIER",
+    "deadBoard": "Ingen kunne knække den. Ny bane, 0-0.",
     "outOfTime": "TIDEN ER UDE",
     "resultWon": "Du vandt",
     "resultLost": "Du tabte",
