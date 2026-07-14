@@ -156,6 +156,12 @@
     "profile": "Profile",
     "a11yBadge": "new friend requests"
   },
+  "daily": {
+    "notPlayed": "Not played yet",
+    "ongoing": "In progress",
+    "solved": "Solved",
+    "surrendered": "Gave up"
+  },
   "headToHead": {
     "title": "Head to head",
     "you": "You",

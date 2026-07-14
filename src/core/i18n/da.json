@@ -156,6 +156,12 @@
     "profile": "Profil",
     "a11yBadge": "nye venneanmodninger"
   },
+  "daily": {
+    "notPlayed": "Ikke spillet endnu",
+    "ongoing": "I gang",
+    "solved": "Løst",
+    "surrendered": "Gav op"
+  },
   "headToHead": {
     "title": "Head to head",
     "you": "Dig",
