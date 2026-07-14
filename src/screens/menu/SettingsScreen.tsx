@@ -4,6 +4,7 @@ import {Check} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {MenuGroup, MenuRow, Text, toast} from '../../core/ui';
+import {useWelcomePreview} from '../../core/ui/welcomePreview';
 import {spacing, useColors} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
@@ -126,6 +127,16 @@ export function SettingsScreen({navigation}: Props) {
             />
           );
         })}
+      </MenuGroup>
+
+      <MenuGroup>
+        {/* Design preview: overlay the onboarding front door over the app so
+            both first-launch flows can be reviewed without a profile reset. */}
+        <MenuRow
+          label={t('settings.showWelcome')}
+          subtitle={t('settings.showWelcomeDesc')}
+          onPress={() => useWelcomePreview.getState().open()}
+        />
       </MenuGroup>
 
       <MenuGroup>

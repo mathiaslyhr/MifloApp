@@ -1012,6 +1012,8 @@
   },
   "settings": {
     "title": "Indstillinger",
+    "showWelcome": "Vis velkomstskærmen",
+    "showWelcomeDesc": "Se førstegangs-flowene uden at nulstille din profil",
     "language": "Sprog",
     "languageSystem": "Systemets standard",
     "languageEn": "English",

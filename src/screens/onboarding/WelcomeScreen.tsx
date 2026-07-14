@@ -14,18 +14,22 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ChevronRight} from 'lucide-react-native';
-import {Button, Text} from '../../core/ui';
+import {ChevronRight, X} from 'lucide-react-native';
+import {Button, CircleButton, Text} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {EnterCodeFlow} from './EnterCodeFlow';
 import {QuickSetupFlow} from './setup/QuickSetupFlow';
 
 export function WelcomeScreen({
   onProfileReady,
+  onClose,
 }: {
   /** A profile now exists on this device (setup finished, or a move landed) —
    * AppBody re-checks the gate and swaps the welcome overlay for the app. */
   onProfileReady?: () => void;
+  /** Preview mode only (opened from Settings on a signed-in device): shows a
+   * floating close button. Absent on a real first launch. */
+  onClose?: () => void;
 } = {}): React.JSX.Element {
   const styles = useThemedStyles(makeStyles);
   const colors = useColors();
@@ -38,6 +42,13 @@ export function WelcomeScreen({
   return (
     <>
       <View style={styles.canvas}>
+        {onClose ? (
+          <View style={[styles.close, {top: insets.top + spacing.sm}]}>
+            <CircleButton onPress={onClose} accessibilityLabel={t('common.close')}>
+              <X size={18} color={colors.ink} strokeWidth={2} />
+            </CircleButton>
+          </View>
+        ) : null}
         <View
           style={[
             styles.body,
@@ -107,6 +118,8 @@ export function WelcomeScreen({
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
     canvas: {flex: 1, backgroundColor: c.background},
+    // Preview-only close button, floating in the top-right corner.
+    close: {position: 'absolute', right: spacing.xl, zIndex: 1},
     body: {flex: 1, justifyContent: 'flex-end', paddingHorizontal: spacing.xl},
     // Big gap = a new group (wordmark → text, text → CTA). Small gaps below
     // keep each group's own members tight so the three read as three.

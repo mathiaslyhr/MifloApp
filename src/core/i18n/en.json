@@ -1012,6 +1012,8 @@
   },
   "settings": {
     "title": "Settings",
+    "showWelcome": "Show welcome screen",
+    "showWelcomeDesc": "Preview the first-launch flows without resetting your profile",
     "language": "Language",
     "languageSystem": "System default",
     "languageEn": "English",

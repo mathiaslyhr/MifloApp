@@ -8,7 +8,7 @@
  * @format
  */
 import React, {useEffect, useState} from 'react';
-import {Alert, StatusBar, StyleSheet} from 'react-native';
+import {Alert, StatusBar, StyleSheet, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -21,6 +21,7 @@ import {
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
 import {BootSplash, ErrorBoundary, ToastHost} from './src/core/ui';
+import {useWelcomePreview} from './src/core/ui/welcomePreview';
 import {SearchProvider} from './src/games/shared/SearchScreen';
 import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
 import {SkinProvider, useSkin} from './src/theme';
@@ -176,6 +177,10 @@ function AppBody(): React.JSX.Element {
 
 /** The full navigator app, rendered once there's a profile. */
 function NavigatorApp(): React.JSX.Element {
+  // Design preview: Settings can overlay the onboarding front door on top of
+  // the running app (close button returns here with nav state intact).
+  const welcomePreview = useWelcomePreview(s => s.visible);
+  const closeWelcomePreview = useWelcomePreview(s => s.close);
   return (
     <SearchProvider>
       <UpdateGate>
@@ -189,6 +194,14 @@ function NavigatorApp(): React.JSX.Element {
           <RootNavigator />
         </NavigationContainer>
       </UpdateGate>
+      {welcomePreview ? (
+        <View style={StyleSheet.absoluteFill}>
+          <WelcomeScreen
+            onClose={closeWelcomePreview}
+            onProfileReady={closeWelcomePreview}
+          />
+        </View>
+      ) : null}
       <ToastHost />
       {/* Old-phone approval prompt for a profile move — global so it pops
           wherever the owner is when their new phone asks. */}
