@@ -5,7 +5,7 @@ import {AppBlur} from './Blur';
 
 type Props = {
   children?: React.ReactNode;
-  /** Glass fill: `'regular'` → `colors.glass` (0.55), `'light'` → `colors.glassLight` (0.40). */
+  /** Legacy prop from the glass era; both values now render the solid surface. */
   tint?: 'light' | 'regular';
   /** Exact fill override for surfaces that need their own tint (e.g. the role reveal's 0.6). */
   tintColor?: string;
@@ -25,12 +25,14 @@ type Props = {
 };
 
 /**
- * The shared glass surface: translucent fill + rim. Every glass card in the
+ * The shared card surface (design.md §5): solid surface-1 fill with the
+ * standard hairline border, one step lighter than the fill. Every card in the
  * app reads from this recipe so the material stays one piece across screens.
+ * The `blur` path keeps a frosted fill for cards floating over a scrim.
  */
 export function GlassCard({
   children,
-  tint = 'regular',
+  tint: _tint = 'regular',
   tintColor,
   shadow = 'none',
   blur,
@@ -40,12 +42,13 @@ export function GlassCard({
   style,
 }: Props) {
   const colors = useColors();
-  const fill = tintColor ?? (tint === 'light' ? colors.glassLight : colors.glass);
+  const fill =
+    tintColor ?? (blur == null ? colors.surface : colors.glass);
   const borderRadius = radii[radius];
   const frame: ViewStyle = {
     borderRadius,
     borderWidth,
-    borderColor: borderColor ?? colors.glassRim,
+    borderColor: borderColor ?? colors.divider,
   };
   const lift = shadow === 'none' ? undefined : shadows[shadow];
 

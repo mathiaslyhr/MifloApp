@@ -35,13 +35,13 @@ const LIGHT_BG = '#FFFFFF';
 const S = 1024;
 const STROKE = 92;
 const R = 100; // hump radius (centerline)
-const X1 = 285; // left stem centerline
+const X1 = 302; // left stem centerline (centers the whole mark incl. ball)
 const X2 = X1 + 2 * R; // middle leg
 const X3 = X2 + 2 * R; // right leg
 const Y_ARC = 430; // hump center height (centerline)
 const Y_BOT = 660; // left/middle leg bottom (centerline)
-const Y_BOT_R = 528; // the short right leg bottom (centerline) — trimmed a
-// few px vs the old mark so the ball below gets air without moving away
+const Y_BOT_R = 510; // the short right leg bottom (centerline) — trimmed vs
+// the old mark so the ball below gets air without moving away
 
 // The ball: brand purple, tucked below the short right leg like the
 // wordmark's period.
