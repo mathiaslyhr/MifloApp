@@ -65,7 +65,7 @@ export function WelcomeScreen({
             <View style={styles.wordmarkMark}>
               <AppMark size={15} stroke={60} />
             </View>
-            <Text variant="wordmark">ifloBall</Text>
+            <Text variant="wordmark">ifloball</Text>
           </View>
 
           {/* Group 2 — tagline + subtitle, tight together. */}
