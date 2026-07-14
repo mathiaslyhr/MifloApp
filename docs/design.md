@@ -146,6 +146,16 @@ Page titles are part of the content, not a fixed bar:
 - The bottom nav island is the one deliberately frosted surface besides the
   top fade.
 
+### The boot loader
+
+On app open the brand ball draws the m: it travels the letter as a pen tip
+(up the stem, over both humps, bouncing back up the middle leg), the stroke
+appearing behind it, then hops off the short right leg and settles into its
+period spot. About 1.8 seconds total; Reduce Motion shows the finished mark
+instead. Implementation: `src/core/ui/BootSplash.tsx`, geometry shared with
+the app icon (`scripts/generate-app-icon.mjs`). The native launch screen is a
+plain `#121212` frame so the animation owns the reveal.
+
 ### Haptics
 
 Semantic wrapper in `src/core/haptics`: `tap` on press, `success` / `warning`

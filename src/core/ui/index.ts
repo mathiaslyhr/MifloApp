@@ -3,6 +3,7 @@
  * `import {Screen, Button, Text} from '../core/ui';`
  */
 export {Screen} from './Screen';
+export {BootSplash} from './BootSplash';
 export {ErrorBoundary} from './ErrorBoundary';
 export {Text} from './Text';
 export {Button} from './Button';

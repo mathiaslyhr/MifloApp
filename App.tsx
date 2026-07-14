@@ -8,7 +8,7 @@
  * @format
  */
 import React, {useEffect, useState} from 'react';
-import {Alert, StatusBar, StyleSheet, View} from 'react-native';
+import {Alert, StatusBar, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -20,10 +20,10 @@ import {
   initFootballDataSync,
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
-import {ErrorBoundary, ToastHost} from './src/core/ui';
+import {BootSplash, ErrorBoundary, ToastHost} from './src/core/ui';
 import {SearchProvider} from './src/games/shared/SearchScreen';
 import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
-import {SkinProvider, colors, useSkin} from './src/theme';
+import {SkinProvider, useSkin} from './src/theme';
 import {UpdateGate} from './src/core/version';
 import {ensureSession} from './src/core/supabase/client';
 import {getCachedProfile} from './src/core/social/socialService';
@@ -137,12 +137,14 @@ function App(): React.JSX.Element {
 }
 
 /**
- * The app body: a profile gate. No profile on this device → the self-contained
- * onboarding overlay (WelcomeScreen); profile → the full navigator app, landing
- * on the Home dashboard.
+ * The app body: the boot splash (the ball draws the m), then a profile gate.
+ * No profile on this device → the self-contained onboarding overlay
+ * (WelcomeScreen); profile → the full navigator app, landing on Home.
  */
 function AppBody(): React.JSX.Element {
   const [gate, setGate] = useState<'loading' | 'welcome' | 'app'>('loading');
+  // The splash always plays through once; the profile read resolves behind it.
+  const [splashDone, setSplashDone] = useState(false);
   useEffect(() => {
     let alive = true;
     getCachedProfile()
@@ -153,9 +155,8 @@ function AppBody(): React.JSX.Element {
     };
   }, []);
 
-  if (gate === 'loading') {
-    // Brief background-colored frame while the cached-profile read resolves.
-    return <View style={styles.gate} />;
+  if (gate === 'loading' || !splashDone) {
+    return <BootSplash onDone={() => setSplashDone(true)} />;
   }
   if (gate === 'app') {
     return <NavigatorApp />;
@@ -212,8 +213,6 @@ function ThemedStatusBar(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   root: {flex: 1},
-  // The profile gate's loading frame: app background so the check never flashes.
-  gate: {flex: 1, backgroundColor: colors.background},
 });
 
 export default App;
