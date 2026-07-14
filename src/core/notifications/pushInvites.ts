@@ -32,9 +32,11 @@ type PushTokenNative = {getApnsToken: () => Promise<string>};
 const CODE_RE = /^[A-Z0-9]{4}$/;
 
 /** Where a push tap wants to land. */
+// TODO(sitemap): friend pushes used to land on the Friends tab; they park on
+// Home until friends have a home in the new sitemap.
 type PendingNavigation =
   | {kind: 'join'; code: string}
-  | {kind: 'tab'; tab: 'social'};
+  | {kind: 'tab'; tab: 'home'};
 
 let pending: PendingNavigation | null = null;
 const handledIds = new Set<string>();
@@ -87,7 +89,7 @@ export function handleNotificationPress(
     }
     target = {kind: 'join', code};
   } else if (type === 'friend-request' || type === 'friend-accepted') {
-    target = {kind: 'tab', tab: 'social'};
+    target = {kind: 'tab', tab: 'home'};
   } else {
     return;
   }

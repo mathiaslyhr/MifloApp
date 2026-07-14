@@ -149,6 +149,8 @@
   },
   "tabs": {
     "home": "Home",
+    "daily": "Daily",
+    "play": "Play",
     "games": "Games",
     "social": "Social",
     "profile": "Profile",

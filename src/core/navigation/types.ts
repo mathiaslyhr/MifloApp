@@ -1,18 +1,19 @@
 /**
  * Root navigation types. The app is a native-stack: the `Tabs` route hosts the
- * Home/Games/Friends/Profile shell (its own local tab toggle), and screens
+ * Home/Daily/Play/Profile shell (its own local tab toggle), and screens
  * outside the chrome — Lobby, Join, the menu pages — are pushed on top.
  */
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {SocialProfile} from '../social/types';
+import type {TabId} from '../ui';
 
 export type RootStackParamList = {
-  /** `tab` jumps the shell to that page (friend-push taps land on Friends);
-   * `at` makes repeat jumps distinct params so the effect refires. `addCode`
-   * arrives via the miflo.dk/add/CODE deep link → Friends tab auto-sends the
-   * friend request once the profile is ready. */
-  Tabs: {tab?: 'social'; at?: number; addCode?: string} | undefined;
+  /** `tab` jumps the shell to that page; `at` makes repeat jumps distinct
+   * params so the effect refires. `addCode` arrives via the miflo.dk/add/CODE
+   * deep link (TODO(sitemap): used to auto-send a friend request from the
+   * Friends tab; re-wire once friends live somewhere). */
+  Tabs: {tab?: TabId; at?: number; addCode?: string} | undefined;
   /** `code` arrives via the miflo.dk/join/CODE deep link → auto-join. */
   Join: {code?: string} | undefined;
   /** `invitedFriendId` pre-marks that friend as invited in the invite sheet

@@ -53,19 +53,21 @@ test('other notifications and malformed codes are ignored', () => {
   expect(navigate).not.toHaveBeenCalled();
 });
 
-test('a friend-request press lands on the Friends tab with a refetch', () => {
+// TODO(sitemap): friend pushes park on Home until friends have a home in the
+// new sitemap (they used to land on the Friends tab).
+test('a friend-request press lands on the Home tab with a refetch', () => {
   handleNotificationPress(friendPush('friend-request'));
   expect(refresh).toHaveBeenCalled();
   expect(navigate).toHaveBeenCalledWith('Tabs', {
-    tab: 'social',
+    tab: 'home',
     at: expect.any(Number),
   });
 });
 
-test('a friend-accepted press lands on the Friends tab too', () => {
+test('a friend-accepted press lands on the Home tab too', () => {
   handleNotificationPress(friendPush('friend-accepted'));
   expect(navigate).toHaveBeenCalledWith('Tabs', {
-    tab: 'social',
+    tab: 'home',
     at: expect.any(Number),
   });
 });
@@ -93,7 +95,7 @@ test('a press before the navigator is ready is parked for onReady', () => {
   expect(navigate).toHaveBeenCalledTimes(1);
 });
 
-test('a cold-start friend-request press is parked and lands on Friends', () => {
+test('a cold-start friend-request press is parked and lands on Home', () => {
   isReady.mockReturnValue(false);
   handleNotificationPress(friendPush('friend-request'));
   expect(navigate).not.toHaveBeenCalled();
@@ -101,7 +103,7 @@ test('a cold-start friend-request press is parked and lands on Friends', () => {
   isReady.mockReturnValue(true);
   flushPendingNavigation();
   expect(navigate).toHaveBeenCalledWith('Tabs', {
-    tab: 'social',
+    tab: 'home',
     at: expect.any(Number),
   });
 });

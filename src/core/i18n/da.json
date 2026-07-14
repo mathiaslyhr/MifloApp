@@ -149,6 +149,8 @@
   },
   "tabs": {
     "home": "Hjem",
+    "daily": "Daglig",
+    "play": "Spil",
     "games": "Spil",
     "social": "Social",
     "profile": "Profil",

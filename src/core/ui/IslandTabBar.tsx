@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
-import {CircleUserRound, Gamepad2, Home, Users, type LucideIcon} from 'lucide-react-native';
+import {CalendarDays, CircleUserRound, Gamepad2, Home, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {
   radii,
@@ -11,36 +11,36 @@ import {
 } from '../../theme';
 import {usePressScale} from './usePressScale';
 import {AppBlur} from './Blur';
+import {Text} from './Text';
 
-export type TabId = 'home' | 'games' | 'social' | 'profile';
+export type TabId = 'home' | 'daily' | 'play' | 'profile';
 
 /**
  * Vertical clearance the nav island reserves at the bottom of a screen — the pill
  * height plus its top breathing room. Screens add this (+ safe-area inset) to
  * their content's bottom padding so nothing hides behind the shell nav.
  */
-export const NAV_HEIGHT = 70;
+export const NAV_HEIGHT = 82;
 
 const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
   {id: 'home', labelKey: 'tabs.home', Icon: Home},
-  {id: 'games', labelKey: 'tabs.games', Icon: Gamepad2},
-  {id: 'social', labelKey: 'tabs.social', Icon: Users},
+  {id: 'daily', labelKey: 'tabs.daily', Icon: CalendarDays},
+  {id: 'play', labelKey: 'tabs.play', Icon: Gamepad2},
   {id: 'profile', labelKey: 'tabs.profile', Icon: CircleUserRound},
 ];
 
 type Props = {
   active: TabId;
-  /** Tapping a tab. No-op tabs (Games/Menu) are inert until the nav shell wires them. */
   onSelect?: (id: TabId) => void;
   /** Tabs to mark with a small "something new" dot (pending friend requests). */
   badge?: Partial<Record<TabId, boolean>>;
 };
 
 /**
- * The floating navigation island — Home · Games · Friends · Profile as a
- * centered, "clear" frosted pill. Icons only (the labels live on as
- * accessibility text); the active tab is tinted the accent color, inactive
- * tabs are muted.
+ * The floating navigation island — Home · Daily · Play · Profile as a
+ * centered, "clear" frosted pill. Each item is an icon with a small title
+ * under it; the active tab is tinted the accent color, inactive tabs are
+ * muted.
  *
  * The springy press-scale is shared by the WHOLE island (Instagram-style): a
  * single animated value scales the entire bar, and pressing any item drives it,
@@ -85,6 +85,9 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
                   <Icon size={22} color={color} strokeWidth={2} />
                   {dotted ? <View style={styles.badgeDot} /> : null}
                 </View>
+                <Text variant="caption" style={{color}}>
+                  {label}
+                </Text>
               </Pressable>
             );
           })}
@@ -114,13 +117,14 @@ const makeStyles = (c: Palette) =>
     borderColor: c.glassRim,
     overflow: 'hidden',
   },
-  // paddingVertical 11 + the 22pt icon = a 44pt tap target (HIG minimum).
+  // Icon over title; 22pt icon + gap + caption + padding clears a 44pt tap target.
   item: {
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 2,
     minWidth: 60,
     paddingHorizontal: 14,
-    paddingVertical: 11,
+    paddingVertical: 8,
   },
   iconWrap: {position: 'relative'},
   // "Something new" marker: a small accent disc pinned to the icon's top-right
