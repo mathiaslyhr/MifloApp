@@ -208,4 +208,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-09': 'england-2021-euro-final',
   '2027-01-10': 'real-madrid-2017-ucl-final',
   '2027-01-11': 'barcelona-2009-ucl-final',
+  '2027-01-12': 'chelsea-2021-ucl-final',
 };
