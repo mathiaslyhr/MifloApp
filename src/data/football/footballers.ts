@@ -8258,6 +8258,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [],
   },
   {
+    id: 'García, Eric',
+    name: 'Eric García',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '2001-01-09',
+    clubs: [
+      {clubId: 'man-city', from: 2018, to: 2021},
+      {clubId: 'barcelona', from: 2021, to: 2024},
+      {clubId: 'girona', from: 2024, to: 2024, loan: true},
+      {clubId: 'barcelona', from: 2024},
+    ],
+    honours: [
+      {type: 'league-title', count: 3, years: [2021, 2023, 2025]},
+      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
+    ],
+  },
+  {
     id: 'García, Fran',
     name: 'Fran García',
     nationality: ['Spain'],
@@ -17396,7 +17413,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2019], clubId: 'valencia'},
-      {type: 'europa-league', count: 1, years: [2021], clubId: 'villarreal'},
+      {type: 'europa-league', count: 1, years: [2021]},
     ],
   },
   {
