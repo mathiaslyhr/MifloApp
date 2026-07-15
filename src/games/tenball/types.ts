@@ -20,6 +20,14 @@ export type TenballEntry = {
    */
   value: string;
   /**
+   * Country whose bundled flag the type-ahead shows beside this entry, keyed
+   * exactly as FLAG_IMAGES / footballer nationalities ('England', not 'UK').
+   * Lets a non-club/nation list still carry art — the CL final cities show the
+   * host country's flag. Optional: an older binary reading a newer OTA pack
+   * just ignores it, and the entry renders name-only as before.
+   */
+  flagCountry?: string;
+  /**
    * Accepted answers: lowercase, accent-folded (playerSearch `fold`), unique
    * across the whole list — every answer owns exactly one slot, so "Last 10"
    * lists must dedupe repeat winners ("the last 10 DIFFERENT winners").

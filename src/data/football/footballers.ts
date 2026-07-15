@@ -15754,6 +15754,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Mosquera, Cristhian',
+    name: 'Cristhian Mosquera',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '2004-06-27',
+    clubs: [
+      {clubId: 'valencia', from: 2022, to: 2025},
+      {clubId: 'arsenal', from: 2025},
+    ],
+    honours: [],
+  },
+  {
     id: 'Motta, Thiago',
     name: 'Thiago Motta',
     nationality: ['Italy', 'Brazil'],

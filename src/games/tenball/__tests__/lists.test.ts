@@ -6,6 +6,7 @@ import en from '../../../core/i18n/en.json';
 import da from '../../../core/i18n/da.json';
 import {getById} from '../../../data/football';
 import {fold} from '../../hattrick/playerSearch';
+import {FLAG_IMAGES} from '../../hattrick/assets/flags.generated';
 import {BUNDLED_LISTS, getListById, LIST_POOL} from '../lists';
 
 describe('bundled Top Bins lists', () => {
@@ -71,5 +72,19 @@ describe('bundled Top Bins lists', () => {
   it('getListById resolves pool entries and misses unknown ids', () => {
     expect(getListById(LIST_POOL[0].id)).toBe(LIST_POOL[0]);
     expect(getListById('nope')).toBeUndefined();
+  });
+
+  it('every entry flagCountry has a bundled flag', () => {
+    // The type-ahead renders flagImage(flagCountry); a typo ('Holland',
+    // 'UK') would silently drop the flag rather than fail, so pin it here.
+    const bad: string[] = [];
+    for (const list of BUNDLED_LISTS) {
+      for (const entry of list.entries) {
+        if (entry.flagCountry && !FLAG_IMAGES[entry.flagCountry]) {
+          bad.push(`${list.id}: ${entry.name} → ${entry.flagCountry}`);
+        }
+      }
+    }
+    expect(bad).toEqual([]);
   });
 });

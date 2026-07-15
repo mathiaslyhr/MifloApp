@@ -19,7 +19,7 @@ import type {TenballKind} from './types';
 function listEntriesOfKind(kind: TenballKind): NameEntry[] {
   return LIST_POOL.filter(l => (l.kind ?? 'player') === kind)
     .flatMap(l => l.entries)
-    .map(e => nameEntry(e.name, e.aliases));
+    .map(e => nameEntry(e.name, e.aliases, e.flagCountry));
 }
 
 // Canonical datasets come first so dedupe keeps their labels/flags; the

@@ -208,4 +208,5 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-09': 'last-10-pfa-poty',
   '2027-01-10': 'last-10-wc-golden-ball',
   '2027-01-11': 'english-titles-clubs',
+  '2027-01-12': 'serie-a-titles-clubs',
 };
