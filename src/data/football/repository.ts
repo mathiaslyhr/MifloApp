@@ -181,14 +181,20 @@ export function matches(footballer: Footballer, criterion: Criterion): boolean {
       return count >= criterion.count;
     }
     case 'leagueTitle': {
-      // Won THIS league: a league-title year that overlaps a spell at a club
-      // playing in it. Honours without years can't be attributed — no match.
+      // Won THIS league: a league-title year that falls within a spell at a
+      // club playing in it. Honours without years can't be attributed — no
+      // match. `from` is the arrival summer, so the earliest title a spell can
+      // account for is the following spring (year > from, not >=): otherwise a
+      // title won in the transfer year — shared as the old club's `to` and the
+      // new club's `from` — is wrongly credited to the club just joined (e.g.
+      // Ribéry's 2019 Bundesliga title bleeding into his 2019 Fiorentina move
+      // and reading as a Serie A win).
       const years = footballer.honours
         .filter(h => h.type === 'league-title')
         .flatMap(h => h.years ?? []);
       return years.some(year =>
         footballer.clubs.some(spell => {
-          if (spell.from != null && year < spell.from) {
+          if (spell.from != null && year <= spell.from) {
             return false;
           }
           if (spell.to != null && year > spell.to) {

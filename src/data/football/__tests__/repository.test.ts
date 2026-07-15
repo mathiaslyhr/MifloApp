@@ -104,6 +104,22 @@ describe('find / intersection', () => {
   });
 });
 
+describe('leagueTitle', () => {
+  // A title won in a transfer year (the old club's `to`, the new club's `from`)
+  // must be credited to the club left, not the club joined. Ribéry won his
+  // final Bundesliga title with Bayern in 2019 and moved to Fiorentina that
+  // same summer — he never won Serie A.
+  it('credits a transfer-year title to the club left, not the club joined', () => {
+    const ribery = getById('Ribéry, Franck')!;
+    expect(matches(ribery, {kind: 'leagueTitle', league: 'bundesliga'})).toBe(
+      true,
+    );
+    expect(matches(ribery, {kind: 'leagueTitle', league: 'serie-a'})).toBe(
+      false,
+    );
+  });
+});
+
 describe('byCategory', () => {
   it('every quiz topic returns at least one footballer', () => {
     for (const topic of TOPICS) {
