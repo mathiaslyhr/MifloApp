@@ -6,10 +6,14 @@
 	<string>development</string>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<!-- mode=developer: Xcode-installed builds fetch the AASA straight from
-		     miflo.dk (no Apple CDN lag while iterating). TestFlight/App Store
-		     builds ignore alternate modes and use Apple's CDN as normal. -->
-		<string>applinks:miflo.dk?mode=developer</string>
+		<!-- No ?mode=developer: it requires Settings > Developer > Associated
+		     Domains Development to be toggled on the device, and without that
+		     toggle the association silently fails and links open in Safari. It
+		     existed to skip Apple-CDN lag, but the CDN copy tracks miflo.dk
+		     fine, so plain applinks is the safer default. Associations only
+		     register at install time — reinstall after changing this. -->
+		<string>applinks:miflo.dk</string>
+		<string>applinks:www.miflo.dk</string>
 	</array>
 </dict>
 </plist>
