@@ -230,7 +230,7 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'watford', from: 2011, to: 2012},
       {clubId: 'burnley', from: 2012, to: 2022},
       {clubId: 'everton', from: 2023, to: 2025},
-      {clubId: 'nottingham-forest', from: 2025},
+      {clubId: 'nottingham-forest', from: 2025, to: 2026},
     ],
   },
   {
@@ -813,7 +813,7 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'tottenham', from: 2021, to: 2021},
       {clubId: 'al-ittihad', from: 2022, to: 2023},
       {clubId: 'nottingham-forest', from: 2023, to: 2025},
-      {clubId: 'west-ham', from: 2025},
+      {clubId: 'west-ham', from: 2025, to: 2026},
     ],
   },
   {
