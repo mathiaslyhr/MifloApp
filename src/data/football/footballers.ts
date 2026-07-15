@@ -14018,6 +14018,17 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Manzambi, Johan',
+    name: 'Johan Manzambi',
+    nationality: ['Switzerland'],
+    positions: ['MF'],
+    born: '2005-08-05',
+    clubs: [
+      {clubId: 'freiburg', from: 2024},
+    ],
+    honours: [],
+  },
+  {
     id: 'Maradona, Diego',
     name: 'Diego Maradona',
     nationality: ['Argentina'],
