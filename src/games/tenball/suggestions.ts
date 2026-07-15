@@ -50,11 +50,14 @@ const POOLS: Record<Exclude<TenballKind, 'player'>, () => NameEntry[]> = {
   other: derivedFromData(() => dedupeByLabel(listEntriesOfKind('other'))),
 };
 
-/** Ranked suggestions for a non-player list kind. */
+/** Ranked suggestions for a non-player list kind. A pack can name a kind this
+ *  binary predates, so fall back to `other` (list-sourced names only) instead
+ *  of throwing on an undefined pool — a weaker type-ahead beats a crash. */
 export function searchSuggestions(
   kind: Exclude<TenballKind, 'player'>,
   query: string,
   limit = 5,
 ): NameEntry[] {
-  return searchNames(POOLS[kind](), query, limit);
+  const pool = POOLS[kind] ?? POOLS.other;
+  return searchNames(pool(), query, limit);
 }

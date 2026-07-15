@@ -40,7 +40,21 @@ export type TenballEntry = {
   footballerId?: string;
 };
 
-/** What a list's answers are — drives which pool the type-ahead searches. */
+/**
+ * What a list's answers are — drives which pool the type-ahead searches.
+ *
+ * `other` is for place-like answers (the CL final cities). EVERY entry on an
+ * `other` list must carry `flagCountry`: those answers have no crest or squad
+ * to identify them, so the flag is the only art the type-ahead can show, and a
+ * list where some entries have one and some don't looks broken. A test pins
+ * this. If a future `other` list genuinely has no country per entry, that test
+ * is the place to make the decision — don't just drop the flag.
+ *
+ * Adding a NEW kind is an over-the-air hazard: `kind` travels in the content
+ * pack, so an already-installed binary would receive a kind it has no pool for.
+ * `searchSuggestions` falls back to `other` rather than crashing, but the
+ * suggestions would still be wrong — ship the binary first.
+ */
 export type TenballKind = 'player' | 'club' | 'nation' | 'manager' | 'other';
 
 /** One curated top-10 list. The id is also the i18n key `tenball.lists.<id>.title`. */

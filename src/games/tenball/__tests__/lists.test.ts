@@ -87,4 +87,23 @@ describe('bundled Top Bins lists', () => {
     }
     expect(bad).toEqual([]);
   });
+
+  it('every entry on an `other` (place) list carries a flag', () => {
+    // Cities have no crest and no squad, so the flag is the only art the
+    // type-ahead can show them with. This is the rule, not a property of
+    // today's ten: a new city list, or one more city on an existing one,
+    // fails here until it names its country. See TenballKind in types.ts.
+    const missing: string[] = [];
+    for (const list of BUNDLED_LISTS) {
+      if ((list.kind ?? 'player') !== 'other') {
+        continue;
+      }
+      for (const entry of list.entries) {
+        if (!entry.flagCountry) {
+          missing.push(`${list.id}: ${entry.name}`);
+        }
+      }
+    }
+    expect(missing).toEqual([]);
+  });
 });
