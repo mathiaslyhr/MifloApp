@@ -288,8 +288,13 @@ export function RankedHattrickScreen({route, navigation}: Props) {
       prevBoard.current = state.boardNumber;
       const starter = state.players.find(p => p.userId === state.turnUserId);
       if (starter) {
-        const name = starter.userId === myUserId ? t('rankedHattrick.you') : starter.name;
-        toast.neutral(t('rankedHattrick.starts', {name}));
+        // "You start", not "You starts" — the name slot can't hold a pronoun
+        // and keep the verb, so the you-case is its own sentence.
+        toast.neutral(
+          starter.userId === myUserId
+            ? t('rankedHattrick.startsYou')
+            : t('rankedHattrick.starts', {name: starter.name}),
+        );
       }
     }
   }, [state, myUserId, t]);
@@ -310,18 +315,40 @@ export function RankedHattrickScreen({route, navigation}: Props) {
     }
     seenBeat.current = activeBeat.seq;
     const name = nameFor(stateRef.current, activeBeat.userId);
+    // Colour and buzz describe YOUR action only: green/success when you did it,
+    // red/error when you fluffed it, and neutral for anything your opponent
+    // did. Kind alone used to cheer at you for conceding and buzz an error at
+    // you when THEY missed — the exact opposite of what happened.
+    const mine = activeBeat.userId === myUserId;
     if (activeBeat.kind === 'goal' || activeBeat.kind === 'level') {
-      haptics.success();
-      toast.success(t(`rankedHattrick.${activeBeat.kind}`, {name}));
+      if (mine) {
+        haptics.success();
+        toast.success(
+          activeBeat.kind === 'goal'
+            ? t('rankedHattrick.goalYou')
+            : t('rankedHattrick.levelYou'),
+        );
+      } else {
+        haptics.tap();
+        toast.neutral(t(`rankedHattrick.${activeBeat.kind}`, {name}));
+      }
     } else if (activeBeat.kind === 'missed') {
-      haptics.error();
-      toast.neutral(t('rankedHattrick.missed', {name: ''}));
+      if (mine) {
+        haptics.error();
+        toast.error(t('rankedHattrick.missed'));
+      } else {
+        // Say who: a bare "MISSED" on the watcher's phone reads as their own.
+        haptics.tap();
+        toast.neutral(t('rankedHattrick.missedThem', {name}));
+      }
     } else if (activeBeat.kind === 'deadBoard') {
       haptics.warning();
       toast.neutral(t('rankedHattrick.deadBoard'));
     }
     // winner / draw / outOfTime → shown by the finish panel.
-  }, [activeBeat, t]);
+    // myUserId decides whose moment this was; the seenBeat guard above makes a
+    // re-run when it resolves a no-op rather than a second toast.
+  }, [activeBeat, myUserId, t]);
 
   // ── Tap a square → search → move ────────────────────────────────────────────
   function onCellPress(cell: number) {

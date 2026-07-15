@@ -11,8 +11,15 @@ import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Avatar, PressableScale, Text, initialsFor} from '../../core/ui';
 import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
-import type {Presence} from '../../core/social/presence';
+import {lastActiveParts, type ActiveUnit, type Presence} from '../../core/social/presence';
 import {formatLastActive} from '../social/PersonCard';
+
+/** The caption under an "active" stat, per unit. */
+const AGO_KEY: Record<ActiveUnit, string> = {
+  minutes: 'profile.agoMinutes',
+  hours: 'profile.agoHours',
+  days: 'profile.agoDays',
+};
 
 type Props = {
   name: string;
@@ -59,25 +66,13 @@ export function ProfileHeader({
     </Text>
   );
 
-  // The Instagram stat: the number is the thing you read, the noun under it is
-  // just its unit. The count stays the a11y label so it's still announced as
-  // one phrase ("12 friends") rather than as a stray number.
+  // The Instagram stat: the number is the thing you read, the unit under it is
+  // just its unit. The full phrase stays the a11y label, so a screen reader
+  // still hears "12 friends" rather than a stray number and a stray noun.
   const friendsLabel =
     friendCount === null ? null : t('profile.friendsCount', {count: friendCount});
 
-  // Brand-coloured because it goes somewhere — it's the only tappable thing in
-  // the identity block, and a grey line gave no hint of that. primaryInk rather
-  // than primary: the palette keeps it a step lighter exactly for small accent
-  // text that has to read on the dark canvas.
-  const friendsText =
-    friendCount === null ? null : (
-      <View style={styles.stat}>
-        <Text style={styles.statValue}>{friendCount}</Text>
-        <Text variant="caption" color="tertiary">
-          {t('profile.friendsStat', {count: friendCount})}
-        </Text>
-      </View>
-    );
+  const active = presence ? lastActiveParts(presence) : null;
 
   return (
     <View style={styles.root}>
@@ -136,28 +131,44 @@ export function ProfileHeader({
             )
           ) : null}
 
-          {/* One meta line under the name: the friends stat, then how recently
-              they were here. Only the stat is inside the Pressable, so the tap
-              target stays exactly as wide as the thing that goes somewhere. */}
-          {friendsLabel || activeLabel ? (
+          {/* A stat row under the name, Instagram's shape: each is a number
+              read big over its unit. Only the friends stat is inside a
+              Pressable, so the tap target is exactly as wide as the thing that
+              goes somewhere — "active" is a fact, not a door.
+
+              Active is absent while they're online, because then the green dot
+              on the avatar is already saying it, and "0 min ago" is a worse way
+              to say "now". */}
+          {friendCount !== null || active ? (
             <View style={styles.metaRow}>
-              {friendsText ? (
+              {friendCount !== null ? (
                 onPressFriends ? (
                   <PressableScale
                     onPress={onPressFriends}
                     hitSlop={10}
                     accessibilityRole="button"
                     accessibilityLabel={friendsLabel ?? undefined}>
-                    {friendsText}
+                    <Stat
+                      value={friendCount}
+                      unit={t('profile.friendsStat', {count: friendCount})}
+                      tone="link"
+                    />
                   </PressableScale>
                 ) : (
-                  friendsText
+                  <Stat
+                    value={friendCount}
+                    unit={t('profile.friendsStat', {count: friendCount})}
+                    tone="link"
+                  />
                 )
               ) : null}
-              {activeLabel ? (
-                <Text variant="secondary" color="tertiary">
-                  {activeLabel}
-                </Text>
+              {active ? (
+                <Stat
+                  value={active.value}
+                  unit={t(AGO_KEY[active.unit], {count: active.value})}
+                  tone="quiet"
+                  accessibilityLabel={activeLabel ?? undefined}
+                />
               ) : null}
             </View>
           ) : null}
@@ -165,6 +176,38 @@ export function ProfileHeader({
       </View>
 
       {children ? <View style={styles.actions}>{children}</View> : null}
+    </View>
+  );
+}
+
+/**
+ * One Instagram-style stat: the number, read big, over the unit it counts.
+ * `link` wears the brand because it goes somewhere; `quiet` is a plain fact and
+ * must not, or the colour stops meaning "tappable".
+ */
+function Stat({
+  value,
+  unit,
+  tone,
+  accessibilityLabel,
+}: {
+  value: number;
+  unit: string;
+  tone: 'link' | 'quiet';
+  accessibilityLabel?: string;
+}) {
+  const styles = useThemedStyles(makeStyles);
+  return (
+    <View
+      style={styles.stat}
+      accessible
+      accessibilityLabel={accessibilityLabel ?? `${value} ${unit}`}>
+      <Text style={[styles.statValue, tone === 'quiet' && styles.statValueQuiet]}>
+        {value}
+      </Text>
+      <Text variant="caption" color="tertiary">
+        {unit}
+      </Text>
     </View>
   );
 }
@@ -189,8 +232,8 @@ const makeStyles = (c: Palette) =>
     metaRow: {
       flexDirection: 'row',
       flexWrap: 'wrap',
-      alignItems: 'center',
-      gap: spacing.sm,
+      alignItems: 'flex-start',
+      gap: spacing.lg,
     },
     // Instagram's stat block: the number carries, the noun is its unit.
     stat: {alignItems: 'flex-start'},
@@ -198,12 +241,13 @@ const makeStyles = (c: Palette) =>
       fontFamily: fonts.medium,
       fontSize: 17,
       lineHeight: 21,
-      // The one tappable thing in the block, so it wears the brand. primaryInk,
-      // not primary: a step lighter, which is what small accent text on the
-      // dark canvas needs to stay legible.
+      // The friends stat is the one tappable thing in the block, so it wears
+      // the brand. primaryInk, not primary: a step lighter, which is what small
+      // accent text on the dark canvas needs to stay legible.
       color: c.primaryInk,
       fontVariant: ['tabular-nums'],
     },
+    statValueQuiet: {color: c.ink},
     // The scale's cap (medium 20) — the same size the wordmark uses, because the
     // name IS this page's headline.
     name: {
@@ -212,7 +256,9 @@ const makeStyles = (c: Palette) =>
       lineHeight: 24,
       color: c.ink,
     },
-    // Same presence trick as PersonCard, scaled for the 72pt disc.
+    // PersonCard's presence trick, scaled for the 72pt disc — but rimmed in the
+    // PAGE colour, not `surface`. This header sits directly on the canvas (no
+    // card), so a surface-coloured rim read as a lighter ring around the dot.
     onlineDot: {
       position: 'absolute',
       right: 2,
@@ -222,7 +268,7 @@ const makeStyles = (c: Palette) =>
       borderRadius: 7,
       backgroundColor: c.success,
       borderWidth: 2.5,
-      borderColor: c.surface,
+      borderColor: c.background,
     },
     actions: {
       flexDirection: 'row',

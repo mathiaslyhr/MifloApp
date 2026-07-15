@@ -179,37 +179,93 @@ export function HattrickGameView({
   // news about the match, and news is what toasts are for. It also means a
   // "GOAL!" never blanks out the board you're reading — the scoreline is
   // already pinned above it, so the call is all a beat has to carry.
+  // The beat is shared state, but the toast is drawn per device — so the phone
+  // can say whose moment it was, and colour it from where you're standing.
+  // Green means YOU did well and red means YOU did badly; anything the opponent
+  // did is neutral news. A beat coloured by kind alone told the watcher green
+  // when they conceded and red when their rival blundered, which is the colour
+  // rule (success/error = right/wrong) saying the opposite of what happened.
+  //
+  // Pass-and-play is exempt on purpose: one device, two people, no "you". It
+  // keeps the neutral, everybody-gets-named voice.
   const seenBeatSeq = useRef<number | null>(null);
+  const prevTurnUserId = useRef<string | null>(null);
   useEffect(() => {
     if (!state) {
       return;
     }
     const beat = state.beat ?? null;
+    const turnIsMine = !!actingUserId && state.turnUserId === actingUserId;
+    // The turn passing TO you is the thing you'd otherwise miss: a skip hands it
+    // over in silence, and even a "MISSED!" never said whose move it now was.
+    const turnCameToMe =
+      !local && turnIsMine && prevTurnUserId.current !== state.turnUserId;
+
+    // First snapshot primes both counters: a device that joins (or rejoins)
+    // mid-match must not re-announce moments that already happened.
     if (seenBeatSeq.current === null) {
       seenBeatSeq.current = beat?.seq ?? 0;
+      prevTurnUserId.current = state.turnUserId ?? null;
       return;
     }
-    if (beat && beat.seq !== seenBeatSeq.current) {
+    prevTurnUserId.current = state.turnUserId ?? null;
+
+    const isNewBeat = !!beat && beat.seq !== seenBeatSeq.current;
+    if (isNewBeat) {
       seenBeatSeq.current = beat.seq;
       BEAT_HAPTIC[beat.kind]();
       const side = beat.sideId
         ? state.sides.find(s => s.id === beat.sideId)
         : undefined;
       const name = side?.name ?? t('hattrick.someone');
+      const mySideId =
+        !local && actingUserId ? sideOfUser(state, actingUserId)?.id : undefined;
+      const mine = !!beat.sideId && beat.sideId === mySideId;
+
+      const call = local
+        ? {
+            goal: t('hattrick.beatGoal', {name}),
+            level: t('hattrick.beatLevel', {name}),
+            winner: t('hattrick.beatWinner', {name}),
+            draw: t('hattrick.beatDraw'),
+            missed: t('hattrick.beatMissed'),
+            timeout: t('hattrick.beatTimeout'),
+          }[beat.kind]
+        : mine
+          ? {
+              goal: t('hattrick.beatGoalYou'),
+              level: t('hattrick.beatLevelYou'),
+              winner: t('hattrick.beatWinnerYou'),
+              draw: t('hattrick.beatDraw'),
+              missed: t('hattrick.beatMissed'),
+              timeout: t('hattrick.beatTimeout'),
+            }[beat.kind]
+          : {
+              goal: t('hattrick.beatGoal', {name}),
+              level: t('hattrick.beatLevel', {name}),
+              winner: t('hattrick.beatWinner', {name}),
+              draw: t('hattrick.beatDraw'),
+              missed: t('hattrick.beatMissedThem', {name}),
+              timeout: t('hattrick.beatTimeoutThem', {name}),
+            }[beat.kind];
+
       toast.show({
-        message: {
-          goal: t('hattrick.beatGoal', {name}),
-          level: t('hattrick.beatLevel', {name}),
-          winner: t('hattrick.beatWinner', {name}),
-          draw: t('hattrick.beatDraw'),
-          missed: t('hattrick.beatMissed'),
-          timeout: t('hattrick.beatTimeout'),
-        }[beat.kind],
-        tone: BEAT_TONE[beat.kind],
+        // One toast, not two: when a beat is what handed you the turn, it says
+        // so itself rather than stacking a second card on top of it.
+        message: turnCameToMe ? `${call}. ${t('hattrick.yourTurn')}` : call,
+        tone: local || !mine ? BEAT_TONE_THEIRS[beat.kind] : BEAT_TONE_MINE[beat.kind],
         duration: BEAT_HOLD_MS[beat.kind],
       });
+      return;
     }
-  }, [state, t]);
+
+    // A quiet handover — a plain skip, or the start of a new board. Nothing
+    // announced it before, so the opponent just sat there.
+    if (turnCameToMe) {
+      haptics.tap();
+      toast.neutral(t('hattrick.yourTurn'));
+    }
+  }, [state, t, local, actingUserId]);
 
   if (!state) {
     // Ghost board while the room state primes over realtime.
@@ -736,14 +792,31 @@ function ScoreStrip({state}: {state: GridState}) {
   );
 }
 
-/** The toast tone each beat speaks in. `timeout` and `draw` are nobody's fault
- *  and nobody's win, so they stay neutral. */
-const BEAT_TONE: Record<Beat['kind'], ToastTone> = {
+/**
+ * The tone a beat speaks in, from where you're standing. The rule: colour
+ * describes YOUR action and nobody else's — green you did well, red you did
+ * badly. Everything the opponent does is neutral news, because there is no
+ * honest colour for "they scored": it isn't your success, and it isn't your
+ * mistake either.
+ *
+ * `timeout` stays neutral even for you: the clock ran out, which isn't a wrong
+ * answer, and `draw`/`winner` land next to a result screen that already says it.
+ */
+const BEAT_TONE_MINE: Record<Beat['kind'], ToastTone> = {
   goal: 'success',
   level: 'success',
   winner: 'success',
   draw: 'neutral',
   missed: 'error',
+  timeout: 'neutral',
+};
+
+const BEAT_TONE_THEIRS: Record<Beat['kind'], ToastTone> = {
+  goal: 'neutral',
+  level: 'neutral',
+  winner: 'neutral',
+  draw: 'neutral',
+  missed: 'neutral',
   timeout: 'neutral',
 };
 

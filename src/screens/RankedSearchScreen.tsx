@@ -23,6 +23,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'RankedSearch'>;
 const FACT_COUNT = 12;
 
 /**
+ * How long each fact holds. A fact is a sentence about a footballer, not a
+ * label — it wants reading, then a beat to land. The first cut swapped every
+ * 3.8s and testers said the cards "switch very fast", which is what a card
+ * changing while you're still on it feels like.
+ */
+const FACT_HOLD_MS = 7000;
+
+/**
  * Ranked matchmaking. Enqueues via `rh_find_match`; if paired immediately it
  * carries the roomId, otherwise it waits on the player's own queue row until the
  * server fills in a room. Leaving cancels the queue. Football facts drawn from
@@ -42,7 +50,10 @@ export function RankedSearchScreen({navigation}: Props) {
     if (facts.length === 0) {
       return;
     }
-    const id = setInterval(() => setFactIndex(n => (n + 1) % facts.length), 3800);
+    const id = setInterval(
+      () => setFactIndex(n => (n + 1) % facts.length),
+      FACT_HOLD_MS,
+    );
     return () => clearInterval(id);
   }, [facts.length]);
 

@@ -49,6 +49,33 @@ export function presenceFor(lastSeenAt: string | null | undefined, nowMs: number
   return {online: false, minutesAgo: Math.max(1, Math.floor(age / 60_000))};
 }
 
+/** The unit an "active N ago" reads in, once the minutes are rounded. */
+export type ActiveUnit = 'minutes' | 'hours' | 'days';
+
+/**
+ * "Active 14 min ago" split into its number and its unit, for the profile's
+ * stat block — where the number is read big and the unit sits under it as a
+ * caption. Null when online (the green dot says it) or unknown.
+ *
+ * Same thresholds and the same two-week freeze as the one-line caption
+ * (formatLastActive), because they're the same fact told at two sizes.
+ */
+export function lastActiveParts(
+  presence: Presence,
+): {value: number; unit: ActiveUnit} | null {
+  if (presence.online || presence.minutesAgo === null) {
+    return null;
+  }
+  const m = Math.min(presence.minutesAgo, MAX_ACTIVE_AGE_MIN);
+  if (m < 60) {
+    return {value: m, unit: 'minutes'};
+  }
+  if (m < 24 * 60) {
+    return {value: Math.floor(m / 60), unit: 'hours'};
+  }
+  return {value: Math.floor(m / (24 * 60)), unit: 'days'};
+}
+
 let running = false;
 
 /**
