@@ -31,7 +31,7 @@ export const MANAGERS: readonly Manager[] = [
     nationality: ['Spain'],
     spells: [
       {clubId: 'leverkusen', from: 2022, to: 2025},
-      {clubId: 'real-madrid', from: 2025, to: 2026},
+      {clubId: 'real-madrid', from: 2025, to: 2025},
       {clubId: 'chelsea', from: 2026},
     ],
   },
@@ -67,7 +67,10 @@ export const MANAGERS: readonly Manager[] = [
     id: 'Arbeloa, Álvaro',
     name: 'Álvaro Arbeloa',
     nationality: ['Spain'],
-    spells: [{clubId: 'fulham', from: 2026}],
+    spells: [
+      {clubId: 'real-madrid', from: 2025, to: 2026},
+      {clubId: 'fulham', from: 2026},
+    ],
   },
   {
     id: 'Arteta, Mikel',
