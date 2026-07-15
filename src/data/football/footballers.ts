@@ -9012,7 +9012,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [11, 10],
     clubs: [
       {clubId: 'man-utd', from: 2019, to: 2024},
-      {clubId: 'marseille', from: 2024},
+      {clubId: 'marseille', from: 2024, to: 2026},
+      {clubId: 'fenerbahce', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
@@ -23086,6 +23087,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 1, years: [2026]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Truffert, Adrien',
+    name: 'Adrien Truffert',
+    nationality: ['France'],
+    positions: ['DF'],
+    born: '2001-10-20',
+    clubs: [
+      {clubId: 'rennes', from: 2019, to: 2025},
+      {clubId: 'bournemouth', from: 2025},
+    ],
+    honours: [],
   },
   {
     id: 'Tsimikas, Kostas',
