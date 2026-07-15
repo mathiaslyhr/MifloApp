@@ -2,8 +2,12 @@
  * The profile "showcase": a user's favorite footballer, club and national team,
  * shown as three little badges under the identity block. Editable on your own
  * Profile (each tile opens a search picker; a set tile can be changed or
- * cleared), read-only on a friend's page — where the whole card hides if they
- * have picked none.
+ * cleared), read-only on a friend's page.
+ *
+ * The card always renders, even with all three slots unset: an empty tile reads
+ * as a dash rather than vanishing, so a friend's page keeps the same shape as
+ * yours and "they have picked nothing" is a thing you can actually see. Hiding
+ * it made an unset showcase indistinguishable from a page that never had one.
  *
  * Favorites are the dataset's stable ids (footballer id, club slug, nation
  * string); art and names resolve here at render time via the same bundled
@@ -12,10 +16,10 @@
  * Profile keeps the one optimistic-update path (mirroring the avatar flow).
  */
 import React from 'react';
-import {ActionSheetIOS, Image, Pressable, StyleSheet, View} from 'react-native';
+import {ActionSheetIOS, Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Plus} from 'lucide-react-native';
-import {Card, Text} from '../../core/ui';
+import {Card, PressableScale, Text} from '../../core/ui';
 import {
   fonts,
   radii,
@@ -67,12 +71,6 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
   const clubName = favorites.clubId
     ? getClub(favorites.clubId)?.name ?? favorites.clubId
     : null;
-
-  // A friend with nothing to show gets no card at all.
-  const isEmpty = !favorites.playerId && !favorites.clubId && !favorites.nation;
-  if (!editable && isEmpty) {
-    return null;
-  }
 
   function set(slot: Slot, id: string | null) {
     if (!onChange) {
@@ -230,13 +228,13 @@ function Tile({
     return body;
   }
   return (
-    <Pressable
-      style={styles.tilePress}
+    <PressableScale
+      containerStyle={styles.tilePress}
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={a11y}>
       {body}
-    </Pressable>
+    </PressableScale>
   );
 }
 
