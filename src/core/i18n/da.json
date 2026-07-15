@@ -189,13 +189,19 @@
     "leaderboard": "Rangliste",
     "ranked1v1": "Rangeret 1v1",
     "rankedHattrick": "Rangeret Hattrick",
-    "value": "Værdi",
-    "trend": "{{delta}} sidste {{count}} kampe",
+    "tiers": {
+      "prospect": "Talent",
+      "squad": "Trupspiller",
+      "firstTeam": "Førsteholdsspiller",
+      "keyPlayer": "Nøglespiller",
+      "star": "Stjerne",
+      "worldClass": "Verdensklasse"
+    },
+    "form": "Form",
     "comingSoon": "Kommer snart",
     "players1v1": "1v1",
     "playersSolo": "Solo",
-    "playersRange": "{{min}}-{{max}}",
-    "rankedHattrickMeta": "5 baner · 2:00 ur"
+    "playersRange": "{{min}}-{{max}}"
   },
   "rankedHattrick": {
     "finding": "Finder en kamp…",

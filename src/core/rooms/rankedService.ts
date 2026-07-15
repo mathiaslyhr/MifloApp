@@ -4,6 +4,7 @@
  * shape (requireClient + supabase.rpc). Lock/clock/scoring are server-decided;
  * these are thin calls.
  */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ensureSession, supabase} from '../supabase/client';
 import {BackendUnavailableError} from './roomService';
 import {VALUE_START} from '../../games/ranked-hattrick/constants';
@@ -188,11 +189,16 @@ export async function rhReportBlur(matchId: string, roomId: string): Promise<voi
   }
 }
 
-export type MyValue = {value: number; games: number; trend: number};
+export type MyValue = {
+  value: number;
+  games: number;
+  /** The last 5 € swings, newest first. The sign is the result (win/loss/draw). */
+  form: number[];
+};
 
-/** This user's Value (€), games played, and net € change over the last 5. */
+/** This user's Value (€), games played, and their last 5 € swings. */
 export async function fetchMyValue(): Promise<MyValue> {
-  const empty: MyValue = {value: VALUE_START, games: 0, trend: 0};
+  const empty: MyValue = {value: VALUE_START, games: 0, form: []};
   if (!supabase) {
     return empty;
   }
@@ -211,13 +217,34 @@ export async function fetchMyValue(): Promise<MyValue> {
     .eq('user_id', uid)
     .order('created_at', {ascending: false})
     .limit(5);
-  const trend = (events ?? []).reduce(
-    (sum, e) => sum + ((e as {delta?: number}).delta ?? 0),
-    0,
-  );
   return {
     value: (row as {value?: number} | null)?.value ?? VALUE_START,
     games: (row as {games?: number} | null)?.games ?? 0,
-    trend,
+    form: (events ?? []).map(e => (e as {delta?: number}).delta ?? 0),
   };
+}
+
+/** The Value this device last showed, so the card can tell "a match happened"
+ * from "they just opened the tab again" and only animate for the former. */
+const LAST_SEEN_KEY = 'miflo.ranked.lastSeenValue';
+
+export async function readLastSeenValue(): Promise<number | null> {
+  try {
+    const raw = await AsyncStorage.getItem(LAST_SEEN_KEY);
+    if (raw == null) {
+      return null;
+    }
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function writeLastSeenValue(value: number): Promise<void> {
+  try {
+    await AsyncStorage.setItem(LAST_SEEN_KEY, String(value));
+  } catch {
+    // A missed write just means one extra count-up next time. Not worth a toast.
+  }
 }

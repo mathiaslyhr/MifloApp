@@ -6,14 +6,13 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import {
+  ArrowDownRight,
+  ArrowUpRight,
   ChevronRight,
   Hash,
   Plus,
   Smartphone,
   Swords,
-  Trophy,
-  TrendingDown,
-  TrendingUp,
   Users,
   type LucideIcon,
 } from 'lucide-react-native';
@@ -40,8 +39,14 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {useAppNavigation} from '../../core/navigation';
 import {useCreateParty} from '../../core/rooms/useCreateParty';
-import {fetchMyValue, type MyValue} from '../../core/rooms/rankedService';
+import {
+  fetchMyValue,
+  readLastSeenValue,
+  writeLastSeenValue,
+  type MyValue,
+} from '../../core/rooms/rankedService';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
+import {VALUE_CAP} from '../../games/ranked-hattrick/constants';
 import {GAMES, type GameEntry, type GameType} from '../gamesCatalog';
 
 /** Solo daily games → their screens (mirrors DailyTab's ROUTE map). */
@@ -196,18 +201,13 @@ export function PlayTab() {
               <Button
                 label={t('play.findMatch')}
                 onPress={() => navigation.navigate('RankedSearch' as never)}
-                leadingIcon={<Swords size={18} color="#FFFFFF" strokeWidth={2} />}
               />
               <Button
                 label={t('play.leaderboard')}
-                variant="outline"
+                variant="secondary"
                 onPress={comingSoon}
-                leadingIcon={<Trophy size={18} color="#A3A3A3" strokeWidth={2} />}
               />
             </View>
-            <Text variant="caption" color="muted" align="center" style={styles.footnote}>
-              {t('play.rankedHattrickMeta')}
-            </Text>
           </>
         )}
       </ScrollView>
@@ -295,89 +295,174 @@ function GameRow({
   );
 }
 
-/** Competitive stat card — labelled as the ranked Hattrick ladder — with the
- * placeholder Rating / Value / recent-trend. */
-/** Count 0 → target on an ease-in (slow → quick) curve; re-runs when `trigger`
- * changes (each time the Competitive tab is focused). */
-function useCountUp(target: number | null, trigger: number): number {
-  const [val, setVal] = useState(0);
+/** A € swing worth animating: the match that just happened. */
+type ValueChange = {from: number; to: number};
+
+/** The shown €. Static at `target` unless a match actually moved it, in which
+ * case it counts `from → to` on an ease-in (slow → quick) curve. Returns null
+ * while the value is still loading. */
+function useValueCountUp(
+  target: number | null,
+  change: ValueChange | null,
+): number | null {
+  const [val, setVal] = useState<number | null>(null);
   useEffect(() => {
     if (target == null) {
-      setVal(0);
+      setVal(null);
+      return;
+    }
+    if (!change) {
+      setVal(target); // nothing happened since last time: no motion.
       return;
     }
     let raf = 0;
     const start = Date.now();
-    const dur = 700;
+    const dur = 900;
     const tick = () => {
       const p = Math.min(1, (Date.now() - start) / dur);
-      setVal(Math.round(target * (p * p))); // easeInQuad
+      const eased = p * p; // easeInQuad
+      setVal(Math.round(change.from + (change.to - change.from) * eased));
       if (p < 1) {
         raf = requestAnimationFrame(tick);
       }
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, trigger]);
+  }, [target, change]);
   return val;
 }
 
+/** The last 5 results, oldest → newest (football form-guide order), padded on
+ * the old side when they haven't played 5 yet. */
+function formSlots(form: number[]): (number | null)[] {
+  const played = form.slice(0, 5).reverse();
+  return [...Array(Math.max(0, 5 - played.length)).fill(null), ...played];
+}
+
+/** The width of the % pill. Fixed on purpose: measuring it would make the
+ * pill's `left` chase a second layout pass on every frame of the count-up.
+ * "100%" is the widest label it can ever hold, and the digits are tabular. */
+const PILL_W = 44;
+
+/** The competitive card: your € value, how far that is toward peak value, and
+ * how the last five went. The € only moves when a match moved it. */
 function ValueCard() {
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const Icon = hattrickIcon();
   const [data, setData] = useState<MyValue | null>(null);
-  const [focusKey, setFocusKey] = useState(0);
+  const [change, setChange] = useState<ValueChange | null>(null);
+  const [trackW, setTrackW] = useState(0);
 
-  // Refresh + replay the count-up on focus (a match just played updates it).
+  // Refresh on focus. A value that differs from what this device last showed
+  // means a match resolved while we were away: that, and only that, animates.
   useFocusEffect(
     useCallback(() => {
       let alive = true;
-      setFocusKey(k => k + 1);
-      fetchMyValue()
-        .then(v => {
-          if (alive) {
-            setData(v);
+      (async () => {
+        try {
+          const v = await fetchMyValue();
+          const prev = await readLastSeenValue();
+          if (!alive) {
+            return;
           }
-        })
-        .catch(() => {});
+          setData(v);
+          setChange(prev != null && prev !== v.value ? {from: prev, to: v.value} : null);
+          await writeLastSeenValue(v.value);
+        } catch {
+          // Offline: leave the card in its loading shell.
+        }
+      })();
       return () => {
         alive = false;
       };
     }, []),
   );
 
-  const shown = useCountUp(data ? data.value : null, focusKey);
-  const trend = data?.trend ?? 0;
-  const trendUp = trend >= 0;
-  const TrendIcon = trendUp ? TrendingUp : TrendingDown;
-  const trendColor = trendUp ? colors.success : colors.error;
+  const shown = useValueCountUp(data ? data.value : null, change);
+
+  // One long run from the floor to the €250M cap — no rungs. Driven by the
+  // animated €, so the bar and the pill tick up with the count-up for free.
+  const pct =
+    shown != null ? Math.round(Math.max(0, Math.min(1, shown / VALUE_CAP)) * 100) : 0;
+  // Centre the pill on the fill's end, but never let it hang off either edge:
+  // a fresh €10M account sits at ~4%, where an uncentred pill would clip.
+  const pillLeft = Math.max(
+    0,
+    Math.min(trackW - PILL_W, (pct / 100) * trackW - PILL_W / 2),
+  );
+
+  const delta = change ? change.to - change.from : 0;
+  const up = delta >= 0;
+  const DeltaIcon = up ? ArrowUpRight : ArrowDownRight;
+  const deltaColor = up ? colors.success : colors.error;
+
   return (
     <GlassCard style={styles.statCard}>
-      <View style={styles.eyebrowRow}>
-        <Icon size={15} color="#FFFFFF" strokeWidth={2} />
-        <Text style={styles.eyebrow}>{t('play.rankedHattrick')}</Text>
+      <View style={styles.tagRow}>
+        <Icon size={13} color={colors.textTertiary} strokeWidth={2} />
+        <Text variant="caption" color="muted">
+          {t('play.rankedHattrick')}
+        </Text>
       </View>
-      <Text variant="caption" color="muted">
-        {t('play.value')}
-      </Text>
-      <Text style={[styles.valueBig, {color: colors.primary}]}>
-        {data ? formatValue(shown) : '—'}
-      </Text>
-      {data && data.games > 0 && trend !== 0 ? (
-        <View style={styles.trendRow}>
-          <TrendIcon size={16} color={trendColor} strokeWidth={2} />
-          <Text variant="secondary" style={{color: trendColor}}>
-            {t('play.trend', {
-              delta: formatDelta(trend),
-              count: Math.min(data.games, 5),
-            })}
-          </Text>
+
+      <View style={styles.valueRow}>
+        <Text style={[styles.valueBig, {color: colors.primary}]}>
+          {shown != null ? formatValue(shown) : '—'}
+        </Text>
+        {change ? (
+          <View style={styles.deltaChip}>
+            <DeltaIcon size={15} color={deltaColor} strokeWidth={2.25} />
+            <Text variant="secondary" style={{color: deltaColor}}>
+              {formatDelta(delta)}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View
+        style={styles.barRow}
+        onLayout={e => setTrackW(e.nativeEvent.layout.width)}
+        accessibilityRole="progressbar"
+        accessibilityValue={{min: 0, max: 100, now: pct}}>
+        <View style={styles.track}>
+          <View
+            style={[styles.trackFill, {width: `${pct}%`, backgroundColor: colors.primary}]}
+          />
         </View>
-      ) : null}
+        {trackW > 0 && shown != null ? (
+          <View style={[styles.pctPill, {left: pillLeft, backgroundColor: colors.primary}]}>
+            <Text style={styles.pctText}>{`${pct}%`}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={styles.statDivider} />
+      <View style={styles.formRow}>
+        <Text variant="caption" color="muted">
+          {t('play.form')}
+        </Text>
+        <View style={styles.dots}>
+          {formSlots(data?.form ?? []).map((d, i) => (
+            <FormDot key={i} delta={d} />
+          ))}
+        </View>
+      </View>
     </GlassCard>
   );
+}
+
+/** One result in the form guide. `null` = not played yet (an empty ring). */
+function FormDot({delta}: {delta: number | null}) {
+  const colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  if (delta == null) {
+    return <View style={[styles.dot, styles.dotEmpty]} />;
+  }
+  const color =
+    delta > 0 ? colors.success : delta < 0 ? colors.error : colors.textTertiary;
+  return <View style={[styles.dot, {backgroundColor: color}]} />;
 }
 
 const makeStyles = (c: Palette) =>
@@ -387,7 +472,6 @@ const makeStyles = (c: Palette) =>
     toggle: {marginTop: spacing.md},
     ctaGroup: {marginTop: spacing.xl, gap: spacing.sm},
     competitiveTop: {marginTop: spacing.xl},
-    footnote: {marginTop: spacing.md},
     // Home-page grouping grammar: a big gap starts a new group, the heading
     // hugs its list.
     sectionLabel: {
@@ -419,24 +503,10 @@ const makeStyles = (c: Palette) =>
     cardSubtitle: {},
     trailing: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
     // Competitive stat card (GlassCard = solid surface, no blur).
-    statCard: {padding: spacing.lg, gap: spacing.md},
-    eyebrowRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
-    eyebrow: {
-      fontFamily: fonts.medium,
-      fontSize: 12,
-      letterSpacing: 0.6,
-      color: c.textTertiary,
-      textTransform: 'uppercase',
-    },
-    statRow: {flexDirection: 'row', justifyContent: 'space-between'},
-    statRight: {alignItems: 'flex-end'},
-    statBig: {
-      fontFamily: fonts.medium,
-      fontSize: 30,
-      lineHeight: 36,
-      color: c.ink,
-      fontVariant: ['tabular-nums'],
-    },
+    statCard: {padding: spacing.lg, gap: spacing.sm},
+    // The game the card belongs to, quietly heading it.
+    tagRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
+    valueRow: {flexDirection: 'row', alignItems: 'baseline', gap: spacing.sm},
     valueBig: {
       fontFamily: fonts.medium,
       fontSize: 38,
@@ -444,5 +514,49 @@ const makeStyles = (c: Palette) =>
       color: c.ink,
       fontVariant: ['tabular-nums'],
     },
-    trendRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
+    // Only shown right after a match: what that result was worth.
+    deltaChip: {flexDirection: 'row', alignItems: 'center', gap: 2},
+    // Progress toward the €250M cap. The row is pill-height so the pill can
+    // overhang the track it rides on.
+    barRow: {height: 22, justifyContent: 'center', marginTop: spacing.xs},
+    track: {
+      height: 6,
+      borderRadius: radii.pill,
+      backgroundColor: c.divider,
+      overflow: 'hidden',
+    },
+    trackFill: {height: 6, borderRadius: radii.pill},
+    // Same fill as the bar, so pill and fill read as one shape.
+    pctPill: {
+      position: 'absolute',
+      width: PILL_W,
+      height: 22,
+      borderRadius: radii.pill,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    pctText: {
+      fontFamily: fonts.medium,
+      fontSize: 12,
+      // Must match fontSize: Text defaults to the `body` variant, whose
+      // lineHeight (21) would otherwise drop the glyph to the bottom of its
+      // line box. Digits and % have no descenders, so a tight box is safe.
+      lineHeight: 12,
+      color: c.onInk,
+      fontVariant: ['tabular-nums'],
+      textAlign: 'center',
+    },
+    statDivider: {
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: c.divider,
+      marginTop: spacing.sm,
+    },
+    formRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+    dots: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
+    dot: {width: 8, height: 8, borderRadius: 4},
+    dotEmpty: {
+      backgroundColor: 'transparent',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.divider,
+    },
   });

@@ -189,13 +189,19 @@
     "leaderboard": "Leaderboard",
     "ranked1v1": "Ranked 1v1",
     "rankedHattrick": "Ranked Hattrick",
-    "value": "Value",
-    "trend": "{{delta}} last {{count}} matches",
+    "tiers": {
+      "prospect": "Prospect",
+      "squad": "Squad player",
+      "firstTeam": "First team",
+      "keyPlayer": "Key player",
+      "star": "Star",
+      "worldClass": "World class"
+    },
+    "form": "Form",
     "comingSoon": "Coming soon",
     "players1v1": "1v1",
     "playersSolo": "Solo",
-    "playersRange": "{{min}}-{{max}}",
-    "rankedHattrickMeta": "5 boards · 2:00 clock"
+    "playersRange": "{{min}}-{{max}}"
   },
   "rankedHattrick": {
     "finding": "Finding a match…",
