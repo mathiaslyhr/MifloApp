@@ -2959,7 +2959,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2008-02-02',
     shirtNumbers: [28],
     clubs: [
-      {clubId: 'agf', from: 2025},
+      {clubId: 'agf', from: 2026},
     ],
     honours: [],
   },
@@ -3751,7 +3751,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2006-05-10',
     shirtNumbers: [33],
     clubs: [
-      {clubId: 'agf', from: 2025},
+      {clubId: 'agf', from: 2024},
     ],
     honours: [],
   },
@@ -9665,7 +9665,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1985-03-31',
     shirtNumbers: [1],
     clubs: [
-      {clubId: 'agf', from: 2025},
+      {clubId: 'agf', from: 2021},
     ],
     honours: [],
   },
@@ -11165,6 +11165,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1993-01-10',
     shirtNumbers: [16],
     clubs: [
+      {clubId: 'konyaspor', from: 2016, to: 2020},
+      {clubId: 'cadiz', from: 2020, to: 2022},
+      {clubId: 'aek-athens', from: 2022, to: 2026},
       {clubId: 'agf', from: 2026},
     ],
     honours: [],
@@ -13274,7 +13277,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1998-10-02',
     shirtNumbers: [11],
     clubs: [
-      {clubId: 'agf', from: 2025},
+      {clubId: 'agf', from: 2019},
     ],
     honours: [],
   },
