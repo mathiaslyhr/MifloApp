@@ -969,25 +969,4 @@ const makeStyles = (c: Palette) =>
     gap: spacing.sm,
     padding: spacing.md,
   },
-  // Commentary beat: full-screen scrim with the call + scoreline centered.
-  beatOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: c.scrim,
-  },
-  beatContent: {alignItems: 'center', gap: spacing.md, padding: spacing.xl},
-  // The call gets a touch of tracking so the caps read like a chyron.
-  beatText: {letterSpacing: 0.5},
-  beatScoreRow: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: spacing.md,
-  },
-  beatScore: {fontVariant: ['tabular-nums']},
-  beatScoreDash: {color: c.textTertiary},
   });
