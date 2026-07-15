@@ -13,6 +13,20 @@ npm run data:publish  # validates + uploads; live for users in ~1 minute
 
 Never finish a player/club/manager/question change without running (or, if the session cannot run it, explicitly reminding the user to run) `npm run data:publish`.
 
+## Code fixes need an app build (not OTA)
+
+Only the football **dataset** (players/clubs/managers/questions) ships over the
+air via `data:publish`. Changes to **logic** (`repository.ts`, game engines,
+UI) reach users only through an App Store build — `data:publish` will report
+"nothing to publish" for them.
+
+**Pending — verify it's in the next build I ship:** the `leagueTitle` matcher
+fix (`src/data/football/repository.ts`, branch
+`claude/frank-ribery-serie-a-bug-xijfg6`) that stopped Franck Ribéry showing as
+a Serie A winner on the hattrick tie screen. It's a code change, so it is NOT
+live for installed apps yet — confirm the branch is merged and included the
+next time an app build goes out.
+
 Hard rules for data edits:
 
 - **Never rename or delete an existing footballer `id`** (`'Surname, First'`). Ids are permanent tags used by the Scout schedule, online rooms, and saved progress. Wrong display name? Fix the `name` field, keep the `id`.
