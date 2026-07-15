@@ -10,6 +10,7 @@ import {
   usedFootballers,
 } from '../../../games/quiz/questions';
 import {CLUBS, getClub} from '../clubs';
+import {MANAGERS} from '../managers';
 import {all, byCategory} from '../repository';
 import type {Rng} from '../repository';
 import {FLAG_IMAGES} from '../../../games/hattrick/assets/flags.generated';
@@ -186,6 +187,63 @@ describe('every criterion has a real image asset', () => {
     for (const clubId of usedClubIds) {
       expect(LOGO_IMAGES[clubId]).toBeDefined();
     }
+  });
+});
+
+describe('manager integrity', () => {
+  // Managers drive the Offside "managed by" axis and the Top Bins manager
+  // type-ahead (where nationality[0] renders a flag), so a typo'd club id or
+  // an unflagged country degrades a game silently rather than failing loudly.
+  it('every manager id is unique', () => {
+    const ids = MANAGERS.map(m => m.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('managers stay sorted by id', () => {
+    const ids = MANAGERS.map(m => m.id);
+    const sorted = [...ids].sort((a, b) =>
+      a.localeCompare(b, 'en', {sensitivity: 'base'}),
+    );
+    expect(ids).toEqual(sorted);
+  });
+
+  it('every manager club spell references a real club', () => {
+    for (const manager of MANAGERS) {
+      for (const spell of manager.spells) {
+        if ('clubId' in spell && spell.clubId) {
+          expect(getClub(spell.clubId)).toBeDefined();
+        }
+      }
+    }
+  });
+
+  it('every manager nationality and national-team spell has a bundled flag', () => {
+    for (const manager of MANAGERS) {
+      for (const country of manager.nationality) {
+        expect(FLAG_IMAGES[country]).toBeDefined();
+      }
+      for (const spell of manager.spells) {
+        if ('country' in spell && spell.country) {
+          expect(FLAG_IMAGES[spell.country]).toBeDefined();
+        }
+      }
+    }
+  });
+
+  it('no manager spell ends before it starts', () => {
+    for (const manager of MANAGERS) {
+      for (const spell of manager.spells) {
+        if (spell.to !== undefined && spell.from !== undefined) {
+          expect(spell.to).toBeGreaterThanOrEqual(spell.from);
+        }
+      }
+    }
+  });
+
+  // The bug this batch fixed: with only 16 managers, ~71% of the Top Bins
+  // manager type-ahead was itself a correct answer, so any pick scored.
+  it('the manager pool is deep enough to hide a list of answers', () => {
+    expect(MANAGERS.length).toBeGreaterThanOrEqual(80);
   });
 });
 
