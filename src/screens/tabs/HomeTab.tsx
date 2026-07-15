@@ -40,9 +40,6 @@ import {TabPage} from './TabPage';
 /** Fraction of the screen a friend card fills, so the next card peeks. */
 const CARD_FRACTION = 0.78;
 
-/** Translucent ink for the card's quieter lines (onInk at reduced strength). */
-const CARD_INK_SOFT = 'rgba(245,245,245,0.85)';
-
 /** Each daily's own screen route. */
 const ROUTE: Record<DailyGame, keyof RootStackParamList> = {
   scout: 'Scout',
@@ -253,13 +250,13 @@ export function HomeTab(): React.JSX.Element {
               <Text variant="secondary" style={styles.doneLead}>
                 {t('home.dailiesDoneLead')}
               </Text>
-              <Text variant="wordmark" color="onInk">
+              <Text variant="wordmark">
                 {name
                   ? t('home.dailiesDoneBye', {name})
                   : t('home.dailiesDoneByeAnon')}
               </Text>
               <View style={styles.doneTimer}>
-                <Timer size={14} color={CARD_INK_SOFT} strokeWidth={2} />
+                <Timer size={14} color={colors.textSecondary} strokeWidth={2} />
                 <Text variant="secondary" style={styles.doneTimerLabel}>
                   {t('daily.nextLabel')}
                 </Text>
@@ -268,7 +265,7 @@ export function HomeTab(): React.JSX.Element {
             </>
           ) : (
             <>
-              <Text variant="wordmark" color="onInk">
+              <Text variant="wordmark">
                 {waitingHeadline}
               </Text>
               {waiting && waiting.length > 0 ? (
@@ -283,14 +280,18 @@ export function HomeTab(): React.JSX.Element {
                         accessibilityRole="button"
                         accessibilityLabel={t(titleKey)}
                         style={[styles.cardRow, !isLast && styles.cardDivider]}>
-                        <Icon size={15} color={CARD_INK_SOFT} strokeWidth={2} />
+                        <Icon
+                          size={15}
+                          color={colors.textSecondary}
+                          strokeWidth={2}
+                        />
                         <Text variant="body" style={styles.cardRowText}>
                           {t(titleKey)}
                         </Text>
                         <View style={styles.flex} />
                         <ChevronRight
                           size={16}
-                          color={CARD_INK_SOFT}
+                          color={colors.textTertiary}
                           strokeWidth={2}
                         />
                       </PressableScale>
@@ -366,12 +367,15 @@ const makeStyles = (c: Palette) =>
     greeting: {marginTop: spacing.xl},
     subline: {marginTop: spacing.xs},
     // New group. The card's height hugs its content (NO flex on the inner —
-    // that collapses to minHeight and clips the list). One solid brand fill.
+    // that collapses to minHeight and clips the list). One rung up the surface
+    // ladder from the canvas, rimmed like every other card in the app.
     card: {
       marginTop: spacing.xxl,
       borderRadius: radii.card,
       overflow: 'hidden',
-      backgroundColor: c.primary,
+      backgroundColor: c.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.divider,
     },
     // minHeight keeps the "all done" state from collapsing into a strip.
     cardInner: {
@@ -382,15 +386,15 @@ const makeStyles = (c: Palette) =>
     },
     cardList: {marginTop: spacing.xs},
     // All-done: a soft eyebrow above the personal sign-off, then the timer.
-    doneLead: {color: CARD_INK_SOFT, marginBottom: spacing.xs},
+    doneLead: {color: c.textSecondary, marginBottom: spacing.xs},
     doneTimer: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.xs + 2,
       marginTop: spacing.md,
     },
-    doneTimerLabel: {color: CARD_INK_SOFT},
-    countdown: {color: c.onInk, fontVariant: ['tabular-nums']},
+    doneTimerLabel: {color: c.textSecondary},
+    countdown: {color: c.ink, fontVariant: ['tabular-nums']},
     // Icon + title + chevron; paddingVertical clears a 44pt tap target.
     cardRow: {
       flexDirection: 'row',
@@ -398,13 +402,12 @@ const makeStyles = (c: Palette) =>
       gap: spacing.sm,
       paddingVertical: spacing.md,
     },
-    // MenuRow convention: hairline under every row but the last. Translucent
-    // ink so it reads on the gradient.
+    // MenuRow convention: hairline under every row but the last.
     cardDivider: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: 'rgba(245,245,245,0.35)',
+      borderBottomColor: c.divider,
     },
-    cardRowText: {color: CARD_INK_SOFT},
+    cardRowText: {color: c.ink},
     // New group; the two buttons stay a tight pair.
     actions: {marginTop: spacing.xxl, gap: spacing.sm + 2},
     // New group; the heading hugs its carousel.
