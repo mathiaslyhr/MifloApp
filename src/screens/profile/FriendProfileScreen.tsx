@@ -1,9 +1,18 @@
 /**
- * A friend's profile — the same page shape as the own Profile tab (identity,
- * streaks, log), built from their published results only: score level and
- * streaks, never answers (the wire cannot carry any). The Instagram-style
- * "Friends" status button is where unfriending lives; inviting to a party
- * sits beside it.
+ * A friend's profile — deliberately the same page as your own Profile tab, in
+ * the same order: identity, favourites, then a Career | Daily segment. What you
+ * can see about yourself, you can see about a friend, so there is nothing to
+ * learn twice. The two differences are both structural:
+ *
+ *   * The header carries the Instagram-style status pair (the quiet "Friends"
+ *     button is where unfriending lives, the invite is the page's one primary),
+ *     where your own header carries a rename and the friends line.
+ *   * Nothing is editable, and no empty state offers an action on their behalf.
+ *
+ * Career comes from rh_friend_career (0042) — the friend-gated twin of the own
+ * page's rh_match_history, since RLS keeps both rating_events and
+ * player_ratings select-own. Daily is built from their published results only:
+ * score level and streaks, never answers (the wire cannot carry any).
  *
  * Streak honesty: published rows carry the streak at publish time, so only
  * today's rows are trusted (matching friendStreak on the Friends tab) — a
@@ -11,13 +20,18 @@
  * 14 days, the same window the opt-in backfill can seed.
  */
 import React, {useCallback, useMemo, useState} from 'react';
-import {Alert, Pressable, StyleSheet, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {ChevronRight, Swords} from 'lucide-react-native';
-import {Button, Card, Skeleton, Text, toast} from '../../core/ui';
-import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {
+  Button,
+  Segmented,
+  Skeleton,
+  toast,
+  type SegmentedOption,
+} from '../../core/ui';
+import {spacing, useThemedStyles, type Palette} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import type {RootStackParamList} from '../../core/navigation';
 import {dateKeyFor, pastDateKeys, previousDateKey} from '../../games/scout/dailySeed';
@@ -29,6 +43,8 @@ import {
   fetchFriendResults,
   removeFriend,
 } from '../../core/social/socialService';
+import {fetchFriendCareer, type FriendCareer} from '../../core/rooms/rankedService';
+import {EMPTY_HISTORY} from '../../games/ranked-hattrick/history';
 import type {PublishedResult} from '../../core/social/types';
 import {inviteFriendToParty} from '../social/inviteToParty';
 import {MenuDetailScreen} from '../menu/MenuDetailScreen';
@@ -36,20 +52,25 @@ import {ProfileHeader} from './ProfileHeader';
 import {FavoritesShowcase} from './FavoritesShowcase';
 import {StreaksSection} from './StreaksSection';
 import {HistorySection, type HistoryDay} from './HistorySection';
+import {CareerSection} from './CareerSection';
 
 /** The log window: today plus the 13 days before it. */
 const LOG_DAYS = 14;
+
+/** The same two segments the own Profile tab has, and in the same order. */
+type Segment = 'career' | 'daily';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FriendProfile'>;
 
 export function FriendProfileScreen({navigation, route}: Props) {
   const {t} = useTranslation();
-  const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const {profile} = route.params;
   const todayKey = useMemo(() => dateKeyFor(new Date()), []);
 
+  const [segment, setSegment] = useState<Segment>('career');
   const [results, setResults] = useState<PublishedResult[] | null>(null);
+  const [career, setCareer] = useState<FriendCareer | null>(null);
   const [friendCount, setFriendCount] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -69,6 +90,23 @@ export function FriendProfileScreen({navigation, route}: Props) {
               isNetworkError(err) ? t('common.errorNetwork') : t('social.loadError'),
             );
             setResults(prev => prev ?? []);
+          }
+        });
+      // One round trip for the whole career, the same bargain the own page
+      // makes. On failure the toast is what tells the truth and the section
+      // falls back to its empty state, rather than a skeleton that never ends.
+      fetchFriendCareer(profile.userId)
+        .then(c => {
+          if (live) {
+            setCareer(c);
+          }
+        })
+        .catch(err => {
+          if (live) {
+            toast.error(
+              isNetworkError(err) ? t('common.errorNetwork') : t('social.loadError'),
+            );
+            setCareer(prev => prev ?? {value: null, history: EMPTY_HISTORY});
           }
         });
       // Absent quietly when unknown (or the RPC isn't deployed yet).
@@ -170,9 +208,14 @@ export function FriendProfileScreen({navigation, route}: Props) {
     return days;
   }, [results, todayKey]);
 
+  const segments: SegmentedOption<Segment>[] = [
+    {key: 'career', label: t('profile.segmentCareer')},
+    {key: 'daily', label: t('profile.segmentDailies')},
+  ];
+
   return (
     <MenuDetailScreen
-      title={profile.displayName}
+      title={t('profile.friendTitle', {name: profile.displayName})}
       onBack={() => navigation.goBack()}
       backLabel={t('common.back')}
       contentStyle={styles.body}>
@@ -202,6 +245,8 @@ export function FriendProfileScreen({navigation, route}: Props) {
         </View>
       </ProfileHeader>
 
+      {/* Above the segments, with the avatar and the name — favourites are
+          identity, exactly as on the own page. Read-only here: they're theirs. */}
       <FavoritesShowcase
         favorites={{
           playerId: profile.favoritePlayerId,
@@ -210,47 +255,34 @@ export function FriendProfileScreen({navigation, route}: Props) {
         }}
       />
 
-      <Card style={styles.h2hCard}>
-        <Pressable
-          onPress={() => navigation.navigate('HeadToHead', {profile})}
-          accessibilityRole="button"
-          style={styles.h2hRow}>
-          <Swords size={18} color={colors.ink} strokeWidth={2} />
-          <Text variant="body" style={styles.h2hLabel}>
-            {t('headToHead.title')}
-          </Text>
-          <ChevronRight size={18} color={colors.textTertiary} strokeWidth={2} />
-        </Pressable>
-      </Card>
+      <Segmented options={segments} value={segment} onChange={setSegment} />
 
-      {results === null ? (
+      {segment === 'career' ? (
+        <CareerSection
+          history={career?.history ?? null}
+          value={career?.value ?? null}
+          todayKey={todayKey}
+          empty={{kind: 'friend', name: profile.displayName}}
+        />
+      ) : results === null ? (
         <Skeleton height={168} />
       ) : (
-        <>
+        <View style={styles.body}>
           <StreaksSection cells={streakCells} />
           <HistorySection
             days={historyDays}
             todayKey={todayKey}
             emptyLabel={t('profile.friendLogEmpty')}
           />
-        </>
+        </View>
       )}
     </MenuDetailScreen>
   );
 }
 
-const makeStyles = (c: Palette) =>
+const makeStyles = (_c: Palette) =>
   StyleSheet.create({
     body: {gap: spacing.lg},
     // Half-width buttons side by side (the Following/Message row).
     action: {flex: 1},
-    // The Head-to-head entry point: a quiet tappable row into the record page.
-    h2hCard: {paddingHorizontal: spacing.lg, paddingVertical: spacing.xs},
-    h2hRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.md,
-      paddingVertical: spacing.md,
-    },
-    h2hLabel: {flex: 1, color: c.ink},
   });

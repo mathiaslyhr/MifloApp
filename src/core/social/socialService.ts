@@ -15,7 +15,6 @@ import i18n from '../i18n';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
 import {partitionRequests, type FriendRequestRow} from './requests';
-import type {HeadToHeadMatch} from './headToHead';
 import type {DailyGame} from '../daily/dailyLog';
 import type {
   FriendFeed,
@@ -598,43 +597,6 @@ export async function fetchFriends(): Promise<SocialProfile[]> {
   return (data ?? [])
     .map(mapProfile)
     .sort((a, b) => a.displayName.localeCompare(b.displayName));
-}
-
-// A head_to_head RPC row is jsonb — map it into the camelCase domain shape.
-function mapHeadToHead(row: any): HeadToHeadMatch {
-  return {
-    matchId: row.match_id,
-    gameType: row.game_type,
-    playedAt: row.played_at,
-    totalPlayers: row.total_players ?? 0,
-    mine: {
-      score: row.mine?.score ?? 0,
-      rank: row.mine?.rank ?? 0,
-      isWinner: row.mine?.is_winner ?? false,
-    },
-    theirs: {
-      score: row.theirs?.score ?? 0,
-      rank: row.theirs?.rank ?? 0,
-      isWinner: row.theirs?.is_winner ?? false,
-    },
-  };
-}
-
-/**
- * The online party games this device and `friendUserId` have played against
- * each other, newest first (0031). Friends-gated and two-party server-side, so
- * it only ever returns games both of you were in; other players' results stay
- * private. Pair with computeHeadToHead for the tally.
- */
-export async function fetchHeadToHead(
-  friendUserId: string,
-): Promise<HeadToHeadMatch[]> {
-  const {client} = await requireClient();
-  const {data, error} = await client.rpc('head_to_head', {p_friend: friendUserId});
-  if (error) {
-    throw error;
-  }
-  return ((data ?? []) as any[]).map(mapHeadToHead);
 }
 
 /** Which of my friends can receive an invite push. Existence only — tokens

@@ -60,6 +60,10 @@
   },
   "home": {
     "help": "Sådan spiller du",
+    "helpTitle": "Sådan spiller du",
+    "help1": "Fire fodboldopgaver lander hver dag. Spil dem selv og byg en stime op.",
+    "help2": "Spiller du med venner? Start en kamp og del koden, så deltager alle på deres egen telefon.",
+    "help3": "Kun én telefon? Stryg til højre på et spil under Spil for at sende den rundt i rummet i stedet.",
     "greetingMorning": "Godmorgen",
     "greetingAfternoon": "God eftermiddag",
     "greetingEvening": "Godaften",
@@ -83,6 +87,8 @@
     "today": "I dag",
     "playWithFriends": "Spil med venner",
     "friendsToday": "Venner i dag",
+    "friendsTodayEmpty": "Ingen venner har spillet endnu i dag.",
+    "friendsTodayNone": "Tilføj venner for at se, hvordan de klarer de daglige spil",
     "friendCardA11y": "{{name}}s daglige resultater",
     "addFriends": "Tilføj venner",
     "addFriendsBody": "Se hvordan venner klarer de daglige spil",
@@ -155,8 +161,8 @@
     "unreachable": "Kan ikke få invitationer",
     "unreachableToast": "{{name}} kan ikke få invitationer lige nu. Del koden i stedet.",
     "shareInstead": "Del koden i stedet",
-    "noFriends": "Ingen venner endnu. Tilføj venner under Venner, og inviter dem herfra.",
-    "noProfile": "Sæt Venner op først. Vælg dit navn under Venner, og inviter herfra.",
+    "noFriends": "Ingen venner endnu. Tilføj venner fra din profil, og inviter dem herfra.",
+    "noProfile": "Sæt din profil op først. Vælg dit navn der, og inviter herfra.",
     "errorLoad": "Kunne ikke hente dine venner.",
     "errorSend": "Kunne ikke sende invitationen. Prøv igen.",
     "errorRoom": "Invitationer virker kun, mens kampen er åben.",
@@ -182,8 +188,8 @@
     "friendlies": "Venskab",
     "competitive": "Konkurrence",
     "createMatch": "Opret kamp",
-    "joinWithCode": "Deltag med kode",
-    "together": "Sammen",
+    "joinMatch": "Deltag i kamp",
+    "multiplayer": "Multiplayer",
     "daily": "Daglig",
     "findMatch": "Find kamp",
     "leaderboard": "Rangliste",
@@ -201,26 +207,53 @@
     "comingSoon": "Kommer snart",
     "players1v1": "1v1",
     "playersSolo": "Solo",
-    "playersRange": "{{min}}-{{max}}"
+    "playersRange": "{{min}}-{{max}}",
+    "helpOneDevice": "Spil på én telefon",
+    "helpCompetitive": "Sådan virker Konkurrence",
+    "help": {
+      "oneDeviceTitle": "Spil på én telefon",
+      "oneDevice1": "Kun én telefon? Stryg til højre på et multiplayer spil for at få knappen \"1 enhed\" frem.",
+      "oneDevice2": "Tryk på den, og telefonen går rundt i rummet. Alle tager deres tur bag et \"Send telefonen videre\" skærmbillede, så ingen ser noget, de ikke må se.",
+      "oneDevice3": "Ingen kode, intet internet. Det virker i flytilstand.",
+      "competitiveTitle": "Sådan virker Konkurrence",
+      "competitive1": "Konkurrence er Hattrick, én mod én. En kamp går over fem baner, og den, der vinder flest, tager den.",
+      "competitive2": "I skiftes til at spille, og hver tur har to minutter på uret.",
+      "competitive3": "Vinder du, stiger din værdi. Taber du, falder den. Værdien er det eneste, du tager med dig, fra €1M op til €250M."
+    }
   },
   "rankedHattrick": {
     "finding": "Finder en kamp…",
     "findingBody": "Matcher dig med en modstander tæt på din rating.",
     "cancel": "Annullér",
-    "tips": [
-      "Dit ur løber kun, mens du holder et felt. At kigge på pladen er gratis.",
-      "Ingen ture her — I er begge på pladen samtidig.",
-      "Tryk for at låse et felt. Din modstander kan ikke røre et, du holder.",
-      "Tre på stribe vinder banen og scorer et mål.",
-      "En kamp er fem baner. 2-2 er uafgjort og står ved magt.",
-      "Et forkert svar giver feltet tilbage — lås det, du er sikker på.",
-      "Hold et felt for længe, og det ryger som en forbier.",
-      "Løber dit ur ud, er du ude resten af kampen.",
-      "Få din modstander til at brænde tid på de svære felter.",
-      "En forbier frigiver feltet for alle — også dig.",
-      "Der er ingen uafgjort-knap. At trække tiden brænder kun dit eget ur.",
-      "Slå en højere rated modstander for at stige hurtigere."
-    ],
+    "fact": {
+      "honourCount": {
+        "champions-league": "{{name}} har vundet Champions League {{times}} gange.",
+        "europa-league": "{{name}} har vundet Europa League {{times}} gange.",
+        "world-cup": "{{name}} har vundet VM {{times}} gange.",
+        "european-championship": "{{name}} har vundet EM {{times}} gange.",
+        "league-title": "{{name}} har vundet {{times}} mesterskaber.",
+        "domestic-cup": "{{name}} har vundet {{times}} pokaltitler.",
+        "ballon-dor": "{{name}} har vundet Ballon d'Or {{times}} gange.",
+        "golden-boot": "{{name}} har vundet {{times}} guldstøvler.",
+        "copa-america": "{{name}} har vundet Copa América {{times}} gange.",
+        "player-of-the-season": "{{name}} er blevet kåret til årets spiller {{times}} gange."
+      },
+      "honourYear": {
+        "champions-league": "{{name}} vandt Champions League i {{year}}.",
+        "europa-league": "{{name}} vandt Europa League i {{year}}.",
+        "world-cup": "{{name}} vandt VM i {{year}}.",
+        "european-championship": "{{name}} vandt EM i {{year}}.",
+        "ballon-dor": "{{name}} vandt Ballon d'Or i {{year}}.",
+        "copa-america": "{{name}} vandt Copa América i {{year}}."
+      },
+      "leagueTitle": "{{name}} vandt mesterskabet med {{club}} i {{year}}.",
+      "oneClub": "{{name}} spillede aldrig for andre klubber end {{club}}.",
+      "treble": "{{name}} var en del af {{club}}s triple i {{season}}.",
+      "teammates": "{{a}} og {{b}} var holdkammerater i {{club}}.",
+      "careerCountries": "{{name}} har spillet for klubber i {{countries}} forskellige lande.",
+      "managerSpell": "{{name}} var træner for {{club}} fra {{from}} til {{to}}.",
+      "managerSpellCurrent": "{{name}} har været træner for {{club}} siden {{from}}."
+    },
     "you": "Dig",
     "board": "Bane {{n}} af {{of}}",
     "yourTurn": "Din tur",
@@ -252,18 +285,6 @@
     "leftApp": "Din modstander forlod appen.",
     "leftAppShort": "forlod appen",
     "blurWarning": "Bliv i appen. Forlad den én gang til, og du taber."
-  },
-  "headToHead": {
-    "title": "Head to head",
-    "you": "Dig",
-    "byGame": "Efter spil",
-    "recent": "Seneste",
-    "draws": "{{count}} uafgjort",
-    "draws_plural": "{{count}} uafgjorte",
-    "youWon": "Du vandt",
-    "friendWon": "{{name}} vandt",
-    "drawn": "Uafgjort",
-    "empty": "Ingen spil med {{name}} endnu. Spil et onlinespil sammen, så dukker det op her."
   },
   "profile": {
     "title": "Profil",
@@ -300,7 +321,6 @@
     "errorFavorite": "Kunne ikke gemme din favorit. Prøv igen.",
     "segmentCareer": "Karriere",
     "segmentDailies": "Daglig",
-    "segmentFriends": "Venner",
     "recentMatches": "Seneste kampe",
     "unknownOpponent": "Ukendt",
     "outcome": {
@@ -312,10 +332,12 @@
     "record": "Resultat",
     "recordValue": "{{w}}V {{l}}T {{d}}U",
     "winRate": "Sejrsrate",
-    "towardTier": "{{pct}}% af vejen til {{tier}}",
-    "topTier": "Toppen af stigen",
+    "valueLabel": "Værdi",
     "careerEmptyTitle": "Ingen kampe endnu",
     "careerEmptyBody": "Spil en rangeret kamp, så begynder din værdi at stige her.",
+    "friendCareerEmptyTitle": "Ingen kampe endnu",
+    "friendCareerEmptyBody": "{{name}} har ikke spillet en rangeret kamp endnu.",
+    "friendTitle": "{{name}}s profil",
     "findMatch": "Find en kamp"
   },
   "games": {
@@ -378,8 +400,14 @@
         ]
       }
     },
-    "heatmap": {"title": "Possession", "tagline": "Erobr banen felt for felt"},
-    "matchday": {"title": "Matchday", "tagline": "Første fulde række vinder"},
+    "heatmap": {
+      "title": "Possession",
+      "tagline": "Erobr banen felt for felt"
+    },
+    "matchday": {
+      "title": "Matchday",
+      "tagline": "Første fulde række vinder"
+    },
     "journeyman": {
       "title": "Journeyman",
       "tagline": "Gæt spilleren på klubberne",
@@ -533,7 +561,7 @@
     "privacy": "Privatlivspolitik",
     "reportBug": "Rapportér en fejl",
     "oneDevice": "Én enhed",
-    "version": "Miflo v{{version}}",
+    "version": "MifloBall v{{version}}",
     "playerCount": "{{n}} fodboldspillere",
     "errorLink": "Kunne ikke åbne linket.",
     "profile": "Profil",
@@ -612,7 +640,9 @@
       "loading": "Uddeler roller…"
     },
     "round": "Runde {{round}} af {{total}}",
-    "roundsPicker": {"label": "Spørgsmål i spillet"},
+    "roundsPicker": {
+      "label": "Spørgsmål i spillet"
+    },
     "answer": {
       "hint": "Alle svarer på det samme spørgsmål. Hold det kort.",
       "placeholder": "Dit svar",
@@ -718,7 +748,9 @@
     "loading": "Indlæser runden…",
     "backToLobby": "Tilbage til lobbyen",
     "round": "Runde {{round}} af {{total}}",
-    "roundsPicker": {"label": "Runder i spillet"},
+    "roundsPicker": {
+      "label": "Runder i spillet"
+    },
     "topic": {
       "honours": "Titler",
       "nationality": "Nationalitet",
@@ -821,7 +853,9 @@
       "rule": "Hver runde stiller ét spørgsmål, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
     },
     "round": "Runde {{round}} af {{total}}",
-    "roundsPicker": {"label": "Spørgsmål i spillet"},
+    "roundsPicker": {
+      "label": "Spørgsmål i spillet"
+    },
     "prompt": {
       "club": "Nævn en spiller der har spillet for {{club}}",
       "nat": "Nævn en spiller fra {{country}}",
@@ -1087,47 +1121,129 @@
       "daily": "En ny liste kommer hver dag, den samme for alle."
     },
     "lists": {
-      "most-ballon-dor": {"title": "Flest Ballon d'Or-titler"},
-      "wc-top-scorers": {"title": "Flest VM-mål nogensinde"},
-      "wc-most-matches": {"title": "Flest VM-kampe nogensinde"},
-      "pl-top-scorers": {"title": "Flest mål i Premier League"},
-      "pl-most-appearances": {"title": "Flest kampe i Premier League"},
-      "pl-most-assists": {"title": "Flest assister i Premier League"},
-      "ucl-top-scorers": {"title": "Flest mål i Champions League"},
-      "record-transfers": {"title": "Dyreste transfers nogensinde"},
-      "intl-goals-men": {"title": "Flest A-landskampsmål (herrer)"},
-      "serie-a-top-scorers": {"title": "Flest mål i Serie A"},
-      "dk-most-caps": {"title": "Flest landskampe for Danmark"},
-      "dk-top-scorers": {"title": "Flest mål for Danmark"},
-      "last-10-ballon-dor": {"title": "De sidste 10 forskellige Ballon d'Or-vindere"},
-      "last-10-wc-golden-ball": {"title": "De sidste 10 forskellige vindere af VM's Golden Ball"},
-      "last-10-wc-golden-boot": {"title": "De sidste 10 VM-topscorere"},
-      "last-10-cl-winners": {"title": "De sidste 10 forskellige Champions League-vindere"},
-      "last-10-cl-managers": {"title": "De sidste 10 forskellige trænere, der vandt Champions League"},
-      "last-10-europa-winners": {"title": "De sidste 10 forskellige Europa League-vindere"},
-      "last-10-fa-cup-winners": {"title": "De sidste 10 forskellige FA Cup-vindere"},
-      "last-10-english-champions": {"title": "De sidste 10 forskellige engelske mestre"},
-      "last-10-pl-managers": {"title": "De sidste 10 forskellige trænere, der vandt Premier League"},
-      "last-10-serie-a-champions": {"title": "De sidste 10 forskellige Serie A-mestre"},
-      "last-10-pl-golden-boot": {"title": "De sidste 10 forskellige Premier League-topscorere"},
-      "last-10-pfa-poty": {"title": "De sidste 10 forskellige PFA Årets Spiller"},
-      "last-10-cl-final-cities": {"title": "De sidste 10 byer med Champions League-finalen"},
-      "last-10-superliga-champions": {"title": "De sidste 10 forskellige danske mestre"},
-      "last-10-african-poty": {"title": "De sidste 10 forskellige Årets Fodboldspiller i Afrika"},
-      "cl-titles-clubs": {"title": "Klubber med flest Champions League-titler"},
-      "english-titles-clubs": {"title": "Klubber med flest engelske mesterskaber"},
-      "serie-a-titles-clubs": {"title": "Klubber med flest italienske mesterskaber"},
-      "german-titles-clubs": {"title": "Klubber med flest tyske mesterskaber"},
-      "fa-cups-clubs": {"title": "Klubber med flest FA Cup-titler"},
-      "euro-titles-nations": {"title": "Lande med flest EM-titler"},
-      "pl-goals-season": {"title": "Flest mål i én Premier League-sæson"},
-      "wc-goals-tournament": {"title": "Flest mål ved én VM-slutrunde"},
-      "man-united-top-scorers": {"title": "Flest mål for Manchester United"},
-      "liverpool-top-scorers": {"title": "Flest mål for Liverpool"},
-      "real-madrid-top-scorers": {"title": "Flest mål for Real Madrid"},
-      "arsenal-top-scorers": {"title": "Flest mål for Arsenal"},
-      "man-united-appearances": {"title": "Flest kampe for Manchester United"},
-      "liverpool-appearances": {"title": "Flest kampe for Liverpool"}
+      "most-ballon-dor": {
+        "title": "Flest Ballon d'Or-titler"
+      },
+      "wc-top-scorers": {
+        "title": "Flest VM-mål nogensinde"
+      },
+      "wc-most-matches": {
+        "title": "Flest VM-kampe nogensinde"
+      },
+      "pl-top-scorers": {
+        "title": "Flest mål i Premier League"
+      },
+      "pl-most-appearances": {
+        "title": "Flest kampe i Premier League"
+      },
+      "pl-most-assists": {
+        "title": "Flest assister i Premier League"
+      },
+      "ucl-top-scorers": {
+        "title": "Flest mål i Champions League"
+      },
+      "record-transfers": {
+        "title": "Dyreste transfers nogensinde"
+      },
+      "intl-goals-men": {
+        "title": "Flest A-landskampsmål (herrer)"
+      },
+      "serie-a-top-scorers": {
+        "title": "Flest mål i Serie A"
+      },
+      "dk-most-caps": {
+        "title": "Flest landskampe for Danmark"
+      },
+      "dk-top-scorers": {
+        "title": "Flest mål for Danmark"
+      },
+      "last-10-ballon-dor": {
+        "title": "De sidste 10 forskellige Ballon d'Or-vindere"
+      },
+      "last-10-wc-golden-ball": {
+        "title": "De sidste 10 forskellige vindere af VM's Golden Ball"
+      },
+      "last-10-wc-golden-boot": {
+        "title": "De sidste 10 VM-topscorere"
+      },
+      "last-10-cl-winners": {
+        "title": "De sidste 10 forskellige Champions League-vindere"
+      },
+      "last-10-cl-managers": {
+        "title": "De sidste 10 forskellige trænere, der vandt Champions League"
+      },
+      "last-10-europa-winners": {
+        "title": "De sidste 10 forskellige Europa League-vindere"
+      },
+      "last-10-fa-cup-winners": {
+        "title": "De sidste 10 forskellige FA Cup-vindere"
+      },
+      "last-10-english-champions": {
+        "title": "De sidste 10 forskellige engelske mestre"
+      },
+      "last-10-pl-managers": {
+        "title": "De sidste 10 forskellige trænere, der vandt Premier League"
+      },
+      "last-10-serie-a-champions": {
+        "title": "De sidste 10 forskellige Serie A-mestre"
+      },
+      "last-10-pl-golden-boot": {
+        "title": "De sidste 10 forskellige Premier League-topscorere"
+      },
+      "last-10-pfa-poty": {
+        "title": "De sidste 10 forskellige PFA Årets Spiller"
+      },
+      "last-10-cl-final-cities": {
+        "title": "De sidste 10 byer med Champions League-finalen"
+      },
+      "last-10-superliga-champions": {
+        "title": "De sidste 10 forskellige danske mestre"
+      },
+      "last-10-african-poty": {
+        "title": "De sidste 10 forskellige Årets Fodboldspiller i Afrika"
+      },
+      "cl-titles-clubs": {
+        "title": "Klubber med flest Champions League-titler"
+      },
+      "english-titles-clubs": {
+        "title": "Klubber med flest engelske mesterskaber"
+      },
+      "serie-a-titles-clubs": {
+        "title": "Klubber med flest italienske mesterskaber"
+      },
+      "german-titles-clubs": {
+        "title": "Klubber med flest tyske mesterskaber"
+      },
+      "fa-cups-clubs": {
+        "title": "Klubber med flest FA Cup-titler"
+      },
+      "euro-titles-nations": {
+        "title": "Lande med flest EM-titler"
+      },
+      "pl-goals-season": {
+        "title": "Flest mål i én Premier League-sæson"
+      },
+      "wc-goals-tournament": {
+        "title": "Flest mål ved én VM-slutrunde"
+      },
+      "man-united-top-scorers": {
+        "title": "Flest mål for Manchester United"
+      },
+      "liverpool-top-scorers": {
+        "title": "Flest mål for Liverpool"
+      },
+      "real-madrid-top-scorers": {
+        "title": "Flest mål for Real Madrid"
+      },
+      "arsenal-top-scorers": {
+        "title": "Flest mål for Arsenal"
+      },
+      "man-united-appearances": {
+        "title": "Flest kampe for Manchester United"
+      },
+      "liverpool-appearances": {
+        "title": "Flest kampe for Liverpool"
+      }
     }
   },
   "legend": {
@@ -1155,8 +1271,6 @@
   },
   "settings": {
     "title": "Indstillinger",
-    "showWelcome": "Vis velkomstskærmen",
-    "showWelcomeDesc": "Se førstegangs-flowene uden at nulstille din profil",
     "language": "Sprog",
     "languageSystem": "Systemets standard",
     "languageEn": "English",
@@ -1170,12 +1284,12 @@
   "aboutPage": {
     "title": "Om Miflo",
     "blurb": "Miflo er sociale spil for venner i samme rum. Saml alle, vælg et spil og spil sammen.",
-    "disclaimer": "Miflo er ikke tilknyttet, sponsoreret af eller godkendt af nogen fodboldliga, klub, spiller eller fodboldforbund. Spillernavne og karrierestatistik er faktuelle oplysninger, der bruges til quizformål. Al grafik er originale illustrationer.",
-    "version": "Miflo v{{version}}"
+    "disclaimer": "Miflo er ikke tilknyttet, sponsoreret af eller godkendt af nogen fodboldliga, klub, spiller eller fodboldforbund. Spillernavne og karrierestatistik er faktuelle oplysninger, der bruges til quizformål. Klublogoer og flag bruges udelukkende til identifikation.",
+    "version": "MifloBall v{{version}}"
   },
   "howToPlay": {
     "title": "Sådan spiller du",
-    "intro": "De fleste Miflo-spil spilles sammen i samme rum: én telefon starter en kamp, og alle andre deltager med koden. Scout er en daglig solo-opgave, du kan spille på egen hånd.",
+    "intro": "De fleste Miflo spil spilles sammen i samme rum: én telefon starter en kamp, og resten deltager med koden. De fire daglige opgaver er dine helt egne, og et nyt sæt lander hver dag.",
     "step1Title": "Opret eller deltag i en kamp",
     "step1Desc": "Tryk på Opret kamp for at få en kode, eller Deltag i kamp og indtast en vens kode.",
     "step2Title": "Vælg et spil",

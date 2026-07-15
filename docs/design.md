@@ -1,8 +1,9 @@
 # Miflo Design System (Skin 1)
 
 The canonical spec for the app's look and feel. Colors live in
-`src/theme/colors.ts`, typography in `src/theme/typography.ts`, motion in
-`src/core/ui/`. If this document and the code disagree, fix one of them.
+`src/theme/colors.ts`, typography in `src/theme/typography.ts`, motion tokens in
+`src/theme/motion.ts` (the components that spend them are in `src/core/ui/`).
+If this document and the code disagree, fix one of them.
 
 ---
 
@@ -102,13 +103,58 @@ reveal. Use `<Text variant="...">` from `src/core/ui/Text.tsx`.
 
 ## 4. Motion and interaction
 
+### Motion tokens
+
+Every duration and easing in the app comes from `src/theme/motion.ts`. If you
+are about to type a number of milliseconds, use a token or add one.
+
+| Token | Value | For |
+| --- | --- | --- |
+| `duration.fast` | 150ms | Scrims and micro-fades. Shouldn't be noticed. |
+| `duration.base` | 200ms | The default: press, thumb slide, toast enter/exit. |
+| `duration.slow` | 300ms | Page-level: the tab cross-fade. |
+| `duration.pulse` | 700ms | One breath of an ambient loop (the skeleton). |
+| `easing.spring` | `cubic-bezier(0.34, 1.25, 0.64, 1)` | The press language. The control point above 1 gives the springy settle. |
+| `easing.out` | `cubic-bezier(0.23, 1, 0.32, 1)` | Decelerate, no overshoot. Things arriving or leaving. |
+| `easing.inOut` | `Easing.inOut(Easing.ease)` | Symmetric, where neither end is an event. |
+
+Keep UI motion at or under `base` unless it is page-level. Animate only
+transform and opacity.
+
+One-off character (the player-count ping's 1100ms travel, a toast's 4s dwell)
+stays a named local constant. A token with a single consumer is not a token.
+
+**No Reanimated, on purpose.** RN's `Animated` with `useNativeDriver: true`
+already runs transform and opacity on the UI thread, so Reanimated would buy the
+same frames for a new native dependency, a babel plugin, and an App Store build.
+Only the handful of `useNativeDriver: false` cases (SVG in `BootSplash`, width
+in `StepProgress` and the offside timer) could gain anything, and none of them
+need it. The easings are shared module-level `Easing.bezier` instances, which is
+safe: the sample table is precomputed at construction, the function is pure, and
+the native driver samples it into a frames array once when the animation starts.
+
+### Reduce Motion
+
+The contract, app-wide: **opacity survives, transforms and loops don't.**
+
+- Motion that conveys nothing (a scrim fading in, a press dimming) still plays.
+  Reduce Motion means reduce *motion*, not remove every transition.
+- Movement is dropped: no scale on press, no rise on the tab cross-fade, no
+  drop on a toast.
+- Ambient loops stop entirely and render at rest. An endless pulse or radiating
+  ring is the least welcome motion there is.
+- Read it from `src/core/ui/reduceMotion.ts`: `getReduceMotion()` in callbacks,
+  `useReduceMotion()` when the decision happens at render. The value is primed
+  once at app start and cached, so the read is **synchronous** — asking
+  `AccessibilityInfo` at mount answers after the first frame has already
+  animated, which is the whole thing we're trying to avoid.
+
 ### The press zoom
 
 Every tappable thing shares one interaction language: a springy shrink.
 
 - Press-in: scale to **0.96**, opacity to **0.9**. Press-out: back to 1.
-- Duration **200ms**, easing **cubic-bezier(0.34, 1.25, 0.64, 1)**. The
-  control point above 1 gives the springy settle.
+- `duration.base`, `easing.spring`.
 - Honors Reduce Motion: opacity only, scale pinned to 1.
 - Implementation: `src/core/ui/usePressScale.ts`, consumed through `Button`
   and `PressableScale`. Never use a bare `Pressable` for a control, and never
@@ -145,6 +191,28 @@ Page titles are part of the content, not a fixed bar:
   transparent bar; they stay put while the title scrolls away.
 - The bottom nav island is a solid surface pill with a divider rim.
 
+### The tab cross-fade
+
+Switching between Home, Daily, Play and Profile is a cross-fade, not a cut.
+
+- The arriving page fades up over `duration.slow` with `easing.out` and lifts
+  the last **8pt** into place. Reduce Motion keeps the fade, drops the lift.
+- All four pages stay mounted always (Fabric culls `display: none` subtrees and
+  detaches their gesture-handler recognizers, so hiding is done with opacity).
+- The incoming page fades in **on top of** the outgoing one, which stays fully
+  opaque until it's covered and then snaps to zero unseen. Fading both at once
+  would land them at ~0.5 together and the background would show through as a
+  dip. This depends on every page painting an opaque background, which `Screen`
+  does.
+- Touch and VoiceOver are gated on the tab state, not on the animation: the old
+  page goes inert the instant you tap, while it's still visible. A dead visible
+  page is fine; a tappable ghost under the live one is not.
+- Implementation: `src/screens/TabsScreen.tsx`.
+
+Pushed screens get their entrance from the native stack instead, and the stack's
+transition is deliberately left at the platform default (see the comment in
+`src/core/navigation/RootNavigator.tsx` before changing it).
+
 ### The boot loader
 
 On app open the brand ball draws the m: it travels the letter as a pen tip
@@ -173,3 +241,10 @@ Semantic wrapper in `src/core/haptics`: `tap` on press, `success` / `warning`
 - **Cards**: surface-1 fill, `divider` hairline, `radii.card` (16). Pills are
   fully round.
 - **No shadow on cards or buttons.** Elevation is brightness (principle 1).
+- **Segmented toggle**: a `surface2` pill track with equal-width segments and a
+  `primary` thumb that slides under the selected one (`duration.base`,
+  `easing.spring`); it lands without travelling on first paint and under Reduce
+  Motion. Labels cross-fade between `onInk` and `textSecondary` as two stacked
+  layers, because colour can't run on the native driver and swapping the tint
+  outright leaves a label unreadable over the thumb still sliding out from under
+  it. Implementation: `src/core/ui/Segmented.tsx`.

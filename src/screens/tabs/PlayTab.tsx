@@ -9,8 +9,6 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   ChevronRight,
-  Hash,
-  Plus,
   Smartphone,
   Swords,
   Users,
@@ -19,6 +17,8 @@ import {
 import {
   Button,
   Card,
+  CircleButton,
+  HowToPlayModal,
   NAV_HEIGHT,
   PressableScale,
   Screen,
@@ -58,7 +58,7 @@ const DAILY_ROUTE: Record<string, string> = {
   teamsheet: 'Teamsheet',
 };
 
-/** Roomless pass-and-play routes, revealed by the swipe on a Together card. */
+/** Roomless pass-and-play routes, revealed by the swipe on a multiplayer card. */
 const LOCAL_ROUTES: Record<string, string> = {
   hattrick: 'HattrickLocal',
   'red-card': 'RedCardLocal',
@@ -66,7 +66,7 @@ const LOCAL_ROUTES: Record<string, string> = {
   'cult-hero': 'CultHeroLocal',
 };
 
-const TOGETHER_GAMES = GAMES.filter(g => !g.single && g.available);
+const MULTIPLAYER_GAMES = GAMES.filter(g => !g.single && g.available);
 const DAILY_GAMES = GAMES.filter(g => g.single && g.available);
 
 type Mode = 'friendlies' | 'competitive';
@@ -75,12 +75,14 @@ type Mode = 'friendlies' | 'competitive';
  * plus a "Competitive" ranked lane, played with Hattrick (UI only for now). */
 export function PlayTab() {
   const {t} = useTranslation();
+  const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
   const {createParty} = useCreateParty();
   const scrollRef = useRef<ScrollView>(null);
   const [mode, setMode] = useState<Mode>('friendlies');
+  const [showHelp, setShowHelp] = useState(false);
 
   // The Value card only mounts on the Competitive segment. Warm its cache while
   // the user is still on Friendlies so the first switch paints from memory,
@@ -111,6 +113,8 @@ export function PlayTab() {
 
   const comingSoon = () => toast.neutral(t('play.comingSoon'));
 
+  const friendlies = mode === 'friendlies';
+
   const countText = (entry: GameEntry): string | undefined => {
     if (entry.single) {
       return undefined;
@@ -140,6 +144,28 @@ export function PlayTab() {
           <Text variant="wordmark" align="center">
             {t('tabs.play')}
           </Text>
+          {/* The corner explains whichever segment you're on, and its icon says
+              which: a phone for the one-phone trick, a ? for the ranked rules. */}
+          <View style={styles.headerRight}>
+            <CircleButton
+              size={30}
+              accessibilityLabel={
+                friendlies ? t('play.helpOneDevice') : t('play.helpCompetitive')
+              }
+              onPress={() => setShowHelp(true)}>
+              {friendlies ? (
+                <Smartphone
+                  size={15}
+                  color={colors.textSecondary}
+                  strokeWidth={2}
+                />
+              ) : (
+                <Text variant="label" color="secondary">
+                  ?
+                </Text>
+              )}
+            </CircleButton>
+          </View>
         </View>
 
         <View style={styles.toggle}>
@@ -156,22 +182,17 @@ export function PlayTab() {
         {mode === 'friendlies' ? (
           <>
             <View style={styles.ctaGroup}>
+              <Button label={t('play.createMatch')} onPress={() => createParty()} />
               <Button
-                label={t('play.createMatch')}
-                onPress={() => createParty()}
-                leadingIcon={<Plus size={18} color="#FFFFFF" strokeWidth={2} />}
-              />
-              <Button
-                label={t('play.joinWithCode')}
+                label={t('play.joinMatch')}
                 variant="outline"
                 onPress={() => navigation.navigate('Join' as never)}
-                leadingIcon={<Hash size={18} color="#A3A3A3" strokeWidth={2} />}
               />
             </View>
 
-            <SectionLabel>{t('play.together')}</SectionLabel>
+            <SectionLabel>{t('play.multiplayer')}</SectionLabel>
             <View style={styles.list}>
-              {TOGETHER_GAMES.map(entry => (
+              {MULTIPLAYER_GAMES.map(entry => (
                 <GameRow
                   key={entry.gameType}
                   title={t(`games.${entry.i18nKey}.title`)}
@@ -219,6 +240,25 @@ export function PlayTab() {
           </>
         )}
       </ScrollView>
+
+      <HowToPlayModal
+        visible={showHelp}
+        onClose={() => setShowHelp(false)}
+        title={friendlies ? t('play.help.oneDeviceTitle') : t('play.help.competitiveTitle')}
+        lines={
+          friendlies
+            ? [
+                {text: t('play.help.oneDevice1')},
+                {text: t('play.help.oneDevice2')},
+                {text: t('play.help.oneDevice3')},
+              ]
+            : [
+                {text: t('play.help.competitive1')},
+                {text: t('play.help.competitive2')},
+                {text: t('play.help.competitive3')},
+              ]
+        }
+      />
     </Screen>
   );
 }
@@ -489,6 +529,14 @@ const makeStyles = (c: Palette) =>
   StyleSheet.create({
     scroll: {flex: 1},
     header: {height: 44, alignItems: 'center', justifyContent: 'center'},
+    // Corner element pinned to the header row's right edge (TabPage's recipe).
+    headerRight: {
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      bottom: 0,
+      justifyContent: 'center',
+    },
     toggle: {marginTop: spacing.md},
     ctaGroup: {marginTop: spacing.xl, gap: spacing.sm},
     competitiveTop: {marginTop: spacing.xl},

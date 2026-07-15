@@ -23,7 +23,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {ChevronRight, Timer} from 'lucide-react-native';
-import {Button, CircleButton, PressableScale, Text} from '../../core/ui';
+import {Button, CircleButton, HowToPlayModal, PressableScale, Text} from '../../core/ui';
 import {radii, screenPadding, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {getCachedProfile, avatarUrlFor, fetchFriendsFeed} from '../../core/social/socialService';
 import {presenceFor} from '../../core/social/presence';
@@ -117,6 +117,10 @@ export function HomeTab(): React.JSX.Element {
   // The dailies not finished today (in DAILY_GAMES order); null until loaded.
   const [waiting, setWaiting] = useState<DailyGame[] | null>(null);
   const [friends, setFriends] = useState<FriendFeed[] | null>(null);
+  // Every friend, not just today's players: an empty carousel means "nobody
+  // has played yet" only if you actually have friends. Null until loaded.
+  const [friendCount, setFriendCount] = useState<number | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   const friendCardWidth = Math.round(width * CARD_FRACTION);
 
@@ -155,6 +159,7 @@ export function HomeTab(): React.JSX.Element {
           }
           const todayRows = (f: FriendFeed) =>
             f.results.filter(r => r.dateKey === today);
+          setFriendCount(feed.length);
           setFriends(
             feed
               .filter(f => todayRows(f).length > 0)
@@ -221,9 +226,10 @@ export function HomeTab(): React.JSX.Element {
   return (
     <TabPage
       right={
-        // TODO(sitemap): inert until the new help page exists — the corner
-        // claims its spot so the header doesn't shift when it goes live.
-        <CircleButton size={30} accessibilityLabel={t('home.help')}>
+        <CircleButton
+          size={30}
+          accessibilityLabel={t('home.help')}
+          onPress={() => setShowHelp(true)}>
           <Text variant="label" color="secondary">
             ?
           </Text>
@@ -322,39 +328,73 @@ export function HomeTab(): React.JSX.Element {
         />
       </View>
 
-      {/* Friends feed — heading + carousel. Hidden until there are friends
-          (no dead-end empty state on the new sitemap yet). */}
-      {friends !== null && friends.length > 0 ? (
+      {/* Friends feed — heading + carousel. The heading holds its place once
+          the feed has loaded, so the group doesn't pop in and out. An empty
+          carousel has two different answers: with friends, nobody has played
+          yet; with none, the line is the way in to go get some. */}
+      {friends !== null ? (
         <>
           <Text variant="section" style={styles.sectionHeading}>
             {t('home.friendsToday')}
           </Text>
-          <ScrollView
-            horizontal
-            style={styles.carousel}
-            contentContainerStyle={styles.carouselContent}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"
-            snapToAlignment="start"
-            snapToInterval={friendCardWidth + spacing.md}>
-            {friends.map(f => (
-              <FriendTodayCard
-                key={f.profile.userId}
-                name={f.profile.displayName}
-                avatarUri={avatarUrlFor(f.profile.avatarPath)}
-                presence={presenceFor(f.profile.lastSeenAt, Date.now())}
-                streak={friendStreak(f.results, todayKey)}
-                today={friendCellsFor(f.results, todayKey)}
-                width={friendCardWidth}
-                onPress={() =>
-                  navigation.navigate('FriendProfile', {profile: f.profile})
-                }
-              />
-            ))}
-          </ScrollView>
+          {friends.length === 0 ? (
+            friendCount === 0 ? (
+              <PressableScale
+                onPress={() => navigation.navigate('FriendsList')}
+                accessibilityRole="button"
+                accessibilityLabel={t('home.addFriends')}
+                style={styles.emptyRow}>
+                <Text variant="secondary" color="secondary">
+                  {t('home.friendsTodayNone')}
+                </Text>
+                <ChevronRight size={15} color={colors.textSecondary} />
+              </PressableScale>
+            ) : (
+              <Text variant="secondary" color="secondary">
+                {t('home.friendsTodayEmpty')}
+              </Text>
+            )
+          ) : (
+            <ScrollView
+              horizontal
+              style={styles.carousel}
+              contentContainerStyle={styles.carouselContent}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              decelerationRate="fast"
+              snapToAlignment="start"
+              snapToInterval={friendCardWidth + spacing.md}>
+              {friends.map(f => (
+                <FriendTodayCard
+                  key={f.profile.userId}
+                  name={f.profile.displayName}
+                  avatarUri={avatarUrlFor(f.profile.avatarPath)}
+                  presence={presenceFor(f.profile.lastSeenAt, Date.now())}
+                  streak={friendStreak(f.results, todayKey)}
+                  today={friendCellsFor(f.results, todayKey)}
+                  width={friendCardWidth}
+                  onPress={() =>
+                    navigation.navigate('FriendProfile', {profile: f.profile})
+                  }
+                />
+              ))}
+            </ScrollView>
+          )}
         </>
       ) : null}
+
+      {/* The front door's own orientation: what lands daily, and the two ways
+          to play with friends. The per-game rules live in each game's help. */}
+      <HowToPlayModal
+        visible={showHelp}
+        onClose={() => setShowHelp(false)}
+        title={t('home.helpTitle')}
+        lines={[
+          {text: t('home.help1')},
+          {text: t('home.help2')},
+          {text: t('home.help3')},
+        ]}
+      />
     </TabPage>
   );
 }
@@ -412,6 +452,14 @@ const makeStyles = (c: Palette) =>
     actions: {marginTop: spacing.xxl, gap: spacing.sm + 2},
     // New group; the heading hugs its carousel.
     sectionHeading: {marginTop: spacing.xxl, marginBottom: spacing.md},
+    // The empty line doubles as a button, so it reads as one: text left,
+    // chevron right, the row's own press target.
+    emptyRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: spacing.sm,
+    },
     // Full-bleed: cancel the screen's side padding so cards scroll
     // edge-to-edge, then re-inset so the first card lines up with the rest.
     carousel: {marginHorizontal: -screenPadding},

@@ -45,11 +45,11 @@ export type RootStackParamList = {
   Teamsheet: undefined;
   /** The old Menu tab's remainder, behind the Profile tab's hamburger. */
   Menu: undefined;
+  /** Every friend you have, opened from the Profile header's friends line.
+   * Holds the search, which is also the only way to add a friend by code. */
+  FriendsList: undefined;
   /** A friend's profile page — the full profile travels for instant paint. */
   FriendProfile: {profile: SocialProfile};
-  /** Head-to-head record against a friend in the online games — the friend's
-   * profile travels for instant paint of the tally header. */
-  HeadToHead: {profile: SocialProfile};
   Settings: undefined;
   HowToPlay: undefined;
   About: undefined;

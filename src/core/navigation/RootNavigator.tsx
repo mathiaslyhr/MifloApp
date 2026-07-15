@@ -24,8 +24,8 @@ import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
 import {TopBinsScreen} from '../../screens/TopBinsScreen';
 import {MenuScreen} from '../../screens/menu/MenuScreen';
+import {FriendsListScreen} from '../../screens/profile/FriendsListScreen';
 import {FriendProfileScreen} from '../../screens/profile/FriendProfileScreen';
-import {HeadToHeadScreen} from '../../screens/profile/HeadToHeadScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
 import {AboutScreen} from '../../screens/menu/AboutScreen';
@@ -40,6 +40,16 @@ export function RootNavigator() {
     // Swipe-back is off everywhere: every pushed page has an explicit back
     // button, and edge swipes kept colliding with in-page gestures (game
     // boards, swipe-reveal rows).
+    //
+    // The push transition is deliberately left at the platform default — this
+    // was evaluated during the motion-system pass and kept on purpose. iOS
+    // substitutes a cross-dissolve for the slide when Reduce Motion is on, but
+    // only while the transition IS the default; naming one explicitly
+    // (`animation: 'fade'`, `'slide_from_right'`, …) pins it and forfeits that
+    // accommodation for free. `presentation: 'modal'` is off the table for the
+    // same reason as swipe-back: it reintroduces the swipe-down dismiss this
+    // navigator turns off. Don't add transition options here without a reason
+    // that outweighs losing the OS behaviour.
     <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
       <Stack.Screen name="Tabs" component={TabsScreen} />
       <Stack.Screen name="Join" component={JoinScreen} />
@@ -63,8 +73,8 @@ export function RootNavigator() {
       <Stack.Screen name="Journeyman" component={JourneymanScreen} />
       <Stack.Screen name="Teamsheet" component={TeamsheetScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
+      <Stack.Screen name="FriendsList" component={FriendsListScreen} />
       <Stack.Screen name="FriendProfile" component={FriendProfileScreen} />
-      <Stack.Screen name="HeadToHead" component={HeadToHeadScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
       <Stack.Screen name="About" component={AboutScreen} />

@@ -1,13 +1,13 @@
 /**
  * The career page: what your € is, where it has been, and who moved it.
  *
- * One RPC (rh_match_history, 0041) feeds all three — the hero's tier and
- * standing, the curve, and the recent-matches list — so the whole segment costs
- * a single round trip and paints from the disk cache on frame one.
+ * One RPC (rh_match_history, 0041) feeds all three — the €, the curve, and the
+ * recent-matches list — so the whole segment costs a single round trip and
+ * paints from the disk cache on frame one.
  *
- * The hero deliberately reads its progress against the current TIER, not the
- * €250M cap: "62% of the way to First Team" is a goal you can act on this
- * evening, where "4% of the way to €250M" is noise.
+ * The tier ladder (Prospect → World class) is deliberately absent from this
+ * page for now: the € is the only thing the career states. `tiers.ts` still
+ * exists, tested, if the rungs come back.
  */
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -16,7 +16,6 @@ import {ArrowDownRight, ArrowUpRight} from 'lucide-react-native';
 import {Button, Card, Skeleton, Text} from '../../core/ui';
 import {fonts, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
-import {tierFor} from '../../games/ranked-hattrick/tiers';
 import {seriesFrom} from '../../games/ranked-hattrick/history';
 import {ValueChart} from './ValueChart';
 import {MatchHistory} from './MatchHistory';
@@ -30,15 +29,21 @@ type Props = {
   /** The € standing right now, from player_ratings — the authority. */
   value: number | null;
   todayKey: string;
-  onFindMatch: () => void;
+  /**
+   * Whose career this is. Your own empty state offers the ladder; a friend's
+   * can only be reported, since there's no match to find on their behalf.
+   */
+  empty:
+    | {kind: 'own'; onFindMatch: () => void}
+    | {kind: 'friend'; name: string};
 };
 
-export function CareerSection({history, value, todayKey, onFindMatch}: Props) {
+export function CareerSection({history, value, todayKey, empty}: Props) {
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
 
-  if (history === null || value === null) {
+  if (history === null) {
     return (
       <View style={styles.section}>
         <Skeleton height={232} />
@@ -54,24 +59,36 @@ export function CareerSection({history, value, todayKey, onFindMatch}: Props) {
   if (played === 0 || matches.length === 0) {
     return (
       <Card style={styles.emptyCard}>
-        <Text variant="section">{t('profile.careerEmptyTitle')}</Text>
-        <Text variant="secondary" color="secondary">
-          {t('profile.careerEmptyBody')}
+        <Text variant="section">
+          {empty.kind === 'own'
+            ? t('profile.careerEmptyTitle')
+            : t('profile.friendCareerEmptyTitle')}
         </Text>
-        <Button label={t('profile.findMatch')} onPress={onFindMatch} />
+        <Text variant="secondary" color="secondary">
+          {empty.kind === 'own'
+            ? t('profile.careerEmptyBody')
+            : t('profile.friendCareerEmptyBody', {name: empty.name})}
+        </Text>
+        {empty.kind === 'own' ? (
+          <Button label={t('profile.findMatch')} onPress={empty.onFindMatch} />
+        ) : null}
       </Card>
     );
   }
 
-  const {tier, next, progress} = tierFor(value);
+  // The authority is player_ratings, but the newest match's `value_after` is
+  // the same number by construction — so it stands in when the € hasn't landed
+  // yet (own page: a cached curve with no cached €) rather than blanking a
+  // career that plainly exists.
+  const standing = value ?? matches[0].valueAfter;
+
   const series = seriesFrom(matches);
   // The window's swing, not the last match's: the chart shows this whole span,
   // so the chip has to describe the same thing the eye is following.
-  const since = series.length > 0 ? value - series[0] : 0;
+  const since = series.length > 0 ? standing - series[0] : 0;
   const up = since >= 0;
   const DeltaIcon = up ? ArrowUpRight : ArrowDownRight;
   const deltaColor = up ? colors.success : colors.error;
-  const pct = Math.round(progress * 100);
 
   return (
     <View style={styles.section}>
@@ -79,10 +96,10 @@ export function CareerSection({history, value, todayKey, onFindMatch}: Props) {
         <View style={styles.heroTop}>
           <View style={styles.heroLead}>
             <Text variant="caption" color="muted">
-              {t(`play.tiers.${tier.key}`).toUpperCase()}
+              {t('profile.valueLabel').toUpperCase()}
             </Text>
             <Text style={[styles.value, {color: colors.primary}]}>
-              {formatValue(value)}
+              {formatValue(standing)}
             </Text>
           </View>
           {since !== 0 ? (
@@ -95,15 +112,7 @@ export function CareerSection({history, value, todayKey, onFindMatch}: Props) {
           ) : null}
         </View>
 
-        <ValueChart series={series} tierLabel={key => t(`play.tiers.${key}`)} />
-
-        <View style={styles.heroFoot}>
-          <Text variant="caption" color="tertiary">
-            {next
-              ? t('profile.towardTier', {tier: t(`play.tiers.${next.key}`), pct})
-              : t('profile.topTier')}
-          </Text>
-        </View>
+        <ValueChart series={series} />
       </Card>
 
       {/* Played / record / win rate — the three numbers a ladder is judged on. */}
@@ -165,11 +174,6 @@ const makeStyles = (c: Palette) =>
       fontVariant: ['tabular-nums'],
     },
     deltaChip: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
-    heroFoot: {
-      borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: c.divider,
-      paddingTop: spacing.md,
-    },
     recordCard: {
       flexDirection: 'row',
       alignItems: 'center',

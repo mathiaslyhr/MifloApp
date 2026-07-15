@@ -15,25 +15,19 @@ import {
 import {ensureSession} from '../core/supabase/client';
 import {getCachedProfile} from '../core/social/socialService';
 import {randomFootballName} from '../core/identity/funnyName';
+import {matchmakingFacts} from '../data/football';
 import {radii, spacing, useColors, useThemedStyles, type Palette} from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RankedSearch'>;
 
-/** Fisher–Yates — a fresh hint order each time you enter matchmaking. */
-function shuffle<T>(items: T[]): T[] {
-  const out = items.slice();
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
-}
+/** How many facts one visit to the queue draws. */
+const FACT_COUNT = 12;
 
 /**
  * Ranked matchmaking. Enqueues via `rh_find_match`; if paired immediately it
  * carries the roomId, otherwise it waits on the player's own queue row until the
- * server fills in a room. Leaving cancels the queue. A shuffle of ranked tips
- * rotates at the bottom while you wait.
+ * server fills in a room. Leaving cancels the queue. Football facts drawn from
+ * the dataset rotate at the bottom while you wait.
  */
 export function RankedSearchScreen({navigation}: Props) {
   const {t} = useTranslation();
@@ -42,19 +36,16 @@ export function RankedSearchScreen({navigation}: Props) {
   const insets = useSafeAreaInsets();
   const enteredRef = useRef(false);
 
-  // Shuffle the tips once per visit, then rotate through them.
-  const tips = useMemo(() => {
-    const pool = t('rankedHattrick.tips', {returnObjects: true});
-    return shuffle(Array.isArray(pool) ? (pool as string[]) : []);
-  }, [t]);
-  const [tipIndex, setTipIndex] = useState(0);
+  // Draw a fresh batch of facts once per visit, then rotate through them.
+  const facts = useMemo(() => matchmakingFacts(FACT_COUNT), []);
+  const [factIndex, setFactIndex] = useState(0);
   useEffect(() => {
-    if (tips.length === 0) {
+    if (facts.length === 0) {
       return;
     }
-    const id = setInterval(() => setTipIndex(n => (n + 1) % tips.length), 3800);
+    const id = setInterval(() => setFactIndex(n => (n + 1) % facts.length), 3800);
     return () => clearInterval(id);
-  }, [tips.length]);
+  }, [facts.length]);
 
   useEffect(() => {
     let unsub: (() => void) | undefined;
@@ -141,11 +132,11 @@ export function RankedSearchScreen({navigation}: Props) {
           />
         </View>
 
-        {tips.length > 0 ? (
-          <View style={[styles.tipCard, {marginBottom: insets.bottom + spacing.lg}]}>
+        {facts.length > 0 ? (
+          <View style={[styles.factCard, {marginBottom: insets.bottom + spacing.lg}]}>
             <Lightbulb size={16} color={colors.primaryInk} strokeWidth={2} />
-            <Text variant="secondary" color="secondary" style={styles.tipText}>
-              {tips[tipIndex]}
+            <Text variant="secondary" color="secondary" style={styles.factText}>
+              {t(facts[factIndex].key, facts[factIndex].params)}
             </Text>
           </View>
         ) : null}
@@ -160,8 +151,8 @@ const makeStyles = (c: Palette) =>
     center: {flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md},
     title: {marginTop: spacing.sm},
     cancel: {marginTop: spacing.xl, alignSelf: 'stretch'},
-    // The rotating hint, parked at the bottom.
-    tipCard: {
+    // The rotating fact, parked at the bottom.
+    factCard: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.sm,
@@ -173,5 +164,5 @@ const makeStyles = (c: Palette) =>
       paddingVertical: spacing.md,
       minHeight: 64,
     },
-    tipText: {flex: 1},
+    factText: {flex: 1},
   });

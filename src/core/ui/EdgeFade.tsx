@@ -25,7 +25,7 @@ import {
   type NativeSyntheticEvent,
 } from 'react-native';
 import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
-import {useColors} from '../../theme';
+import {motion, useColors} from '../../theme';
 
 /** Height of each edge-fade scrim. */
 export const EDGE_FADE_HEIGHT = 36;
@@ -48,9 +48,12 @@ export function useEdgeFades() {
       return;
     }
     shownRef.current = show;
+    // Deliberately not gated on Reduce Motion: this is an opacity-only scrim,
+    // which is the accommodation, not the thing being accommodated. RM users
+    // still want the separation to appear when content sits under the chrome.
     Animated.timing(value, {
       toValue: show ? 1 : 0,
-      duration: 150,
+      duration: motion.duration.fast,
       useNativeDriver: true,
     }).start();
   }

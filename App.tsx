@@ -8,7 +8,7 @@
  * @format
  */
 import React, {useEffect, useState} from 'react';
-import {Alert, StatusBar, StyleSheet, View} from 'react-native';
+import {Alert, StatusBar, StyleSheet} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {NavigationContainer} from '@react-navigation/native';
@@ -20,8 +20,12 @@ import {
   initFootballDataSync,
   maybeApplyPending,
 } from './src/data/football/remote/datasetSync';
-import {BootSplash, ErrorBoundary, ToastHost} from './src/core/ui';
-import {useWelcomePreview} from './src/core/ui/welcomePreview';
+import {
+  BootSplash,
+  ErrorBoundary,
+  ToastHost,
+  initReduceMotion,
+} from './src/core/ui';
 import {SearchProvider} from './src/games/shared/SearchScreen';
 import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
 import {SkinProvider, useSkin} from './src/theme';
@@ -48,12 +52,14 @@ import {TransferApprovalModal} from './src/screens/transfer/TransferApprovalModa
 import {Sentry, isSentryEnabled} from './src/core/observability/sentry';
 
 /**
- * Deep links into the app. Only the party join link is routable from outside
- * (https://miflo.dk/join/CODE via Associated Domains, miflo://join/CODE as the
- * custom-scheme fallback) — everything else stays app-internal.
+ * Deep links into the app. Only the party join and friend-code links are
+ * routable from outside (https://miflo.dk/join/CODE and /add/CODE via
+ * Associated Domains, miflo://… as the custom-scheme fallback) — everything
+ * else stays app-internal. The hosts here must stay in step with the
+ * associated-domains list in Miflo.entitlements.
  */
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: ['https://miflo.dk', 'miflo://'],
+  prefixes: ['https://miflo.dk', 'https://www.miflo.dk', 'miflo://'],
   config: {screens: {Join: 'join/:code', Tabs: 'add/:addCode'}},
 };
 
@@ -66,6 +72,11 @@ function App(): React.JSX.Element {
     // haptics-on are the synchronous defaults until these resolve).
     loadStoredLanguage().catch(() => {});
     loadHapticsPreference().catch(() => {});
+    // Cache the OS Reduce Motion flag once, up front, so components can read it
+    // synchronously on their first frame instead of animating and then finding
+    // out. Resolves long before the boot splash finishes. Also keeps us to one
+    // native query for the whole app.
+    initReduceMotion();
     // Learn when this user is actually free (recorded now and on every
     // foreground), then re-anchor the daily nudges to it. The callback is what
     // schedules: it runs after the session is recorded, so the very first
@@ -181,10 +192,6 @@ function AppBody(): React.JSX.Element {
 
 /** The full navigator app, rendered once there's a profile. */
 function NavigatorApp(): React.JSX.Element {
-  // Design preview: Settings can overlay the onboarding front door on top of
-  // the running app (close button returns here with nav state intact).
-  const welcomePreview = useWelcomePreview(s => s.visible);
-  const closeWelcomePreview = useWelcomePreview(s => s.close);
   return (
     <SearchProvider>
       <UpdateGate>
@@ -198,14 +205,6 @@ function NavigatorApp(): React.JSX.Element {
           <RootNavigator />
         </NavigationContainer>
       </UpdateGate>
-      {welcomePreview ? (
-        <View style={StyleSheet.absoluteFill}>
-          <WelcomeScreen
-            onClose={closeWelcomePreview}
-            onProfileReady={closeWelcomePreview}
-          />
-        </View>
-      ) : null}
       <ToastHost />
       {/* Old-phone approval prompt for a profile move — global so it pops
           wherever the owner is when their new phone asks. */}

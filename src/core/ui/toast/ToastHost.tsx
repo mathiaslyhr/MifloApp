@@ -17,9 +17,7 @@
  */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  AccessibilityInfo,
   Animated,
-  Easing,
   LayoutAnimation,
   PanResponder,
   Pressable,
@@ -29,6 +27,7 @@ import {
 import {Check, Info, X} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
+  motion,
   radii,
   spacing,
   useColors,
@@ -36,12 +35,9 @@ import {
   type Palette,
 } from '../../../theme';
 import {Text} from '../Text';
+import {getReduceMotion} from '../reduceMotion';
 import {Toast, ToastTone, useToastStore} from './toastStore';
 
-const ENTER_EASING = Easing.bezier(0.34, 1.25, 0.64, 1);
-const EXIT_EASING = Easing.bezier(0.23, 1, 0.32, 1);
-const ENTER_MS = 220;
-const EXIT_MS = 160;
 const CHIP_SIZE = 24;
 const CHIP_ICON = 14;
 
@@ -67,7 +63,7 @@ const toneChip = (
 });
 
 const EXPAND_ANIM = LayoutAnimation.create(
-  ENTER_MS,
+  motion.duration.base,
   LayoutAnimation.Types.easeInEaseOut,
   LayoutAnimation.Properties.opacity,
 );
@@ -169,7 +165,6 @@ function ToastCard({
   const translateY = useRef(new Animated.Value(-8)).current;
   const translateX = useRef(new Animated.Value(0)).current;
   const stack = useRef(new Animated.Value(depth)).current;
-  const reduceMotion = useRef(false);
   const leavingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isFront = depth === 0;
@@ -195,12 +190,12 @@ function ToastCard({
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 0,
-        duration: EXIT_MS,
+        duration: motion.duration.fast,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
-        toValue: reduceMotion.current ? 0 : -8,
-        duration: EXIT_MS,
+        toValue: getReduceMotion() ? 0 : -8,
+        duration: motion.duration.fast,
         useNativeDriver: true,
       }),
     ]).start(() => dismiss(toast.id));
@@ -217,14 +212,14 @@ function ToastCard({
       Animated.parallel([
         Animated.timing(translateX, {
           toValue: direction * 480,
-          duration: reduceMotion.current ? 0 : 200,
-          easing: EXIT_EASING,
+          duration: getReduceMotion() ? 0 : motion.duration.base,
+          easing: motion.easing.out,
           useNativeDriver: true,
         }),
         Animated.timing(opacity, {
           toValue: 0,
-          duration: 200,
-          easing: EXIT_EASING,
+          duration: motion.duration.base,
+          easing: motion.easing.out,
           useNativeDriver: true,
         }),
       ]).start(() => dismiss(toast.id));
@@ -238,23 +233,26 @@ function ToastCard({
   }, [clearTimer, close, toast.duration]);
 
   useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled()
-      .then(v => {
-        reduceMotion.current = v;
-      })
-      .catch(() => {});
-
+    // The drop is skipped under Reduce Motion; the fade always plays. Reading
+    // the flag synchronously is what makes that work: this used to kick off an
+    // async isReduceMotionEnabled() and then read the result in the same tick,
+    // before the promise could resolve, so the check was always false and the
+    // drop played regardless.
+    const reduceMotion = getReduceMotion();
+    if (reduceMotion) {
+      translateY.setValue(0);
+    }
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
-        duration: ENTER_MS,
-        easing: ENTER_EASING,
+        duration: motion.duration.base,
+        easing: motion.easing.spring,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
         toValue: 0,
-        duration: reduceMotion.current ? 0 : ENTER_MS,
-        easing: ENTER_EASING,
+        duration: reduceMotion ? 0 : motion.duration.base,
+        easing: motion.easing.spring,
         useNativeDriver: true,
       }),
     ]).start();
@@ -280,8 +278,8 @@ function ToastCard({
   useEffect(() => {
     Animated.timing(stack, {
       toValue: expanded ? 0 : depth,
-      duration: reduceMotion.current ? 0 : ENTER_MS,
-      easing: EXIT_EASING,
+      duration: getReduceMotion() ? 0 : motion.duration.base,
+      easing: motion.easing.out,
       useNativeDriver: true,
     }).start();
   }, [depth, expanded, stack]);

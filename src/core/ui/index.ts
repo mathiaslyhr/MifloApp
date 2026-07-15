@@ -14,7 +14,7 @@ export {SwipeReveal, closeOpenSwipeReveal} from './SwipeReveal';
 export {Card} from './Card';
 export {Skeleton} from './Skeleton';
 export {Tag} from './Tag';
-export {Segmented} from './Segmented';
+export {Segmented, segmentedThumb} from './Segmented';
 export type {SegmentedOption} from './Segmented';
 export {MenuRow} from './MenuRow';
 export type {MenuRowKind} from './MenuRow';
@@ -32,6 +32,11 @@ export {QrCard} from './QrCard';
 export {PressableScale} from './PressableScale';
 export {AppMark} from './AppMark';
 export {usePressScale} from './usePressScale';
+export {
+  getReduceMotion,
+  useReduceMotion,
+  initReduceMotion,
+} from './reduceMotion';
 export {ToastHost} from './toast/ToastHost';
 export {toast, useToast, useToastStore} from './toast/toastStore';
 export type {Toast, ToastTone, ToastOptions} from './toast/toastStore';

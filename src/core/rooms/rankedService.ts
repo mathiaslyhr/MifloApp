@@ -305,6 +305,49 @@ export async function fetchMatchHistory(limit?: number): Promise<MyHistory> {
   return historyFrom(data);
 }
 
+/** A friend's career: the same three things the own page reads, plus the €
+ * standing that the own page takes straight from player_ratings (RLS keeps
+ * that row unreadable from here, so the RPC carries it). */
+export type FriendCareer = {
+  /** Null when they have never been rated — no ranked match, no €. */
+  value: number | null;
+  history: MyHistory;
+};
+
+const EMPTY_CAREER: FriendCareer = {value: null, history: EMPTY_HISTORY};
+
+/**
+ * A friend's ranked career (rh_friend_career, 0042). Friend-gated server-side;
+ * a non-friend gets an exception rather than an empty page. Nothing is cached:
+ * the own career earns its disk cache by being opened constantly and needing a
+ * curve on frame one, while a friend's page is a visit — one round trip, a
+ * skeleton, done.
+ */
+export async function fetchFriendCareer(
+  userId: string,
+  limit?: number,
+): Promise<FriendCareer> {
+  if (!supabase) {
+    return EMPTY_CAREER;
+  }
+  const uid = await ensureSession();
+  if (!uid) {
+    return EMPTY_CAREER;
+  }
+  const {data, error} = await supabase.rpc('rh_friend_career', {
+    p_user_id: userId,
+    p_limit: limit ?? null,
+  });
+  if (error) {
+    throw error;
+  }
+  const value = (data as {value?: unknown} | null)?.value;
+  return {
+    value: typeof value === 'number' ? value : null,
+    history: historyFrom(data),
+  };
+}
+
 /** The history this device last showed. Same bargain as the Value cache above:
  * the chart paints a real curve on frame one instead of a shell, and the
  * network only ever corrects it. */

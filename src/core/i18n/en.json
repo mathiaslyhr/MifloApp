@@ -60,6 +60,10 @@
   },
   "home": {
     "help": "How it works",
+    "helpTitle": "How it works",
+    "help1": "Four football puzzles land every day. Play them on your own and build a streak.",
+    "help2": "Playing with friends? Start a match and share the code, and everyone joins on their own phone.",
+    "help3": "Only got one phone? Swipe right on a game under Play to pass it around the room instead.",
     "greetingMorning": "Good morning",
     "greetingAfternoon": "Good afternoon",
     "greetingEvening": "Good evening",
@@ -83,6 +87,8 @@
     "today": "Today",
     "playWithFriends": "Play with friends",
     "friendsToday": "Friends today",
+    "friendsTodayEmpty": "No friends have played yet today.",
+    "friendsTodayNone": "Add friends to see how they do daily",
     "friendCardA11y": "{{name}}'s daily results",
     "addFriends": "Add friends",
     "addFriendsBody": "See how friends do daily",
@@ -155,8 +161,8 @@
     "unreachable": "Can't get invites",
     "unreachableToast": "{{name}} can't get invites right now. Share the code instead.",
     "shareInstead": "Share the code instead",
-    "noFriends": "No friends yet. Add friends on the Friends tab, then invite them from here.",
-    "noProfile": "Set up Friends first. Pick your name on the Friends tab, then invite from here.",
+    "noFriends": "No friends yet. Add friends from your profile, then invite them from here.",
+    "noProfile": "Set up your profile first. Pick your name there, then invite from here.",
     "errorLoad": "Couldn't load your friends.",
     "errorSend": "Couldn't send the invite. Try again.",
     "errorRoom": "Invites only work while the match is in the lobby.",
@@ -182,8 +188,8 @@
     "friendlies": "Friendlies",
     "competitive": "Competitive",
     "createMatch": "Create match",
-    "joinWithCode": "Join with code",
-    "together": "Together",
+    "joinMatch": "Join match",
+    "multiplayer": "Multiplayer",
     "daily": "Daily",
     "findMatch": "Find match",
     "leaderboard": "Leaderboard",
@@ -201,26 +207,53 @@
     "comingSoon": "Coming soon",
     "players1v1": "1v1",
     "playersSolo": "Solo",
-    "playersRange": "{{min}}-{{max}}"
+    "playersRange": "{{min}}-{{max}}",
+    "helpOneDevice": "Play on one phone",
+    "helpCompetitive": "How Competitive works",
+    "help": {
+      "oneDeviceTitle": "Play on one phone",
+      "oneDevice1": "No second phone? Swipe right on any multiplayer game to reveal a 1 device button.",
+      "oneDevice2": "Tap it and the phone goes around the room. Everyone takes their turn behind a \"Pass the phone\" screen, so nobody sees anything they shouldn't.",
+      "oneDevice3": "No code, no internet. It works in flight mode.",
+      "competitiveTitle": "How Competitive works",
+      "competitive1": "Competitive is Hattrick, one on one. A match runs over five boards and whoever wins the most takes it.",
+      "competitive2": "You take turns, and each turn has two minutes on the clock.",
+      "competitive3": "Win and your value climbs, lose and it slips. Value is the only thing you carry, from €1M up to €250M."
+    }
   },
   "rankedHattrick": {
     "finding": "Finding a match…",
     "findingBody": "Pairing you with an opponent near your rating.",
     "cancel": "Cancel",
-    "tips": [
-      "Your clock only runs while you hold a square. Scanning the board is free.",
-      "No turns here — you're both on the board at the same time.",
-      "Tap to lock a square. Your opponent can't touch one you're holding.",
-      "Three in a row wins the board and scores a goal.",
-      "A match is five boards. A 2-2 is a real draw and stands.",
-      "A wrong answer hands the square back — lock the one you're sure of.",
-      "Hold a square too long and it slips away as a miss.",
-      "Run your clock to zero and you're out for the rest of the match.",
-      "Make your opponent burn time on the hard squares.",
-      "A miss frees the square for anyone — including you.",
-      "There's no tie button. Stalling only burns your own clock.",
-      "Beat a higher-rated opponent to climb the rankings faster."
-    ],
+    "fact": {
+      "honourCount": {
+        "champions-league": "{{name}} has won the Champions League {{times}} times.",
+        "europa-league": "{{name}} has won the Europa League {{times}} times.",
+        "world-cup": "{{name}} has won the World Cup {{times}} times.",
+        "european-championship": "{{name}} has won the European Championship {{times}} times.",
+        "league-title": "{{name}} has won {{times}} league titles.",
+        "domestic-cup": "{{name}} has won {{times}} domestic cups.",
+        "ballon-dor": "{{name}} has won the Ballon d'Or {{times}} times.",
+        "golden-boot": "{{name}} has won {{times}} Golden Boots.",
+        "copa-america": "{{name}} has won the Copa América {{times}} times.",
+        "player-of-the-season": "{{name}} has been named Player of the Season {{times}} times."
+      },
+      "honourYear": {
+        "champions-league": "{{name}} won the Champions League in {{year}}.",
+        "europa-league": "{{name}} won the Europa League in {{year}}.",
+        "world-cup": "{{name}} won the World Cup in {{year}}.",
+        "european-championship": "{{name}} won the European Championship in {{year}}.",
+        "ballon-dor": "{{name}} won the Ballon d'Or in {{year}}.",
+        "copa-america": "{{name}} won the Copa América in {{year}}."
+      },
+      "leagueTitle": "{{name}} won the league with {{club}} in {{year}}.",
+      "oneClub": "{{name}} never played for a club other than {{club}}.",
+      "treble": "{{name}} was part of the {{club}} treble side of {{season}}.",
+      "teammates": "{{a}} and {{b}} were teammates at {{club}}.",
+      "careerCountries": "{{name}} played for clubs in {{countries}} different countries.",
+      "managerSpell": "{{name}} managed {{club}} from {{from}} to {{to}}.",
+      "managerSpellCurrent": "{{name}} has managed {{club}} since {{from}}."
+    },
     "you": "You",
     "board": "Board {{n}} of {{of}}",
     "yourTurn": "Your turn",
@@ -253,18 +286,6 @@
     "leftAppShort": "left the app",
     "blurWarning": "Don't leave the app. Leave once more and you forfeit."
   },
-  "headToHead": {
-    "title": "Head to head",
-    "you": "You",
-    "byGame": "By game",
-    "recent": "Recent",
-    "draws": "{{count}} draw",
-    "draws_plural": "{{count}} draws",
-    "youWon": "You won",
-    "friendWon": "{{name}} won",
-    "drawn": "Drawn",
-    "empty": "No games with {{name}} yet. Play an online game together and it shows up here."
-  },
   "profile": {
     "title": "Profile",
     "menuA11y": "Menu",
@@ -281,7 +302,7 @@
     "errorRename": "Couldn't change your name. Try again.",
     "friendsButton": "Friends",
     "friendLogEmpty": "No games played yet.",
-    "showcaseTitle": "Showcase",
+    "showcaseTitle": "Favorites",
     "favoritePlayer": "Player",
     "favoriteClub": "Club",
     "favoriteNation": "Nation",
@@ -300,7 +321,6 @@
     "errorFavorite": "Couldn't save your favorite. Try again.",
     "segmentCareer": "Career",
     "segmentDailies": "Daily",
-    "segmentFriends": "Friends",
     "recentMatches": "Recent matches",
     "unknownOpponent": "Someone",
     "outcome": {
@@ -312,10 +332,12 @@
     "record": "Record",
     "recordValue": "{{w}}W {{l}}L {{d}}D",
     "winRate": "Win rate",
-    "towardTier": "{{pct}}% of the way to {{tier}}",
-    "topTier": "The top of the ladder",
+    "valueLabel": "Value",
     "careerEmptyTitle": "No matches yet",
     "careerEmptyBody": "Play a ranked match and your value starts its climb here.",
+    "friendCareerEmptyTitle": "No matches yet",
+    "friendCareerEmptyBody": "{{name}} hasn't played a ranked match yet.",
+    "friendTitle": "{{name}}'s profile",
     "findMatch": "Find a match"
   },
   "games": {
@@ -378,8 +400,14 @@
         ]
       }
     },
-    "heatmap": {"title": "Possession", "tagline": "Claim the pitch"},
-    "matchday": {"title": "Matchday", "tagline": "First full row wins"},
+    "heatmap": {
+      "title": "Possession",
+      "tagline": "Claim the pitch"
+    },
+    "matchday": {
+      "title": "Matchday",
+      "tagline": "First full row wins"
+    },
     "journeyman": {
       "title": "Journeyman",
       "tagline": "Guess who from the clubs",
@@ -533,7 +561,7 @@
     "privacy": "Privacy Policy",
     "reportBug": "Report a bug",
     "oneDevice": "One device",
-    "version": "Miflo v{{version}}",
+    "version": "MifloBall v{{version}}",
     "playerCount": "{{n}} footballers",
     "errorLink": "Couldn't open the link.",
     "profile": "Profile",
@@ -612,7 +640,9 @@
       "loading": "Dealing roles…"
     },
     "round": "Round {{round}} of {{total}}",
-    "roundsPicker": {"label": "Questions this game"},
+    "roundsPicker": {
+      "label": "Questions this game"
+    },
     "answer": {
       "hint": "Everyone answers the same question. Keep it short.",
       "placeholder": "Your answer",
@@ -718,7 +748,9 @@
     "loading": "Loading the round…",
     "backToLobby": "Back to lobby",
     "round": "Round {{round}} of {{total}}",
-    "roundsPicker": {"label": "Rounds this game"},
+    "roundsPicker": {
+      "label": "Rounds this game"
+    },
     "topic": {
       "honours": "Honours",
       "nationality": "Nationality",
@@ -821,7 +853,9 @@
       "rule": "Every round asks one question and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
     },
     "round": "Round {{round}} of {{total}}",
-    "roundsPicker": {"label": "Questions this game"},
+    "roundsPicker": {
+      "label": "Questions this game"
+    },
     "prompt": {
       "club": "Name a player who has played for {{club}}",
       "nat": "Name a player from {{country}}",
@@ -1087,47 +1121,129 @@
       "daily": "A new list drops every day, the same for everyone."
     },
     "lists": {
-      "most-ballon-dor": {"title": "Most Ballon d'Or wins"},
-      "wc-top-scorers": {"title": "World Cup all-time top scorers"},
-      "wc-most-matches": {"title": "Most World Cup matches played"},
-      "pl-top-scorers": {"title": "Premier League all-time top scorers"},
-      "pl-most-appearances": {"title": "Most Premier League appearances"},
-      "pl-most-assists": {"title": "Most Premier League assists"},
-      "ucl-top-scorers": {"title": "Champions League all-time top scorers"},
-      "record-transfers": {"title": "Most expensive transfers ever"},
-      "intl-goals-men": {"title": "Most international goals (men)"},
-      "serie-a-top-scorers": {"title": "Serie A all-time top scorers"},
-      "dk-most-caps": {"title": "Most caps for Denmark"},
-      "dk-top-scorers": {"title": "Denmark's all-time top scorers"},
-      "last-10-ballon-dor": {"title": "The last 10 different Ballon d'Or winners"},
-      "last-10-wc-golden-ball": {"title": "The last 10 different World Cup Golden Ball winners"},
-      "last-10-wc-golden-boot": {"title": "The last 10 World Cup top scorers"},
-      "last-10-cl-winners": {"title": "The last 10 different Champions League winners"},
-      "last-10-cl-managers": {"title": "The last 10 different Champions League winning managers"},
-      "last-10-europa-winners": {"title": "The last 10 different Europa League winners"},
-      "last-10-fa-cup-winners": {"title": "The last 10 different FA Cup winners"},
-      "last-10-english-champions": {"title": "The last 10 different English champions"},
-      "last-10-pl-managers": {"title": "The last 10 different Premier League winning managers"},
-      "last-10-serie-a-champions": {"title": "The last 10 different Serie A champions"},
-      "last-10-pl-golden-boot": {"title": "The last 10 different Premier League top scorers"},
-      "last-10-pfa-poty": {"title": "The last 10 different PFA Players of the Year"},
-      "last-10-cl-final-cities": {"title": "The last 10 Champions League final cities"},
-      "last-10-superliga-champions": {"title": "The last 10 different Danish champions"},
-      "last-10-african-poty": {"title": "The last 10 different African Footballers of the Year"},
-      "cl-titles-clubs": {"title": "Clubs with most Champions League titles"},
-      "english-titles-clubs": {"title": "Clubs with most English league titles"},
-      "serie-a-titles-clubs": {"title": "Clubs with most Italian league titles"},
-      "german-titles-clubs": {"title": "Clubs with most German league titles"},
-      "fa-cups-clubs": {"title": "Clubs with most FA Cups"},
-      "euro-titles-nations": {"title": "Countries with most European Championships"},
-      "pl-goals-season": {"title": "Most goals in one Premier League season"},
-      "wc-goals-tournament": {"title": "Most goals at a single World Cup"},
-      "man-united-top-scorers": {"title": "Manchester United's all-time top scorers"},
-      "liverpool-top-scorers": {"title": "Liverpool's all-time top scorers"},
-      "real-madrid-top-scorers": {"title": "Real Madrid's all-time top scorers"},
-      "arsenal-top-scorers": {"title": "Arsenal's all-time top scorers"},
-      "man-united-appearances": {"title": "Most appearances for Manchester United"},
-      "liverpool-appearances": {"title": "Most appearances for Liverpool"}
+      "most-ballon-dor": {
+        "title": "Most Ballon d'Or wins"
+      },
+      "wc-top-scorers": {
+        "title": "World Cup all-time top scorers"
+      },
+      "wc-most-matches": {
+        "title": "Most World Cup matches played"
+      },
+      "pl-top-scorers": {
+        "title": "Premier League all-time top scorers"
+      },
+      "pl-most-appearances": {
+        "title": "Most Premier League appearances"
+      },
+      "pl-most-assists": {
+        "title": "Most Premier League assists"
+      },
+      "ucl-top-scorers": {
+        "title": "Champions League all-time top scorers"
+      },
+      "record-transfers": {
+        "title": "Most expensive transfers ever"
+      },
+      "intl-goals-men": {
+        "title": "Most international goals (men)"
+      },
+      "serie-a-top-scorers": {
+        "title": "Serie A all-time top scorers"
+      },
+      "dk-most-caps": {
+        "title": "Most caps for Denmark"
+      },
+      "dk-top-scorers": {
+        "title": "Denmark's all-time top scorers"
+      },
+      "last-10-ballon-dor": {
+        "title": "The last 10 different Ballon d'Or winners"
+      },
+      "last-10-wc-golden-ball": {
+        "title": "The last 10 different World Cup Golden Ball winners"
+      },
+      "last-10-wc-golden-boot": {
+        "title": "The last 10 World Cup top scorers"
+      },
+      "last-10-cl-winners": {
+        "title": "The last 10 different Champions League winners"
+      },
+      "last-10-cl-managers": {
+        "title": "The last 10 different Champions League winning managers"
+      },
+      "last-10-europa-winners": {
+        "title": "The last 10 different Europa League winners"
+      },
+      "last-10-fa-cup-winners": {
+        "title": "The last 10 different FA Cup winners"
+      },
+      "last-10-english-champions": {
+        "title": "The last 10 different English champions"
+      },
+      "last-10-pl-managers": {
+        "title": "The last 10 different Premier League winning managers"
+      },
+      "last-10-serie-a-champions": {
+        "title": "The last 10 different Serie A champions"
+      },
+      "last-10-pl-golden-boot": {
+        "title": "The last 10 different Premier League top scorers"
+      },
+      "last-10-pfa-poty": {
+        "title": "The last 10 different PFA Players of the Year"
+      },
+      "last-10-cl-final-cities": {
+        "title": "The last 10 Champions League final cities"
+      },
+      "last-10-superliga-champions": {
+        "title": "The last 10 different Danish champions"
+      },
+      "last-10-african-poty": {
+        "title": "The last 10 different African Footballers of the Year"
+      },
+      "cl-titles-clubs": {
+        "title": "Clubs with most Champions League titles"
+      },
+      "english-titles-clubs": {
+        "title": "Clubs with most English league titles"
+      },
+      "serie-a-titles-clubs": {
+        "title": "Clubs with most Italian league titles"
+      },
+      "german-titles-clubs": {
+        "title": "Clubs with most German league titles"
+      },
+      "fa-cups-clubs": {
+        "title": "Clubs with most FA Cups"
+      },
+      "euro-titles-nations": {
+        "title": "Countries with most European Championships"
+      },
+      "pl-goals-season": {
+        "title": "Most goals in one Premier League season"
+      },
+      "wc-goals-tournament": {
+        "title": "Most goals at a single World Cup"
+      },
+      "man-united-top-scorers": {
+        "title": "Manchester United's all-time top scorers"
+      },
+      "liverpool-top-scorers": {
+        "title": "Liverpool's all-time top scorers"
+      },
+      "real-madrid-top-scorers": {
+        "title": "Real Madrid's all-time top scorers"
+      },
+      "arsenal-top-scorers": {
+        "title": "Arsenal's all-time top scorers"
+      },
+      "man-united-appearances": {
+        "title": "Most appearances for Manchester United"
+      },
+      "liverpool-appearances": {
+        "title": "Most appearances for Liverpool"
+      }
     }
   },
   "legend": {
@@ -1155,8 +1271,6 @@
   },
   "settings": {
     "title": "Settings",
-    "showWelcome": "Show welcome screen",
-    "showWelcomeDesc": "Preview the first-launch flows without resetting your profile",
     "language": "Language",
     "languageSystem": "System default",
     "languageEn": "English",
@@ -1170,12 +1284,12 @@
   "aboutPage": {
     "title": "About Miflo",
     "blurb": "Miflo is social party games for friends in the same room. Gather everyone, pick a game and play together.",
-    "disclaimer": "Miflo is not affiliated with, sponsored by, or endorsed by any football league, club, player or governing body. Player names and career statistics are factual information used for trivia purposes. All artwork is original illustration.",
-    "version": "Miflo v{{version}}"
+    "disclaimer": "Miflo is not affiliated with, sponsored by, or endorsed by any football league, club, player or governing body. Player names and career statistics are factual information used for trivia purposes. Club crests and flags are used for identification only.",
+    "version": "MifloBall v{{version}}"
   },
   "howToPlay": {
     "title": "How to play",
-    "intro": "Most Miflo games are played together in the same room: one phone starts a match and everyone else joins with the code. Scout is a solo daily puzzle you can play on your own.",
+    "intro": "Most Miflo games are played together in the same room: one phone starts a match and everyone else joins with the code. The four daily puzzles are yours alone, and a fresh set lands every day.",
     "step1Title": "Create or join a match",
     "step1Desc": "Tap Create match to get a code, or Join match and type a friend's code.",
     "step2Title": "Pick a game",
@@ -1186,7 +1300,7 @@
     "title": "One device",
     "intro": "Several of the games can also be played together on a single phone. No internet needed, so it works on a plane or anywhere offline.",
     "step1Title": "Swipe right on the game",
-    "step1Desc": "On the Games tab, swipe right on any game that offers 1 device play.",
+    "step1Desc": "On the Play tab, swipe right on any game that offers 1 device play.",
     "step2Title": "Tap the phone button",
     "step2Desc": "A round 1 device button appears on the left of the card. Tap it to start.",
     "step3Title": "Pass the phone around",

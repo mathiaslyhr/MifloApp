@@ -137,7 +137,18 @@ const makeStyles = (c: Palette) =>
       alignItems: 'flex-end',
       gap: 2,
     },
-    wordmarkMark: {marginBottom: 5},
+    /**
+     * The mark is an SVG in a View, so the row's `flex-end` aligns its BOX
+     * bottom with the text's — and the mark's box bottom is the purple ball,
+     * which hangs below the m's feet. Box-aligning therefore lifts the m off
+     * the line and it reads as floating beside "ifloball".
+     *
+     * This drop lands the m's feet ON the text baseline, leaving the ball as a
+     * small descender — which is the icon's own geometry (the ball is the right
+     * leg's terminal, below the baseline). Measured off a @3x render, not
+     * guessed: at marginBottom 5 the feet sat 5 device px (1.67pt) high.
+     */
+    wordmarkMark: {marginBottom: 3.33},
     // Big gap = a new group (wordmark → text, text → CTA). Small gaps below
     // keep each group's own members tight so the three read as three.
     groupGap: {marginTop: spacing.xxl},

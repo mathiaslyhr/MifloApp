@@ -53,6 +53,26 @@ function wereTeammates(a: Footballer, b: Footballer): boolean {
 }
 
 /**
+ * The clubs where two footballers were actually teammates — same club, spells
+ * overlapping in time. Sharing a club at different times doesn't count, so this
+ * is the club a "they played together" statement can safely name.
+ */
+export function sharedClubsOf(a: Footballer, b: Footballer): string[] {
+  const shared = new Set<string>();
+  if (a.id === b.id) {
+    return [];
+  }
+  for (const sa of a.clubs) {
+    for (const sb of b.clubs) {
+      if (sa.clubId === sb.clubId && spellsOverlap(sa, sb)) {
+        shared.add(sa.clubId);
+      }
+    }
+  }
+  return [...shared];
+}
+
+/**
  * Did a footballer play under a manager? True when one of the player's club
  * spells overlaps a managerial spell at the SAME club. National-team spells are
  * ignored — we can't tell from `nationality` when a player was actually called

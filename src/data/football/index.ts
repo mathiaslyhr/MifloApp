@@ -10,6 +10,8 @@ export type {Category} from './categories';
 export {FOOTBALLERS} from './footballers';
 export {MANAGERS} from './managers';
 export {CONTINENTS, continentOf} from './continents';
+export {matchmakingFacts} from './facts';
+export type {Fact} from './facts';
 export {TREBLE_SQUADS, TREBLE_WINNER_IDS} from './trebles';
 export type {TrebleSquad} from './trebles';
 export {

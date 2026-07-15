@@ -20,3 +20,4 @@ export {spacing, space, screenPadding, minTapTarget} from './spacing';
 export type {SpacingToken} from './spacing';
 export {fonts, type} from './typography';
 export type {TypeVariant} from './typography';
+export {motion} from './motion';

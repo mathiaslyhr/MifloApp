@@ -1,29 +1,28 @@
 /**
- * Profile — the career page. Who you are, what your € has done, and everyone
- * you play with.
+ * Profile — your career page. Who you are, and what your € has done.
  *
- * The identity block stays pinned above a three-way segment, Instagram-style:
+ * The identity block stays pinned above a two-way segment, Instagram-style:
  * the header is the constant, the body swaps.
  *
- *   Career  — the € curve, the record, and the ranked matches behind it.
- *   Dailies — streaks and the full archive (which had no home at all after the
- *             sitemap reset; the Daily tab only ever shows today).
- *   Friends — requests, the list, remove, and add-by-code.
+ *   Career — the € curve, the record, and the ranked matches behind it.
+ *   Daily  — streaks and the full archive (which had no home at all after the
+ *            sitemap reset; the Daily tab only ever shows today).
  *
- * Friends live here because the Friends tab is gone. Rather than bury them
- * behind a "See all" row, they get equal billing with the career, and a pending
- * request badges the Profile tab from the shell — so nothing is lost by their
- * not having a tab of their own.
+ * Friends are deliberately NOT a section here. Home already shows how they did
+ * today, so repeating the feed would be the same answer twice; the header's
+ * friends line opens the list instead, which is where browsing, adding and your
+ * own code live. What does stay is the pending-requests block: it renders
+ * nothing until someone is waiting, and it's what the Profile tab's badge
+ * promises — a badge that led nowhere would be a lie.
  *
  * Answers are the owner's privilege: they ride only on days that are closed
  * (see `closed` below), so a live puzzle can never spoil itself.
  */
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import type {ScrollView} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {Menu, Search} from 'lucide-react-native';
+import {Menu} from 'lucide-react-native';
 import {
   Button,
   Card,
@@ -40,20 +39,20 @@ import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {isBackendConfigured} from '../../core/config';
 import {isNetworkError} from '../../core/rooms/roomService';
 import {useAppNavigation} from '../../core/navigation';
-import {dateKeyFor, pastDateKeys} from '../../games/scout/dailySeed';
+import {dateKeyFor} from '../../games/scout/dailySeed';
 import {optInToSocial} from '../../core/social/onboarding';
 import {flushOutbox} from '../../core/social/outbox';
-import {refreshFriendRequests} from '../../core/social/requestsStore';
+import {refreshFriendRequests, useRequestsStore} from '../../core/social/requestsStore';
 import {
   avatarUrlFor,
-  fetchFriendsFeed,
+  fetchFriends,
   fetchMyProfile,
   getCachedProfile,
   isNameTakenError,
   setDisplayName,
   setFavorites,
 } from '../../core/social/socialService';
-import type {FriendFeed, SocialProfile} from '../../core/social/types';
+import type {SocialProfile} from '../../core/social/types';
 import {
   fetchMatchHistory,
   fetchMyValue,
@@ -72,41 +71,31 @@ import {FavoritesShowcase, type Favorites} from '../profile/FavoritesShowcase';
 import {StreaksSection} from '../profile/StreaksSection';
 import {HistorySection, type HistoryDay} from '../profile/HistorySection';
 import {CareerSection} from '../profile/CareerSection';
-import {FriendsSection} from '../profile/FriendsSection';
-import {CodeBlock} from '../social/CodeBlock';
+import {RequestsSection} from '../social/RequestsSection';
+import {useSendFriendRequest} from '../social/useSendFriendRequest';
 import {TabPage} from './TabPage';
 
-/** The friends feed window: today plus the six days before it. */
-const WEEK_DAYS = 7;
-
-export type ProfileSegment = 'career' | 'dailies' | 'friends';
+export type ProfileSegment = 'career' | 'daily';
 
 type Props = {
   /** The tab shell's focus signal — all four tab pages stay mounted. */
   isActive?: boolean;
   /** A friend code from the miflo.dk/add/CODE deep link. */
   addCode?: string;
-  /** Deep links and pushes that mean "friends" open on that segment. */
-  initialSegment?: ProfileSegment;
 };
 
-export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
+export function ProfileTab({isActive = true, addCode}: Props) {
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const navigation = useAppNavigation();
-  const scrollRef = useRef<ScrollView>(null);
   const isFocused = useIsFocused();
 
   const todayKey = useMemo(() => dateKeyFor(new Date()), []);
-  const weekKeys = useMemo(
-    () => [...pastDateKeys(todayKey, WEEK_DAYS - 1).reverse(), todayKey],
-    [todayKey],
-  );
 
-  const [segment, setSegment] = useState<ProfileSegment>(initialSegment ?? 'career');
+  const [segment, setSegment] = useState<ProfileSegment>('career');
   const [profile, setProfile] = useState<SocialProfile | null | 'loading'>('loading');
-  const [feed, setFeed] = useState<FriendFeed[] | null>(null);
+  const [friends, setFriends] = useState<SocialProfile[] | null>(null);
   const [log, setLog] = useState<DailyLog | null>(null);
   // Seeded from memory so a reopen paints the real curve on frame one.
   const [history, setHistory] = useState<MyHistory | null>(peekCachedHistory);
@@ -114,14 +103,7 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
   const [nameInput, setNameInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [renaming, setRenaming] = useState(false);
-  const openFriendSearch = useRef<(() => void) | null>(null);
-
-  // A deep link asking for friends flips the segment.
-  useEffect(() => {
-    if (initialSegment) {
-      setSegment(initialSegment);
-    }
-  }, [initialSegment]);
+  const requests = useRequestsStore(s => s.requests);
 
   // Resolve the profile once: cache first (instant, works offline), then the
   // server as truth when reachable. A stale "no cache" worst case just shows
@@ -155,32 +137,46 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
     };
   }, []);
 
-  const refreshFeed = useCallback(async () => {
+  // Only the count is wanted here (the header's friends line), so this is the
+  // bare list, not the daily feed Home already pays for.
+  const refreshFriends = useCallback(async () => {
     if (!isBackendConfigured) {
       return;
     }
     try {
-      setFeed(await fetchFriendsFeed(weekKeys[0]));
-    } catch (err) {
-      toast.error(isNetworkError(err) ? t('common.errorNetwork') : t('social.loadError'));
-      // Keep whatever is on screen; an empty list only replaces the skeleton.
-      setFeed(prev => prev ?? []);
+      setFriends(await fetchFriends());
+    } catch {
+      setFriends(prev => prev ?? []);
     }
-  }, [weekKeys, t]);
+  }, []);
 
+  const {send} = useSendFriendRequest({onFriendAdded: refreshFriends});
+
+  // A shared friend-code link lands on this tab with `addCode`: send it once, as
+  // soon as there's a profile to send it from. Each code value fires exactly
+  // once, and it's consumed here because here is where the link lands.
+  const consumedAddCode = useRef<string | null>(null);
   const hasProfile = profile !== null && profile !== 'loading';
+  useEffect(() => {
+    if (!addCode || consumedAddCode.current === addCode || !hasProfile) {
+      return;
+    }
+    consumedAddCode.current = addCode;
+    send(addCode.toUpperCase());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addCode, hasProfile]);
 
   // The focus signal. `isActive` covers tab switches: all four pages stay
   // mounted, so useFocusEffect alone fires for the whole Tabs route and can't
   // tell them apart. `isFocused` covers popping back from a pushed screen — a
-  // friend removed on their own profile page must leave this list at once.
+  // friend removed on the friends list must leave this count at once.
   useEffect(() => {
     if (!isActive || !isFocused || !hasProfile) {
       return;
     }
     let live = true;
     flushOutbox().catch(() => {});
-    refreshFeed();
+    refreshFriends();
     refreshFriendRequests();
     loadDailyLog(todayKey).then(l => live && setLog(l));
 
@@ -213,7 +209,7 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
     return () => {
       live = false;
     };
-  }, [isActive, isFocused, hasProfile, refreshFeed, todayKey]);
+  }, [isActive, isFocused, hasProfile, refreshFriends, todayKey]);
 
   // Deleting the profile (from the Menu) clears the cache; drop to onboarding
   // the next time this tab is looked at. A no-op while a profile is cached.
@@ -225,7 +221,7 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
     getCachedProfile().then(cached => {
       if (live && !cached) {
         setProfile(null);
-        setFeed(null);
+        setFriends(null);
       }
     });
     return () => {
@@ -320,33 +316,20 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
 
   const segments: SegmentedOption<ProfileSegment>[] = [
     {key: 'career', label: t('profile.segmentCareer')},
-    {key: 'dailies', label: t('profile.segmentDailies')},
-    {key: 'friends', label: t('profile.segmentFriends')},
+    {key: 'daily', label: t('profile.segmentDailies')},
   ];
 
-  // One corner, two jobs: the friend search only exists while friends are the
-  // body it would search.
   const corner = (
-    <View style={styles.corner}>
-      {hasProfile && segment === 'friends' ? (
-        <CircleButton
-          size={30}
-          accessibilityLabel={t('social.searchA11y')}
-          onPress={() => openFriendSearch.current?.()}>
-          <Search size={16} color={colors.ink} strokeWidth={2} />
-        </CircleButton>
-      ) : null}
-      <CircleButton
-        size={30}
-        accessibilityLabel={t('menu.title')}
-        onPress={() => navigation.navigate('Menu')}>
-        <Menu size={16} color={colors.ink} strokeWidth={2} />
-      </CircleButton>
-    </View>
+    <CircleButton
+      size={30}
+      accessibilityLabel={t('menu.title')}
+      onPress={() => navigation.navigate('Menu')}>
+      <Menu size={16} color={colors.ink} strokeWidth={2} />
+    </CircleButton>
   );
 
   return (
-    <TabPage title={t('tabs.profile')} right={corner} scrollRef={scrollRef}>
+    <TabPage title={t('tabs.profile')} right={corner}>
       {profile === 'loading' ? (
         <View style={styles.body}>
           <Skeleton height={96} />
@@ -380,11 +363,11 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
           <ProfileHeader
             name={profile.displayName}
             tone="accent"
-            // The feed IS the friend list, so its length is the count — no
-            // second call, and the two can never disagree. Null while it loads,
-            // which is exactly when the header wants to hide the line.
-            friendCount={feed?.length ?? null}
-            onPressFriends={() => setSegment('friends')}
+            // The list IS the friends, so its length is the count — no second
+            // call, and the two can never disagree. Null while it loads, which
+            // is exactly when the header wants to hide the line.
+            friendCount={friends?.length ?? null}
+            onPressFriends={() => navigation.navigate('FriendsList')}
             onEditName={() => setRenaming(true)}
             avatarUri={avatarUrlFor(profile.avatarPath)}
           />
@@ -402,6 +385,13 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
             onChange={handleFavorites}
           />
 
+          {/* Renders nothing until someone is waiting — but when they are, this
+              is what the tab's badge was pointing at. */}
+          <RequestsSection
+            requests={requests?.incoming ?? []}
+            onAccepted={refreshFriends}
+          />
+
           <Segmented options={segments} value={segment} onChange={setSegment} />
 
           {segment === 'career' ? (
@@ -409,9 +399,12 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
               history={history}
               value={value}
               todayKey={todayKey}
-              onFindMatch={() => navigation.navigate('RankedSearch')}
+              empty={{
+                kind: 'own',
+                onFindMatch: () => navigation.navigate('RankedSearch'),
+              }}
             />
-          ) : segment === 'dailies' ? (
+          ) : (
             <View style={styles.body}>
               {log === null ? (
                 <Skeleton height={200} />
@@ -427,25 +420,6 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
                   <HistorySection days={historyDays} todayKey={todayKey} />
                 </>
               )}
-            </View>
-          ) : (
-            <View style={styles.body}>
-              <FriendsSection
-                feed={feed}
-                setFeed={setFeed}
-                refreshFeed={refreshFeed}
-                todayKey={todayKey}
-                scrollRef={scrollRef}
-                addCode={addCode}
-                onSearchReady={open => {
-                  openFriendSearch.current = open;
-                }}
-              />
-              {/* Your code sits with the friends, because handing it to one is
-                  the only thing it's for. */}
-              <Card style={styles.codeCard}>
-                <CodeBlock code={profile.friendCode} divider={false} />
-              </Card>
             </View>
           )}
         </View>
@@ -468,7 +442,5 @@ export function ProfileTab({isActive = true, addCode, initialSegment}: Props) {
 const makeStyles = (_c: Palette) =>
   StyleSheet.create({
     body: {gap: spacing.lg},
-    corner: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
     onboardCard: {padding: spacing.xl, gap: spacing.md},
-    codeCard: {paddingHorizontal: spacing.lg, paddingVertical: spacing.md},
   });
