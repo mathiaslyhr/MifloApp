@@ -31,7 +31,8 @@ export const MANAGERS: readonly Manager[] = [
     nationality: ['Spain'],
     spells: [
       {clubId: 'leverkusen', from: 2022, to: 2025},
-      {clubId: 'real-madrid', from: 2025},
+      {clubId: 'real-madrid', from: 2025, to: 2026},
+      {clubId: 'chelsea', from: 2026},
     ],
   },
   {
@@ -61,6 +62,12 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'real-madrid', from: 2021, to: 2025},
       {country: 'Brazil', from: 2025},
     ],
+  },
+  {
+    id: 'Arbeloa, Álvaro',
+    name: 'Álvaro Arbeloa',
+    nationality: ['Spain'],
+    spells: [{clubId: 'fulham', from: 2026}],
   },
   {
     id: 'Arteta, Mikel',
@@ -188,7 +195,8 @@ export const MANAGERS: readonly Manager[] = [
     spells: [
       {clubId: 'shakhtar', from: 2021, to: 2022},
       {clubId: 'brighton', from: 2022, to: 2024},
-      {clubId: 'marseille', from: 2024},
+      {clubId: 'marseille', from: 2024, to: 2026},
+      {clubId: 'tottenham', from: 2026},
     ],
   },
   {
@@ -306,7 +314,7 @@ export const MANAGERS: readonly Manager[] = [
     nationality: ['Denmark'],
     spells: [
       {clubId: 'brentford', from: 2018, to: 2025},
-      {clubId: 'tottenham', from: 2025},
+      {clubId: 'tottenham', from: 2025, to: 2026},
     ],
   },
   {
@@ -401,7 +409,7 @@ export const MANAGERS: readonly Manager[] = [
     spells: [
       {clubId: 'barcelona', from: 2008, to: 2012},
       {clubId: 'bayern', from: 2013, to: 2016},
-      {clubId: 'man-city', from: 2016},
+      {clubId: 'man-city', from: 2016, to: 2026},
     ],
   },
   {
@@ -700,7 +708,8 @@ export const MANAGERS: readonly Manager[] = [
     spells: [
       {clubId: 'parma', from: 2021, to: 2021},
       {clubId: 'leicester', from: 2023, to: 2024},
-      {clubId: 'chelsea', from: 2024},
+      {clubId: 'chelsea', from: 2024, to: 2026},
+      {clubId: 'man-city', from: 2026},
     ],
   },
   {
@@ -774,7 +783,8 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'tottenham', from: 2019, to: 2021},
       {clubId: 'roma', from: 2021, to: 2024},
       {clubId: 'fenerbahce', from: 2024, to: 2025},
-      {clubId: 'benfica', from: 2025},
+      {clubId: 'benfica', from: 2025, to: 2026},
+      {clubId: 'real-madrid', from: 2026},
     ],
   },
   {
@@ -1090,7 +1100,7 @@ export const MANAGERS: readonly Manager[] = [
       {clubId: 'olympiacos', from: 2015, to: 2016},
       {clubId: 'watford', from: 2017, to: 2018},
       {clubId: 'everton', from: 2018, to: 2019},
-      {clubId: 'fulham', from: 2021},
+      {clubId: 'fulham', from: 2021, to: 2026},
     ],
   },
   {
