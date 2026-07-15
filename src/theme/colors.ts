@@ -46,14 +46,6 @@ export type Palette = {
   /** One step lighter, for small accent text that must read on dark. */
   primaryInk: string;
 
-  /** Translucent chrome surfaces (blur pills, frosted headers): faint white
-   * over the dark ground so the blur shows through. */
-  glass: string;
-  glassLight: string;
-  /** Rim on glass — lighter than the fill, per the border principle. */
-  glassRim: string;
-  /** Near-solid frosted surface — for cards floating on a dimmed scrim. */
-  glassStrong: string;
   /** Hairline rim on the solid (primary) button. */
   solidRim: string;
 
@@ -108,10 +100,6 @@ export const skin1: Palette = {
   primary: '#6260FF',
   primaryInk: '#8583FF',
 
-  glass: 'rgba(255,255,255,0.10)',
-  glassLight: 'rgba(255,255,255,0.06)',
-  glassRim: 'rgba(255,255,255,0.14)',
-  glassStrong: 'rgba(26,26,26,0.94)',
   solidRim: 'rgba(255,255,255,0.18)',
 
   shadow: 'rgba(0,0,0,0.45)',

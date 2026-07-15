@@ -10,7 +10,7 @@ import {Animated, LayoutAnimation, Pressable, StyleSheet, View} from 'react-nati
 import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
 import {ChevronDown, Flame} from 'lucide-react-native';
-import {Avatar, GlassCard, Text, initialsFor} from '../../core/ui';
+import {Avatar, Card, Text, initialsFor} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {DAILY_GAMES, type DailyGame, type DayCellStatus} from '../../core/daily/dailyLog';
 import {DailyRow} from '../../core/daily/DailyRow';
@@ -130,7 +130,7 @@ export function PersonCard({name, streak, today, presence, avatarUri, onPress}: 
   }
 
   return (
-    <GlassCard style={styles.personCard}>
+    <Card style={styles.personCard}>
       {/* The row folds the daily games open; the avatar and name are their
           own tap targets that open the friend's profile. RN hands the touch to
           the innermost pressable, so tapping them navigates without toggling. */}
@@ -209,7 +209,7 @@ export function PersonCard({name, streak, today, presence, avatarUri, onPress}: 
           })}
         </View>
       ) : null}
-    </GlassCard>
+    </Card>
   );
 }
 
@@ -226,7 +226,7 @@ const makeStyles = (c: Palette) =>
     },
     personName: {flex: 1},
     // Instagram-style presence: a small green disc pinned to the avatar's
-    // corner, rimmed in surface white so it reads on the glass card.
+    // corner, rimmed in surface white so it reads on the card.
     onlineDot: {
       position: 'absolute',
       right: 0,

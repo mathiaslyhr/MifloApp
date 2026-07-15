@@ -82,23 +82,17 @@ export type GameEntry = {
   maxPlayers?: number;
 };
 
-/**
- * Per-game identity colours for the Play-tab colored-square icon badges. These
- * are fixed brand tones (like the guess-feedback colours), not theme tokens, so
- * a game reads the same in both appearances. Tweak freely.
+/*
+ * There is deliberately no per-game colour here.
+ *
+ * Games read white in the catalog: a game's identity is its name and its icon,
+ * not a hue. Colour is kept for meaning — the imposter's title is `error` red
+ * because you ARE the imposter, right/wrong chips are `success`/`error` because
+ * you were right or wrong. A decorative per-game palette would spend those
+ * signals on nothing: Red Card's old tone was `#FF6A61`, the exact `error` red,
+ * so "this is Red Card" and "you got caught" would have looked identical on the
+ * same screen.
  */
-export const GAME_COLORS: Record<GameType, string> = {
-  hattrick: '#6260FF',
-  'red-card': '#FF6A61',
-  offside: '#5B9CFF',
-  'cult-hero': '#C77DFF',
-  scout: '#4FB477',
-  tenball: '#E0A94A',
-  journeyman: '#5BC8C0',
-  teamsheet: '#E06C9F',
-  heatmap: '#8B93A7',
-  matchday: '#8B93A7',
-};
 
 /**
  * Games in hub display order: playable games first, then "coming soon" ones.

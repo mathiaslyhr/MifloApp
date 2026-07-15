@@ -1,6 +1,6 @@
 /**
  * Menu — pushed from the Profile tab's hamburger corner button (it stopped
- * being a tab when Profile took its place). Grouped iOS-style glass cards:
+ * being a tab when Profile took its place). Grouped iOS-style cards:
  * App (how to play, settings) and About; FAQ, Privacy and Report a bug open
  * the marketing site. The old Account group is gone — the profile IS the
  * page you came from.

@@ -123,9 +123,9 @@ const makeStyles = (c: Palette) =>
     },
     divider: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      // A bright white hairline that matches the card's glass rim, so the rim and
-      // the row separators read as one piece of glass (not a gray line on frost).
-      borderBottomColor: c.glassRim,
+      // The standard hairline, matching the card's rim, so the rim and the row
+      // separators read as one piece.
+      borderBottomColor: c.divider,
       // Square off the bottom corners so the divider spans full width; the group
       // card clips the outer radius.
       borderBottomLeftRadius: 0,

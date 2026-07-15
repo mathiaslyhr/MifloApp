@@ -10,7 +10,6 @@ import {
   type Palette,
 } from '../../theme';
 import {usePressScale} from './usePressScale';
-import {AppBlur} from './Blur';
 
 export type TabId = 'home' | 'daily' | 'play' | 'profile';
 
@@ -37,9 +36,9 @@ type Props = {
 
 /**
  * The floating navigation island — Home · Daily · Play · Profile as a
- * centered, "clear" frosted pill. Icons only (the labels live on as
- * accessibility text); the active tab is tinted the accent color, inactive
- * tabs are muted.
+ * centered solid pill (surface fill, one-step-lighter rim). Icons only (the
+ * labels live on as accessibility text); the active tab is tinted the accent
+ * color, inactive tabs are muted.
  *
  * The springy press-scale is shared by the WHOLE island (Instagram-style): a
  * single animated value scales the entire bar, and pressing any item drives it,
@@ -48,21 +47,14 @@ type Props = {
 export function IslandTabBar({active, onSelect, badge}: Props) {
   const press = usePressScale();
   const {t} = useTranslation();
-  const {colors, skin} = useSkin();
+  const {colors} = useSkin();
   const styles = useThemedStyles(makeStyles);
-  // A faint white tint over the blur keeps the "clear" frosted look; on a dark
-  // canvas it drops so the pill doesn't glow brighter than the ground behind it.
-  const pillTint =
-    skin.appearance === 'dark'
-      ? 'rgba(255,255,255,0.08)'
-      : 'rgba(255,255,255,0.22)';
   return (
     <View style={styles.wrap} pointerEvents="box-none">
       {/* Outer layer carries the shadow (a clipped view clips its own shadow on
-          iOS); the inner pill clips the blur to the rounded shape. */}
+          iOS); the inner pill clips content to the rounded shape. */}
       <Animated.View style={[styles.island, press.animatedStyle]}>
-        <View style={[styles.pill, {backgroundColor: pillTint}]}>
-          <AppBlur amount={22} />
+        <View style={styles.pill}>
           {ITEMS.map(({id, labelKey, Icon}) => {
             const on = id === active;
             const color = on ? colors.primary : colors.muted;
@@ -101,8 +93,8 @@ const makeStyles = (c: Palette) =>
     borderRadius: radii.pill,
     ...shadows.floating,
   },
-  // Visible pill: clips the real backdrop blur to the rounded shape. The light
-  // tint (backgroundColor) is applied inline per theme; blur shows through.
+  // Visible pill: solid surface one step above the canvas, rimmed a step
+  // lighter still (elevation is brightness, never shadow on the fill itself).
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -110,7 +102,8 @@ const makeStyles = (c: Palette) =>
     padding: 6,
     borderRadius: radii.pill,
     borderWidth: 1,
-    borderColor: c.glassRim,
+    borderColor: c.divider,
+    backgroundColor: c.surface,
     overflow: 'hidden',
   },
   // paddingVertical 11 + the 22pt icon = a 44pt tap target (HIG minimum).
@@ -123,7 +116,7 @@ const makeStyles = (c: Palette) =>
   },
   iconWrap: {position: 'relative'},
   // "Something new" marker: a small accent disc pinned to the icon's top-right
-  // corner, rimmed so it reads on the frosted pill (same trick as onlineDot).
+  // corner, rimmed so it reads on the pill (same trick as onlineDot).
   badgeDot: {
     position: 'absolute',
     top: -2,

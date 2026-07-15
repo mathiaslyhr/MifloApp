@@ -1,11 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
-  Animated,
   KeyboardAvoidingView,
-  type LayoutChangeEvent,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
   Platform,
   Pressable,
   ScrollView,
@@ -22,21 +18,22 @@ import {
 } from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
-import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CircleButton,
+  EdgeFade,
   FloatingBar,
   Screen,
   Text,
   toast,
+  useEdgeFades,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {
   enableScoutReminder,
   markScoutReminderOffered,
   shouldOfferScoutReminder,
-  syncScoutReminder,
+  syncNudges,
 } from '../core/notifications/scoutReminder';
 import {
   fonts,
@@ -80,7 +77,6 @@ import {
   saveDailyProgress,
   saveStreak,
 } from '../games/teamsheet/storage';
-import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {queueDailyResult} from '../core/social/outbox';
 import {fromTeamsheetEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {TeamsheetHelpModal} from '../games/teamsheet/TeamsheetHelpModal';
@@ -115,50 +111,7 @@ export function TeamsheetScreen({navigation}: Props) {
   const [showHelp, setShowHelp] = useState(false);
   const openSearch = useSearch();
 
-  // Scroll-aware edge fades: each scrim only shows when there's board content
-  // scrolled past that edge, so the top/bottom row is never dimmed at rest.
-  const fadeTopOpacity = useRef(new Animated.Value(0)).current;
-  const fadeBottomOpacity = useRef(new Animated.Value(0)).current;
-  const fadeTopShown = useRef(false);
-  const fadeBottomShown = useRef(false);
-  const viewportH = useRef(0);
-  const contentH = useRef(0);
-  const lastOffsetY = useRef(0);
-
-  function toggleFade(
-    value: Animated.Value,
-    shownRef: React.MutableRefObject<boolean>,
-    show: boolean,
-  ) {
-    if (shownRef.current === show) {
-      return;
-    }
-    shownRef.current = show;
-    Animated.timing(value, {
-      toValue: show ? 1 : 0,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function refreshFades(offsetY: number) {
-    const maxY = Math.max(0, contentH.current - viewportH.current);
-    toggleFade(fadeTopOpacity, fadeTopShown, offsetY > 2);
-    toggleFade(fadeBottomOpacity, fadeBottomShown, offsetY < maxY - 2);
-  }
-
-  const onBoardScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    lastOffsetY.current = e.nativeEvent.contentOffset.y;
-    refreshFades(lastOffsetY.current);
-  };
-  const onBoardLayout = (e: LayoutChangeEvent) => {
-    viewportH.current = e.nativeEvent.layout.height;
-    refreshFades(lastOffsetY.current);
-  };
-  const onBoardContentSize = (_w: number, h: number) => {
-    contentH.current = h;
-    refreshFades(lastOffsetY.current);
-  };
+  const fades = useEdgeFades();
 
   // One-time reminder offer, shown the moment a sheet is finished — shared
   // with the other dailies (same asked/pref keys), so whichever game the
@@ -253,9 +206,9 @@ export function TeamsheetScreen({navigation}: Props) {
     setStreak(updated);
     const entry = historyEntryFor(next);
     Promise.all([saveStreak(updated), recordHistory(entry)])
-      // Finished: drop tonight's rescue nudge and, if the other dailies are
-      // done too, skip tomorrow-morning's "new games" ping past today.
-      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
+      // Finished: drop tonight's rescue nudge and, if the other dailies
+      // are done too, skip today's habit ping.
+      .then(() => syncNudges())
       .catch(() => toast.error(t('teamsheet.errorSave')));
     // Share the score-only result with friends — a local queue write plus a
     // fire-and-forget flush; a no-op until the player opts into Friends.
@@ -483,7 +436,7 @@ export function TeamsheetScreen({navigation}: Props) {
             </Text>
           ) : null}
 
-          {/* The board dissolves into the canvas at both edges (no frost, no
+          {/* The board dissolves into the canvas at both edges (no
               borders) so rows never bleed into the header or the search pill. */}
           <View style={styles.boardWrap}>
           <ScrollView
@@ -493,9 +446,9 @@ export function TeamsheetScreen({navigation}: Props) {
             keyboardDismissMode="none"
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={16}
-            onScroll={onBoardScroll}
-            onLayout={onBoardLayout}
-            onContentSizeChange={onBoardContentSize}>
+            onScroll={fades.onScroll}
+            onLayout={fades.onLayout}
+            onContentSizeChange={fades.onContentSizeChange}>
             {/* Tapping the pitch background clears the targeted spot. The
                 rows render attack first and GK last, broadcast style. */}
             <Pressable onPress={() => setSelected(null)} style={styles.pitch}>
@@ -531,8 +484,8 @@ export function TeamsheetScreen({navigation}: Props) {
               ))}
             </Pressable>
           </ScrollView>
-            <EdgeFade edge="top" opacity={fadeTopOpacity} />
-            <EdgeFade edge="bottom" opacity={fadeBottomOpacity} />
+            <EdgeFade edge="top" opacity={fades.topOpacity} />
+            <EdgeFade edge="bottom" opacity={fades.bottomOpacity} />
           </View>
 
           {finished ? (
@@ -718,39 +671,6 @@ function PlayerToken({
   );
 }
 
-/**
- * A solid-colour edge fade (no blur): the canvas colour ramping to transparent
- * over the board's top/bottom edge so formation rows dissolve into the
- * background instead of hard-cutting against the header or the search pill.
- */
-function EdgeFade({
-  edge,
-  opacity,
-}: {
-  edge: 'top' | 'bottom';
-  opacity: Animated.Value;
-}) {
-  const colors = useColors();
-  const styles = useThemedStyles(makeStyles);
-  const top = edge === 'top';
-  const gradId = `teamsheetFade-${edge}`;
-  return (
-    <Animated.View
-      pointerEvents="none"
-      style={[styles.fade, top ? styles.fadeTop : styles.fadeBottom, {opacity}]}>
-      <Svg width="100%" height="100%">
-        <Defs>
-          <LinearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-            <Stop offset={0} stopColor={colors.background} stopOpacity={top ? 1 : 0} />
-            <Stop offset={1} stopColor={colors.background} stopOpacity={top ? 0 : 1} />
-          </LinearGradient>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="100%" fill={`url(#${gradId})`} />
-      </Svg>
-    </Animated.View>
-  );
-}
-
 function Stat({
   label,
   value,
@@ -809,9 +729,6 @@ function Countdown() {
   );
 }
 
-/** Height of each edge-fade scrim over the formation board. */
-const FADE_HEIGHT = 36;
-
 const TOKEN_WIDTH = 62;
 const CIRCLE = 50;
 const BADGE = 16;
@@ -838,9 +755,6 @@ const makeStyles = (c: Palette) =>
   boardWrap: {flex: 1, marginTop: spacing.md},
   board: {flex: 1},
   boardContent: {paddingVertical: spacing.md},
-  fade: {position: 'absolute', left: 0, right: 0, height: FADE_HEIGHT},
-  fadeTop: {top: 0},
-  fadeBottom: {bottom: 0},
   // One formation line: GK alone up top, then defence down to attack. Fixed
   // token sizes and centred rows keep 1/2/3/4/5-man lines visually identical.
   formationRow: {
@@ -865,7 +779,7 @@ const makeStyles = (c: Palette) =>
     color: c.textTertiary,
   },
   posLabelSelected: {color: c.primary},
-  // The player circle: shirt number where the face would be. Glass while
+  // The player circle: shirt number where the face would be. Surface while
   // hidden, brand purple once earned, primary ring while targeted.
   circle: {
     width: CIRCLE,

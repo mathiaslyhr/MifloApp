@@ -78,7 +78,7 @@ const makeStyles = (c: Palette) =>
     },
     divider: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: c.glassRim,
+      borderBottomColor: c.divider,
       marginTop: spacing.sm,
     },
   });

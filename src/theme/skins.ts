@@ -1,7 +1,7 @@
 /**
  * Skins — the app's visual identities. A skin bundles a colour `palette` with
- * the `appearance` axis it sits on (light/dark), which drives the blur tint
- * and the status-bar glyphs.
+ * the `appearance` axis it sits on (light/dark), which drives the status-bar
+ * glyphs.
  *
  * Single-skin registry: Skin 1, the dark elevation-by-brightness system
  * (spec: docs/design.md). A future skin extends the union and adds an entry.

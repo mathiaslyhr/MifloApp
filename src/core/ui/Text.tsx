@@ -42,7 +42,7 @@ export function Text({
   const colors = useColors();
   return (
     <RNText
-      // Cap Dynamic Type: past ~1.2x the glass layouts clip instead of helping.
+      // Cap Dynamic Type: past ~1.2x the tight layouts clip instead of helping.
       maxFontSizeMultiplier={1.2}
       style={[
         typeScale[variant],

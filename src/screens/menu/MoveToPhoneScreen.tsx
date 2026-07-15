@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {spacing, useThemedStyles, type Palette} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {MenuDetailScreen} from './MenuDetailScreen';
@@ -37,11 +37,11 @@ export function MoveToPhoneScreen({navigation}: Props) {
 
       {steps.map(s => (
         <View key={s.n} style={styles.step}>
-          <GlassCard radius="pill" tint="light" style={styles.badge}>
+          <Card radius="pill" style={styles.badge}>
             <Text variant="label" style={styles.badgeText}>
               {s.n}
             </Text>
-          </GlassCard>
+          </Card>
           <View style={styles.stepText}>
             <Text variant="body">{s.title}</Text>
             <Text variant="secondary" color="secondary">

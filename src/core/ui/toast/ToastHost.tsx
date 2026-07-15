@@ -414,7 +414,7 @@ const makeStyles = (c: Palette) =>
     // content, so nothing may ghost through.
     backgroundColor: c.surface,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: c.glassRim,
+    borderColor: c.divider,
     // Soft lift so the toast reads above the page content.
     shadowColor: c.shadow,
     shadowOpacity: 1,

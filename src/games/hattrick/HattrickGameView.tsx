@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next';
 import {
   Button,
   CircleButton,
-  GlassCard,
+  Card,
   PressableScale,
   Screen,
   Skeleton,
@@ -84,8 +84,8 @@ type Props = {
 
 const ROW_LABEL_W = 58;
 const LABEL_GAP = 8;
-// White hairline dividers on the glass board — same language as the menu cards.
-// The colour is the palette's `glassRim`, applied inside `makeStyles`.
+// Hairline dividers on the board — same language as the menu cards.
+// The colour is the palette's `divider`, applied inside `makeStyles`.
 const DIVIDER = 1;
 
 /**
@@ -121,7 +121,7 @@ export function HattrickGameView({
     : perspective.myUserId;
 
   // One board sized from the screen so every cell is identical. Layout is
-  // [row-label | gap | board]; the board is a single glass card split into a
+  // [row-label | gap | board]; the board is a single surface card split into a
   // 3×3 by white dividers.
   const {width} = useWindowDimensions();
   const cellSize = Math.floor(
@@ -343,14 +343,14 @@ export function HattrickGameView({
           )}
         </View>
 
-        {/* Column headers: corner actions (skip/tie) + a glass bar split into 3 */}
+        {/* Column headers: corner actions (skip/tie) + a header bar split into 3 */}
         <View style={styles.topRow}>
-          <GlassCard
+          <Card
             style={[
               styles.card,
               styles.corner,
               {width: ROW_LABEL_W, height: headerH, marginRight: LABEL_GAP},
-              // Only draw the glass card when it actually holds an action;
+              // Only draw the card when it actually holds an action;
               // otherwise stay an invisible spacer to keep board alignment.
               cornerEmpty && styles.cornerBlank,
             ]}>
@@ -387,8 +387,8 @@ export function HattrickGameView({
                 </Text>
               </PressableScale>
             ) : null}
-          </GlassCard>
-          <GlassCard style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
+          </Card>
+          <Card style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
             {state.cols.map((c, i) => (
               <AxisCell
                 key={`c${i}`}
@@ -402,12 +402,12 @@ export function HattrickGameView({
                 }}
               />
             ))}
-          </GlassCard>
+          </Card>
         </View>
 
-        {/* Row headers (glass bar) + the board */}
+        {/* Row headers + the board */}
         <View style={styles.bottomRow}>
-          <GlassCard style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
+          <Card style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
             {state.rows.map((c, i) => (
               <AxisCell
                 key={`r${i}`}
@@ -421,9 +421,9 @@ export function HattrickGameView({
                 }}
               />
             ))}
-          </GlassCard>
+          </Card>
 
-          <GlassCard style={[styles.card, {width: boardSize, height: boardSize}]}>
+          <Card style={[styles.card, {width: boardSize, height: boardSize}]}>
             {[0, 1, 2].map(r => (
               <View key={`row${r}`} style={{flexDirection: 'row'}}>
                 {[0, 1, 2].map(c => {
@@ -499,7 +499,7 @@ export function HattrickGameView({
                 })}
               </View>
             ))}
-          </GlassCard>
+          </Card>
         </View>
 
         {state.winner ? (
@@ -880,7 +880,7 @@ function TieOverlay({
         styles.tieOverlay,
         {bottom: insets.bottom + spacing.xl, opacity, transform: [{translateY}]},
       ]}>
-      <GlassCard blur={24} style={styles.tieCard}>
+      <Card style={styles.tieCard}>
         <View style={styles.tieContent}>
           {waiting ? (
             <>
@@ -918,7 +918,7 @@ function TieOverlay({
             </>
           )}
         </View>
-      </GlassCard>
+      </Card>
     </Animated.View>
   );
 }
@@ -957,13 +957,13 @@ const makeStyles = (c: Palette) =>
   // The header bars and board clip their internal grid dividers to the corners.
   card: {overflow: 'hidden'},
   // White dividers that split a card into a grid.
-  divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: c.glassRim},
-  divTop: {borderTopWidth: DIVIDER, borderTopColor: c.glassRim},
-  // Top-left corner: Skip / Tie stacked as compact glass actions.
+  divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: c.divider},
+  divTop: {borderTopWidth: DIVIDER, borderTopColor: c.divider},
+  // Top-left corner: Skip / Tie stacked as compact actions.
   corner: {flexDirection: 'column'},
   cornerBlank: {backgroundColor: c.transparent, borderWidth: 0},
   cornerBtn: {flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4},
-  cornerDiv: {height: DIVIDER, backgroundColor: c.glassRim},
+  cornerDiv: {height: DIVIDER, backgroundColor: c.divider},
   axis: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -989,7 +989,7 @@ const makeStyles = (c: Palette) =>
     marginBottom: spacing.xs,
   },
   timerTime: {fontVariant: ['tabular-nums']},
-  timerTrack: {height: 8, borderRadius: 4, backgroundColor: c.glassRim, overflow: 'hidden'},
+  timerTrack: {height: 8, borderRadius: 4, backgroundColor: c.surface2, overflow: 'hidden'},
   timerFill: {height: '100%', borderRadius: 4},
   cell: {alignItems: 'center', justifyContent: 'center', padding: 4},
   cellName: {fontFamily: fonts.regular, fontSize: 10, lineHeight: 14},
@@ -1024,8 +1024,8 @@ const makeStyles = (c: Palette) =>
     right: spacing.xl,
     alignItems: 'stretch',
   },
-  // Frosted glass tie card (GlassCard blur) with a bespoke, tighter lift than
-  // the shared floating recipe — it hovers close over the board.
+  // Floating tie card with a bespoke, tighter lift than the shared floating
+  // recipe — it hovers close over the board.
   tieCard: {
     shadowColor: c.shadowInk,
     shadowOpacity: 0.18,

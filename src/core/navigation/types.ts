@@ -11,8 +11,7 @@ import type {TabId} from '../ui';
 export type RootStackParamList = {
   /** `tab` jumps the shell to that page; `at` makes repeat jumps distinct
    * params so the effect refires. `addCode` arrives via the miflo.dk/add/CODE
-   * deep link (TODO(sitemap): used to auto-send a friend request from the
-   * Friends tab; re-wire once friends live somewhere). */
+   * deep link and opens Profile → Friends, which auto-sends the request. */
   Tabs: {tab?: TabId; at?: number; addCode?: string} | undefined;
   /** `code` arrives via the miflo.dk/join/CODE deep link → auto-join. */
   Join: {code?: string} | undefined;
@@ -46,9 +45,6 @@ export type RootStackParamList = {
   Teamsheet: undefined;
   /** The old Menu tab's remainder, behind the Profile tab's hamburger. */
   Menu: undefined;
-  /** The Instagram-style friends list, opened from the Profile tab: a plain
-   * list of your friends, each row tapping through to their profile. */
-  FriendsList: undefined;
   /** A friend's profile page — the full profile travels for instant paint. */
   FriendProfile: {profile: SocialProfile};
   /** Head-to-head record against a friend in the online games — the friend's

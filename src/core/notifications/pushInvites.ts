@@ -23,6 +23,7 @@ import {NativeModules} from 'react-native';
 import {navigationRef} from '../navigation/navigationRef';
 import {refreshFriendRequests} from '../social/requestsStore';
 import {getCachedProfile, uploadPushToken} from '../social/socialService';
+import type {TabId} from '../ui';
 
 const LAST_UPLOADED_KEY = 'push.lastUploadedToken';
 
@@ -31,12 +32,11 @@ type PushTokenNative = {getApnsToken: () => Promise<string>};
 /** Party codes are 4 chars from gen_code's alphabet; anything else is noise. */
 const CODE_RE = /^[A-Z0-9]{4}$/;
 
-/** Where a push tap wants to land. */
-// TODO(sitemap): friend pushes used to land on the Friends tab; they park on
-// Home until friends have a home in the new sitemap.
+/** Where a push tap wants to land. Friend pushes go to Profile, which holds
+ * the friends list now that the Friends tab is gone. */
 type PendingNavigation =
   | {kind: 'join'; code: string}
-  | {kind: 'tab'; tab: 'home'};
+  | {kind: 'tab'; tab: TabId};
 
 let pending: PendingNavigation | null = null;
 const handledIds = new Set<string>();
@@ -89,7 +89,8 @@ export function handleNotificationPress(
     }
     target = {kind: 'join', code};
   } else if (type === 'friend-request' || type === 'friend-accepted') {
-    target = {kind: 'tab', tab: 'home'};
+    // Profile holds the friends list (and the pending requests) now.
+    target = {kind: 'tab', tab: 'profile'};
   } else {
     return;
   }

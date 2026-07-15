@@ -24,7 +24,7 @@ export type SegmentedOption<K extends string> = {
  * A two-plus-option in-page segmented toggle (e.g. Friendlies | Competitive):
  * a `surface2` track holding equal-width segments; the selected one fills brand
  * purple with `onInk` text, the rest read as `textSecondary`. Each segment
- * shares the springy press-scale. No frost.
+ * shares the springy press-scale.
  */
 export function Segmented<K extends string>({
   options,

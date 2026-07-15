@@ -10,7 +10,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, Pressable, StyleSheet, View} from 'react-native';
 import {Crown} from 'lucide-react-native';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {
   fonts,
   radii,
@@ -48,7 +48,7 @@ export function CardGrid({
   return (
     <View style={styles.grid}>
       {cards.map((card, i) => {
-        let border: string = colors.glassRim;
+        let border: string = colors.divider;
         if (revealing && i === correctIndex) {
           border = colors.success;
         } else if (revealing && i === selectedIndex) {
@@ -66,14 +66,14 @@ export function CardGrid({
             accessibilityRole="button"
             accessibilityLabel={card.name}>
             {({pressed}) => (
-              <GlassCard
+              <Card
                 borderWidth={2}
                 borderColor={border}
                 style={[styles.card, pressed && tappable && styles.cardPressed]}>
                 <Text variant="section" align="center" style={styles.cardName}>
                   {card.name}
                 </Text>
-              </GlassCard>
+              </Card>
             )}
           </Pressable>
         );
@@ -130,7 +130,7 @@ export function CountdownBar({
 }
 
 /**
- * Kahoot-style leaderboard: one glass pill per player (rank, name, this
+ * Kahoot-style leaderboard: one surface pill per player (rank, name, this
  * round's +delta, running total), leader crowned. The list lives in the
  * screen's ScrollView, so a 12-player party simply scrolls with the page.
  */
@@ -149,7 +149,7 @@ export function Scoreboard({
       {rows.map((row, i) => {
         const d = deltas[row.userId] ?? 0;
         return (
-          <GlassCard key={row.userId} radius="pill" style={styles.playerPill}>
+          <Card key={row.userId} radius="pill" style={styles.playerPill}>
             <View style={styles.scoreNameCol}>
               <Text variant="caption" color="muted" style={styles.rank}>
                 {i + 1}
@@ -176,7 +176,7 @@ export function Scoreboard({
                 {row.score}
               </Text>
             </View>
-          </GlassCard>
+          </Card>
         );
       })}
     </View>

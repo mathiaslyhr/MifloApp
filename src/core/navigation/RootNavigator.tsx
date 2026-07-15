@@ -24,7 +24,6 @@ import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
 import {ScoutScreen} from '../../screens/ScoutScreen';
 import {TopBinsScreen} from '../../screens/TopBinsScreen';
 import {MenuScreen} from '../../screens/menu/MenuScreen';
-import {FriendsListScreen} from '../../screens/profile/FriendsListScreen';
 import {FriendProfileScreen} from '../../screens/profile/FriendProfileScreen';
 import {HeadToHeadScreen} from '../../screens/profile/HeadToHeadScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
@@ -64,7 +63,6 @@ export function RootNavigator() {
       <Stack.Screen name="Journeyman" component={JourneymanScreen} />
       <Stack.Screen name="Teamsheet" component={TeamsheetScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
-      <Stack.Screen name="FriendsList" component={FriendsListScreen} />
       <Stack.Screen name="FriendProfile" component={FriendProfileScreen} />
       <Stack.Screen name="HeadToHead" component={HeadToHeadScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />

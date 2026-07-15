@@ -17,7 +17,7 @@ import {
   Button,
   CircleButton,
   FloatingBar,
-  GlassCard,
+  Card,
   Screen,
   Text,
   toast,
@@ -450,20 +450,20 @@ export function RankedHattrickScreen({route, navigation}: Props) {
             {/* Board — same visuals as friendly Hattrick. */}
             <View style={styles.boardArea}>
               <View style={styles.topRow}>
-                <GlassCard style={[styles.card, styles.cornerBlank, {width: ROW_LABEL_W, height: headerH, marginRight: LABEL_GAP}]} />
-                <GlassCard style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
+                <Card style={[styles.card, styles.cornerBlank, {width: ROW_LABEL_W, height: headerH, marginRight: LABEL_GAP}]} />
+                <Card style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
                   {state.cols.map((c, i) => (
                     <AxisCell key={`c${i}`} criterion={c} w={cellSize} h={headerH} divider={i > 0 ? 'left' : null} />
                   ))}
-                </GlassCard>
+                </Card>
               </View>
               <View style={styles.bottomRow}>
-                <GlassCard style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
+                <Card style={[styles.card, {width: ROW_LABEL_W, height: boardSize, marginRight: LABEL_GAP}]}>
                   {state.rows.map((c, i) => (
                     <AxisCell key={`r${i}`} criterion={c} w={ROW_LABEL_W} h={cellSize} divider={i > 0 ? 'top' : null} />
                   ))}
-                </GlassCard>
-                <GlassCard style={[styles.card, {width: boardSize, height: boardSize}]}>
+                </Card>
+                <Card style={[styles.card, {width: boardSize, height: boardSize}]}>
                   {[0, 1, 2].map(r => (
                     <View key={`row${r}`} style={styles.gridRow}>
                       {[0, 1, 2].map(c => {
@@ -482,7 +482,7 @@ export function RankedHattrickScreen({route, navigation}: Props) {
                       })}
                     </View>
                   ))}
-                </GlassCard>
+                </Card>
               </View>
             </View>
 
@@ -743,8 +743,8 @@ const makeStyles = (c: Palette) =>
     gridRow: {flexDirection: 'row'},
     card: {overflow: 'hidden'},
     cornerBlank: {backgroundColor: c.transparent, borderWidth: 0},
-    divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: c.glassRim},
-    divTop: {borderTopWidth: DIVIDER, borderTopColor: c.glassRim},
+    divLeft: {borderLeftWidth: DIVIDER, borderLeftColor: c.divider},
+    divTop: {borderTopWidth: DIVIDER, borderTopColor: c.divider},
     axis: {alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4, paddingVertical: 4, gap: 2},
     axisIcon: {fontSize: 17, lineHeight: 22, textAlign: 'center'},
     axisFlag: {width: 24, height: 17, borderRadius: 2},

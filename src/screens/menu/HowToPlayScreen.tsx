@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {GAMES} from '../gamesCatalog';
@@ -45,11 +45,11 @@ export function HowToPlayScreen({navigation}: Props) {
 
       {steps.map(s => (
         <View key={s.n} style={styles.step}>
-          <GlassCard radius="pill" tint="light" style={styles.badge}>
+          <Card radius="pill" style={styles.badge}>
             <Text variant="label" style={styles.badgeText}>
               {s.n}
             </Text>
-          </GlassCard>
+          </Card>
           <View style={styles.stepText}>
             <Text variant="body">{s.title}</Text>
             <Text variant="secondary" color="secondary">
@@ -66,9 +66,9 @@ export function HowToPlayScreen({navigation}: Props) {
       {games.map(g => (
         <View key={g.key} style={styles.game}>
           <View style={styles.gameHeader}>
-            <GlassCard radius="pill" tint="light" style={styles.badge}>
+            <Card radius="pill" style={styles.badge}>
               <g.Icon size={18} color={colors.ink} strokeWidth={1.75} />
-            </GlassCard>
+            </Card>
             <Text variant="body">{g.title}</Text>
           </View>
           <View style={styles.rules}>
@@ -88,7 +88,7 @@ const makeStyles = (c: Palette) =>
   StyleSheet.create({
     body: {gap: spacing.xl},
     step: {flexDirection: 'row', gap: spacing.md, alignItems: 'flex-start'},
-    // Frosted "liquid glass" chip (GlassCard) holding a step number or game icon.
+    // Surface chip (Card) holding a step number or game icon.
     badge: {
       width: 30,
       height: 30,

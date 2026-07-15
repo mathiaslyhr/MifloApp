@@ -13,7 +13,7 @@ import {StyleSheet, View} from 'react-native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {Avatar, GlassCard, initialsFor, Skeleton, Text, toast} from '../../core/ui';
+import {Avatar, Card, initialsFor, Skeleton, Text, toast} from '../../core/ui';
 import {
   fonts,
   spacing,
@@ -110,11 +110,11 @@ export function HeadToHeadScreen({navigation, route}: Props) {
             myWins={0}
             theirWins={0}
           />
-          <GlassCard style={styles.emptyCard}>
+          <Card style={styles.emptyCard}>
             <Text variant="secondary" color="secondary" align="center">
               {t('headToHead.empty', {name: profile.displayName})}
             </Text>
-          </GlassCard>
+          </Card>
         </>
       ) : (
         <>
@@ -206,7 +206,7 @@ function ByGameSection({
       <Text variant="caption" color="tertiary" style={styles.eyebrow}>
         {t('headToHead.byGame').toUpperCase()}
       </Text>
-      <GlassCard style={styles.card}>
+      <Card style={styles.card}>
         {rows.map((g, i) => {
           const rec = perGame[g.gameType];
           return (
@@ -223,7 +223,7 @@ function ByGameSection({
             </View>
           );
         })}
-      </GlassCard>
+      </Card>
     </View>
   );
 }
@@ -282,7 +282,7 @@ function RecentSection({
               ? t('headToHead.friendWon', {name: theirName})
               : t('headToHead.drawn');
           return (
-            <GlassCard key={match.matchId} style={styles.recentCard}>
+            <Card key={match.matchId} style={styles.recentCard}>
               <View style={styles.recentTop}>
                 {entry ? (
                   <entry.Icon size={16} color={colors.ink} strokeWidth={2} />
@@ -304,7 +304,7 @@ function RecentSection({
                   {match.mine.score} – {match.theirs.score}
                 </Text>
               </View>
-            </GlassCard>
+            </Card>
           );
         })}
       </View>

@@ -6,6 +6,7 @@ import {DailyTab} from './tabs/DailyTab';
 import {PlayTab} from './tabs/PlayTab';
 import {ProfileTab} from './tabs/ProfileTab';
 import {FloatingBar, IslandTabBar, type TabId} from '../core/ui';
+import {useRequestsStore} from '../core/social/requestsStore';
 import type {RootStackParamList} from '../core/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
@@ -24,19 +25,26 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
  * VoiceOver are gated separately via `pointerEvents` /
  * `accessibilityElementsHidden`.
  *
- * The blurred nav island lives here — one shared instance pinned over all four
- * pages, so content scrolls and blurs beneath it consistently (Instagram-style).
+ * The nav island lives here — one shared instance pinned over all four pages,
+ * so content scrolls beneath it consistently (Instagram-style).
  */
 export function TabsScreen({route}: Props) {
   const [tab, setTab] = useState<TabId>('home');
+  const addCode = route.params?.addCode;
+  // A pending friend request badges Profile — the tab that now holds the
+  // friends list. Without a Friends tab of its own, this dot is the only thing
+  // that says someone is waiting on you, so it's load-bearing.
+  const requests = useRequestsStore(s => s.requests);
+  const hasRequests = (requests?.incoming.length ?? 0) > 0;
+
   // Pushes/deep links jump into a tab: a tap navigates to Tabs with {tab, at}
   // and this effect flips the local toggle. Keyed on the params object (`at`
-  // keeps repeat taps distinct) so every tap lands.
-  // TODO(sitemap): `addCode` (miflo.dk/add/CODE) used to land on the Friends
-  // tab, which auto-sent the request; re-wire once friends live somewhere.
+  // keeps repeat taps distinct) so every tap lands. A friend-code link
+  // (miflo.dk/add/CODE) carries no tab and means Profile → Friends, which is
+  // where the code gets sent.
   useEffect(() => {
     if (route.params?.tab || route.params?.addCode) {
-      setTab(route.params.tab ?? 'home');
+      setTab(route.params.tab ?? (route.params.addCode ? 'profile' : 'home'));
     }
   }, [route.params]);
 
@@ -60,12 +68,16 @@ export function TabsScreen({route}: Props) {
         <PlayTab />
       </View>
       <View {...pageProps('profile')}>
-        <ProfileTab />
+        <ProfileTab
+          isActive={tab === 'profile'}
+          addCode={addCode}
+          initialSegment={addCode ? 'friends' : undefined}
+        />
       </View>
 
-      {/* Shared blurred nav island, pinned over every tab page. */}
+      {/* Shared nav island, pinned over every tab page. */}
       <FloatingBar edge="bottom">
-        <IslandTabBar active={tab} onSelect={setTab} />
+        <IslandTabBar active={tab} onSelect={setTab} badge={{profile: hasRequests}} />
       </FloatingBar>
     </View>
   );

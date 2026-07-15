@@ -1,6 +1,6 @@
 /**
  * One ranked player on the worldwide board, as a full-width row inside the
- * board's GlassCard (same divider recipe as DailyRow, so the board reads like
+ * board's Card (same divider recipe as DailyRow, so the board reads like
  * the rest of the daily language). Rank slot, avatar, name, and the one-line
  * result summary. The caller's own row is tinted with the brand accent — the
  * "you" idiom — resolved from the wire's is_me flag, never an id.
@@ -81,7 +81,7 @@ const makeStyles = (c: Palette) =>
     },
     divider: {
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderBottomColor: c.glassRim,
+      borderBottomColor: c.divider,
     },
     // Fixed, right-aligned tabular figures so ranks line up in a column even at
     // three digits (the pinned "you" row can be well down the board).

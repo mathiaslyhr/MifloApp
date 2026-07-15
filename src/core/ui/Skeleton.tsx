@@ -1,9 +1,9 @@
 /**
- * Loading placeholder: a glass block with a gentle opacity pulse, used where a
- * screen waits on the network (lobby roster, online boards). Same material as
- * GlassCard (translucent white, zero shadow, in-flow) so the ghost layout
- * reads as the real one about to arrive. Core `Animated` only — the project
- * pins legacy gesture-handler and ships no Reanimated.
+ * Loading placeholder: a surface-2 block with a gentle opacity pulse, used
+ * where a screen waits on the network (lobby roster, online boards). Same
+ * material as the app's cards (solid surface, zero shadow, in-flow) so the
+ * ghost layout reads as the real one about to arrive. Core `Animated` only —
+ * the project pins legacy gesture-handler and ships no Reanimated.
  */
 import React, {useEffect, useRef} from 'react';
 import {Animated, type StyleProp, type ViewStyle} from 'react-native';
@@ -49,7 +49,7 @@ export function Skeleton({
     <Animated.View
       accessibilityLabel={accessibilityLabel}
       style={[
-        {width, height, borderRadius: radius, backgroundColor: colors.glass, opacity},
+        {width, height, borderRadius: radius, backgroundColor: colors.surface2, opacity},
         style,
       ]}
     />

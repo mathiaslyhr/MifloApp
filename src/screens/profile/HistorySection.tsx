@@ -1,6 +1,6 @@
 /**
  * The daily-games history from the old Log tab, shared by both profile pages:
- * one glass card per day (today first), a DailyRow per game inside. Hosts
+ * one card per day (today first), a DailyRow per game inside. Hosts
  * prepare the rows — the own page resolves answers locally (owner's
  * privilege), a friend's page always passes null answers (published rows
  * can't carry any) — so the no-spoiler rule holds by construction.
@@ -8,10 +8,10 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {spacing} from '../../theme';
-import {previousDateKey} from '../../games/scout/dailySeed';
 import {DailyRow} from '../../core/daily/DailyRow';
+import {useDayLabel} from './dayLabel';
 import type {DailyGame, DayCellStatus} from '../../core/daily/dailyLog';
 
 export type HistoryDay = {
@@ -35,18 +35,7 @@ type Props = {
 
 export function HistorySection({days, todayKey, emptyLabel}: Props) {
   const {t} = useTranslation();
-  const months = t('dailyLog.months', {returnObjects: true}) as string[];
-
-  function formatDay(dateKey: string): string {
-    if (dateKey === todayKey) {
-      return t('dailyLog.today');
-    }
-    if (dateKey === previousDateKey(todayKey)) {
-      return t('dailyLog.yesterday');
-    }
-    const [, m, d] = dateKey.split('-').map(Number);
-    return `${d} ${months[m - 1] ?? m}`;
-  }
+  const formatDay = useDayLabel(todayKey);
 
   return (
     <View style={styles.section}>
@@ -54,15 +43,15 @@ export function HistorySection({days, todayKey, emptyLabel}: Props) {
         {t('dailyLog.history').toUpperCase()}
       </Text>
       {days.length === 0 && emptyLabel ? (
-        <GlassCard style={styles.messageCard}>
+        <Card style={styles.messageCard}>
           <Text variant="secondary" color="secondary" align="center">
             {emptyLabel}
           </Text>
-        </GlassCard>
+        </Card>
       ) : (
         <View style={styles.dayList}>
           {days.map(day => (
-            <GlassCard key={day.dateKey} style={styles.dayCard}>
+            <Card key={day.dateKey} style={styles.dayCard}>
               <Text variant="label">{formatDay(day.dateKey)}</Text>
               {/* Full-width rows, not pills: the game name and the answer get
                   the card's whole width. */}
@@ -79,7 +68,7 @@ export function HistorySection({days, todayKey, emptyLabel}: Props) {
                   />
                 ))}
               </View>
-            </GlassCard>
+            </Card>
           ))}
         </View>
       )}

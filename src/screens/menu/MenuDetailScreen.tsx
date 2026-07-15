@@ -5,7 +5,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {ChevronLeft} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {CircleButton, FloatingBar, Screen, Text, TopStatusFade} from '../../core/ui';
+import {CircleButton, FloatingBar, Screen, Text} from '../../core/ui';
 import {screenPadding, spacing, useColors} from '../../theme';
 
 type Props = {
@@ -22,9 +22,9 @@ type Props = {
 /**
  * Shared layout for the menu detail pages (Profile, Settings, How to play,
  * About). The content sits in a full-height ScrollView on the page background.
- * The wordmark title lives in the scroll flow, so it scrolls up and dissolves
- * under the frosted top fade; only the back button stays pinned as a floating
- * corner button so back is always reachable.
+ * The wordmark title lives in the scroll flow, so it scrolls off the top;
+ * only the back button stays pinned as a floating corner button so back is
+ * always reachable.
  */
 export function MenuDetailScreen({
   title,
@@ -71,9 +71,6 @@ export function MenuDetailScreen({
           <View style={styles.chromeSpacer} />
         </View>
       </FloatingBar>
-
-      {/* Frosted fade under the status bar so the title dissolves as it scrolls. */}
-      <TopStatusFade />
     </Screen>
   );
 }

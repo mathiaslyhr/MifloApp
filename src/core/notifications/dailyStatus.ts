@@ -1,11 +1,17 @@
 /**
  * The notification layer's one view of the daily games: what counts as
- * "finished today" for each of Scout, Top Bins, Journeyman and Team sheet,
- * plus each game's streak. Both the 09:00 reminder (skips mornings where
- * everything is done) and the 20:00 streak saver (which streaks are at risk
- * tonight) read from here, so the finished rules live in exactly one place.
- * A new daily game only has to add its entry to `loadDailyStatuses`.
+ * "started" and "finished" today for each of Scout, Top Bins, Journeyman and
+ * Team sheet, plus each game's streak. `nudgePlan` decides the day's nudges
+ * from exactly this, so the rules live in one place and cannot disagree with
+ * themselves. A new daily game only has to add its entry to
+ * `loadDailyStatuses`.
+ *
+ * Finished includes a surrender: there is nothing left to nudge someone about.
+ * Started deliberately means a real guess, not an opened screen, because the
+ * evening taunt ("was it that hard?") is a bluff against someone who never
+ * actually tried.
  */
+import type {DailyGame} from '../daily/dailyLog';
 import {
   loadDailyProgress as loadJourneymanProgress,
   loadStreak as loadJourneymanStreak,
@@ -24,8 +30,10 @@ import {
 } from '../../games/tenball/storage';
 
 export type DailyGameStatus = {
-  /** i18n namespace holding the game's streakNotif copy. */
-  game: 'scout' | 'tenball' | 'journeyman' | 'teamsheet';
+  game: DailyGame;
+  /** At least one real guess today. */
+  startedToday: boolean;
+  /** Solved or surrendered today. */
   finishedToday: boolean;
   /** Days in the current streak (0 when there is none). */
   streakDays: number;
@@ -58,13 +66,17 @@ export async function loadDailyStatuses(
   return [
     {
       game: 'scout',
+      startedToday: (scout?.guessedIds.length ?? 0) > 0,
       finishedToday:
-        scout?.secretId != null && scout.guessedIds.includes(scout.secretId),
+        scout != null &&
+        (scout.gaveUp === true ||
+          (scout.secretId != null && scout.guessedIds.includes(scout.secretId))),
       streakDays: scoutStreak.current,
       streakLastCompleted: scoutStreak.lastCompletedDateKey,
     },
     {
       game: 'tenball',
+      startedToday: (tenball?.guesses.length ?? 0) > 0,
       finishedToday:
         tenball != null &&
         (tenball.gaveUp ||
@@ -76,6 +88,7 @@ export async function loadDailyStatuses(
     },
     {
       game: 'journeyman',
+      startedToday: (journeyman?.guessedIds.length ?? 0) > 0,
       finishedToday:
         journeyman != null &&
         (journeyman.gaveUp ||
@@ -86,6 +99,7 @@ export async function loadDailyStatuses(
     },
     {
       game: 'teamsheet',
+      startedToday: (teamsheet?.guesses.length ?? 0) > 0,
       finishedToday:
         teamsheet != null &&
         (teamsheet.gaveUp ||

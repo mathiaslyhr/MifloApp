@@ -4,9 +4,8 @@
  * yourself in the lobby by tapping your avatar); pass a `gameType` to lock the
  * party to a game, or omit it to let the host pick in the lobby.
  *
- * The create → navigate → error-toast dance used to be copy-pasted in
- * HomeScreen and GamesScreen; this hook is its single home so new call sites
- * (the skin-3 Home dashboard) share the exact behaviour.
+ * The create → navigate → error-toast dance lives only here so every call
+ * site shares the exact behaviour.
  */
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';

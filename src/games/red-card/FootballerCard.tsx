@@ -27,7 +27,7 @@ export function FootballerCard({footballerId}: {footballerId: string}) {
 
   return (
     // Chromeless: just the stacked content — the caller supplies any framing
-    // (a frosted card, a green/red reveal frame, etc.).
+    // (a surface card, a green/red reveal frame, etc.).
     <View style={styles.content}>
       {portrait != null ? (
         <Image source={portrait} resizeMode="contain" style={styles.portrait} />

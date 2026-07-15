@@ -12,30 +12,24 @@ import {shuffle, type Rng} from '../../data/football';
 import {buildRounds} from './questions';
 import {fractionRemaining, scoreAnswer} from './scoring';
 import {MAX_ROUNDS, MIN_ROUNDS, QUESTION_DURATION_MS} from './types';
-import type {OffsideAnswer, OffsidePlayer, OffsideRound} from './types';
+import type {OffsidePlayer, OffsideState} from './types';
 
 /** An odd-one-out race works head-to-head, same floor as online. */
 export const LOCAL_MIN_PLAYERS = 2;
 
-export type LocalOffsideStage = 'question' | 'reveal' | 'scoreboard' | 'standings';
-
-export type LocalOffsideState = {
-  /** `userId` is a local 'p1'.. id, so the shared engine helpers and the
-   * Scoreboard rows work unchanged. */
-  players: OffsidePlayer[];
+/**
+ * `LocalOffsideState` extends the online `OffsideState`, so the shared
+ * `standings`/`deltasOf` and the online components' props work unchanged, and
+ * one GameView draws both modes. The extras are what a shared phone adds.
+ *
+ * `userId` is a local 'p1'.. id. `roundEndsAt`/`turnUserId` stay null — the
+ * server clock and the turn lock have no local meaning; `deadline` is the
+ * local answer to the former.
+ */
+export type LocalOffsideState = OffsideState & {
   /** Shuffled once at deal; the per-round answering order. */
   order: string[];
-  /** deck.length — `buildRounds` can cap a thin pool to fewer rounds. */
-  rounds: number;
-  deck: OffsideRound[];
-  /** 1..rounds — one deck entry per round. */
-  round: number;
-  /** This round's answers by playerId; cleared when the next round starts. */
-  answers: Record<string, OffsideAnswer>;
-  /** Running totals, accumulated when a round resolves. */
-  scores: Record<string, number>;
-  stage: LocalOffsideStage;
-  /** Index into `order` of whose turn it is (question stage only). */
+  /** Index into `order` of whose turn it is (question phase only). */
   handoffIndex: number;
   /** false = "Pass the phone to X" gate; true = X's cards and clock are up. */
   contentShown: boolean;
@@ -83,21 +77,26 @@ function dealGame(
     scores[p.userId] = 0;
   }
   return {
-    players,
-    order: shuffle(players.map(p => p.userId), rng),
+    gameType: 'offside',
+    phase: 'question',
+    round: 1,
+    // Defensive cap: `buildRounds` can return a thinner deck than asked for.
     rounds: deck.length,
     deck,
-    round: 1,
+    roundEndsAt: null,
+    turnUserId: null,
+    players,
     answers: {},
+    answeredCount: 0,
     scores,
-    stage: 'question',
+    order: shuffle(players.map(p => p.userId), rng),
     handoffIndex: 0,
     contentShown: false,
     deadline: null,
   };
 }
 
-/** The player the phone is being passed to (question stage only). */
+/** The player the phone is being passed to (question phase only). */
 export function handoffPlayer(
   state: LocalOffsideState,
 ): OffsidePlayer | undefined {
@@ -111,7 +110,7 @@ export function revealQuestion(
   state: LocalOffsideState,
   now: number = Date.now(),
 ): LocalOffsideState {
-  if (state.stage !== 'question' || state.contentShown) {
+  if (state.phase !== 'question' || state.contentShown) {
     return state;
   }
   return {...state, contentShown: true, deadline: now + QUESTION_DURATION_MS};
@@ -130,7 +129,7 @@ export function submitLocalAnswer(
   now: number = Date.now(),
 ): LocalOffsideState {
   if (
-    state.stage !== 'question' ||
+    state.phase !== 'question' ||
     !state.contentShown ||
     state.deadline === null
   ) {
@@ -154,6 +153,7 @@ export function submitLocalAnswer(
     return {
       ...state,
       answers,
+      answeredCount: state.answeredCount + 1,
       handoffIndex: next,
       contentShown: false,
       deadline: null,
@@ -166,8 +166,9 @@ export function submitLocalAnswer(
   return {
     ...state,
     answers,
+    answeredCount: state.answeredCount + 1,
     scores,
-    stage: 'reveal',
+    phase: 'reveal',
     handoffIndex: 0,
     contentShown: false,
     deadline: null,
@@ -177,22 +178,23 @@ export function submitLocalAnswer(
 /** Anyone taps the game forward: reveal → scoreboard → next question (fresh
  * answers, gate re-armed) or, after the last round, the final standings. */
 export function advanceLocalOffside(state: LocalOffsideState): LocalOffsideState {
-  if (state.stage === 'reveal') {
-    return {...state, stage: 'scoreboard'};
+  if (state.phase === 'reveal') {
+    return {...state, phase: 'scoreboard'};
   }
-  if (state.stage !== 'scoreboard') {
+  if (state.phase !== 'scoreboard') {
     return state;
   }
   if (state.round < state.rounds) {
     return {
       ...state,
-      stage: 'question',
+      phase: 'question',
       round: state.round + 1,
       answers: {},
+      answeredCount: 0,
       handoffIndex: 0,
       contentShown: false,
       deadline: null,
     };
   }
-  return {...state, stage: 'standings'};
+  return {...state, phase: 'standings'};
 }

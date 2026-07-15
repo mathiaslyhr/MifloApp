@@ -1,13 +1,13 @@
 /**
  * The streak grid from the old Log tab, now shared by both profile pages: a
- * 2×2 glass card, one cell per daily game, so every game keeps its full name.
+ * 2×2 card, one cell per daily game, so every game keeps its full name.
  * The own page shows current + best; a friend's page passes no `best` (only
  * today's published streak is ever trusted) and the caption disappears.
  */
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
 import {GAME_META} from '../../core/daily/DailyRow';
 import type {DailyGame} from '../../core/daily/dailyLog';
@@ -27,7 +27,7 @@ export function StreaksSection({cells}: {cells: StreakCell[]}) {
       <Text variant="caption" color="tertiary" style={styles.eyebrow}>
         {t('dailyLog.streaks').toUpperCase()}
       </Text>
-      <GlassCard style={styles.streakCard}>
+      <Card style={styles.streakCard}>
         {cells.map(cell => (
           <View key={cell.game} style={styles.streakCell}>
             <Text variant="secondary" color="secondary" numberOfLines={1}>
@@ -41,7 +41,7 @@ export function StreaksSection({cells}: {cells: StreakCell[]}) {
             ) : null}
           </View>
         ))}
-      </GlassCard>
+      </Card>
     </View>
   );
 }

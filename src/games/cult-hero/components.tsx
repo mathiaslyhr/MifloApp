@@ -6,7 +6,7 @@
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {GlassCard, GlassTag, Text} from '../../core/ui';
+import {Card, Tag, Text} from '../../core/ui';
 import {spacing, useThemedStyles, type Palette} from '../../theme';
 import {getById} from '../../data/football';
 import {flagImage} from '../hattrick/criterionIcon';
@@ -50,11 +50,11 @@ export function PromptBlock({
   const styles = useThemedStyles(makeStyles);
   return (
     <>
-      <GlassTag tint="light" style={styles.roundPill}>
+      <Tag style={styles.roundPill}>
         <Text variant="caption" color="muted" style={styles.roundText}>
           {t('cultHero.round', {round, total})}
         </Text>
-      </GlassTag>
+      </Tag>
       {text === undefined ? null : muted ? (
         <Text variant="secondary" color="secondary" align="center">
           {text}
@@ -73,12 +73,12 @@ export function PickedAnswerCard({footballerId}: {footballerId: string}) {
   const {t} = useTranslation();
   const styles = useThemedStyles(makeStyles);
   return (
-    <GlassCard style={styles.card}>
+    <Card style={styles.card}>
       <Text variant="caption" color="muted" align="center" style={styles.cardLabel}>
         {t('cultHero.answer.picked')}
       </Text>
       <FootballerLine footballerId={footballerId} />
-    </GlassCard>
+    </Card>
   );
 }
 
@@ -105,7 +105,7 @@ export function ResultRevealCard({
   }
   return (
     <>
-      <GlassCard style={styles.card}>
+      <Card style={styles.card}>
         <Text variant="caption" color="muted" align="center" style={styles.cardLabel}>
           {t('cultHero.results.answerBy', {name})}
         </Text>
@@ -126,7 +126,7 @@ export function ResultRevealCard({
             {t('cultHero.results.invalid')}
           </Text>
         )}
-      </GlassCard>
+      </Card>
       <View style={styles.progress}>
         <View style={styles.dots}>
           {dots.map(i => (

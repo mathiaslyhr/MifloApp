@@ -13,7 +13,7 @@
 import React, {useEffect, useState} from 'react';
 import {Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Avatar, GlassTag, Skeleton, Text, toast} from '../../core/ui';
+import {Avatar, Tag, Skeleton, Text, toast} from '../../core/ui';
 import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {requestPushPermissionAndSync} from '../../core/notifications/pushInvites';
 import {presenceFor} from '../../core/social/presence';
@@ -171,7 +171,7 @@ export function InviteFriendsSheet({
           {friend.displayName}
         </Text>
         {reachable.has(id) ? (
-          <GlassTag
+          <Tag
             size="sm"
             accent={invited}
             disabled={isSending || invited || !code}
@@ -187,7 +187,7 @@ export function InviteFriendsSheet({
                 ? t('invite.invited')
                 : t('invite.invite')}
             </Text>
-          </GlassTag>
+          </Tag>
         ) : (
           // No push token on their side (old build, notifications off) — the
           // code link is the only way to reach them.

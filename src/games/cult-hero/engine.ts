@@ -99,3 +99,16 @@ export function standings(
 export function nameOf(state: CultHeroState, userId: string): string {
   return state.players.find(p => p.userId === userId)?.name ?? '';
 }
+
+/**
+ * This round's points per player, for the standings' +N column. `results` stay
+ * through 'leaderboard' and 'final', so the last round's scores double as the
+ * final deltas.
+ */
+export function deltasOf(state: CultHeroState): Record<string, number> {
+  const deltas: Record<string, number> = {};
+  for (const result of state.results ?? []) {
+    deltas[result.userId] = result.score;
+  }
+  return deltas;
+}

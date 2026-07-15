@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ensureSession, supabase} from '../supabase/client';
 import {BackendUnavailableError} from './roomService';
 import {VALUE_START} from '../../games/ranked-hattrick/constants';
+import {EMPTY_HISTORY, historyFrom} from '../../games/ranked-hattrick/history';
+import type {MyHistory} from '../../games/ranked-hattrick/history';
 import type {RankedState} from '../../games/ranked-hattrick/types';
 
 async function requireClient() {
@@ -224,27 +226,140 @@ export async function fetchMyValue(): Promise<MyValue> {
   };
 }
 
-/** The Value this device last showed, so the card can tell "a match happened"
- * from "they just opened the tab again" and only animate for the former. */
-const LAST_SEEN_KEY = 'miflo.ranked.lastSeenValue';
+/**
+ * The Value this device last showed. Kept for two reasons: the card paints it
+ * on the first frame instead of sitting empty until Supabase answers, and the
+ * € it holds is what "did a match happen while we were away?" is measured
+ * against — so the count-up fires for a real result and never for a reopen.
+ */
+const CACHE_KEY = 'miflo.ranked.value';
 
-export async function readLastSeenValue(): Promise<number | null> {
+/** Mirrors the stored snapshot for this process, so a reopen costs no await. */
+let memo: MyValue | null = null;
+
+/** The cached Value if this process has already loaded it. Synchronous on
+ * purpose: it seeds the first render, and a render can't await. */
+export function peekCachedValue(): MyValue | null {
+  return memo;
+}
+
+/** The cached Value, hitting the disk only on the first call of the process. */
+export async function readCachedValue(): Promise<MyValue | null> {
+  if (memo) {
+    return memo;
+  }
   try {
-    const raw = await AsyncStorage.getItem(LAST_SEEN_KEY);
+    const raw = await AsyncStorage.getItem(CACHE_KEY);
     if (raw == null) {
       return null;
     }
-    const n = Number(raw);
-    return Number.isFinite(n) ? n : null;
+    const p = JSON.parse(raw) as Partial<MyValue>;
+    // Distrust the disk: a half-written or older shape paints a broken card.
+    if (
+      typeof p.value !== 'number' ||
+      typeof p.games !== 'number' ||
+      !Array.isArray(p.form)
+    ) {
+      return null;
+    }
+    memo = {
+      value: p.value,
+      games: p.games,
+      form: p.form.filter((n): n is number => typeof n === 'number'),
+    };
+    return memo;
   } catch {
     return null;
   }
 }
 
-export async function writeLastSeenValue(value: number): Promise<void> {
+export async function writeCachedValue(v: MyValue): Promise<void> {
+  memo = v; // in memory first: the next reopen shouldn't wait on the disk.
   try {
-    await AsyncStorage.setItem(LAST_SEEN_KEY, String(value));
+    await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(v));
   } catch {
     // A missed write just means one extra count-up next time. Not worth a toast.
+  }
+}
+
+/**
+ * This user's ranked match history: every match's opponent, result and € swing,
+ * plus their career record. One RPC (0041) feeds the whole career page — the
+ * chart, the record and the recent-matches list — so the Profile tab costs one
+ * round trip, not three.
+ */
+export async function fetchMatchHistory(limit?: number): Promise<MyHistory> {
+  if (!supabase) {
+    return EMPTY_HISTORY;
+  }
+  const uid = await ensureSession();
+  if (!uid) {
+    return EMPTY_HISTORY;
+  }
+  const {data, error} = await supabase.rpc('rh_match_history', {
+    p_limit: limit ?? null,
+  });
+  if (error) {
+    throw error;
+  }
+  return historyFrom(data);
+}
+
+/** The history this device last showed. Same bargain as the Value cache above:
+ * the chart paints a real curve on frame one instead of a shell, and the
+ * network only ever corrects it. */
+const HISTORY_KEY = 'miflo.ranked.history';
+
+let historyMemo: MyHistory | null = null;
+
+/** The cached history if this process has already loaded it. Synchronous on
+ * purpose — it seeds the first render, and a render can't await. */
+export function peekCachedHistory(): MyHistory | null {
+  return historyMemo;
+}
+
+/** The cached history, hitting the disk only on the first call of the process. */
+export async function readCachedHistory(): Promise<MyHistory | null> {
+  if (historyMemo) {
+    return historyMemo;
+  }
+  try {
+    const raw = await AsyncStorage.getItem(HISTORY_KEY);
+    if (raw == null) {
+      return null;
+    }
+    // historyFrom already distrusts its input, so the disk gets parsed by the
+    // same rules as the wire — an older shape yields an empty history, never a
+    // broken chart.
+    const parsed = historyFrom(JSON.parse(raw));
+    historyMemo = parsed;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+export async function writeCachedHistory(h: MyHistory): Promise<void> {
+  historyMemo = h;
+  try {
+    // Stored in the wire's shape, so readCachedHistory can reuse historyFrom.
+    await AsyncStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify({
+        matches: h.matches.map(m => ({
+          match_id: m.matchId,
+          created_at: m.at,
+          delta: m.delta,
+          value_after: m.valueAfter,
+          result: m.result,
+          opponent_id: m.opponent?.userId ?? null,
+          opponent_name: m.opponent?.name ?? null,
+          opponent_avatar: m.opponent?.avatarPath ?? null,
+        })),
+        record: h.record,
+      }),
+    );
+  } catch {
+    // A missed write costs one shell on the next cold open. Not worth a toast.
   }
 }

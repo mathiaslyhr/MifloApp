@@ -7,7 +7,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Crown} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
-import {GlassCard, GlassTag, Text} from '../../core/ui';
+import {Card, Tag, Text} from '../../core/ui';
 import {
   fonts,
   spacing,
@@ -18,7 +18,7 @@ import {
 
 export type NamedPlayer = {userId: string; name: string};
 
-/** Tappable roster of glass name tags; optionally hides one player (yourself). */
+/** Tappable roster of name tags; optionally hides one player (yourself). */
 export function PlayerGrid({
   players,
   excludeId,
@@ -34,7 +34,7 @@ export function PlayerGrid({
       {players
         .filter(p => p.userId !== excludeId)
         .map(p => (
-          <GlassTag
+          <Tag
             key={p.userId}
             onPress={() => onPick(p.userId)}
             accessibilityRole="button"
@@ -42,7 +42,7 @@ export function PlayerGrid({
             <Text variant="body" style={styles.pickName}>
               {p.name}
             </Text>
-          </GlassTag>
+          </Tag>
         ))}
     </View>
   );
@@ -71,14 +71,14 @@ export function AnswerRevealBlock({
   }
   return (
     <>
-      <GlassCard style={styles.answerCard}>
+      <Card style={styles.answerCard}>
         <Text variant="caption" color="muted" align="center" style={styles.answerAuthor}>
           {name}
         </Text>
         <Text variant="section" align="center" style={styles.answerText}>
           {text}
         </Text>
-      </GlassCard>
+      </Card>
       <View style={styles.answerProgress}>
         <View style={styles.answerDots}>
           {dots.map(i => (
@@ -109,7 +109,7 @@ export function Scoreboard({
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   return (
-    <GlassCard style={styles.listCard}>
+    <Card style={styles.listCard}>
       <Text variant="label" style={styles.listTitle}>
         {t('redCard.reveal.scoreboard')}
       </Text>
@@ -145,7 +145,7 @@ export function Scoreboard({
           </View>
         );
       })}
-    </GlassCard>
+    </Card>
   );
 }
 

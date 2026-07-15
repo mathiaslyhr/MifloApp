@@ -56,16 +56,9 @@ type Props = {
    * - `'pill'` (default): filled pill with accent text, matching the left
    *   icon badge — for the Games hub tiles.
    * - `'text'`: plain muted label — for the picker popup, where a filled pill
-   *   would clash with the glass tiles.
+   *   would clash with the tiles.
    */
   badgeVariant?: 'pill' | 'text';
-  /**
-   * Surface treatment:
-   * - `'glass'` (default): clear frosted fill for in-flow tiles.
-   * - `'floating'`: near-solid frosted white for a tile floating on a dimmed
-   *   (dark) scrim — e.g. the game-picker popup, which has no card behind it.
-   */
-  surface?: 'glass' | 'floating';
   /**
    * Optional hidden leading action, Apple Mail style: swiping the tile to the
    * right slides it over and reveals a small circle button on the left (e.g.
@@ -88,10 +81,9 @@ type Props = {
 };
 
 /**
- * A full-width glass card for the Games hub: an accent icon badge, the game
- * title + a one-line tagline, and a trailing chevron. Reuses the "clear"
- * frosted-glass language (glassLight fill, glassRim rim, soft lift shadow) from
- * CircleButton / IslandTabBar, and the shared springy press-scale via
+ * A full-width game card: an accent icon badge, the game title + a one-line
+ * tagline, and a trailing chevron. Solid surface fill with the standard
+ * hairline rim (design.md), and the shared springy press-scale via
  * PressableScale.
  */
 export function GameTile({
@@ -105,7 +97,6 @@ export function GameTile({
   meta,
   daily,
   badgeVariant = 'pill',
-  surface = 'glass',
   SecondaryIcon,
   onSecondaryPress,
   secondaryAccessibilityLabel,
@@ -252,11 +243,7 @@ export function GameTile({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityState={disabled ? {disabled: true} : undefined}
-      style={[
-        styles.card,
-        surface === 'floating' && styles.cardFloating,
-        disabled && styles.cardDisabled,
-      ]}>
+      style={[styles.card, disabled && styles.cardDisabled]}>
       <View style={styles.topPillRow} pointerEvents="none">
         {topPill}
         {metaPill}
@@ -289,8 +276,8 @@ export function GameTile({
 
   return (
     <View>
-      {/* The hidden leading action. It fades in with the swipe — the tile's
-          glass is translucent, so at rest it must be fully invisible. */}
+      {/* The hidden leading action. It fades in with the swipe, so at rest it
+          is fully invisible. */}
       <Animated.View
         pointerEvents={revealed ? 'auto' : 'none'}
         style={[
@@ -341,21 +328,9 @@ const makeStyles = (c: Palette) =>
     paddingHorizontal: spacing.lg,
     borderRadius: radii.card,
     borderWidth: 1,
-    // "Clear" frosted glass — matches the nav island / secondary button. Flat
-    // on purpose: in-flow glass carries no shadow (it smears the background
-    // and bleeds into the gaps between stacked tiles).
-    backgroundColor: c.glassLight,
-    borderColor: c.glassRim,
-  },
-  // Floating on a dimmed scrim (picker popup): near-solid white + a real lift
-  // so the tile reads as its own card with no container behind it.
-  cardFloating: {
-    backgroundColor: c.glassStrong,
-    shadowColor: c.shadowInk,
-    shadowOpacity: 0.22,
-    shadowRadius: 24,
-    shadowOffset: {width: 0, height: 12},
-    elevation: 8,
+    // Solid surface, flat on purpose: in-flow cards carry no shadow.
+    backgroundColor: c.surface,
+    borderColor: c.divider,
   },
   cardDisabled: {opacity: 0.5},
   // Trailing slot (badge or chevron) never shrinks; the body yields space to it.
@@ -394,7 +369,7 @@ const makeStyles = (c: Palette) =>
     borderRadius: radii.pill,
     backgroundColor: c.surface2,
     borderWidth: 1,
-    borderColor: c.glassRim,
+    borderColor: c.divider,
     shadowColor: c.shadowInk,
     shadowOpacity: 0.1,
     shadowOffset: {width: 0, height: 3},
@@ -406,7 +381,7 @@ const makeStyles = (c: Palette) =>
   dailyText: {color: c.onInk},
   pillText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
   metaText: {fontSize: 11, lineHeight: 14, letterSpacing: 0.3},
-  // Plain muted label (picker popup) — no background to clash with glass tiles.
+  // Plain muted label (picker popup) — no background to clash with the tiles.
   textBadge: {fontSize: 12, lineHeight: 15},
   badge: {
     width: 44,

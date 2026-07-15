@@ -23,8 +23,6 @@ type Props = {
   borderWidth?: 1 | 2;
   /** Brand-purple rim — "you" in the lobby, selected states. */
   accent?: boolean;
-  /** Legacy prop from the glass era; both values now render surface-2. */
-  tint?: 'light' | 'regular';
   style?: StyleProp<ViewStyle>;
   accessibilityRole?: AccessibilityRole;
   accessibilityLabel?: string;
@@ -36,14 +34,13 @@ type Props = {
  * (design.md). No `overflow: 'hidden'` anywhere so children may straddle the
  * rim (the lobby's HOST badge sits above the top border).
  */
-export function GlassTag({
+export function Tag({
   children,
   onPress,
   disabled = false,
   size = 'md',
   borderWidth = 1,
   accent = false,
-  tint: _tint = 'regular',
   style,
   accessibilityRole,
   accessibilityLabel,

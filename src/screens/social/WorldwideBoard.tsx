@@ -1,7 +1,7 @@
 /**
  * The worldwide board: for one daily game, today's best players across the
  * whole app (public by design), ranked most-right then fewest-tries. A row of
- * icon pills switches games; the list is one GlassCard of LeaderboardRows, with
+ * icon pills switches games; the list is one Card of LeaderboardRows, with
  * the caller's own row pinned at the bottom when it falls outside the top slice.
  *
  * Lives inside the Friends tab's ScrollView (no scroll of its own). Fetches on
@@ -11,7 +11,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {GlassCard, GlassTag, Skeleton, Text} from '../../core/ui';
+import {Card, Tag, Skeleton, Text} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {isBackendConfigured} from '../../core/config';
 import {DAILY_GAMES, type DailyGame} from '../../core/daily/dailyLog';
@@ -73,7 +73,7 @@ export function WorldwideBoard({todayKey, active, myName, myAvatarUri}: Props) {
           const {Icon, titleKey} = GAME_META[g];
           const selected = g === game;
           return (
-            <GlassTag
+            <Tag
               key={g}
               onPress={() => setGame(g)}
               accent={selected}
@@ -85,7 +85,7 @@ export function WorldwideBoard({todayKey, active, myName, myAvatarUri}: Props) {
                 color={selected ? colors.primaryInk : colors.textSecondary}
                 strokeWidth={2}
               />
-            </GlassTag>
+            </Tag>
           );
         })}
       </View>
@@ -95,27 +95,27 @@ export function WorldwideBoard({todayKey, active, myName, myAvatarUri}: Props) {
       </Text>
 
       {!isBackendConfigured ? (
-        <GlassCard style={styles.messageCard}>
+        <Card style={styles.messageCard}>
           <Text variant="secondary" color="secondary" align="center">
             {t('leaderboard.unavailable')}
           </Text>
-        </GlassCard>
+        </Card>
       ) : state === 'loading' ? (
         <Skeleton height={220} />
       ) : state === 'error' ? (
-        <GlassCard style={styles.messageCard}>
+        <Card style={styles.messageCard}>
           <Text variant="secondary" color="secondary" align="center">
             {t('leaderboard.loadError')}
           </Text>
-        </GlassCard>
+        </Card>
       ) : state.rows.length === 0 ? (
-        <GlassCard style={styles.messageCard}>
+        <Card style={styles.messageCard}>
           <Text variant="secondary" color="secondary" align="center">
             {t('leaderboard.empty', {game: t(GAME_META[game].titleKey)})}
           </Text>
-        </GlassCard>
+        </Card>
       ) : (
-        <GlassCard style={styles.board}>
+        <Card style={styles.board}>
           {state.rows.map((row, i) => (
             <LeaderboardRow
               key={`${row.rank}-${i}`}
@@ -146,7 +146,7 @@ export function WorldwideBoard({todayKey, active, myName, myAvatarUri}: Props) {
               />
             </View>
           ) : null}
-        </GlassCard>
+        </Card>
       )}
     </View>
   );
@@ -173,6 +173,6 @@ const makeStyles = (c: Palette) =>
     // A stronger top rule sets the pinned "you" row apart from the top slice.
     pinned: {
       borderTopWidth: StyleSheet.hairlineWidth,
-      borderTopColor: c.glassRim,
+      borderTopColor: c.divider,
     },
   });

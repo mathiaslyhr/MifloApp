@@ -9,7 +9,7 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {X} from 'lucide-react-native';
-import {Avatar, Button, CircleButton, GlassCard, Text, toast} from '../../core/ui';
+import {Avatar, Button, CircleButton, Card, Text, toast} from '../../core/ui';
 import {spacing, useColors} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import {refreshFriendRequests} from '../../core/social/requestsStore';
@@ -80,7 +80,7 @@ export function RequestsSection({requests, onAccepted}: Props) {
           .join('');
         const busy = busyId !== null;
         return (
-          <GlassCard key={userId} style={styles.card}>
+          <Card key={userId} style={styles.card}>
             <Avatar
               initials={initials}
               tone="soft"
@@ -104,7 +104,7 @@ export function RequestsSection({requests, onAccepted}: Props) {
               accessibilityLabel={t('social.a11yDecline', {name: displayName})}>
               <X size={16} color={colors.textSecondary} strokeWidth={2} />
             </CircleButton>
-          </GlassCard>
+          </Card>
         );
       })}
     </View>

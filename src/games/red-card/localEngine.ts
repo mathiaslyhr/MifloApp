@@ -8,11 +8,30 @@
  * reveal their private content, and hides it again before the next pass.
  * Scoring reuses the online mirrors (`tally`, `applyRedemption`) so both modes
  * award identical points.
+ *
+ * `LocalRedCardState` extends the online `ImposterState`, so the shared
+ * `advanceAnswerReveal`, `standings`, `nameOf` and `awaitingRedemption` work
+ * unchanged and one GameView draws both modes.
+ *
+ * THE SECRET RULE. `imposterId`/`footballerId` are extras here and are NOT on
+ * `ImposterState`. That is what keeps the GameView honest: its `state` prop is
+ * typed `ImposterState`, so reading a secret inside it is a compile error, and
+ * the secret can only arrive through `perspective`. This state must therefore
+ * never reach the wire — the local container has no `roomId` and must never
+ * import `core/rooms/*`.
  */
 import {shuffle, type Rng} from '../../data/football';
-import {applyRedemption, cleanAnswer, eligibleFootballerIds, tally} from './engine';
+import {
+  advanceAnswerReveal,
+  applyRedemption,
+  awaitingRedemption,
+  cleanAnswer,
+  eligibleFootballerIds,
+  tally,
+} from './engine';
 import {buildQuestionIds, rememberQuestions} from './questions';
 import {MAX_ROUNDS, MIN_POOL, MIN_ROUNDS, SCORE} from './types';
+import type {ImposterPlayer, ImposterRole, ImposterState} from './types';
 
 /**
  * Fewest players for a meaningful local hand (1 imposter + 2 detectives).
@@ -21,61 +40,32 @@ import {MAX_ROUNDS, MIN_POOL, MIN_ROUNDS, SCORE} from './types';
  */
 export const LOCAL_MIN_PLAYERS = 3;
 
-export type LocalPlayer = {id: string; name: string};
-
-export type LocalStage =
-  /** The phone goes around once; each player privately sees their role. */
-  | 'roleReveal'
-  /** Per round: the phone goes around and each player privately types an answer. */
-  | 'answering'
-  /** Phone in the middle: the round's answers show one by one, attributed. */
-  | 'answerReveal'
-  /** The phone goes around again; each player secretly taps a vote. */
-  | 'voting'
-  /** The caught imposter gets the phone for a blind redemption guess. */
-  | 'redemption'
-  /** Everything on the table: secret, scoreboard, votes. */
-  | 'reveal';
-
-export type LocalReveal = {
-  caught: boolean;
-  /** Points earned this hand (includes a successful redemption). */
-  deltas: Record<string, number>;
-  /** voterId -> the player they voted for. */
-  votes: Record<string, string>;
-  redemption?: {guessId: string; correct: boolean};
-};
-
-export type LocalRedCardState = {
-  players: LocalPlayer[];
+export type LocalRedCardState = ImposterState & {
   /** The two secrets — safe here because the phone itself is shared. */
   imposterId: string;
   footballerId: string;
   /** Shuffled player order, used for role handoffs, answering, and voting. */
   order: string[];
-  /** Host-picked question count, MIN_ROUNDS..MAX_ROUNDS. */
-  rounds: number;
-  /** Stable question ids, one per round (see `questions.ts`). */
-  questionIds: string[];
-  /** Every question this session has asked (oldest first), across rematches. */
-  usedQuestionIds: string[];
-  /** 1..rounds — one shared question per round. */
-  round: number;
-  /** The current round's answers, playerId -> text. */
-  answers: Record<string, string>;
-  /** Randomized playerId order for the current round's answer reveal. */
-  revealOrder: string[];
-  /** Which answer is on screen during answerReveal (0-based). */
-  answerIndex: number;
-  votes: Record<string, string>;
-  /** Running totals across hands. */
-  scores: Record<string, number>;
-  stage: LocalStage;
-  /** Index into `order` of whose eyes may be on the screen (handoff stages). */
+  /** Index into `order` of whose eyes may be on the screen (handoff steps). */
   handoffIndex: number;
   /** false = "Pass the phone to X" gate; true = X's private content is up. */
   contentShown: boolean;
-  reveal?: LocalReveal;
+  /**
+   * The role round-trip: the phone goes around once so each player privately
+   * sees their role. A local-only step INSIDE the shared `answering` phase —
+   * it mirrors the role modal online lays over the same phase.
+   */
+  roleTrip: boolean;
+  /**
+   * This round's answers before publication, playerId -> text. The local mirror
+   * of the server's private answer table; published into `answers` when the
+   * last player submits.
+   */
+  drafts: Record<string, string>;
+  /** Votes so far, voterId -> targetId. Public only via `reveal.votes`. */
+  votes: Record<string, string>;
+  /** Every question this session has asked (oldest first), across rematches. */
+  usedQuestionIds: string[];
 };
 
 /** Deal a fresh hand for the named players (3+, trimmed non-empty names). */
@@ -91,10 +81,10 @@ export function createLocalGame(
   if (rounds < MIN_ROUNDS || rounds > MAX_ROUNDS) {
     throw new Error(`Red Card plays ${MIN_ROUNDS} to ${MAX_ROUNDS} rounds`);
   }
-  const players = trimmed.map((name, i) => ({id: `p${i + 1}`, name}));
+  const players = trimmed.map((name, i) => ({userId: `p${i + 1}`, name}));
   const scores: Record<string, number> = {};
   for (const p of players) {
-    scores[p.id] = 0;
+    scores[p.userId] = 0;
   }
   return dealHand(players, scores, rounds, rng);
 }
@@ -115,7 +105,7 @@ export function createLocalRematch(
 }
 
 function dealHand(
-  players: LocalPlayer[],
+  players: ImposterPlayer[],
   scores: Record<string, number>,
   rounds: number,
   rng: Rng,
@@ -133,32 +123,52 @@ function dealHand(
   // Prefer questions the session hasn't heard yet (see questions.ts).
   const questionIds = buildQuestionIds(rounds, rng, usedQuestionIds);
   return {
-    players,
-    imposterId: players[Math.floor(rng() * players.length)].id,
-    footballerId: candidates[Math.floor(rng() * candidates.length)],
-    order: shuffle(players.map(p => p.id), rng),
+    gameType: 'red-card',
+    // The hand opens on the role round-trip, which lives inside `answering`.
+    phase: 'answering',
+    round: 1,
     rounds,
     questionIds,
-    usedQuestionIds: rememberQuestions(usedQuestionIds, questionIds),
-    round: 1,
-    answers: {},
-    revealOrder: [],
+    turnUserId: null,
+    players,
+    answeredCount: 0,
     answerIndex: 0,
-    votes: {},
+    votedCount: 0,
     scores,
-    stage: 'roleReveal',
+    imposterId: players[Math.floor(rng() * players.length)].userId,
+    footballerId: candidates[Math.floor(rng() * candidates.length)],
+    order: shuffle(players.map(p => p.userId), rng),
     handoffIndex: 0,
     contentShown: false,
+    roleTrip: true,
+    drafts: {},
+    votes: {},
+    usedQuestionIds: rememberQuestions(usedQuestionIds, questionIds),
   };
 }
 
 /** The player the phone is being passed to (roles / answering / voting / redemption). */
-export function handoffPlayer(state: LocalRedCardState): LocalPlayer | undefined {
-  if (state.stage === 'redemption') {
-    return state.players.find(p => p.id === state.imposterId);
+export function handoffPlayer(
+  state: LocalRedCardState,
+): ImposterPlayer | undefined {
+  if (awaitingRedemption(state)) {
+    return state.players.find(p => p.userId === state.imposterId);
   }
   const id = state.order[state.handoffIndex];
-  return state.players.find(p => p.id === id);
+  return state.players.find(p => p.userId === id);
+}
+
+/**
+ * The gated player's private role. Local-only by nature: online this comes off
+ * the server, which is the entire reason the secret lives off-device there.
+ */
+export function localRole(
+  state: LocalRedCardState,
+  userId: string,
+): ImposterRole {
+  return userId === state.imposterId
+    ? {role: 'imposter'}
+    : {role: 'detective', footballerId: state.footballerId};
 }
 
 /** The handoff player taps: their private content comes up. */
@@ -170,33 +180,35 @@ export function showContent(state: LocalRedCardState): LocalRedCardState {
 }
 
 /**
- * "Hide and pass on" after a private role look. The last look starts the first
- * question round. (Answering and voting advance through their own private
- * actions instead — submitting IS the pass.)
+ * "Hide and pass on" after a private role look. The last look ends the role
+ * round-trip and starts the first question. (Answering and voting advance
+ * through their own private actions instead — submitting IS the pass.)
  */
 export function hideAndPass(state: LocalRedCardState): LocalRedCardState {
-  if (state.stage !== 'roleReveal' || !state.contentShown) {
+  if (!state.roleTrip || !state.contentShown) {
     return state;
   }
   const next = state.handoffIndex + 1;
   if (next < state.order.length) {
     return {...state, handoffIndex: next, contentShown: false};
   }
-  return {...state, stage: 'answering', handoffIndex: 0, contentShown: false};
+  return {...state, roleTrip: false, handoffIndex: 0, contentShown: false};
 }
 
 /**
  * The gated player privately types their answer to the round's question.
  * Recording it re-arms the pass gate for the next player; the last answer
- * shuffles a reveal order and puts the phone in the middle for the one-by-one
- * reveal. Empty or over-long answers are ignored (the screen disables submit).
+ * publishes the round's texts in a random order — the local mirror of the
+ * server writing them into the public state — and puts the phone in the middle
+ * for the one-by-one reveal. Empty or over-long answers are ignored (the screen
+ * disables submit).
  */
 export function submitLocalAnswer(
   state: LocalRedCardState,
   text: string,
   rng: Rng = Math.random,
 ): LocalRedCardState {
-  if (state.stage !== 'answering' || !state.contentShown) {
+  if (state.phase !== 'answering' || state.roleTrip || !state.contentShown) {
     return state;
   }
   const clean = cleanAnswer(text);
@@ -204,16 +216,26 @@ export function submitLocalAnswer(
     return state;
   }
   const playerId = state.order[state.handoffIndex];
-  const answers = {...state.answers, [playerId]: clean};
+  const drafts = {...state.drafts, [playerId]: clean};
   const next = state.handoffIndex + 1;
   if (next < state.order.length) {
-    return {...state, answers, handoffIndex: next, contentShown: false};
+    return {
+      ...state,
+      drafts,
+      answeredCount: state.answeredCount + 1,
+      handoffIndex: next,
+      contentShown: false,
+    };
   }
   return {
     ...state,
-    answers,
-    stage: 'answerReveal',
-    revealOrder: shuffle([...state.order], rng),
+    drafts: {},
+    answeredCount: state.answeredCount + 1,
+    answers: shuffle([...state.order], rng).map(id => ({
+      userId: id,
+      text: drafts[id],
+    })),
+    phase: 'answerReveal',
     answerIndex: 0,
     handoffIndex: 0,
     contentShown: false,
@@ -221,68 +243,71 @@ export function submitLocalAnswer(
 }
 
 /**
- * Anyone taps past the answer on the table: next answer, then either the next
- * round's question (fresh answers, phone goes around again) or — after the
- * final round — the vote.
+ * Anyone taps past the answer on the table, reusing the online pager; its
+ * spreads preserve the local extras at runtime, the cast just restores the
+ * wider type. Rolling into a new round (or the vote) re-arms the pass gate for
+ * player one.
  */
 export function advanceLocalAnswerReveal(
   state: LocalRedCardState,
 ): LocalRedCardState {
-  if (state.stage !== 'answerReveal') {
-    return state;
+  const next = advanceAnswerReveal(state) as LocalRedCardState;
+  if (next.phase !== state.phase || next.round !== state.round) {
+    return {...next, drafts: {}, handoffIndex: 0, contentShown: false};
   }
-  if (state.answerIndex + 1 < state.revealOrder.length) {
-    return {...state, answerIndex: state.answerIndex + 1};
-  }
-  if (state.round < state.rounds) {
-    return {
-      ...state,
-      stage: 'answering',
-      round: state.round + 1,
-      answers: {},
-      revealOrder: [],
-      answerIndex: 0,
-      handoffIndex: 0,
-      contentShown: false,
-    };
-  }
-  return {...state, stage: 'voting', handoffIndex: 0, contentShown: false};
+  return next;
 }
 
 /**
  * The handoff player secretly votes. Rejects self-votes. Recording the vote
  * immediately re-arms the pass gate for the next voter; the last vote scores
- * the hand with the shared `tally` and moves to redemption (imposter caught)
- * or straight to the reveal (imposter escaped).
+ * the hand with the shared `tally` and opens the reveal. A caught imposter
+ * still owes a blind guess — see `awaitingRedemption`.
  */
 export function castLocalVote(
   state: LocalRedCardState,
   targetId: string,
 ): LocalRedCardState {
-  if (state.stage !== 'voting' || !state.contentShown) {
+  if (state.phase !== 'voting' || !state.contentShown) {
     return state;
   }
   const voterId = state.order[state.handoffIndex];
-  if (voterId === targetId || !state.players.some(p => p.id === targetId)) {
+  if (voterId === targetId || !state.players.some(p => p.userId === targetId)) {
     return state;
   }
   const votes = {...state.votes, [voterId]: targetId};
   const next = state.handoffIndex + 1;
   if (next < state.order.length) {
-    return {...state, votes, handoffIndex: next, contentShown: false};
+    return {
+      ...state,
+      votes,
+      votedCount: state.votedCount + 1,
+      handoffIndex: next,
+      contentShown: false,
+    };
   }
   const result = tally(
     votes,
     state.imposterId,
-    state.players.map(p => p.id),
+    state.players.map(p => p.userId),
     state.scores,
   );
   return {
     ...state,
     votes,
+    votedCount: state.votedCount + 1,
     scores: result.scores,
-    reveal: {caught: result.caught, deltas: result.deltas, votes},
-    stage: result.caught ? 'redemption' : 'reveal',
+    // The hand is over, so the secrets go public here — exactly as the server
+    // writes them into `reveal` online.
+    reveal: {
+      imposterId: state.imposterId,
+      footballerId: state.footballerId,
+      caught: result.caught,
+      deltas: result.deltas,
+      votes,
+    },
+    phase: 'reveal',
+    handoffIndex: 0,
     contentShown: false,
   };
 }
@@ -296,7 +321,7 @@ export function applyLocalRedemption(
   state: LocalRedCardState,
   guessId: string,
 ): LocalRedCardState {
-  if (state.stage !== 'redemption' || !state.reveal) {
+  if (!awaitingRedemption(state) || !state.reveal) {
     return state;
   }
   const correct = guessId === state.footballerId;
@@ -311,20 +336,6 @@ export function applyLocalRedemption(
     ...state,
     scores: applyRedemption(state.scores, state.imposterId, correct),
     reveal: {...state.reveal, deltas, redemption: {guessId, correct}},
-    stage: 'reveal',
     contentShown: false,
   };
-}
-
-/** Players sorted by running score (desc), for the reveal scoreboard. */
-export function localStandings(
-  state: LocalRedCardState,
-): {id: string; name: string; score: number}[] {
-  return state.players
-    .map(p => ({id: p.id, name: p.name, score: state.scores[p.id] ?? 0}))
-    .sort((a, b) => b.score - a.score);
-}
-
-export function localNameOf(state: LocalRedCardState, id: string): string {
-  return state.players.find(p => p.id === id)?.name ?? '';
 }

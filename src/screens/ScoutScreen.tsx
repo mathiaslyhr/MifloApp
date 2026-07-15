@@ -1,12 +1,8 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Alert,
-  Animated,
   Image,
   KeyboardAvoidingView,
-  type LayoutChangeEvent,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
   Platform,
   Pressable,
   ScrollView,
@@ -16,14 +12,15 @@ import {
 import {ChevronLeft, Flag, HelpCircle} from 'lucide-react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
-import Svg, {Defs, LinearGradient, Rect, Stop} from 'react-native-svg';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   CircleButton,
+  EdgeFade,
   FloatingBar,
   Screen,
   Text,
   toast,
+  useEdgeFades,
 } from '../core/ui';
 import {haptics} from '../core/haptics';
 import {
@@ -41,9 +38,8 @@ import {
   enableScoutReminder,
   markScoutReminderOffered,
   shouldOfferScoutReminder,
-  syncScoutReminder,
+  syncNudges,
 } from '../core/notifications/scoutReminder';
-import {syncStreakSaver} from '../core/notifications/streakSaver';
 import {queueDailyResult} from '../core/social/outbox';
 import {fromScoutEntry, liveStreak, ongoingResult} from '../core/social/normalize';
 import {flagImage, logoImage} from '../games/hattrick/criterionIcon';
@@ -130,50 +126,7 @@ export function ScoutScreen({navigation}: Props) {
   const openSearch = useSearch();
   const [cellInfo, setCellInfo] = useState<CellInfo | null>(null);
 
-  // Scroll-aware edge fades: each scrim only shows when there's list content
-  // scrolled past that edge, so the first/last card is never dimmed at rest.
-  const fadeTopOpacity = useRef(new Animated.Value(0)).current;
-  const fadeBottomOpacity = useRef(new Animated.Value(0)).current;
-  const fadeTopShown = useRef(false);
-  const fadeBottomShown = useRef(false);
-  const viewportH = useRef(0);
-  const contentH = useRef(0);
-  const lastOffsetY = useRef(0);
-
-  function toggleFade(
-    value: Animated.Value,
-    shownRef: React.MutableRefObject<boolean>,
-    show: boolean,
-  ) {
-    if (shownRef.current === show) {
-      return;
-    }
-    shownRef.current = show;
-    Animated.timing(value, {
-      toValue: show ? 1 : 0,
-      duration: 150,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function refreshFades(offsetY: number) {
-    const maxY = Math.max(0, contentH.current - viewportH.current);
-    toggleFade(fadeTopOpacity, fadeTopShown, offsetY > 2);
-    toggleFade(fadeBottomOpacity, fadeBottomShown, offsetY < maxY - 2);
-  }
-
-  const onBoardScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    lastOffsetY.current = e.nativeEvent.contentOffset.y;
-    refreshFades(lastOffsetY.current);
-  };
-  const onBoardLayout = (e: LayoutChangeEvent) => {
-    viewportH.current = e.nativeEvent.layout.height;
-    refreshFades(lastOffsetY.current);
-  };
-  const onBoardContentSize = (_w: number, h: number) => {
-    contentH.current = h;
-    refreshFades(lastOffsetY.current);
-  };
+  const fades = useEdgeFades();
 
   function showCellInfo(info: CellInfo) {
     haptics.tap();
@@ -305,9 +258,8 @@ export function ScoutScreen({navigation}: Props) {
     setStreak(updated);
     const entry = historyEntryFor(next);
     Promise.all([saveStreak(updated), recordHistory(entry)])
-      // Finished: drop tonight's rescue nudge and skip tomorrow-morning's
-      // "new player" ping past today.
-      .then(() => Promise.all([syncStreakSaver(), syncScoutReminder()]))
+      // Finished: drop tonight's rescue nudge and skip today's habit ping.
+      .then(() => syncNudges())
       .catch(() => toast.error(t('scout.errorSave')));
     // Share the score-only result with friends — a local queue write plus a
     // fire-and-forget flush; a no-op until the player opts into Friends.
@@ -445,7 +397,7 @@ export function ScoutScreen({navigation}: Props) {
           ))}
         </View>
 
-        {/* The guess list dissolves into the canvas at both edges (no frost, no
+        {/* The guess list dissolves into the canvas at both edges (no
             borders) so cards never bleed into the header or the search pill. */}
         <View style={styles.boardWrap}>
           <ScrollView
@@ -455,9 +407,9 @@ export function ScoutScreen({navigation}: Props) {
             keyboardDismissMode="on-drag"
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={16}
-            onScroll={onBoardScroll}
-            onLayout={onBoardLayout}
-            onContentSizeChange={onBoardContentSize}>
+            onScroll={fades.onScroll}
+            onLayout={fades.onLayout}
+            onContentSizeChange={fades.onContentSizeChange}>
             {/* Newest guess first; the badge counts the real guess ordinal. */}
             {state.guesses
               .slice()
@@ -495,8 +447,8 @@ export function ScoutScreen({navigation}: Props) {
               </Text>
             ) : null}
           </ScrollView>
-          <EdgeFade edge="top" opacity={fadeTopOpacity} />
-          <EdgeFade edge="bottom" opacity={fadeBottomOpacity} />
+          <EdgeFade edge="top" opacity={fades.topOpacity} />
+          <EdgeFade edge="bottom" opacity={fades.bottomOpacity} />
         </View>
 
         {finished ? (
@@ -693,39 +645,6 @@ function LegendItem({color, label}: {color: string; label: string}) {
   );
 }
 
-/**
- * A solid-colour edge fade (no blur): the canvas colour ramping to transparent
- * over the list's top/bottom edge so cards dissolve into the background instead
- * of hard-cutting against the header or the search pill.
- */
-function EdgeFade({
-  edge,
-  opacity,
-}: {
-  edge: 'top' | 'bottom';
-  opacity: Animated.Value;
-}) {
-  const colors = useColors();
-  const styles = useThemedStyles(makeStyles);
-  const top = edge === 'top';
-  const gradId = `scoutFade-${edge}`;
-  return (
-    <Animated.View
-      pointerEvents="none"
-      style={[styles.fade, top ? styles.fadeTop : styles.fadeBottom, {opacity}]}>
-      <Svg width="100%" height="100%">
-        <Defs>
-          <LinearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-            <Stop offset={0} stopColor={colors.background} stopOpacity={top ? 1 : 0} />
-            <Stop offset={1} stopColor={colors.background} stopOpacity={top ? 0 : 1} />
-          </LinearGradient>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="100%" fill={`url(#${gradId})`} />
-      </Svg>
-    </Animated.View>
-  );
-}
-
 function Stat({
   label,
   value,
@@ -784,9 +703,6 @@ function Countdown() {
   );
 }
 
-/** Height of each edge-fade scrim over the guess list. */
-const FADE_HEIGHT = 36;
-
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
   flex: {flex: 1},
@@ -833,9 +749,6 @@ const makeStyles = (c: Palette) =>
   boardWrap: {flex: 1},
   board: {flex: 1},
   boardContent: {gap: spacing.md, paddingVertical: spacing.md},
-  fade: {position: 'absolute', left: 0, right: 0, height: FADE_HEIGHT},
-  fadeTop: {top: 0},
-  fadeBottom: {bottom: 0},
   // One guess = one card (surface fill + hairline rim, no shadow).
   card: {
     backgroundColor: c.surface,

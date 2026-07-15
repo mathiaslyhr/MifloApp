@@ -66,6 +66,20 @@ export function advanceAnswerReveal(state: ImposterState): ImposterState {
   return {...rest, phase: 'voting', answerIndex: 0, turnUserId: null};
 }
 
+/**
+ * The hand is over, the imposter was caught, and they still owe their blind
+ * guess at the secret. A view concern derived from the public state — NOT a
+ * phase of its own: `ImposterPhase` is the broadcast contract mirrored by the
+ * 0015/0021 migrations, and redemption never needed a slot in it.
+ */
+export function awaitingRedemption(state: ImposterState): boolean {
+  return (
+    state.phase === 'reveal' &&
+    !!state.reveal?.caught &&
+    !state.reveal.redemption
+  );
+}
+
 export type TallyResult = {
   caught: boolean;
   deltas: Record<string, number>;

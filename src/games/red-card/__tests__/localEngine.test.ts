@@ -6,10 +6,11 @@ import {
   createLocalRematch,
   hideAndPass,
   LOCAL_MIN_PLAYERS,
+  localRole,
   showContent,
   submitLocalAnswer,
 } from '../localEngine';
-import {eligibleFootballerIds} from '../engine';
+import {awaitingRedemption, eligibleFootballerIds} from '../engine';
 import {QUESTION_IDS} from '../questions';
 import {ANSWER_MAX_LEN, SCORE} from '../types';
 import type {LocalRedCardState} from '../localEngine';
@@ -37,7 +38,7 @@ function playRound(state: LocalRedCardState): LocalRedCardState {
   for (let i = 0; i < s.order.length; i++) {
     s = submitLocalAnswer(showContent(s), `answer ${i}`);
   }
-  while (s.stage === 'answerReveal') {
+  while (s.phase === 'answerReveal') {
     s = advanceLocalAnswerReveal(s);
   }
   return s;
@@ -46,7 +47,7 @@ function playRound(state: LocalRedCardState): LocalRedCardState {
 /** Walk every question round to its end, landing on voting. */
 function intoVoting(state: LocalRedCardState): LocalRedCardState {
   let s = state;
-  while (s.stage === 'answering') {
+  while (s.phase === 'answering') {
     s = playRound(s);
   }
   return s;
@@ -58,7 +59,7 @@ function voteAll(
   pick: (voterId: string) => string,
 ): LocalRedCardState {
   let s = state;
-  while (s.stage === 'voting') {
+  while (s.phase === 'voting') {
     s = showContent(s);
     s = castLocalVote(s, pick(s.order[s.handoffIndex]));
   }
@@ -75,10 +76,12 @@ describe('createLocalGame', () => {
   it('deals a valid hand: imposter is a player, secret is illustrated, order is a permutation', () => {
     const s = createLocalGame(NAMES, 2, seq([0.7, 0.2, 0.4]));
     expect(s.players.map(p => p.name)).toEqual(NAMES);
-    expect(s.players.some(p => p.id === s.imposterId)).toBe(true);
+    expect(s.players.some(p => p.userId === s.imposterId)).toBe(true);
     expect(eligibleFootballerIds()).toContain(s.footballerId);
-    expect([...s.order].sort()).toEqual(s.players.map(p => p.id).sort());
-    expect(s.stage).toBe('roleReveal');
+    expect([...s.order].sort()).toEqual(s.players.map(p => p.userId).sort());
+    // The hand opens on the role round-trip, inside the shared answering phase.
+    expect(s.phase).toBe('answering');
+    expect(s.roleTrip).toBe(true);
     expect(s.contentShown).toBe(false);
     expect(Object.values(s.scores)).toEqual([0, 0, 0]);
   });
@@ -91,7 +94,8 @@ describe('createLocalGame', () => {
     for (const id of s.questionIds) {
       expect(QUESTION_IDS).toContain(id);
     }
-    expect(s.answers).toEqual({});
+    expect(s.drafts).toEqual({});
+    expect(s.answers).toBeUndefined();
   });
 
   it('trims names and rejects fewer than the minimum', () => {
@@ -108,18 +112,32 @@ describe('createLocalGame', () => {
   });
 });
 
+describe('localRole', () => {
+  it('names the imposter as such and hands every detective the secret', () => {
+    const s = createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]));
+    expect(localRole(s, s.imposterId)).toEqual({role: 'imposter'});
+    for (const p of s.players.filter(p => p.userId !== s.imposterId)) {
+      expect(localRole(s, p.userId)).toEqual({
+        role: 'detective',
+        footballerId: s.footballerId,
+      });
+    }
+  });
+});
+
 describe('role handoffs', () => {
   it('walks every player once, then starts the first question round', () => {
     let s = createLocalGame(NAMES, 2, seq([0.5]));
     for (let i = 0; i < s.order.length; i++) {
-      expect(s.stage).toBe('roleReveal');
+      expect(s.roleTrip).toBe(true);
       expect(s.handoffIndex).toBe(i);
       expect(s.contentShown).toBe(false);
       s = showContent(s);
       expect(s.contentShown).toBe(true);
       s = hideAndPass(s);
     }
-    expect(s.stage).toBe('answering');
+    expect(s.roleTrip).toBe(false);
+    expect(s.phase).toBe('answering');
     expect(s.round).toBe(1);
     expect(s.handoffIndex).toBe(0);
     expect(s.contentShown).toBe(false);
@@ -129,17 +147,25 @@ describe('role handoffs', () => {
     const s = createLocalGame(NAMES, 2, seq([0.5]));
     expect(hideAndPass(s)).toBe(s);
   });
+
+  it('hideAndPass is a no-op once the role trip is over', () => {
+    const shown = showContent(intoAnswering(createLocalGame(NAMES, 2, seq([0.5]))));
+    expect(hideAndPass(shown)).toBe(shown);
+  });
 });
 
 describe('submitLocalAnswer', () => {
-  it('records each answer behind the gate and re-arms it for the next player', () => {
+  it('drafts each answer behind the gate and re-arms it for the next player', () => {
     let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
     const first = s.order[0];
     s = submitLocalAnswer(showContent(s), '  80m  ');
-    expect(s.answers[first]).toBe('80m');
-    expect(s.stage).toBe('answering');
+    expect(s.drafts[first]).toBe('80m');
+    expect(s.phase).toBe('answering');
     expect(s.handoffIndex).toBe(1);
     expect(s.contentShown).toBe(false);
+    // Nothing is public until everyone has answered.
+    expect(s.answers).toBeUndefined();
+    expect(s.answeredCount).toBe(1);
   });
 
   it('is a no-op behind the gate and for empty or over-long answers', () => {
@@ -150,60 +176,91 @@ describe('submitLocalAnswer', () => {
     expect(submitLocalAnswer(shown, 'x'.repeat(ANSWER_MAX_LEN + 1))).toBe(shown);
   });
 
-  it('the last answer opens the reveal with a shuffled full reveal order', () => {
+  it('is a no-op during the role trip', () => {
+    const s = showContent(createLocalGame(NAMES, 2, seq([0.5])));
+    expect(submitLocalAnswer(s, 'too early')).toBe(s);
+  });
+
+  it('the last answer publishes every answer in a shuffled order', () => {
     let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
     for (let i = 0; i < s.order.length; i++) {
       s = submitLocalAnswer(showContent(s), `answer ${i}`);
     }
-    expect(s.stage).toBe('answerReveal');
+    expect(s.phase).toBe('answerReveal');
     expect(s.answerIndex).toBe(0);
-    // The reveal order is a permutation of the players.
-    expect([...s.revealOrder].sort()).toEqual([...s.order].sort());
-    for (const id of s.revealOrder) {
-      expect(s.answers[id]).toBeDefined();
+    expect(s.answers).toBeDefined();
+    // Published answers are a permutation of the players, each with its text.
+    expect(s.answers!.map(a => a.userId).sort()).toEqual([...s.order].sort());
+    for (const a of s.answers!) {
+      expect(a.text).toMatch(/^answer \d$/);
     }
+    // The drafts are spent.
+    expect(s.drafts).toEqual({});
   });
 });
 
 describe('advanceLocalAnswerReveal', () => {
-  it('pages every answer, then rolls into the next round with fresh answers', () => {
+  it('pages every answer, then rolls into the next round with fresh drafts', () => {
     let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
     for (let i = 0; i < s.order.length; i++) {
       s = submitLocalAnswer(showContent(s), `answer ${i}`);
     }
-    for (let i = 1; i < s.revealOrder.length; i++) {
+    const total = s.answers!.length;
+    for (let i = 1; i < total; i++) {
       s = advanceLocalAnswerReveal(s);
-      expect(s.stage).toBe('answerReveal');
+      expect(s.phase).toBe('answerReveal');
       expect(s.answerIndex).toBe(i);
     }
     s = advanceLocalAnswerReveal(s);
-    expect(s.stage).toBe('answering');
+    expect(s.phase).toBe('answering');
     expect(s.round).toBe(2);
-    expect(s.answers).toEqual({});
-    expect(s.revealOrder).toEqual([]);
+    // Past the last answer, this round's texts leave the public state.
+    expect(s.answers).toBeUndefined();
+    expect(s.drafts).toEqual({});
+    expect(s.answeredCount).toBe(0);
     expect(s.handoffIndex).toBe(0);
     expect(s.contentShown).toBe(false);
   });
 
   it('moves to voting after the final round', () => {
     const s = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5]))));
-    expect(s.stage).toBe('voting');
+    expect(s.phase).toBe('voting');
     expect(s.handoffIndex).toBe(0);
+    expect(s.contentShown).toBe(false);
   });
 
   it('a 3-round game walks three questions before voting', () => {
     let s = intoAnswering(createLocalGame(NAMES, 3, seq([0.5])));
     for (let round = 1; round <= 3; round++) {
-      expect(s.stage).toBe('answering');
+      expect(s.phase).toBe('answering');
       expect(s.round).toBe(round);
       s = playRound(s);
     }
-    expect(s.stage).toBe('voting');
+    expect(s.phase).toBe('voting');
   });
 
   it('is a no-op outside answerReveal', () => {
     const s = createLocalGame(NAMES, 2, seq([0.5]));
     expect(advanceLocalAnswerReveal(s)).toBe(s);
+  });
+
+  /**
+   * The shared pager runs on the wider local state, so every branch of
+   * `advanceAnswerReveal` must spread rather than rebuild. If it ever stops,
+   * the secrets and the handoff bookkeeping vanish silently mid-hand.
+   */
+  it('carries the local extras through the shared pager', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5])));
+    for (let i = 0; i < s.order.length; i++) {
+      s = submitLocalAnswer(showContent(s), `answer ${i}`);
+    }
+    const before = s;
+    const next = advanceLocalAnswerReveal(s);
+    expect(next.imposterId).toBe(before.imposterId);
+    expect(next.footballerId).toBe(before.footballerId);
+    expect(next.order).toEqual(before.order);
+    expect(next.usedQuestionIds).toEqual(before.usedQuestionIds);
+    expect(next.roleTrip).toBe(false);
   });
 });
 
@@ -218,31 +275,41 @@ describe('castLocalVote', () => {
     expect(castLocalVote(shown, voter)).toBe(shown);
   });
 
-  it('everyone voting the imposter catches them and routes to redemption', () => {
-    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
+  it('everyone voting the imposter catches them and leaves a guess owed', () => {
+    const s0 = intoVoting(
+      intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))),
+    );
     const s = voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
-    expect(s.stage).toBe('redemption');
+    expect(s.phase).toBe('reveal');
+    expect(awaitingRedemption(s)).toBe(true);
     expect(s.reveal).toMatchObject({caught: true});
+    // The hand is over, so the secrets are public on the reveal.
+    expect(s.reveal!.imposterId).toBe(s0.imposterId);
+    expect(s.reveal!.footballerId).toBe(s0.footballerId);
     for (const p of s.players) {
-      const expected =
-        p.id === s.imposterId ? 0 : SCORE.detectiveCorrect;
-      expect(s.reveal!.deltas[p.id]).toBe(expected);
-      expect(s.scores[p.id]).toBe(expected);
+      const expected = p.userId === s.imposterId ? 0 : SCORE.detectiveCorrect;
+      expect(s.reveal!.deltas[p.userId]).toBe(expected);
+      expect(s.scores[p.userId]).toBe(expected);
     }
   });
 
-  it('an escaped imposter scores and goes straight to the reveal', () => {
-    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
+  it('an escaped imposter scores and owes no guess', () => {
+    const s0 = intoVoting(
+      intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))),
+    );
     // Everyone votes for one non-imposter scapegoat (the imposter votes for
     // another detective so nobody self-votes).
-    const detectives = s0.players.filter(p => p.id !== s0.imposterId).map(p => p.id);
+    const detectives = s0.players
+      .filter(p => p.userId !== s0.imposterId)
+      .map(p => p.userId);
     const scapegoat = detectives[0];
     const s = voteAll(s0, voter =>
       voter === scapegoat ? detectives[1] ?? s0.imposterId : scapegoat,
     );
-    expect(s.stage).toBe('reveal');
+    expect(s.phase).toBe('reveal');
+    expect(awaitingRedemption(s)).toBe(false);
     expect(s.reveal).toMatchObject({caught: false});
     expect(s.scores[s.imposterId]).toBe(SCORE.imposterEscape);
     expect(s.reveal!.deltas[s.imposterId]).toBe(SCORE.imposterEscape);
@@ -251,7 +318,9 @@ describe('castLocalVote', () => {
 
 describe('applyLocalRedemption', () => {
   function caughtState(): LocalRedCardState {
-    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))));
+    const s0 = intoVoting(
+      intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))),
+    );
     return voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
@@ -260,8 +329,12 @@ describe('applyLocalRedemption', () => {
   it('a correct blind guess earns the redemption points', () => {
     const s = caughtState();
     const done = applyLocalRedemption(s, s.footballerId);
-    expect(done.stage).toBe('reveal');
-    expect(done.reveal!.redemption).toEqual({guessId: s.footballerId, correct: true});
+    expect(done.phase).toBe('reveal');
+    expect(awaitingRedemption(done)).toBe(false);
+    expect(done.reveal!.redemption).toEqual({
+      guessId: s.footballerId,
+      correct: true,
+    });
     expect(done.scores[s.imposterId]).toBe(SCORE.imposterRedeem);
     expect(done.reveal!.deltas[s.imposterId]).toBe(SCORE.imposterRedeem);
   });
@@ -270,12 +343,13 @@ describe('applyLocalRedemption', () => {
     const s = caughtState();
     const wrong = eligibleFootballerIds().find(id => id !== s.footballerId)!;
     const done = applyLocalRedemption(s, wrong);
-    expect(done.stage).toBe('reveal');
+    expect(done.phase).toBe('reveal');
+    expect(awaitingRedemption(done)).toBe(false);
     expect(done.reveal!.redemption).toEqual({guessId: wrong, correct: false});
     expect(done.scores[s.imposterId]).toBe(0);
   });
 
-  it('is a no-op outside the redemption stage', () => {
+  it('is a no-op when no guess is owed', () => {
     const s = createLocalGame(NAMES, 2, seq([0.5]));
     expect(applyLocalRedemption(s, 'anything')).toBe(s);
   });
@@ -283,7 +357,9 @@ describe('applyLocalRedemption', () => {
 
 describe('createLocalRematch', () => {
   it('keeps players, rounds and running scores, redeals secrets, avoids repeats', () => {
-    const s0 = intoVoting(intoAnswering(createLocalGame(NAMES, 3, seq([0.5, 0.1, 0.8]))));
+    const s0 = intoVoting(
+      intoAnswering(createLocalGame(NAMES, 3, seq([0.5, 0.1, 0.8]))),
+    );
     const done = voteAll(s0, voter =>
       voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
     );
@@ -293,17 +369,19 @@ describe('createLocalRematch', () => {
     expect(next.players).toEqual(redeemed.players);
     expect(next.scores).toEqual(redeemed.scores);
     expect(next.rounds).toBe(3);
-    expect(next.stage).toBe('roleReveal');
+    expect(next.phase).toBe('answering');
+    expect(next.roleTrip).toBe(true);
     expect(next.round).toBe(1);
     expect(next.votes).toEqual({});
-    expect(next.answers).toEqual({});
+    expect(next.drafts).toEqual({});
+    expect(next.answers).toBeUndefined();
     expect(next.reveal).toBeUndefined();
     expect(next.footballerId).not.toBe(redeemed.footballerId);
     // Fresh questions: nothing from the hand everyone just played.
     for (const id of next.questionIds) {
       expect(redeemed.questionIds).not.toContain(id);
     }
-    expect(next.players.some(p => p.id === next.imposterId)).toBe(true);
+    expect(next.players.some(p => p.userId === next.imposterId)).toBe(true);
   });
 
   it('accumulates asked questions across rematches so none repeat', () => {
@@ -317,5 +395,34 @@ describe('createLocalRematch', () => {
       }
       expect(s.usedQuestionIds).toHaveLength(seen.size);
     }
+  });
+});
+
+/**
+ * THE SECRET RULE, as a test. The secrets are local extras and must never leak
+ * into the fields a room would broadcast — the only place they legitimately go
+ * public is `reveal`, once the hand is over.
+ */
+describe('secret containment', () => {
+  it('keeps the secrets out of the published answers', () => {
+    let s = intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8])));
+    for (let i = 0; i < s.order.length; i++) {
+      s = submitLocalAnswer(showContent(s), `answer ${i}`);
+    }
+    const published = JSON.stringify(s.answers);
+    expect(published).not.toContain(s.footballerId);
+    expect(s.answers!.every(a => a.userId !== s.footballerId)).toBe(true);
+  });
+
+  it('reveals the secrets only once the hand is over', () => {
+    const s0 = intoVoting(
+      intoAnswering(createLocalGame(NAMES, 2, seq([0.5, 0.1, 0.8]))),
+    );
+    // Mid-hand: no reveal block at all, so nothing public names the secret.
+    expect(s0.reveal).toBeUndefined();
+    const done = voteAll(s0, voter =>
+      voter === s0.imposterId ? s0.order.find(id => id !== voter)! : s0.imposterId,
+    );
+    expect(done.reveal!.footballerId).toBe(s0.footballerId);
   });
 });

@@ -2,7 +2,7 @@
  * How many rounds/questions a game runs — a minus circle, the value, a plus
  * circle. Shared by every host lobby and pass-and-play setup screen (Red Card,
  * Cult Hero, Offside), each passing its own range and label. Replaces the old
- * per-game rows of preset GlassTag pills: fixed 44×44 circles stay perfectly
+ * per-game rows of preset Tag pills: fixed 44×44 circles stay perfectly
  * round at any digit count, and every value in range is reachable.
  */
 import React from 'react';
@@ -102,9 +102,9 @@ const makeStyles = (c: Palette) =>
       borderRadius: radii.pill,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: c.glass,
+      backgroundColor: c.surface2,
       borderWidth: 2,
-      borderColor: c.glassRim,
+      borderColor: c.divider,
     },
     circleDisabled: {opacity: 0.35},
     value: {

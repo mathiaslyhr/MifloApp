@@ -18,7 +18,7 @@ import {
 } from 'lucide-react-native';
 import {
   Button,
-  GlassCard,
+  Card,
   NAV_HEIGHT,
   PressableScale,
   Screen,
@@ -41,8 +41,9 @@ import {useAppNavigation} from '../../core/navigation';
 import {useCreateParty} from '../../core/rooms/useCreateParty';
 import {
   fetchMyValue,
-  readLastSeenValue,
-  writeLastSeenValue,
+  peekCachedValue,
+  readCachedValue,
+  writeCachedValue,
   type MyValue,
 } from '../../core/rooms/rankedService';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
@@ -80,6 +81,13 @@ export function PlayTab() {
   const {createParty} = useCreateParty();
   const scrollRef = useRef<ScrollView>(null);
   const [mode, setMode] = useState<Mode>('friendlies');
+
+  // The Value card only mounts on the Competitive segment. Warm its cache while
+  // the user is still on Friendlies so the first switch paints from memory,
+  // with no disk read of its own.
+  useEffect(() => {
+    readCachedValue();
+  }, []);
 
   const openGame = (entry: GameEntry) => {
     if (entry.single) {
@@ -255,7 +263,9 @@ function GameRow({
       accessibilityRole="button"
       accessibilityLabel={title}>
       <View style={styles.iconSlot}>
-        <Icon size={26} color="#FFFFFF" strokeWidth={2} />
+        {/* Every game reads white here: identity is the name and the icon, not
+            a hue. Colour is saved for meaning inside the game. */}
+        <Icon size={26} color={colors.ink} strokeWidth={2} />
       </View>
       <View style={styles.body}>
         <Text variant="section" numberOfLines={1} style={styles.cardTitle}>
@@ -351,27 +361,37 @@ function ValueCard() {
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const Icon = hattrickIcon();
-  const [data, setData] = useState<MyValue | null>(null);
+  // Seeded from memory so a reopen paints the real card on frame one — the €
+  // barely moves between visits, so last-known is the honest thing to show
+  // while the network confirms it.
+  const [data, setData] = useState<MyValue | null>(peekCachedValue);
   const [change, setChange] = useState<ValueChange | null>(null);
   const [trackW, setTrackW] = useState(0);
 
-  // Refresh on focus. A value that differs from what this device last showed
-  // means a match resolved while we were away: that, and only that, animates.
   useFocusEffect(
     useCallback(() => {
       let alive = true;
       (async () => {
+        // Paint the disk's copy first (only ever awaited once per process),
+        // then let the network correct it.
+        const cached = await readCachedValue();
+        if (!alive) {
+          return;
+        }
+        setData(prev => prev ?? cached);
         try {
           const v = await fetchMyValue();
-          const prev = await readLastSeenValue();
           if (!alive) {
             return;
           }
+          // A € that differs from what this device last showed means a match
+          // resolved while we were away: that, and only that, animates.
+          const prev = cached?.value;
           setData(v);
           setChange(prev != null && prev !== v.value ? {from: prev, to: v.value} : null);
-          await writeLastSeenValue(v.value);
+          await writeCachedValue(v);
         } catch {
-          // Offline: leave the card in its loading shell.
+          // Offline: the cached card stands rather than falling back to a shell.
         }
       })();
       return () => {
@@ -399,7 +419,7 @@ function ValueCard() {
   const deltaColor = up ? colors.success : colors.error;
 
   return (
-    <GlassCard style={styles.statCard}>
+    <Card style={styles.statCard}>
       <View style={styles.tagRow}>
         <Icon size={13} color={colors.textTertiary} strokeWidth={2} />
         <Text variant="caption" color="muted">
@@ -449,7 +469,7 @@ function ValueCard() {
           ))}
         </View>
       </View>
-    </GlassCard>
+    </Card>
   );
 }
 
@@ -484,14 +504,14 @@ const makeStyles = (c: Palette) =>
       marginBottom: spacing.md,
     },
     list: {gap: spacing.md},
-    // Game row: surface + hairline rim, no frost, no coloured fill.
+    // Game row: surface + rim, no coloured fill.
     card: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: spacing.md,
       backgroundColor: c.surface,
       borderRadius: radii.card,
-      borderWidth: StyleSheet.hairlineWidth,
+      borderWidth: 1,
       borderColor: c.divider,
       paddingHorizontal: spacing.md,
       paddingVertical: spacing.md,
@@ -502,7 +522,7 @@ const makeStyles = (c: Palette) =>
     cardTitle: {},
     cardSubtitle: {},
     trailing: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
-    // Competitive stat card (GlassCard = solid surface, no blur).
+    // Competitive stat card (Card = solid surface, no blur).
     statCard: {padding: spacing.lg, gap: spacing.sm},
     // The game the card belongs to, quietly heading it.
     tagRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},

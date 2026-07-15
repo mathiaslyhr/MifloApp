@@ -16,7 +16,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {ChevronRight, Swords} from 'lucide-react-native';
-import {Button, GlassCard, Skeleton, Text, toast} from '../../core/ui';
+import {Button, Card, Skeleton, Text, toast} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {isNetworkError} from '../../core/rooms/roomService';
 import type {RootStackParamList} from '../../core/navigation';
@@ -210,7 +210,7 @@ export function FriendProfileScreen({navigation, route}: Props) {
         }}
       />
 
-      <GlassCard style={styles.h2hCard}>
+      <Card style={styles.h2hCard}>
         <Pressable
           onPress={() => navigation.navigate('HeadToHead', {profile})}
           accessibilityRole="button"
@@ -221,7 +221,7 @@ export function FriendProfileScreen({navigation, route}: Props) {
           </Text>
           <ChevronRight size={18} color={colors.textTertiary} strokeWidth={2} />
         </Pressable>
-      </GlassCard>
+      </Card>
 
       {results === null ? (
         <Skeleton height={168} />

@@ -15,7 +15,7 @@ import React from 'react';
 import {ActionSheetIOS, Image, Pressable, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Plus} from 'lucide-react-native';
-import {GlassCard, Text} from '../../core/ui';
+import {Card, Text} from '../../core/ui';
 import {
   fonts,
   radii,
@@ -141,7 +141,7 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
   }
 
   return (
-    <GlassCard style={styles.card}>
+    <Card style={styles.card}>
       <Text variant="label" color="secondary" style={styles.title}>
         {t('profile.showcaseTitle')}
       </Text>
@@ -168,7 +168,7 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
           onPress={() => onTilePress('nation', !!favorites.nation)}
         />
       </View>
-    </GlassCard>
+    </Card>
   );
 }
 

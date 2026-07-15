@@ -8,7 +8,7 @@
  *
  *   Header   brand mark + the streak flame (hidden at zero)
  *   Hello    greeting + today's date, tight pair
- *   Daily    brand-gradient card listing the dailies still waiting; each row
+ *   Daily    surface card listing the dailies still waiting; each row
  *            is its own button straight into that game (MenuRow dividers)
  *   Match    Create match / Join match, tight pair
  *   Friends  heading + carousel of friends' unfolded day cards
@@ -87,8 +87,8 @@ function formatCountdown(ms: number): string {
 
 /**
  * The live countdown to tomorrow's dailies, ticking its own second so only the
- * clock re-renders each tick, not the whole Home page. Bright ink on the card's
- * gradient, tabular figures so the digits don't jitter.
+ * clock re-renders each tick, not the whole Home page. Bright ink on the card,
+ * tabular figures so the digits don't jitter.
  */
 function NextDropCountdown() {
   const styles = useThemedStyles(makeStyles);
@@ -374,7 +374,7 @@ const makeStyles = (c: Palette) =>
       borderRadius: radii.card,
       overflow: 'hidden',
       backgroundColor: c.surface,
-      borderWidth: StyleSheet.hairlineWidth,
+      borderWidth: 1,
       borderColor: c.divider,
     },
     // minHeight keeps the "all done" state from collapsing into a strip.

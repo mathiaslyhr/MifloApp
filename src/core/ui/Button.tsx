@@ -41,7 +41,7 @@ type Props = {
  *  - `primary`   solid brand fill, hairline rim, fully flat (no shadow —
  *                the fill alone carries the hierarchy)
  *  - `secondary` surface fill with an ink border (the "Join match" pill)
- *  - `outline`   divider-hairline border on faint glass (tertiary CTA)
+ *  - `outline`   divider-hairline border on surface (tertiary CTA)
  */
 export function Button({
   label,
@@ -112,7 +112,7 @@ const variantStyles = (c: Palette): Record<ButtonVariant, ViewStyle> => ({
     borderColor: c.ink,
   },
   outline: {
-    backgroundColor: c.glassLight,
+    backgroundColor: c.surface,
     borderWidth: 1,
     borderColor: c.divider,
   },

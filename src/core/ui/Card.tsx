@@ -1,22 +1,13 @@
 import React from 'react';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 import {radii, shadows, useColors} from '../../theme';
-import {AppBlur} from './Blur';
 
 type Props = {
   children?: React.ReactNode;
-  /** Legacy prop from the glass era; both values now render the solid surface. */
-  tint?: 'light' | 'regular';
-  /** Exact fill override for surfaces that need their own tint (e.g. the role reveal's 0.6). */
+  /** Exact fill override for surfaces that need their own tint. */
   tintColor?: string;
-  /** Ambient lift. Most in-flow glass cards sit flush (`'none'`). */
+  /** Ambient lift. Most in-flow cards sit flush (`'none'`). */
   shadow?: 'none' | 'soft' | 'floating';
-  /**
-   * Backdrop blur amount. When set, the card renders the two-layer Liquid Glass
-   * structure: the outer view keeps border + shadow unclipped while an inner
-   * layer clips a real `AppBlur` + tint to the corners.
-   */
-  blur?: number;
   radius?: 'card' | 'pill';
   borderWidth?: number;
   borderColor?: string;
@@ -28,58 +19,23 @@ type Props = {
  * The shared card surface (design.md §5): solid surface-1 fill with the
  * standard hairline border, one step lighter than the fill. Every card in the
  * app reads from this recipe so the material stays one piece across screens.
- * The `blur` path keeps a frosted fill for cards floating over a scrim.
  */
-export function GlassCard({
+export function Card({
   children,
-  tint: _tint = 'regular',
   tintColor,
   shadow = 'none',
-  blur,
   radius = 'card',
   borderWidth = 1,
   borderColor,
   style,
 }: Props) {
   const colors = useColors();
-  const fill =
-    tintColor ?? (blur == null ? colors.surface : colors.glass);
-  const borderRadius = radii[radius];
   const frame: ViewStyle = {
-    borderRadius,
+    borderRadius: radii[radius],
     borderWidth,
     borderColor: borderColor ?? colors.divider,
+    backgroundColor: tintColor ?? colors.surface,
   };
   const lift = shadow === 'none' ? undefined : shadows[shadow];
-
-  if (blur == null) {
-    return (
-      <View style={[frame, {backgroundColor: fill}, lift, style]}>
-        {children}
-      </View>
-    );
-  }
-
-  // Two-layer Liquid Glass: `overflow: 'hidden'` on the outer view would clip
-  // its own shadow on iOS, so the clip lives on an inner absolute fill instead.
-  return (
-    <View style={[frame, lift, style]}>
-      <View style={[styles.blurClip, {borderRadius}]} pointerEvents="none">
-        <AppBlur amount={blur} />
-        <View style={[StyleSheet.absoluteFill, {backgroundColor: fill}]} />
-      </View>
-      {children}
-    </View>
-  );
+  return <View style={[frame, lift, style]}>{children}</View>;
 }
-
-const styles = StyleSheet.create({
-  blurClip: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    overflow: 'hidden',
-  },
-});

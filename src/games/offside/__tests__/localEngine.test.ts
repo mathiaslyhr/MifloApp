@@ -51,7 +51,7 @@ describe('createLocalOffsideGame', () => {
       expect(round.outlierIndex).toBeLessThan(4);
     }
     expect([...s.order].sort()).toEqual(s.players.map(p => p.userId).sort());
-    expect(s.stage).toBe('question');
+    expect(s.phase).toBe('question');
     expect(s.round).toBe(1);
     expect(s.contentShown).toBe(false);
     expect(s.deadline).toBeNull();
@@ -139,14 +139,14 @@ describe('submitLocalAnswer', () => {
     const [first, second] = s.order;
 
     s = submitLocalAnswer(revealQuestion(s, T0), outlier, T0);
-    expect(s.stage).toBe('question');
+    expect(s.phase).toBe('question');
     expect(s.handoffIndex).toBe(1);
     expect(s.contentShown).toBe(false);
     expect(s.deadline).toBeNull();
     expect(handoffPlayer(s)?.userId).toBe(second);
 
     s = submitLocalAnswer(revealQuestion(s, T0), (outlier + 1) % 4, T0);
-    expect(s.stage).toBe('reveal');
+    expect(s.phase).toBe('reveal');
     expect(s.scores[first]).toBe(MAX_POINTS);
     expect(s.scores[second]).toBe(0);
   });
@@ -156,11 +156,11 @@ describe('advanceLocalOffside', () => {
   it('walks reveal, scoreboard, next question with a fresh gate and answers', () => {
     let s = createLocalOffsideGame(NAMES, 5, seq([0.5]));
     s = playRound(s, (_, round) => round.outlierIndex);
-    expect(s.stage).toBe('reveal');
+    expect(s.phase).toBe('reveal');
     s = advanceLocalOffside(s);
-    expect(s.stage).toBe('scoreboard');
+    expect(s.phase).toBe('scoreboard');
     s = advanceLocalOffside(s);
-    expect(s.stage).toBe('question');
+    expect(s.phase).toBe('question');
     expect(s.round).toBe(2);
     expect(s.answers).toEqual({});
     expect(s.handoffIndex).toBe(0);
@@ -171,8 +171,8 @@ describe('advanceLocalOffside', () => {
   it('lands on the standings after the last round with accumulated totals', () => {
     let s = createLocalOffsideGame(NAMES, 5, seq([0.5]));
     const winner = s.order[0];
-    while (s.stage !== 'standings') {
-      if (s.stage === 'question') {
+    while (s.phase !== 'standings') {
+      if (s.phase === 'question') {
         s = playRound(s, id => (id === winner ? s.deck[s.round - 1].outlierIndex : null));
       } else {
         s = advanceLocalOffside(s);
@@ -195,7 +195,7 @@ describe('createLocalOffsideRematch', () => {
     const next = createLocalOffsideRematch(s, seq([0.9, 0.2, 0.6]));
     expect(next.players).toEqual(s.players);
     expect(next.rounds).toBe(next.deck.length);
-    expect(next.stage).toBe('question');
+    expect(next.phase).toBe('question');
     expect(next.round).toBe(1);
     expect(next.answers).toEqual({});
     expect(Object.values(next.scores)).toEqual([0, 0]);

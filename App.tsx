@@ -31,8 +31,8 @@ import {getCachedProfile} from './src/core/social/socialService';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
 import {loadHapticsPreference} from './src/core/settings/preferences';
-import {syncScoutReminder} from './src/core/notifications/scoutReminder';
-import {syncStreakSaver} from './src/core/notifications/streakSaver';
+import {syncNudges} from './src/core/notifications/scoutReminder';
+import {startHabitTracking} from './src/core/notifications/habit';
 import {
   flushPendingNavigation,
   initPushInviteListeners,
@@ -66,10 +66,14 @@ function App(): React.JSX.Element {
     // haptics-on are the synchronous defaults until these resolve).
     loadStoredLanguage().catch(() => {});
     loadHapticsPreference().catch(() => {});
-    // Schedule/cancel tonight's streak-saver nudge and re-anchor the 09:00
-    // reminder (skips mornings where every daily game is already finished).
-    syncStreakSaver();
-    syncScoutReminder().catch(() => {});
+    // Learn when this user is actually free (recorded now and on every
+    // foreground), then re-anchor the daily nudges to it. The callback is what
+    // schedules: it runs after the session is recorded, so the very first
+    // launch already pings at the right time rather than a day later, and a
+    // foreground re-anchors across a midnight rollover or a timezone change.
+    startHabitTracking(() => {
+      syncNudges().catch(() => {});
+    });
     // OTA game content: apply the cached pack, then poll for a newer one on
     // launch + every foreground. Fails silently — bundled data always works.
     initFootballDataSync().catch(() => {});

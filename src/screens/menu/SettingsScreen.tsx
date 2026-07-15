@@ -23,7 +23,6 @@ import {
   enableScoutReminder,
   getScoutReminderPreference,
 } from '../../core/notifications/scoutReminder';
-import {syncStreakSaver} from '../../core/notifications/streakSaver';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
@@ -89,7 +88,6 @@ export function SettingsScreen({navigation}: Props) {
       } else {
         await disableScoutReminder();
       }
-      await syncStreakSaver();
     } catch {
       setReminder(!value);
       toast.error(t('settings.errorSave'));

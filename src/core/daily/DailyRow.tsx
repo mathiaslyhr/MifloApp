@@ -6,9 +6,9 @@
  * flag = surrendered or rolled over unfinished. Then the right/wrong counts:
  * the correct count, a red cross (miss mark), the wrong count.
  *
- * Deliberately a plain row, not a pill: pills nested inside a glass card
- * squeeze the game name and the answer into half-width and read as glass on
- * glass. A row gives the title and the answer the card's full width.
+ * Deliberately a plain row, not a pill: pills nested inside a card squeeze
+ * the game name and the answer into half-width. A row gives the title and
+ * the answer the card's full width.
  *
  * `answer` renders as a second line (the player/team behind a finished day)
  * and is only ever passed on the owner's own rows — published data cannot
@@ -151,7 +151,7 @@ const makeStyles = (c: Palette) =>
   divider: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     // Bright hairline matching the card rim, same recipe as MenuRow dividers.
-    borderBottomColor: c.glassRim,
+    borderBottomColor: c.divider,
   },
   dim: {opacity: 0.45},
   text: {flex: 1},

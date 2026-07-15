@@ -66,10 +66,9 @@ are tuned for the `#121212` ground and are trivially swappable tokens:
 
 ### Everything else
 
-Frosted chrome (the nav pill, the top status fade, toasts) uses faint white
-translucency over the dark ground so the blur shows through: fills at 6 to 10
-percent white, rims at 14 to 18 percent white (rims lighter than fills, per
-principle 2). Scrims are black at 35 to 60 percent. Shadows exist only for
+There is no frosted or translucent chrome: every surface (the nav pill, cards,
+toasts) is a solid step on the elevation ladder with a rim one step lighter
+(principle 2). Scrims are black at 35 to 60 percent. Shadows exist only for
 truly floating chrome; cards never carry shadow (principle 1). One theme-fixed
 exception: QR codes are always black modules on a white card, because scanners
 need dark-on-light.
@@ -138,13 +137,13 @@ Page titles are part of the content, not a fixed bar:
 
 - The title (`wordmark` variant) is the first child inside the ScrollView, so
   it slides up and off as you scroll.
-- A pinned `TopStatusFade` (a real backdrop blur, gradient-masked to fade to
-  nothing at its bottom edge) sits behind the status bar, so content dissolves
-  under it with no hard seam.
+- Where a scroller meets pinned chrome, use the shared scroll-aware edge fades
+  (`EdgeFade` / `useEdgeFades` in `src/core/ui/EdgeFade.tsx`): the canvas
+  colour ramps to transparent over the edge, and each scrim only appears once
+  content is actually scrolled past it. No blur anywhere.
 - Persistent controls (back, help) are floating corner circle buttons on a
   transparent bar; they stay put while the title scrolls away.
-- The bottom nav island is the one deliberately frosted surface besides the
-  top fade.
+- The bottom nav island is a solid surface pill with a divider rim.
 
 ### The boot loader
 
