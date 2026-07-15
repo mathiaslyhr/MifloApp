@@ -291,6 +291,8 @@
     "menuA11y": "Menu",
     "friendsCount": "{{count}} ven",
     "friendsCount_plural": "{{count}} venner",
+    "friendsStat": "ven",
+    "friendsStat_plural": "venner",
     "editNameTitle": "Skift dit navn",
     "editNameA11y": "Skift dit navn",
     "editAvatarA11y": "Skift dit profilbillede",
@@ -339,6 +341,7 @@
     "friendCareerEmptyBody": "{{name}} har ikke spillet en rangeret kamp endnu.",
     "friendsOfTitle": "{{name}}s venner",
     "addFriend": "Tilføj ven",
+    "friendRequested": "Anmodet",
     "strangerLocked": "Tilføj {{name}} for at se deres karriere og daglige spil.",
     "findMatch": "Find en kamp"
   },

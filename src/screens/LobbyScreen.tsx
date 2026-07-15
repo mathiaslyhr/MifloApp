@@ -674,12 +674,17 @@ export function LobbyScreen({route, navigation}: Props) {
         initialInvitedId={route.params.invitedFriendId}
       />
 
+      {/* 20 to match what the server accepts (rename_player truncates there,
+          and profiles allow 20) — the sheet's default of 15 meant a long
+          profile name arrived in the lobby un-retypable. Renaming here is
+          room-local: it never touches the profile the name came from. */}
       <NameSheet
         visible={renameOpen}
         title={t('lobby.renameTitle')}
         initialValue={me?.name ?? ''}
         placeholder={t('lobby.namePlaceholder')}
         confirmLabel={t('common.save')}
+        maxLength={20}
         onConfirm={submitRename}
         onCancel={() => setRenameOpen(false)}
       />

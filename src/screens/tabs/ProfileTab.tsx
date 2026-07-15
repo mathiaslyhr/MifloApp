@@ -4,9 +4,10 @@
  * The identity block stays pinned above a two-way segment, Instagram-style:
  * the header is the constant, the body swaps.
  *
- *   Career — the € curve, the record, and the ranked matches behind it.
  *   Daily  — streaks and the full archive (which had no home at all after the
- *            sitemap reset; the Daily tab only ever shows today).
+ *            sitemap reset; the Daily tab only ever shows today). It opens
+ *            first because it's what there is to check every day.
+ *   Career — the € curve, the record, and the ranked matches behind it.
  *
  * Friends are deliberately NOT a section here. Home already shows how they did
  * today, so repeating the feed would be the same answer twice; the header's
@@ -93,7 +94,7 @@ export function ProfileTab({isActive = true, addCode}: Props) {
 
   const todayKey = useMemo(() => dateKeyFor(new Date()), []);
 
-  const [segment, setSegment] = useState<ProfileSegment>('career');
+  const [segment, setSegment] = useState<ProfileSegment>('daily');
   const [profile, setProfile] = useState<SocialProfile | null | 'loading'>('loading');
   const [friends, setFriends] = useState<SocialProfile[] | null>(null);
   const [log, setLog] = useState<DailyLog | null>(null);
@@ -315,8 +316,8 @@ export function ProfileTab({isActive = true, addCode}: Props) {
   }, [log, todayKey, t]);
 
   const segments: SegmentedOption<ProfileSegment>[] = [
-    {key: 'career', label: t('profile.segmentCareer')},
     {key: 'daily', label: t('profile.segmentDailies')},
+    {key: 'career', label: t('profile.segmentCareer')},
   ];
 
   const corner = (

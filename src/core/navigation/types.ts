@@ -47,9 +47,13 @@ export type RootStackParamList = {
   Menu: undefined;
   /** Every friend you have, opened from the Profile header's friends line.
    * Holds the search, which is also the only way to add a friend by code. */
-  FriendsList: undefined;
-  /** A friend's profile page — the full profile travels for instant paint. */
-  FriendProfile: {profile: SocialProfile};
+  /** Someone's friends. No params = mine (my code, add-by-code, swipe-remove);
+   * a userId = a friend's list, which is browsable but not editable. */
+  FriendsList: {userId: string; name: string} | undefined;
+  /** A profile page — the profile travels for instant paint. `relation` is a
+   * paint hint only: public_profile's is_friend is the authority, since you
+   * might have become friends between the tap and the fetch. */
+  FriendProfile: {profile: SocialProfile; relation?: 'friend' | 'stranger'};
   Settings: undefined;
   HowToPlay: undefined;
   About: undefined;

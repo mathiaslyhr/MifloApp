@@ -1,6 +1,6 @@
 /**
- * Friends — the whole friends hub, opened from the Profile header's friends
- * line. Your code to hand out, the search to find or add someone, and the list
+ * Friends — the whole friends hub, opened from a profile header's friends stat.
+ * Your code to hand out, the search to find or add someone, and the list
  * itself; tap a row for that friend's profile, swipe right to remove.
  *
  * Deliberately NOT a daily feed: Home already shows how friends did today, so
@@ -11,6 +11,13 @@
  * query spelling an unknown friend code turns into a "send request" tile.
  * Adding a friend IS searching for them, and this is the only route to
  * add-by-code, so it can never be reduced to a plain filter.
+ *
+ * With a `userId` param this is instead A FRIEND'S list, the Instagram move:
+ * browse who they know and go look at those people. It's the same page with
+ * everything personal taken out — your code, add-by-code and swipe-to-remove
+ * are all about YOUR friendships and mean nothing on someone else's list. Rows
+ * carry your own relation to each person (friends_of, 0043), so a mutual opens
+ * their real profile and everyone else opens a stranger page.
  */
 import React, {useCallback, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
@@ -35,29 +42,51 @@ import {presenceFor} from '../../core/social/presence';
 import {
   avatarUrlFor,
   fetchFriends,
+  fetchFriendsOf,
   getCachedProfile,
   removeFriend,
+  searchProfiles,
 } from '../../core/social/socialService';
-import type {SocialProfile} from '../../core/social/types';
+import {isNetworkError} from '../../core/rooms/roomService';
+import type {DirectoryPerson, SocialProfile} from '../../core/social/types';
 import {useSearch} from '../../games/shared/SearchScreen';
-import {ADD_FRIEND_PREFIX, friendSource} from '../../games/shared/searchSources';
+import {ADD_FRIEND_PREFIX, peopleSource} from '../../games/shared/searchSources';
 import {useSendFriendRequest} from '../social/useSendFriendRequest';
 import {CodeBlock} from '../social/CodeBlock';
 import {MenuDetailScreen} from '../menu/MenuDetailScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'FriendsList'>;
 
-export function FriendsListScreen({navigation}: Props) {
+export function FriendsListScreen({navigation, route}: Props) {
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
+  // No params = my own list. A userId = someone else's, read-only.
+  const ofUserId = route.params?.userId ?? null;
+  const ofName = route.params?.name ?? '';
   const [friends, setFriends] = useState<SocialProfile[] | null>(null);
+  const [people, setPeople] = useState<DirectoryPerson[] | null>(null);
   const [myCode, setMyCode] = useState<string | null>(null);
   const scrollRef = React.useRef<ScrollView>(null);
   const openSearch = useSearch();
 
   const load = useCallback(() => {
     let live = true;
+    if (ofUserId) {
+      fetchFriendsOf(ofUserId)
+        .then(rows => live && setPeople(rows))
+        .catch(err => {
+          if (live) {
+            toast.error(
+              isNetworkError(err) ? t('common.errorNetwork') : t('social.loadError'),
+            );
+            setPeople(prev => prev ?? []);
+          }
+        });
+      return () => {
+        live = false;
+      };
+    }
     fetchFriends()
       .then(rows => live && setFriends(rows))
       .catch(() => live && setFriends(prev => prev ?? []));
@@ -67,7 +96,7 @@ export function FriendsListScreen({navigation}: Props) {
     return () => {
       live = false;
     };
-  }, []);
+  }, [ofUserId, t]);
 
   // Refetch each time the page is looked at, so a removal on a friend's profile
   // (or a new accept) is reflected on the way back.
@@ -95,17 +124,34 @@ export function FriendsListScreen({navigation}: Props) {
   }
 
   function openFriendSearch() {
+    // Whoever the search turns up has to be findable again when a tile is
+    // picked, and only the grid knows which tile that was — so remember every
+    // person the field has seen this session.
+    const seen = new Map<string, DirectoryPerson>();
+    for (const profile of friends ?? []) {
+      seen.set(profile.userId, {
+        userId: profile.userId,
+        displayName: profile.displayName,
+        avatarPath: profile.avatarPath,
+        isFriend: true,
+      });
+    }
     openSearch(
-      // friendSource speaks the feed's shape ({profile}); this page holds bare
-      // profiles, so wrap them rather than fetch the whole daily feed again.
-      friendSource(
-        (friends ?? []).map(profile => ({profile})),
-        friend => ({
-          id: friend.profile.userId,
-          label: friend.profile.displayName,
+      peopleSource(
+        friends ?? [],
+        async query => {
+          const rows = await searchProfiles(query);
+          for (const row of rows) {
+            seen.set(row.userId, row);
+          }
+          return rows;
+        },
+        person => ({
+          id: person.userId,
+          label: person.displayName,
           avatar: {
-            initials: initialsFor(friend.profile.displayName),
-            uri: avatarUrlFor(friend.profile.avatarPath),
+            initials: initialsFor(person.displayName),
+            uri: avatarUrlFor(person.avatarPath),
           },
         }),
         code => t('social.sendRequestTo', {code}),
@@ -119,11 +165,88 @@ export function FriendsListScreen({navigation}: Props) {
         send(item.id.slice(ADD_FRIEND_PREFIX.length));
         return;
       }
-      const friend = (friends ?? []).find(f => f.userId === item.id);
-      if (friend) {
-        navigation.navigate('FriendProfile', {profile: friend});
+      const person = seen.get(item.id);
+      if (!person) {
+        return;
       }
+      // A friend opens their real page; anyone else opens their stranger page,
+      // which is where Add friend lives. Searching for someone and adding them
+      // is one road, not two.
+      const friend = (friends ?? []).find(f => f.userId === person.userId);
+      navigation.navigate('FriendProfile', {
+        profile: friend ?? {
+          userId: person.userId,
+          displayName: person.displayName,
+          avatarPath: person.avatarPath,
+          friendCode: '',
+          lastSeenAt: null,
+          favoritePlayerId: null,
+          favoriteClubId: null,
+          favoriteNation: null,
+        },
+        relation: person.isFriend ? 'friend' : 'stranger',
+      });
     });
+  }
+
+  // Someone else's list: browsable, never editable.
+  if (ofUserId) {
+    return (
+      <MenuDetailScreen
+        title={t('profile.friendsOfTitle', {name: ofName})}
+        onBack={() => navigation.goBack()}
+        backLabel={t('common.back')}
+        scrollRef={scrollRef}
+        contentStyle={styles.body}>
+        {people === null ? (
+          <Skeleton height={160} />
+        ) : people.length === 0 ? (
+          <Card style={styles.messageCard}>
+            <Text variant="secondary" color="secondary" align="center">
+              {t('social.empty')}
+            </Text>
+          </Card>
+        ) : (
+          people.map(person => (
+            <PressableScale
+              key={person.userId}
+              onPress={() =>
+                navigation.push('FriendProfile', {
+                  // A directory row knows a name and a face; the page it opens
+                  // fetches the rest. The blanks are honest: a friend-of-friend
+                  // has no code or presence we're allowed to know.
+                  profile: {
+                    userId: person.userId,
+                    displayName: person.displayName,
+                    avatarPath: person.avatarPath,
+                    friendCode: '',
+                    lastSeenAt: null,
+                    favoritePlayerId: null,
+                    favoriteClubId: null,
+                    favoriteNation: null,
+                  },
+                  relation: person.isFriend ? 'friend' : 'stranger',
+                })
+              }
+              accessibilityRole="button"
+              accessibilityLabel={person.displayName}>
+              <Card style={styles.row}>
+                <Avatar
+                  initials={initialsFor(person.displayName)}
+                  tone="soft"
+                  size={44}
+                  uri={avatarUrlFor(person.avatarPath)}
+                />
+                <Text variant="label" numberOfLines={1} style={styles.name}>
+                  {person.displayName}
+                </Text>
+                <ChevronRight size={18} color={colors.textTertiary} strokeWidth={2} />
+              </Card>
+            </PressableScale>
+          ))
+        )}
+      </MenuDetailScreen>
+    );
   }
 
   return (

@@ -291,6 +291,8 @@
     "menuA11y": "Menu",
     "friendsCount": "{{count}} friend",
     "friendsCount_plural": "{{count}} friends",
+    "friendsStat": "friend",
+    "friendsStat_plural": "friends",
     "editNameTitle": "Change your name",
     "editNameA11y": "Change your name",
     "editAvatarA11y": "Change your profile picture",
@@ -339,6 +341,7 @@
     "friendCareerEmptyBody": "{{name}} hasn't played a ranked match yet.",
     "friendsOfTitle": "{{name}}'s friends",
     "addFriend": "Add friend",
+    "friendRequested": "Requested",
     "strangerLocked": "Add {{name}} to see their career and dailies.",
     "findMatch": "Find a match"
   },

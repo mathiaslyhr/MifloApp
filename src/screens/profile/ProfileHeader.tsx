@@ -7,9 +7,9 @@
  * identity, not another card in the list.
  */
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {Avatar, Text, initialsFor} from '../../core/ui';
+import {Avatar, PressableScale, Text, initialsFor} from '../../core/ui';
 import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
 import type {Presence} from '../../core/social/presence';
 import {formatLastActive} from '../social/PersonCard';
@@ -59,14 +59,25 @@ export function ProfileHeader({
     </Text>
   );
 
+  // The Instagram stat: the number is the thing you read, the noun under it is
+  // just its unit. The count stays the a11y label so it's still announced as
+  // one phrase ("12 friends") rather than as a stray number.
   const friendsLabel =
     friendCount === null ? null : t('profile.friendsCount', {count: friendCount});
 
-  const friendsText = friendsLabel ? (
-    <Text variant="secondary" color="secondary">
-      {friendsLabel}
-    </Text>
-  ) : null;
+  // Brand-coloured because it goes somewhere — it's the only tappable thing in
+  // the identity block, and a grey line gave no hint of that. primaryInk rather
+  // than primary: the palette keeps it a step lighter exactly for small accent
+  // text that has to read on the dark canvas.
+  const friendsText =
+    friendCount === null ? null : (
+      <View style={styles.stat}>
+        <Text style={styles.statValue}>{friendCount}</Text>
+        <Text variant="caption" color="tertiary">
+          {t('profile.friendsStat', {count: friendCount})}
+        </Text>
+      </View>
+    );
 
   return (
     <View style={styles.root}>
@@ -74,7 +85,7 @@ export function ProfileHeader({
         {/* Own page: the avatar is the tap target for choosing a picture.
             Friend page (no onPressAvatar): plain, non-tappable. */}
         {onPressAvatar ? (
-          <Pressable
+          <PressableScale
             onPress={onPressAvatar}
             hitSlop={8}
             accessibilityRole="button"
@@ -91,7 +102,7 @@ export function ProfileHeader({
                 accessibilityLabel={t('social.a11yOnline')}
               />
             ) : null}
-          </Pressable>
+          </PressableScale>
         ) : (
           <View>
             <Avatar
@@ -113,36 +124,42 @@ export function ProfileHeader({
           {showName ? (
             onEditName ? (
               // The name itself is the (undecorated) tap target for renaming.
-              <Pressable
+              <PressableScale
                 onPress={onEditName}
                 hitSlop={8}
                 accessibilityRole="button"
                 accessibilityLabel={t('profile.editNameA11y')}>
                 {nameText}
-              </Pressable>
+              </PressableScale>
             ) : (
               nameText
             )
           ) : null}
 
-          {activeLabel ? (
-            <Text variant="caption" color="tertiary">
-              {activeLabel}
-            </Text>
-          ) : null}
-
-          {friendsLabel ? (
-            onPressFriends ? (
-              <Pressable
-                onPress={onPressFriends}
-                hitSlop={10}
-                accessibilityRole="button"
-                accessibilityLabel={friendsLabel}>
-                {friendsText}
-              </Pressable>
-            ) : (
-              friendsText
-            )
+          {/* One meta line under the name: the friends stat, then how recently
+              they were here. Only the stat is inside the Pressable, so the tap
+              target stays exactly as wide as the thing that goes somewhere. */}
+          {friendsLabel || activeLabel ? (
+            <View style={styles.metaRow}>
+              {friendsText ? (
+                onPressFriends ? (
+                  <PressableScale
+                    onPress={onPressFriends}
+                    hitSlop={10}
+                    accessibilityRole="button"
+                    accessibilityLabel={friendsLabel ?? undefined}>
+                    {friendsText}
+                  </PressableScale>
+                ) : (
+                  friendsText
+                )
+              ) : null}
+              {activeLabel ? (
+                <Text variant="secondary" color="tertiary">
+                  {activeLabel}
+                </Text>
+              ) : null}
+            </View>
           ) : null}
         </View>
       </View>
@@ -165,6 +182,27 @@ const makeStyles = (c: Palette) =>
     info: {
       flex: 1,
       gap: spacing.xs,
+    },
+    // Name, then one meta line: the friends stat and how recently they were
+    // here. Wraps rather than truncates — a long "Active 3 days ago" beside the
+    // stat doesn't fit every phone.
+    metaRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      gap: spacing.sm,
+    },
+    // Instagram's stat block: the number carries, the noun is its unit.
+    stat: {alignItems: 'flex-start'},
+    statValue: {
+      fontFamily: fonts.medium,
+      fontSize: 17,
+      lineHeight: 21,
+      // The one tappable thing in the block, so it wears the brand. primaryInk,
+      // not primary: a step lighter, which is what small accent text on the
+      // dark canvas needs to stay legible.
+      color: c.primaryInk,
+      fontVariant: ['tabular-nums'],
     },
     // The scale's cap (medium 20) — the same size the wordmark uses, because the
     // name IS this page's headline.

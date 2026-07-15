@@ -139,3 +139,86 @@ $$;
 
 revoke execute on function public.public_profile(uuid) from public, anon;
 grant execute on function public.public_profile(uuid) to authenticated;
+
+-- ── search_profiles: find someone by the name you know them by ───────────────
+-- Adding a friend used to mean knowing their six-character code, because
+-- profiles_select hides everyone who isn't already a friend — so typing a
+-- person's actual name found nothing, and said "no matches" as if they didn't
+-- exist. Display names are globally unique (0027), so a name is an identifier
+-- in exactly the way a code is; this makes it usable as one.
+--
+-- Returns the same rows as friends_of, so both feed one list on the client.
+-- Same fields, same limits: no friend_code (you don't get to skip the request
+-- by finding someone), no presence, no favourites.
+--
+-- Exact match sorts first, then prefix, then the rest — so searching a whole
+-- name lands on that person even when they share a stem with others.
+--
+-- The escaping is load-bearing, not defensive: `_` and `%` are LIKE wildcards,
+-- and a real user is named "_". Unescaped, their search would match the entire
+-- table and theirs would be the one row hardest to find.
+
+create or replace function public.search_profiles(
+  p_query text,
+  p_limit int default 20
+)
+returns jsonb
+language plpgsql
+stable
+security definer
+set search_path = public
+as $$
+declare
+  v_uid   uuid := auth.uid();
+  v_q     text := btrim(coalesce(p_query, ''));
+  v_esc   text;
+  v_limit int  := least(greatest(coalesce(p_limit, 20), 1), 50);
+  v_rows  jsonb;
+begin
+  if v_uid is null then
+    raise exception 'Not authenticated';
+  end if;
+  -- An empty query means "everyone", which is a directory dump, not a search.
+  if v_q = '' then
+    return '[]'::jsonb;
+  end if;
+
+  v_esc := replace(replace(replace(v_q, '\', '\\'), '%', '\%'), '_', '\_');
+
+  select coalesce(
+    jsonb_agg(
+      jsonb_build_object(
+        'user_id', f.user_id,
+        'display_name', f.display_name,
+        'avatar_path', f.avatar_path,
+        'is_friend', f.is_friend
+      )
+      order by f.exact desc, f.prefix desc, lower(f.display_name), f.user_id
+    ),
+    '[]'::jsonb
+  )
+  into v_rows
+  from (
+    select
+      p.user_id,
+      p.display_name,
+      p.avatar_path,
+      public.are_friends(v_uid, p.user_id) as is_friend,
+      (lower(p.display_name) = lower(v_q)) as exact,
+      (p.display_name ilike v_esc || '%' escape '\') as prefix
+    from public.profiles p
+    where p.user_id <> v_uid
+      and p.display_name ilike '%' || v_esc || '%' escape '\'
+    order by
+      (lower(p.display_name) = lower(v_q)) desc,
+      (p.display_name ilike v_esc || '%' escape '\') desc,
+      lower(p.display_name)
+    limit v_limit
+  ) f;
+
+  return v_rows;
+end;
+$$;
+
+revoke execute on function public.search_profiles(text, int) from public, anon;
+grant execute on function public.search_profiles(text, int) to authenticated;

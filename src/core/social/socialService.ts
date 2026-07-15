@@ -499,6 +499,33 @@ export async function fetchFriendsOf(userId: string): Promise<DirectoryPerson[]>
 }
 
 /**
+ * Find people by the name you know them by (search_profiles, 0043). This is
+ * what makes a name work like a code: profiles RLS hides everyone who isn't
+ * already a friend, so before this, typing a real person's name answered "no
+ * matches". Empty/blank queries return nothing rather than the whole directory.
+ */
+export async function searchProfiles(query: string): Promise<DirectoryPerson[]> {
+  const trimmed = query.trim();
+  if (trimmed === '') {
+    return [];
+  }
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('search_profiles', {
+    p_query: trimmed,
+    p_limit: null,
+  });
+  if (error) {
+    throw error;
+  }
+  return ((data ?? []) as any[]).map(row => ({
+    userId: row.user_id,
+    displayName: row.display_name,
+    avatarPath: row.avatar_path ?? null,
+    isFriend: row.is_friend === true,
+  }));
+}
+
+/**
  * What anyone signed in may know about `userId` (public_profile, 0043): the
  * stranger page's whole world, and the authority on whether you're friends.
  * Null when the profile is gone (a deleted account), so the caller can say

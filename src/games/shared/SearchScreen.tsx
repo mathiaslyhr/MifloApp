@@ -13,6 +13,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -165,10 +166,39 @@ function SearchScreen({
   const [inputFocused, setInputFocused] = useState(false);
 
   const trimmed = query.trim();
-  const results = useMemo(
-    () => (trimmed === '' ? [] : source.search(query)),
-    [source, query, trimmed],
-  );
+  // A source may answer now (the bundled dataset) or later (people search hits
+  // the server). `live` is what keeps a slow answer to "Mat" from overwriting
+  // the answer to "Mathias" that landed first.
+  const [results, setResults] = useState<SearchItem[]>([]);
+  useEffect(() => {
+    if (trimmed === '') {
+      setResults([]);
+      return;
+    }
+    let live = true;
+    const run = () => {
+      const out = source.search(query);
+      if (Array.isArray(out)) {
+        setResults(out);
+        return;
+      }
+      out
+        .then(items => live && setResults(items))
+        .catch(() => live && setResults([]));
+    };
+    const delay = source.debounceMs ?? 0;
+    if (delay === 0) {
+      run();
+      return () => {
+        live = false;
+      };
+    }
+    const timer = setTimeout(run, delay);
+    return () => {
+      live = false;
+      clearTimeout(timer);
+    };
+  }, [source, query, trimmed]);
 
   // A subtitle shows only to tell apart two results with the same name.
   const clashing = useMemo(() => {
