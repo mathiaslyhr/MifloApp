@@ -916,6 +916,15 @@ export const MANAGERS: readonly Manager[] = [
     ],
   },
   {
+    id: 'Poulsen, Jakob',
+    name: 'Jakob Poulsen',
+    nationality: ['Denmark'],
+    spells: [
+      {clubId: 'viborg', from: 2023, to: 2025},
+      {clubId: 'agf', from: 2025},
+    ],
+  },
+  {
     id: 'Queiroz, Carlos',
     name: 'Carlos Queiroz',
     nationality: ['Portugal'],

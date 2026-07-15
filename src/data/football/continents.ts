@@ -103,6 +103,7 @@ const COUNTRY_CONTINENT: Record<string, Continent> = {
   'South Africa': 'Africa',
   Togo: 'Africa',
   Tunisia: 'Africa',
+  Uganda: 'Africa',
   Zambia: 'Africa',
   Zimbabwe: 'Africa',
   // Asia

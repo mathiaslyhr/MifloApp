@@ -44,7 +44,7 @@ const COUNTRY_ISO = {
   Sweden: 'se', Switzerland: 'ch', Togo: 'tg', 'Trinidad and Tobago': 'tt',
   Tunisia: 'tn', Turkey: 'tr', Ukraine: 'ua', 'United Arab Emirates': 'ae',
   Uruguay: 'uy', USA: 'us', Uzbekistan: 'uz', Venezuela: 've', Wales: 'gb-wls',
-  Zambia: 'zm', Zimbabwe: 'zw',
+  Uganda: 'ug', Zambia: 'zm', Zimbabwe: 'zw',
 };
 
 // Every distinct country the dataset actually uses.

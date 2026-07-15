@@ -204,6 +204,8 @@ export const CLUBS: readonly Club[] = [
   {id: 'rayo-vallecano', name: 'Rayo Vallecano', country: 'Spain', league: 'la-liga'},
   {id: 'orlando-pirates', name: 'Orlando Pirates', country: 'South Africa', league: 'south-african-league'},
   {id: 'chicago-fire', name: 'Chicago Fire', country: 'USA', league: 'mls'},
+  {id: 'agf', name: 'AGF', country: 'Denmark', league: 'danish-superliga'},
+  {id: 'viborg', name: 'Viborg FF', country: 'Denmark', league: 'danish-superliga'},
 ];
 
 const clubsById = derivedFromData(

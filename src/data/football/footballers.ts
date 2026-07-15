@@ -2952,6 +2952,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Bogere, James',
+    name: 'James Bogere',
+    nationality: ['Uganda'],
+    positions: ['FW'],
+    born: '2008-02-02',
+    shirtNumbers: [28],
+    clubs: [
+      {clubId: 'agf', from: 2025},
+    ],
+    honours: [],
+  },
+  {
     id: 'Boilesen, Nicolai',
     name: 'Nicolai Boilesen',
     nationality: ['Denmark'],
@@ -3730,6 +3742,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 1, years: [2012]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Callø, Luka',
+    name: 'Luka Callø',
+    nationality: ['Denmark'],
+    positions: ['DF'],
+    born: '2006-05-10',
+    shirtNumbers: [33],
+    clubs: [
+      {clubId: 'agf', from: 2025},
+    ],
+    honours: [],
   },
   {
     id: 'Calvert-Lewin, Dominic',
@@ -6971,6 +6995,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Emmery, Frederik',
+    name: 'Frederik Emmery',
+    nationality: ['Denmark'],
+    positions: ['FW'],
+    born: '2006-12-25',
+    shirtNumbers: [39],
+    clubs: [
+      {clubId: 'agf', from: 2025},
+    ],
+    honours: [],
+  },
+  {
     id: 'En-Nesyri, Youssef',
     name: 'Youssef En-Nesyri',
     nationality: ['Morocco'],
@@ -9622,6 +9658,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Hansen, Jesper',
+    name: 'Jesper Hansen',
+    nationality: ['Denmark'],
+    positions: ['GK'],
+    born: '1985-03-31',
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'agf', from: 2025},
+    ],
+    honours: [],
+  },
+  {
     id: 'Hargreaves, Owen',
     name: 'Owen Hargreaves',
     nationality: ['England'],
@@ -11108,6 +11156,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 1, years: [2025]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Jønsson, Jens',
+    name: 'Jens Jønsson',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    born: '1993-01-10',
+    shirtNumbers: [16],
+    clubs: [
+      {clubId: 'agf', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Jørgensen, Martin',
@@ -13205,6 +13265,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'europa-league', count: 1, years: [1997]},
       {type: 'league-title', count: 5, years: [1999, 2000, 2001, 2003, 2005]},
     ],
+  },
+  {
+    id: 'Links, Gift',
+    name: 'Gift Links',
+    nationality: ['South Africa'],
+    positions: ['FW'],
+    born: '1998-10-02',
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'agf', from: 2025},
+    ],
+    honours: [],
   },
   {
     id: 'Lino, Samuel',

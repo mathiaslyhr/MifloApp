@@ -17,13 +17,14 @@
 import {mkdirSync, writeFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
 import sharp from 'sharp';
-import {FOOTBALLERS, CLUBS, root} from './_load-football.mjs';
+import {CLUBS, root} from './_load-football.mjs';
 
 const BUCKET = 'https://pub-3bd35431294c47068cbf31a95d572166.r2.dev/logos';
 const LOGO_SIZE = 96; // ~3x of the ~28–32pt crest chip; crest fit inside, square.
 
 // clubId → footylogos slug (verified via probe; extend per dataset batch).
 const CLUB_SLUG = {
+  agf: 'agf-aarhus', viborg: 'viborg-ff',
   'man-city': 'manchester-city', 'man-utd': 'manchester-united',
   arsenal: 'arsenal', chelsea: 'chelsea', liverpool: 'liverpool-fc',
   tottenham: 'tottenham-hotspur', 'aston-villa': 'aston-villa',
@@ -105,13 +106,11 @@ const slugify = s =>
   s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
-// Only fetch crests for clubs that a footballer actually references — keeps the
-// bundle to clubs that can appear on a grid axis.
-const usedClubIds = new Set();
-for (const f of FOOTBALLERS) for (const s of f.clubs) usedClubIds.add(s.clubId);
-const clubs = CLUBS.filter(c => usedClubIds.has(c.id)).sort((a, b) =>
-  a.id.localeCompare(b.id),
-);
+// Every club that ships in the content pack needs a crest: datasetSync's
+// validateContentPack rejects the whole pack on the first club with no bundled
+// logo, so a club reachable only via a manager spell (never a footballer) would
+// still break it. Fetch for all of CLUBS.
+const clubs = [...CLUBS].sort((a, b) => a.id.localeCompare(b.id));
 
 async function fetchLogo(slug) {
   const url = `${BUCKET}/${slug}/${slug}-logo-footylogos.svg`;

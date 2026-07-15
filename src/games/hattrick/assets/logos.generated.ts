@@ -7,6 +7,7 @@
 export const LOGO_IMAGES: Record<string, number> = {
   "ac-milan": require('./logos/ac-milan.png'),
   "aek-athens": require('./logos/aek-athens.png'),
+  "agf": require('./logos/agf.png'),
   "ajax": require('./logos/ajax.png'),
   "al-ahli": require('./logos/al-ahli.png'),
   "al-ahly": require('./logos/al-ahly.png'),
@@ -168,6 +169,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "valencia": require('./logos/valencia.png'),
   "vancouver": require('./logos/vancouver.png'),
   "vfb-stuttgart": require('./logos/vfb-stuttgart.png'),
+  "viborg": require('./logos/viborg.png'),
   "villarreal": require('./logos/villarreal.png'),
   "watford": require('./logos/watford.png'),
   "werder-bremen": require('./logos/werder-bremen.png'),
