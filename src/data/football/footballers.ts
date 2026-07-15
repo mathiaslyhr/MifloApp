@@ -1434,6 +1434,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Asp Jensen, Jonathan',
+    name: 'Jonathan Asp Jensen',
+    nationality: ['Denmark'],
+    positions: ['MF'],
+    born: '2005-01-02',
+    clubs: [
+      {clubId: 'bayern', from: 2023, to: 2026},
+      {clubId: 'deportivo', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Aspas, Iago',
     name: 'Iago Aspas',
     nationality: ['Spain'],
@@ -1464,7 +1476,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2022, to: 2023},
       {clubId: 'marseille', from: 2023, to: 2024},
       {clubId: 'al-qadsiah', from: 2024, to: 2025},
-      {clubId: 'marseille', from: 2025},
+      {clubId: 'marseille', from: 2025, to: 2026},
+      {clubId: 'deportivo', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2017], clubId: 'dortmund'},
