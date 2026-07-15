@@ -95,6 +95,7 @@ export function RequestsSection({requests, onAccepted}: Props) {
               label={t('social.accept')}
               variant="secondary"
               fullWidth={false}
+              size="sm"
               disabled={busy}
               onPress={() => handleAccept(request)}
             />

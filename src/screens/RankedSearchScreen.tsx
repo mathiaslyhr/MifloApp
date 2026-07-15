@@ -13,8 +13,7 @@ import {
   subscribeQueue,
 } from '../core/rooms/rankedService';
 import {ensureSession} from '../core/supabase/client';
-import {getCachedProfile} from '../core/social/socialService';
-import {randomFootballName} from '../core/identity/funnyName';
+import {myPlayerName} from '../core/social/socialService';
 import {matchmakingFacts} from '../data/football';
 import {radii, spacing, useColors, useThemedStyles, type Palette} from '../theme';
 
@@ -73,10 +72,7 @@ export function RankedSearchScreen({navigation}: Props) {
       // Watch our queue row (fast path)…
       unsub = subscribeQueue(uid, enter);
       try {
-        // Play under your real profile name (funny name only as a fallback).
-        const profile = await getCachedProfile().catch(() => null);
-        const name = profile?.displayName?.trim() || randomFootballName();
-        const roomId = await findMatch(name);
+        const roomId = await findMatch(await myPlayerName());
         if (!alive) {
           return;
         }

@@ -1,7 +1,16 @@
 /**
- * Random funny football usernames. Miflo assigns one the moment you create or
- * join a party, so you're straight in — no name prompt. You can tap yourself in
- * the lobby to change it, but half the fun is guessing who "Lionel Messiah" is.
+ * Random funny football usernames.
+ *
+ * DELIBERATELY UNUSED, and kept anyway. Miflo used to assign one of these the
+ * moment you created or joined a party, back when a profile was optional and a
+ * lobby needed *some* name to show. Every player now makes a profile before the
+ * app will even render a navigator (App.tsx gates on it), so a lobby showing
+ * "Lionel Messiah" instead of the name their friends know them by is simply
+ * wrong. Rooms read `myPlayerName()` (core/social/socialService) instead.
+ *
+ * It stays in the tree because the list is good and the day a name is needed
+ * for something that isn't a person — a bot, a placeholder, a demo lobby — this
+ * is what it should be. Don't wire it back into create/join.
  *
  * Two sources, mixed ~50/50 for variety:
  *  - CURATED: FIFA Ultimate Team / Pro Clubs-style pun names (the good stuff).

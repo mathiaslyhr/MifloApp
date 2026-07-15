@@ -19,6 +19,7 @@ import {
   Skeleton,
   Text,
   toast,
+  type ToastTone,
 } from '../../core/ui';
 import {haptics} from '../../core/haptics';
 import {
@@ -173,7 +174,11 @@ export function HattrickGameView({
   // a moment that already happened. The haptic fires here too, so the moment
   // lands physically on EVERY device (the watcher's phone, not just the
   // actor's).
-  const [activeBeat, setActiveBeat] = useState<Beat | null>(null);
+  //
+  // A beat announces through the toast stack, not a full-screen scrim: it is
+  // news about the match, and news is what toasts are for. It also means a
+  // "GOAL!" never blanks out the board you're reading — the scoreline is
+  // already pinned above it, so the call is all a beat has to carry.
   const seenBeatSeq = useRef<number | null>(null);
   useEffect(() => {
     if (!state) {
@@ -187,9 +192,24 @@ export function HattrickGameView({
     if (beat && beat.seq !== seenBeatSeq.current) {
       seenBeatSeq.current = beat.seq;
       BEAT_HAPTIC[beat.kind]();
-      setActiveBeat(beat);
+      const side = beat.sideId
+        ? state.sides.find(s => s.id === beat.sideId)
+        : undefined;
+      const name = side?.name ?? t('hattrick.someone');
+      toast.show({
+        message: {
+          goal: t('hattrick.beatGoal', {name}),
+          level: t('hattrick.beatLevel', {name}),
+          winner: t('hattrick.beatWinner', {name}),
+          draw: t('hattrick.beatDraw'),
+          missed: t('hattrick.beatMissed'),
+          timeout: t('hattrick.beatTimeout'),
+        }[beat.kind],
+        tone: BEAT_TONE[beat.kind],
+        duration: BEAT_HOLD_MS[beat.kind],
+      });
     }
-  }, [state]);
+  }, [state, t]);
 
   if (!state) {
     // Ghost board while the room state primes over realtime.
@@ -541,16 +561,6 @@ export function HattrickGameView({
         />
       ) : null}
 
-      {/* Commentary beat — the synced full-screen moment both devices show. */}
-      {activeBeat ? (
-        <CommentaryOverlay
-          key={`${boardNumberOf(state)}:${activeBeat.seq}`}
-          beat={activeBeat}
-          state={state}
-          onDone={() => setActiveBeat(null)}
-        />
-      ) : null}
-
       <AxisInfoModal criterion={explain} onClose={() => setExplain(null)} />
       <HelpModal visible={showHelp} onClose={() => setShowHelp(false)} />
     </Screen>
@@ -685,7 +695,12 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
 }
 
 /** The match scoreline ("Mathias 2 – Test 1") + the board count, always in
- * view above the board — colored per side, tallies in tabular figures. */
+ * view above the board — colored per side, tallies in tabular figures.
+ *
+ * The score is the point of this strip, so it is the one thing that never
+ * yields: each side is a shrinkable name beside a fixed number, and two long
+ * names simply truncate towards the middle. Names arrive from profiles and run
+ * to 20 characters, which is wider than any phone can hold twice over. */
 function ScoreStrip({state}: {state: GridState}) {
   const {t} = useTranslation();
   const styles = useThemedStyles(makeStyles);
@@ -696,16 +711,21 @@ function ScoreStrip({state}: {state: GridState}) {
         {state.sides.map((s, i) => (
           <React.Fragment key={s.id}>
             {i > 0 ? (
-              <Text variant="section" color="tertiary">
-                {'  –  '}
+              <Text variant="section" color="tertiary" style={styles.scoreDash}>
+                –
               </Text>
             ) : null}
-            <Text
-              variant="section"
-              numberOfLines={1}
-              style={[styles.scoreName, {color: s.color}]}>
-              {s.name} {scores[s.id] ?? 0}
-            </Text>
+            <View style={styles.scoreSide}>
+              <Text
+                variant="section"
+                numberOfLines={1}
+                style={[styles.scoreName, {color: s.color}]}>
+                {s.name}
+              </Text>
+              <Text variant="section" style={[styles.scoreValue, {color: s.color}]}>
+                {scores[s.id] ?? 0}
+              </Text>
+            </View>
           </React.Fragment>
         ))}
       </View>
@@ -715,6 +735,17 @@ function ScoreStrip({state}: {state: GridState}) {
     </View>
   );
 }
+
+/** The toast tone each beat speaks in. `timeout` and `draw` are nobody's fault
+ *  and nobody's win, so they stay neutral. */
+const BEAT_TONE: Record<Beat['kind'], ToastTone> = {
+  goal: 'success',
+  level: 'success',
+  winner: 'success',
+  draw: 'neutral',
+  missed: 'error',
+  timeout: 'neutral',
+};
 
 /** How long each beat holds before fading — score moments linger. */
 const BEAT_HOLD_MS: Record<Beat['kind'], number> = {
@@ -735,114 +766,6 @@ const BEAT_HAPTIC: Record<Beat['kind'], () => void> = {
   missed: haptics.error,
   timeout: haptics.warning,
 };
-
-/**
- * A commentary beat: full-screen scrim, the call in huge type ("GOAL! …"),
- * and — for score moments — the scoreline popping in underneath. Purely
- * decorative and non-blocking (`pointerEvents: none`); it plays once and
- * reports back through `onDone`.
- */
-function CommentaryOverlay({
-  beat,
-  state,
-  onDone,
-}: {
-  beat: Beat;
-  state: GridState;
-  onDone: () => void;
-}) {
-  const {t} = useTranslation();
-  const colors = useColors();
-  const styles = useThemedStyles(makeStyles);
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.82)).current;
-  const scoreScale = useRef(new Animated.Value(0.5)).current;
-
-  const side = beat.sideId
-    ? state.sides.find(s => s.id === beat.sideId)
-    : undefined;
-  const name = side?.name ?? t('hattrick.someone');
-  const copy = {
-    goal: t('hattrick.beatGoal', {name}),
-    level: t('hattrick.beatLevel', {name}),
-    winner: t('hattrick.beatWinner', {name}),
-    draw: t('hattrick.beatDraw'),
-    missed: t('hattrick.beatMissed'),
-    timeout: t('hattrick.beatTimeout'),
-  }[beat.kind];
-  const showScore =
-    beat.kind === 'goal' ||
-    beat.kind === 'level' ||
-    beat.kind === 'winner' ||
-    beat.kind === 'draw';
-  const scores = matchScores(state);
-
-  useEffect(() => {
-    const anim = Animated.sequence([
-      Animated.parallel([
-        Animated.timing(opacity, {toValue: 1, duration: 160, useNativeDriver: true}),
-        Animated.spring(scale, {
-          toValue: 1,
-          friction: 6,
-          tension: 120,
-          useNativeDriver: true,
-        }),
-        // The scoreline lands a breath after the call.
-        Animated.spring(scoreScale, {
-          toValue: 1,
-          friction: 5,
-          tension: 90,
-          delay: 220,
-          useNativeDriver: true,
-        }),
-      ]),
-      Animated.delay(BEAT_HOLD_MS[beat.kind]),
-      Animated.timing(opacity, {toValue: 0, duration: 220, useNativeDriver: true}),
-    ]);
-    anim.start(({finished}) => {
-      if (finished) {
-        onDone();
-      }
-    });
-    return () => anim.stop();
-    // Play exactly once per mount — the parent keys this component per beat.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <Animated.View
-      pointerEvents="none"
-      accessibilityRole="text"
-      accessibilityLabel={copy}
-      style={[styles.beatOverlay, {opacity}]}>
-      <Animated.View style={[styles.beatContent, {transform: [{scale}]}]}>
-        <Text
-          variant="hero"
-          align="center"
-          style={[styles.beatText, {color: side?.color ?? colors.ink}]}>
-          {copy}
-        </Text>
-        {showScore ? (
-          <Animated.View
-            style={[styles.beatScoreRow, {transform: [{scale: scoreScale}]}]}>
-            {state.sides.map((s, i) => (
-              <React.Fragment key={s.id}>
-                {i > 0 ? (
-                  <Text variant="hero" style={styles.beatScoreDash}>
-                    –
-                  </Text>
-                ) : null}
-                <Text variant="hero" style={[styles.beatScore, {color: s.color}]}>
-                  {scores[s.id] ?? 0}
-                </Text>
-              </React.Fragment>
-            ))}
-          </Animated.View>
-        ) : null}
-      </Animated.View>
-    </Animated.View>
-  );
-}
 
 /** Tie prompt as a floating card pinned to the bottom. Rendered outside the
  * centered game column so it never reflows the board (fades/slides in like a
@@ -944,13 +867,21 @@ const makeStyles = (c: Palette) =>
   center: {flex: 1, justifyContent: 'center'},
   // Match scoreline + board count, sitting quietly above the turn line.
   scoreStrip: {alignItems: 'center', gap: 2, paddingTop: spacing.sm},
+  // Stretched, not content-sized: a shrinkable child can only shrink inside a
+  // bounded parent, and `maxWidth: '100%'` alone let the row spill instead.
   scoreRow: {
     flexDirection: 'row',
-    alignItems: 'baseline',
-    maxWidth: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
     paddingHorizontal: spacing.lg,
   },
-  scoreName: {fontVariant: ['tabular-nums']},
+  // Both sides shrink, so two long names give way together rather than the
+  // second one losing its score off the edge of the screen.
+  scoreSide: {flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1},
+  scoreName: {flexShrink: 1},
+  scoreValue: {flexShrink: 0, fontVariant: ['tabular-nums']},
+  scoreDash: {flexShrink: 0, marginHorizontal: spacing.md},
   turnRow: {paddingVertical: spacing.lg, alignItems: 'center'},
   topRow: {flexDirection: 'row', alignSelf: 'center', marginBottom: LABEL_GAP},
   bottomRow: {flexDirection: 'row', alignSelf: 'center'},

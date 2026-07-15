@@ -40,6 +40,37 @@ export type SocialProfile = {
   favoriteNation: string | null;
 };
 
+/**
+ * One row in someone's friend list (friends_of, 0043). Deliberately thinner
+ * than a SocialProfile: a list is a list, and a friend-of-friend's code,
+ * presence and favourites are none of the browser's business until they open
+ * the page. `isFriend` is the browser's own relation to this person, which is
+ * what decides whether tapping opens a full profile or a stranger page.
+ */
+export type DirectoryPerson = {
+  userId: string;
+  displayName: string;
+  avatarPath: string | null;
+  isFriend: boolean;
+};
+
+/**
+ * What anyone signed in may know about anyone else (public_profile, 0043) —
+ * the stranger page's whole world. No friend code, no presence: those stay
+ * friend-scoped. `isFriend` is the authority, re-asked on every visit, because
+ * friendship can change between the tap and the fetch.
+ */
+export type PublicProfile = {
+  userId: string;
+  displayName: string;
+  avatarPath: string | null;
+  favoritePlayerId: string | null;
+  favoriteClubId: string | null;
+  favoriteNation: string | null;
+  friendCount: number;
+  isFriend: boolean;
+};
+
 /** One friend's profile plus their recent published results, newest first. */
 export type FriendFeed = {
   profile: SocialProfile;

@@ -11,9 +11,8 @@ import {
   createRoom,
 } from '../../core/rooms/roomService';
 import type {RootNavigation} from '../../core/navigation';
-import {randomFootballName} from '../../core/identity/funnyName';
 import {
-  getCachedProfile,
+  myPlayerName,
   sendPartyInvite,
 } from '../../core/social/socialService';
 import type {SocialProfile} from '../../core/social/types';
@@ -27,9 +26,7 @@ export async function inviteFriendToParty(
   t: TFunction,
 ): Promise<void> {
   try {
-    // The social display name when opted in; a party name works fine too.
-    const myName = (await getCachedProfile())?.displayName ?? randomFootballName();
-    const room = await createRoom(NO_GAME_YET, [], 0, myName);
+    const room = await createRoom(NO_GAME_YET, [], 0, await myPlayerName());
     navigation.navigate('Lobby', {
       roomId: room.id,
       invitedFriendId: friend.userId,

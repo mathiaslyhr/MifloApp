@@ -623,10 +623,18 @@ function cellValue(key: ColumnKey, attrs: ReturnType<typeof deriveAttributes> | 
   }
 }
 
+/**
+ * A chip's text (position, league, age). No `adjustsFontSizeToFit`: on iOS it
+ * fights an explicit lineHeight, and the paragraph style wins — the font gets
+ * driven down to the shrink floor and the chip reads as a smudge. Everything
+ * here is two to seven characters ("MF", "Bundes.", "24↑") and fits at 13 in a
+ * chip a fifth of the card wide, so the shrink bought nothing and cost
+ * legibility. numberOfLines is the honest fallback if a value ever outgrows it.
+ */
 function CellText({children}: {children: React.ReactNode}) {
   const styles = useThemedStyles(makeStyles);
   return (
-    <Text style={styles.cellText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
+    <Text style={styles.cellText} numberOfLines={1}>
       {children}
     </Text>
   );
@@ -775,6 +783,11 @@ const makeStyles = (c: Palette) =>
   cellText: {
     fontFamily: fonts.regular,
     fontSize: 13,
+    // Its own line box. Text defaults to the body variant, so without this the
+    // chip inherits body's lineHeight of 21 around a 13pt glyph, which both
+    // mis-centres it in the 36pt chip and is what the old shrink-to-fit was
+    // fighting when it collapsed the font.
+    lineHeight: 16,
     // White always: the guess chips are fixed bold colours in both themes.
     color: '#FFFFFF',
     textAlign: 'center',

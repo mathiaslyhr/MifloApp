@@ -17,11 +17,13 @@ import {ensureSession, supabase} from '../supabase/client';
 import {partitionRequests, type FriendRequestRow} from './requests';
 import type {DailyGame} from '../daily/dailyLog';
 import type {
+  DirectoryPerson,
   FriendFeed,
   FriendRequests,
   LeaderboardEntry,
   LeaderboardMe,
   LeaderboardView,
+  PublicProfile,
   PublishedResult,
   SendRequestOutcome,
   SendRequestResult,
@@ -75,6 +77,31 @@ export async function getCachedProfile(): Promise<SocialProfile | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * The name this device plays under, in every room and every match: the
+ * profile's display name, always. Never a generated one — see
+ * core/identity/funnyName.ts for why that era ended.
+ *
+ * The cache is the answer in practice: App.tsx gates the whole navigator on a
+ * cached profile, so a lobby cannot exist without one. The server read is the
+ * cold-cache fallback and throws the same BackendUnavailableError that the room
+ * create on the next line would throw anyway, so callers need no new catch.
+ */
+export async function myPlayerName(): Promise<string> {
+  const cached = await getCachedProfile();
+  if (cached) {
+    return cached.displayName;
+  }
+  const remote = await fetchMyProfile();
+  if (!remote) {
+    // Unreachable behind the App.tsx gate: a session with no profile row. The
+    // caller's existing error toast is the right answer — inventing a name here
+    // is exactly the behaviour this function exists to end.
+    throw new Error('No profile to play under');
+  }
+  return remote.displayName;
 }
 
 async function cacheProfile(profile: SocialProfile | null): Promise<void> {
@@ -446,6 +473,59 @@ export async function fetchFriendCount(userId: string): Promise<number | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * Who `userId` is friends with (friends_of, 0043) — yourself or a friend. The
+ * server rejects a stranger's list rather than returning an empty one, so this
+ * throws for anyone you haven't earned; that's the caller's toast, not a
+ * silently blank page.
+ *
+ * Each row carries YOUR relation to that person (`isFriend`), which is what
+ * decides whether tapping opens their real profile or a stranger page.
+ */
+export async function fetchFriendsOf(userId: string): Promise<DirectoryPerson[]> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('friends_of', {p_user_id: userId});
+  if (error) {
+    throw error;
+  }
+  return ((data ?? []) as any[]).map(row => ({
+    userId: row.user_id,
+    displayName: row.display_name,
+    avatarPath: row.avatar_path ?? null,
+    isFriend: row.is_friend === true,
+  }));
+}
+
+/**
+ * What anyone signed in may know about `userId` (public_profile, 0043): the
+ * stranger page's whole world, and the authority on whether you're friends.
+ * Null when the profile is gone (a deleted account), so the caller can say
+ * "absent" rather than render an empty person.
+ */
+export async function fetchPublicProfile(
+  userId: string,
+): Promise<PublicProfile | null> {
+  const {client} = await requireClient();
+  const {data, error} = await client.rpc('public_profile', {p_user_id: userId});
+  if (error) {
+    throw error;
+  }
+  if (!data) {
+    return null;
+  }
+  const row = data as any;
+  return {
+    userId: row.user_id,
+    displayName: row.display_name,
+    avatarPath: row.avatar_path ?? null,
+    favoritePlayerId: row.favorite_player_id ?? null,
+    favoriteClubId: row.favorite_club_id ?? null,
+    favoriteNation: row.favorite_nation ?? null,
+    friendCount: typeof row.friend_count === 'number' ? row.friend_count : 0,
+    isFriend: row.is_friend === true,
+  };
 }
 
 /**

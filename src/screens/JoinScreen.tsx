@@ -12,7 +12,7 @@ import {
   BackendUnavailableError,
   isNetworkError,
 } from '../core/rooms/roomService';
-import {randomFootballName} from '../core/identity/funnyName';
+import {myPlayerName} from '../core/social/socialService';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Join'>;
 
@@ -20,7 +20,8 @@ const CODE_LENGTH = 4;
 
 /**
  * Join — enter a party code to hop into someone else's lobby. Like Create, you
- * get a random football name (no prompt) and can rename yourself in the lobby.
+ * show up under your profile name (no prompt) and can rename yourself in the
+ * lobby without touching the profile.
  * On success we `replace` this screen with the Lobby so Back goes Home.
  */
 export function JoinScreen({navigation, route}: Props) {
@@ -62,7 +63,7 @@ export function JoinScreen({navigation, route}: Props) {
     }
     setBusy(true);
     try {
-      const room = await joinRoom(joinCode, randomFootballName());
+      const room = await joinRoom(joinCode, await myPlayerName());
       navigation.replace('Lobby', {roomId: room.id});
     } catch (err) {
       // Blame the code only when the server actually rejected it — a request

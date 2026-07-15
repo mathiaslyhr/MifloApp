@@ -19,6 +19,12 @@ type Props = {
   variant?: ButtonVariant;
   /** Stretch to fill the container width (default true — Home stacks full-width). */
   fullWidth?: boolean;
+  /**
+   * `md` (default) is the page's CTA. `sm` is an inline row action — a friend
+   * request's Accept, sitting beside a name and a 32pt decline — where a 48pt
+   * pill outweighs the row it lives in.
+   */
+  size?: 'md' | 'sm';
   disabled?: boolean;
   /**
    * When set, a disabled button keeps its greyed look but stays tappable and
@@ -48,6 +54,7 @@ export function Button({
   onPress,
   variant = 'primary',
   fullWidth = true,
+  size = 'md',
   disabled = false,
   onDisabledPress,
   trailingIcon,
@@ -81,13 +88,18 @@ export function Button({
       <Animated.View
         style={[
           styles.base,
+          size === 'sm' && styles.small,
           variantStyles(colors)[variant],
           disabled && styles.disabled,
           press.animatedStyle,
           style,
         ]}>
         {leadingIcon ? <View style={styles.leading}>{leadingIcon}</View> : null}
+        {/* A pill is one line by definition: its radius is derived from its
+            height, so a wrapped label doesn't just look cramped, it inflates the
+            whole shape into an ellipse. Truncation is the honest failure. */}
         <Animated.Text
+          numberOfLines={1}
           style={[
             styles.label,
             {color: isPrimary ? colors.onInk : colors.textPrimary},
@@ -128,6 +140,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Inline-row size: still a comfortable target, no longer a page CTA.
+  small: {minHeight: 34, paddingVertical: 7, paddingHorizontal: 14},
   disabled: {opacity: 0.5},
   label: {...typeScale.label, textAlign: 'center'},
   trailing: {position: 'absolute', right: 20, top: 0, bottom: 0, justifyContent: 'center'},

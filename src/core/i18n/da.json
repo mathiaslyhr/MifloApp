@@ -337,7 +337,9 @@
     "careerEmptyBody": "Spil en rangeret kamp, så begynder din værdi at stige her.",
     "friendCareerEmptyTitle": "Ingen kampe endnu",
     "friendCareerEmptyBody": "{{name}} har ikke spillet en rangeret kamp endnu.",
-    "friendTitle": "{{name}}s profil",
+    "friendsOfTitle": "{{name}}s venner",
+    "addFriend": "Tilføj ven",
+    "strangerLocked": "Tilføj {{name}} for at se deres karriere og daglige spil.",
     "findMatch": "Find en kamp"
   },
   "games": {
@@ -606,7 +608,7 @@
     "proposeError": "Kunne ikke foreslå uafgjort.",
     "tieWaiting": "Uafgjort foreslået. Venter på alle ({{accepted}}/{{total}})",
     "tiePrompt": "{{name}} foreslår uafgjort. Er du enig?",
-    "acceptTie": "Accepter uafgjort",
+    "acceptTie": "Accepter",
     "decline": "Afvis",
     "waitingHost": "Venter på værten…",
     "playAgain": "Spil igen",
