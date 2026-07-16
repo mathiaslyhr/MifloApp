@@ -6,7 +6,8 @@
  * the separating — no section chrome between the hello, the card and the
  * buttons.
  *
- *   Header   brand mark + the streak flame (hidden at zero)
+ *   Header   brand mark + the notifications bell (dotted when something is
+ *            newer than this device's last read)
  *   Hello    greeting + today's date, tight pair
  *   Daily    surface card listing the dailies still waiting; each row
  *            is its own button straight into that game (MenuRow dividers)
@@ -22,9 +23,23 @@ import {
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
-import {ChevronRight, Timer} from 'lucide-react-native';
-import {Button, CircleButton, HowToPlayModal, PressableScale, Text} from '../../core/ui';
-import {radii, screenPadding, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {Bell, ChevronRight, Timer} from 'lucide-react-native';
+import {Button, CircleButton, PressableScale, Text} from '../../core/ui';
+import {
+  onRim,
+  radii,
+  screenPadding,
+  spacing,
+  useColors,
+  useThemedStyles,
+  type Palette,
+} from '../../theme';
+import {
+  mergeFeed,
+  unreadCount,
+  useNotificationsStore,
+} from '../../core/notifications/notificationsStore';
+import {useRequestsStore} from '../../core/social/requestsStore';
 import {getCachedProfile, avatarUrlFor, fetchFriendsFeed} from '../../core/social/socialService';
 import {presenceFor} from '../../core/social/presence';
 import type {FriendFeed} from '../../core/social/types';
@@ -120,7 +135,17 @@ export function HomeTab(): React.JSX.Element {
   // Every friend, not just today's players: an empty carousel means "nobody
   // has played yet" only if you actually have friends. Null until loaded.
   const [friendCount, setFriendCount] = useState<number | null>(null);
-  const [showHelp, setShowHelp] = useState(false);
+
+  // The bell's dot: anything the feed would show that's newer than the last
+  // time this device opened it. Both stores are already kept warm from App.tsx,
+  // so this costs a subscription, not a fetch.
+  const requests = useRequestsStore(s => s.requests);
+  const invites = useNotificationsStore(s => s.invites);
+  const lastReadAt = useNotificationsStore(s => s.lastReadAt);
+  const unread = unreadCount(
+    mergeFeed(requests?.incoming ?? [], invites ?? []),
+    lastReadAt,
+  );
 
   const friendCardWidth = Math.round(width * CARD_FRACTION);
 
@@ -226,14 +251,19 @@ export function HomeTab(): React.JSX.Element {
   return (
     <TabPage
       right={
-        <CircleButton
-          size={30}
-          accessibilityLabel={t('home.help')}
-          onPress={() => setShowHelp(true)}>
-          <Text variant="label" color="secondary">
-            ?
-          </Text>
-        </CircleButton>
+        <View>
+          <CircleButton
+            size={30}
+            accessibilityLabel={
+              unread > 0
+                ? t('notifications.a11yBellUnread', {count: unread})
+                : t('notifications.a11yBell')
+            }
+            onPress={() => navigation.navigate('Notifications')}>
+            <Bell size={15} color={colors.textSecondary} strokeWidth={2.25} />
+          </CircleButton>
+          {unread > 0 ? <View style={styles.bellDot} /> : null}
+        </View>
       }>
       {/* Hello — greeting + the friends pulse, one tight pair. */}
       <Text variant="title" style={styles.greeting}>
@@ -382,19 +412,6 @@ export function HomeTab(): React.JSX.Element {
           )}
         </>
       ) : null}
-
-      {/* The front door's own orientation: what lands daily, and the two ways
-          to play with friends. The per-game rules live in each game's help. */}
-      <HowToPlayModal
-        visible={showHelp}
-        onClose={() => setShowHelp(false)}
-        title={t('home.helpTitle')}
-        lines={[
-          {text: t('home.help1')},
-          {text: t('home.help2')},
-          {text: t('home.help3')},
-        ]}
-      />
     </TabPage>
   );
 }
@@ -402,6 +419,22 @@ export function HomeTab(): React.JSX.Element {
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
     flex: {flex: 1},
+    // "Something new" marker on the bell. The tab bar rims its dot because that
+    // one overlaps an icon and needs a gap from it; this one is pinned to the
+    // round button's outline, where the surface behind changes halfway across
+    // (surface2 inside, canvas outside) — so any rim colour would read as a
+    // ring against the other half. A bare disc has that problem in neither
+    // half, which is exactly why the presence dot (PersonCard) is bare too.
+    // onRim centres it on the outline at 45°; the wrapper has no border, so 0.
+    bellDot: {
+      position: 'absolute',
+      top: onRim(30, 8),
+      right: onRim(30, 8),
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: c.primary,
+    },
     // Chrome (the scroll-away brand header) → content: slightly under a group
     // gap, then the date hugs its greeting.
     greeting: {marginTop: spacing.xl},

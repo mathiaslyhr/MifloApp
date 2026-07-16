@@ -10,7 +10,7 @@ import {MenuDetailScreen} from './MenuDetailScreen';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'HowToPlay'>;
 
-/** How to play — the rules, also reached from the Home "?" help button. */
+/** How to play — the rules. The app's only how-to-play; Home's corner is the bell. */
 export function HowToPlayScreen({navigation}: Props) {
   const {t} = useTranslation();
   const colors = useColors();
