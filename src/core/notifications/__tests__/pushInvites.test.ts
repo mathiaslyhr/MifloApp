@@ -7,6 +7,7 @@
  */
 import {navigationRef} from '../../navigation/navigationRef';
 import {refreshFriendRequests} from '../../social/requestsStore';
+import {refreshInvites} from '../notificationsStore';
 import {flushPendingNavigation, handleNotificationPress} from '../pushInvites';
 
 jest.mock('../../navigation/navigationRef', () => ({
@@ -17,14 +18,20 @@ jest.mock('../../social/requestsStore', () => ({
   refreshFriendRequests: jest.fn(() => Promise.resolve()),
 }));
 
+jest.mock('../notificationsStore', () => ({
+  refreshInvites: jest.fn(() => Promise.resolve()),
+}));
+
 const isReady = navigationRef.isReady as jest.Mock;
 const navigate = navigationRef.navigate as unknown as jest.Mock;
 const refresh = refreshFriendRequests as jest.Mock;
+const refreshInv = refreshInvites as jest.Mock;
 
 beforeEach(() => {
   isReady.mockReturnValue(true);
   navigate.mockClear();
   refresh.mockClear();
+  refreshInv.mockClear();
 });
 
 function invite(code: string, id?: string) {
@@ -106,4 +113,28 @@ test('a cold-start friend-request press is parked and lands on Profile', () => {
     tab: 'profile',
     at: expect.any(Number),
   });
+});
+
+/**
+ * The bell's dot is computed from the store, and the store only refetches on
+ * launch and on foreground — neither of which happens when the push lands while
+ * you're already in the app. Without a refresh here the invite sits on the
+ * server, Home shows no dot, and it only appears once you happen to open the
+ * bell (which refetches on mount). That was the observed bug: "no dot, but it
+ * says join".
+ */
+test('a party-invite refreshes the invite store, so the bell can dot', () => {
+  handleNotificationPress(invite('ABCD'));
+  expect(refreshInv).toHaveBeenCalled();
+});
+
+test('a friend-request does not refetch invites, and vice versa', () => {
+  handleNotificationPress(friendPush('friend-request'));
+  expect(refresh).toHaveBeenCalled();
+  expect(refreshInv).not.toHaveBeenCalled();
+
+  refresh.mockClear();
+  handleNotificationPress(invite('EFGH'));
+  expect(refreshInv).toHaveBeenCalled();
+  expect(refresh).not.toHaveBeenCalled();
 });

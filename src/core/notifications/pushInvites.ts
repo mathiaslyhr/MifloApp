@@ -21,6 +21,7 @@ import notifee, {AuthorizationStatus, EventType} from '@notifee/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeModules} from 'react-native';
 import {navigationRef} from '../navigation/navigationRef';
+import {refreshInvites} from './notificationsStore';
 import {refreshFriendRequests} from '../social/requestsStore';
 import {getCachedProfile, uploadPushToken} from '../social/socialService';
 import type {TabId} from '../ui';
@@ -102,11 +103,27 @@ export function handleNotificationPress(
     }
     handledIds.add(id);
   }
-  if (type === 'friend-request' || type === 'friend-accepted') {
-    // Refetch so the Requests section / new friend is there when we land.
+  refreshForNotification(notification);
+  navigateOrPark(target);
+}
+
+/**
+ * Pull the source this notification came from, so the bell agrees with what
+ * just buzzed. Called both when a push is PRESSED and when it merely ARRIVES
+ * in the foreground — the stores otherwise only refetch on launch and on
+ * foreground, neither of which happens while you're already in the app.
+ *
+ * Cheap and idempotent: both refreshers swallow their own errors and no-op
+ * before the device opts into Friends.
+ */
+function refreshForNotification(notification: PressedNotification | undefined): void {
+  const type = notification?.data?.type;
+  if (type === 'party-invite') {
+    refreshInvites();
+  } else if (type === 'friend-request' || type === 'friend-accepted') {
+    // Refetch so the request / new friend is there when we land.
     refreshFriendRequests();
   }
-  navigateOrPark(target);
 }
 
 /**
@@ -117,6 +134,15 @@ export function initPushInviteListeners(): () => void {
   const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
     if (type === EventType.PRESS) {
       handleNotificationPress(detail.notification);
+      return;
+    }
+    // A push that ARRIVES while the app is open is news the stores haven't
+    // heard: they only refetch on launch and on foreground, and neither
+    // happens when we're already looking at the screen. Without this the bell
+    // stays dotless until something else happens to refetch — the invite is
+    // sitting on the server, and Home says nothing.
+    if (type === EventType.DELIVERED) {
+      refreshForNotification(detail.notification);
     }
   });
   notifee
