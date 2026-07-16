@@ -123,8 +123,8 @@ export function CareerSection({history, value, todayKey, empty}: Props) {
           label={t('profile.record')}
           value={t('profile.recordValue', {
             w: record.wins,
-            l: record.losses,
             d: record.draws,
+            l: record.losses,
           })}
         />
         <View style={styles.recordDivider} />

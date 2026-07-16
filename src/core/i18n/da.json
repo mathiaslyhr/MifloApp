@@ -204,7 +204,6 @@
       "worldClass": "Verdensklasse"
     },
     "form": "Form",
-    "comingSoon": "Kommer snart",
     "players1v1": "1v1",
     "playersSolo": "Solo",
     "playersRange": "{{min}}-{{max}}",
@@ -341,7 +340,7 @@
     },
     "played": "Kampe",
     "record": "Resultat",
-    "recordValue": "{{w}}V {{l}}T {{d}}U",
+    "recordValue": "{{w}}V {{d}}U {{l}}T",
     "winRate": "Sejrsrate",
     "valueLabel": "Værdi",
     "careerEmptyTitle": "Ingen kampe endnu",
@@ -563,6 +562,17 @@
     "loadError": "Kunne ikke hente ranglisten.",
     "unavailable": "Du skal have internet for at se verdensranglisten.",
     "a11yRow": "Plads {{rank}}, {{name}}, {{result}}"
+  },
+  "rankedBoard": {
+    "title": "Rangliste",
+    "eyebrowWorld": "Mest værdifulde spillere",
+    "eyebrowFriends": "Dine venner efter værdi",
+    "rowStats": "{{played}} kampe · {{w}}V {{d}}U {{l}}T",
+    "gapToTop": "{{value}} op til top 10",
+    "emptyWorld": "Der er ikke spillet nogen rangerede kampe endnu.",
+    "emptyFriends": "Ingen af dine venner har spillet en rangeret kamp endnu.",
+    "notRanked": "Spil en rangeret kamp for at komme på ranglisten.",
+    "a11yRow": "Plads {{rank}}, {{name}}, {{value}}, {{w}} vundet {{d}} uafgjort {{l}} tabt"
   },
   "menu": {
     "title": "Menu",

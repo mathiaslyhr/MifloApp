@@ -26,7 +26,6 @@ import {
   SwipeReveal,
   closeOpenSwipeReveal,
   Text,
-  toast,
 } from '../../core/ui';
 import {
   fonts,
@@ -110,8 +109,6 @@ export function PlayTab() {
       navigation.navigate(route as never);
     }
   };
-
-  const comingSoon = () => toast.neutral(t('play.comingSoon'));
 
   const friendlies = mode === 'friendlies';
 
@@ -234,7 +231,7 @@ export function PlayTab() {
               <Button
                 label={t('play.leaderboard')}
                 variant="secondary"
-                onPress={comingSoon}
+                onPress={() => navigation.navigate('RankedLeaderboard' as never)}
               />
             </View>
           </>

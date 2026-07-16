@@ -348,6 +348,94 @@ export async function fetchFriendCareer(
   };
 }
 
+/** Which board: everyone, or just you and your friends ranked among yourselves. */
+export type BoardScope = 'world' | 'friends';
+
+/** One player on the ranked board. No user id: `isMe` is all the row needs to
+ * tint itself, so nobody's id crosses the wire (rh_leaderboard, 0044). */
+export type RankedBoardEntry = {
+  rank: number;
+  /** Always present: rh_leaderboard inner-joins profiles (0045), so a deleted
+   * account isn't on the board at all rather than sitting on it namelessly. */
+  displayName: string;
+  avatarPath: string | null;
+  value: number;
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  isMe: boolean;
+};
+
+/** The caller's own place, for pinning when it falls outside the visible slice.
+ * Shares the entry's stats, minus the identity the caller already knows. */
+export type RankedBoardMe = Omit<RankedBoardEntry, 'displayName' | 'avatarPath' | 'isMe'>;
+
+/** The top slice plus the caller's own row. */
+export type RankedBoard = {
+  rows: RankedBoardEntry[];
+  /** Null when the caller has never played a ranked match, so there is nothing
+   * to pin — an unrated account has no player_ratings row at all. */
+  me: RankedBoardMe | null;
+};
+
+const EMPTY_BOARD: RankedBoard = {rows: [], me: null};
+
+/** How many places the board shows before it falls back to pinning your row. */
+export const BOARD_LIMIT = 10;
+
+function boardEntryFrom(row: any): RankedBoardEntry {
+  return {
+    rank: row.rank ?? 0,
+    displayName: row.display_name ?? '',
+    avatarPath: row.avatar_path ?? null,
+    value: row.value ?? 0,
+    played: row.played ?? 0,
+    wins: row.wins ?? 0,
+    draws: row.draws ?? 0,
+    losses: row.losses ?? 0,
+    isMe: row.is_me ?? false,
+  };
+}
+
+/**
+ * The ranked board (rh_leaderboard, 0044): the top BOARD_LIMIT by € value, plus
+ * the caller's own place for pinning below. Like a friend's career page this is
+ * a visit, not a habit — so it takes one round trip and a skeleton, and caches
+ * nothing. A cached board would also paint last week's ranks on the first frame,
+ * which is worse than a moment of empty.
+ */
+export async function fetchLeaderboard(scope: BoardScope): Promise<RankedBoard> {
+  if (!supabase) {
+    return EMPTY_BOARD;
+  }
+  const uid = await ensureSession();
+  if (!uid) {
+    return EMPTY_BOARD;
+  }
+  const {data, error} = await supabase.rpc('rh_leaderboard', {
+    p_scope: scope,
+    p_limit: BOARD_LIMIT,
+  });
+  if (error) {
+    throw error;
+  }
+  const payload = (data ?? {}) as {rows?: any[]; me?: any};
+  return {
+    rows: (payload.rows ?? []).map(boardEntryFrom),
+    me: payload.me
+      ? {
+          rank: payload.me.rank ?? 0,
+          value: payload.me.value ?? 0,
+          played: payload.me.played ?? 0,
+          wins: payload.me.wins ?? 0,
+          draws: payload.me.draws ?? 0,
+          losses: payload.me.losses ?? 0,
+        }
+      : null,
+  };
+}
+
 /** The history this device last showed. Same bargain as the Value cache above:
  * the chart paints a real curve on frame one instead of a shell, and the
  * network only ever corrects it. */

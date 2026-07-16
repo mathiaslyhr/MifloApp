@@ -204,7 +204,6 @@
       "worldClass": "World class"
     },
     "form": "Form",
-    "comingSoon": "Coming soon",
     "players1v1": "1v1",
     "playersSolo": "Solo",
     "playersRange": "{{min}}-{{max}}",
@@ -341,7 +340,7 @@
     },
     "played": "Played",
     "record": "Record",
-    "recordValue": "{{w}}W {{l}}L {{d}}D",
+    "recordValue": "{{w}}W {{d}}D {{l}}L",
     "winRate": "Win rate",
     "valueLabel": "Value",
     "careerEmptyTitle": "No matches yet",
@@ -563,6 +562,17 @@
     "loadError": "Couldn't load the leaderboard.",
     "unavailable": "You need an internet connection to see the worldwide board.",
     "a11yRow": "Rank {{rank}}, {{name}}, {{result}}"
+  },
+  "rankedBoard": {
+    "title": "Leaderboard",
+    "eyebrowWorld": "Most valuable players",
+    "eyebrowFriends": "Your friends by value",
+    "rowStats": "{{played}} played · {{w}}W {{d}}D {{l}}L",
+    "gapToTop": "{{value}} to reach the top 10",
+    "emptyWorld": "No ranked matches have been played yet.",
+    "emptyFriends": "None of your friends have played a ranked match yet.",
+    "notRanked": "Play a ranked match to enter the board.",
+    "a11yRow": "Rank {{rank}}, {{name}}, {{value}}, {{w}} wins {{d}} draws {{l}} losses"
   },
   "menu": {
     "title": "Menu",

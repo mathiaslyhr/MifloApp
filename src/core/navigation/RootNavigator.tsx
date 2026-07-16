@@ -18,6 +18,7 @@ import {OffsideLocalScreen} from '../../screens/OffsideLocalScreen';
 import {CultHeroScreen} from '../../screens/CultHeroScreen';
 import {CultHeroLocalScreen} from '../../screens/CultHeroLocalScreen';
 import {RankedSearchScreen} from '../../screens/RankedSearchScreen';
+import {RankedLeaderboardScreen} from '../../screens/RankedLeaderboardScreen';
 import {RankedHattrickScreen} from '../../screens/RankedHattrickScreen';
 import {JourneymanScreen} from '../../screens/JourneymanScreen';
 import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
@@ -62,6 +63,7 @@ export function RootNavigator() {
       {/* Competitive Hattrick — matchmaking then the live ranked match. */}
       <Stack.Screen name="RankedSearch" component={RankedSearchScreen} />
       <Stack.Screen name="RankedHattrick" component={RankedHattrickScreen} />
+      <Stack.Screen name="RankedLeaderboard" component={RankedLeaderboardScreen} />
       {/* Pass-and-play on one shared phone — roomless, fully offline. */}
       <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} />
       <Stack.Screen name="RedCardLocal" component={RedCardLocalScreen} />
