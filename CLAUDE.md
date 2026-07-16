@@ -20,12 +20,8 @@ air via `data:publish`. Changes to **logic** (`repository.ts`, game engines,
 UI) reach users only through an App Store build — `data:publish` will report
 "nothing to publish" for them.
 
-**Pending — verify it's in the next build I ship:** the `leagueTitle` matcher
-fix (`src/data/football/repository.ts`, branch
-`claude/frank-ribery-serie-a-bug-xijfg6`) that stopped Franck Ribéry showing as
-a Serie A winner on the hattrick tie screen. It's a code change, so it is NOT
-live for installed apps yet — confirm the branch is merged and included the
-next time an app build goes out.
+The `leagueTitle` matcher fix (Franck Ribéry showing as a Serie A winner) was
+merged in `badb03e` and shipped in **1.0 (21)**, 2026-07-16. Nothing pending.
 
 Hard rules for data edits:
 
