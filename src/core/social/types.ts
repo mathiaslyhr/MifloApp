@@ -143,3 +143,25 @@ export type FriendRequests = {
   incoming: FriendRequest[];
   outgoing: FriendRequest[];
 };
+
+/**
+ * One party invite, as the bell reads it. `joined` and `joinable` are derived
+ * server-side (see 0046) rather than inferred here: `joinable` mirrors
+ * join_room's own `status = 'lobby'` condition, so a Join button can never
+ * offer what the RPC would reject.
+ */
+export type PartyInvite = {
+  id: string;
+  /** Server timestamp (ISO) — newest first. */
+  createdAt: string;
+  /** The host. `displayName` falls back when their account is gone. */
+  profile: {
+    userId: string;
+    displayName: string;
+    avatarPath: string | null;
+  };
+  /** The room code, for the Join tap. */
+  code: string;
+  joined: boolean;
+  joinable: boolean;
+};

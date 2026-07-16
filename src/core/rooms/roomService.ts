@@ -8,6 +8,7 @@
  */
 import {ensureSession, supabase} from '../supabase/client';
 import type {ResultEntry} from '../stats/types';
+import type {PartyInvite} from '../social/types';
 import {
   createHostHeartbeat,
   createStaleWatchdog,
@@ -481,6 +482,43 @@ export async function closeStaleRoom(roomId: string): Promise<boolean> {
     throw error;
   }
   return !!data;
+}
+
+/**
+ * One `my_party_invites` row → the client shape. Exported for its test.
+ *
+ * `joined` wins over `joinable`: the RPC already excludes it, but the two must
+ * never disagree in the UI, and a stale row must not offer to re-join a room
+ * you are already in.
+ */
+export function mapPartyInvite(row: any): PartyInvite {
+  const joined = row.joined === true;
+  return {
+    id: String(row.id),
+    createdAt: String(row.created_at),
+    profile: {
+      userId: String(row.from_user_id),
+      displayName: row.display_name ?? 'Someone',
+      avatarPath: row.avatar_path ?? null,
+    },
+    code: String(row.code),
+    joined,
+    joinable: !joined && row.joinable === true,
+  };
+}
+
+/**
+ * The caller's party invites, newest first. Throws like every other wrapper
+ * here: deciding what a failure means is the caller's job, and the bell's store
+ * turns it into a retry row rather than an empty feed that would lie.
+ */
+export async function fetchMyPartyInvites(): Promise<PartyInvite[]> {
+  const client = await requireClient();
+  const {data, error} = await client.rpc('my_party_invites', {p_limit: 30});
+  if (error) {
+    throw error;
+  }
+  return (Array.isArray(data) ? data : []).map(mapPartyInvite);
 }
 
 export async function fetchRoom(roomId: string): Promise<Room | null> {
