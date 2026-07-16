@@ -828,4 +828,35 @@ export const WC_FINALS: readonly FamousLineup[] = [
       {name: 'Olivier Giroud', position: 'FW', shirt: 9, subbedOff: true},
     ],
   },
+  {
+    id: 'argentina-1990-world-cup-final',
+    team: 'Argentina',
+    competition: 'World Cup Final',
+    year: 1990,
+    formation: '5-3-2',
+    // West Germany wore white, so Argentina took their blue change shirt
+    // (the page's kit template is _argentina1990a, body 0000C0) — not the
+    // usual sky-blue stripes.
+    kit: {body: '#0000C0', number: '#F4F4F6'},
+    match: {
+      competitionKey: 'worldCupFinal',
+      opponent: 'West Germany',
+      goalsFor: 0,
+      goalsAgainst: 1,
+    },
+    players: [
+      {name: 'Sergio Goycochea', position: 'GK', shirt: 12},
+      {name: 'José Basualdo', position: 'DF', shirt: 4, aliases: ['Basualdo']},
+      {name: 'José Serrizuela', position: 'DF', shirt: 18, aliases: ['Serrizuela']},
+      // Simón swept behind the two centre-backs.
+      {name: 'Juan Simón', position: 'DF', shirt: 20, aliases: ['Simon']},
+      {name: 'Oscar Ruggeri', position: 'DF', shirt: 19, aliases: ['Ruggeri'], subbedOff: true},
+      {name: 'Roberto Sensini', position: 'DF', shirt: 17},
+      {name: 'Néstor Lorenzo', position: 'MF', shirt: 13, aliases: ['Lorenzo']},
+      {name: 'Jorge Burruchaga', position: 'MF', shirt: 7, subbedOff: true},
+      {name: 'Pedro Troglio', position: 'MF', shirt: 21, yellowCard: true},
+      {name: 'Diego Maradona', position: 'FW', shirt: 10, footballerId: 'Maradona, Diego', captain: true, yellowCard: true},
+      {name: 'Gustavo Dezotti', position: 'FW', shirt: 9, redCard: true},
+    ],
+  },
 ];

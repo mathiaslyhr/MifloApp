@@ -444,4 +444,63 @@ export const EURO_FINALS: readonly FamousLineup[] = [
       {name: 'Harry Kane', position: 'FW', shirt: 9, captain: true, subbedOff: true, yellowCard: true},
     ],
   },
+  {
+    id: 'germany-1992-euro-final',
+    team: 'Germany',
+    competition: 'European Championship Final',
+    year: 1992,
+    formation: '5-3-2',
+    // The page's kit template is _ger92, body FFFFFF — Denmark wore red.
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
+    match: {
+      competitionKey: 'euroFinal',
+      opponent: 'Denmark',
+      goalsFor: 0,
+      goalsAgainst: 2,
+    },
+    players: [
+      {name: 'Bodo Illgner', position: 'GK', shirt: 1},
+      {name: 'Stefan Reuter', position: 'DF', shirt: 2, yellowCard: true},
+      {name: 'Jürgen Kohler', position: 'DF', shirt: 4, aliases: ['Kohler']},
+      // Buchwald swept behind Kohler and Helmer.
+      {name: 'Guido Buchwald', position: 'DF', shirt: 6},
+      {name: 'Thomas Helmer', position: 'DF', shirt: 14},
+      {name: 'Andreas Brehme', position: 'DF', shirt: 3, captain: true},
+      {name: 'Matthias Sammer', position: 'MF', shirt: 16, subbedOff: true},
+      {name: 'Stefan Effenberg', position: 'MF', shirt: 17, yellowCard: true, subbedOff: true},
+      {name: 'Thomas Häßler', position: 'MF', shirt: 8, aliases: ['Hassler'], yellowCard: true},
+      {name: 'Karl-Heinz Riedle', position: 'FW', shirt: 11, aliases: ['Riedle']},
+      {name: 'Jürgen Klinsmann', position: 'FW', shirt: 18, aliases: ['Klinsmann'], yellowCard: true},
+    ],
+  },
+  {
+    id: 'portugal-2004-euro-final',
+    team: 'Portugal',
+    competition: 'European Championship Final',
+    year: 2004,
+    formation: '4-2-3-1',
+    // The page's kit template is _por04h1, body DF000F — the hosts' home red.
+    kit: {body: '#DF000F', number: '#F4F4F6'},
+    match: {
+      competitionKey: 'euroFinal',
+      opponent: 'Greece',
+      goalsFor: 0,
+      goalsAgainst: 1,
+    },
+    players: [
+      // Not to be confused with Leicester's Ricardo Pereira (born 1993): this
+      // is the keeper who saved the England shootout penalty, gloves off.
+      {name: 'Ricardo', position: 'GK', shirt: 1},
+      {name: 'Miguel', position: 'DF', shirt: 13, aliases: ['Miguel Monteiro'], subbedOff: true},
+      {name: 'Jorge Andrade', position: 'DF', shirt: 4, aliases: ['Andrade']},
+      {name: 'Ricardo Carvalho', position: 'DF', shirt: 16, aliases: ['Carvalho']},
+      {name: 'Nuno Valente', position: 'DF', shirt: 14, aliases: ['Valente'], yellowCard: true},
+      {name: 'Maniche', position: 'MF', shirt: 18},
+      {name: 'Costinha', position: 'MF', shirt: 6, yellowCard: true, subbedOff: true},
+      {name: 'Cristiano Ronaldo', position: 'FW', shirt: 17, footballerId: 'Ronaldo, Cristiano'},
+      {name: 'Deco', position: 'MF', shirt: 20},
+      {name: 'Luís Figo', position: 'FW', shirt: 7, aliases: ['Figo', 'Luis Figo'], captain: true},
+      {name: 'Pauleta', position: 'FW', shirt: 9, subbedOff: true},
+    ],
+  },
 ];
