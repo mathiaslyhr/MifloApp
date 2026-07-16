@@ -12,7 +12,7 @@ import {
   searchNames,
   type NameEntry,
 } from '../shared/nameSearch';
-import {CITIES} from './cities';
+import {CITIES} from '../../data/geography';
 import {LIST_POOL} from './lists';
 import type {TenballKind} from './types';
 

@@ -1,40 +1,39 @@
 /**
- * Decoy pool for `other` (place) Top Bins lists — the CL-final-cities list and
- * any future city list. Player/club/nation/manager lists hide their daily
- * answers inside a big canonical dataset (FOOTBALLERS, CLUBS, …) so the
- * type-ahead never leaks the ten correct answers. `other` lists had no such
- * dataset, so the pool was *only* the ten answers: a player could pick every
- * suggestion blind and win knowing nothing. This is that missing dataset — a
- * broad crowd of well-known world cities the answers can hide among.
+ * Shared dataset of well-known world cities — a neutral, game-agnostic pool any
+ * feature can draw on (place type-aheads, geography quizzes, host-city
+ * pickers …). It lives here rather than inside a game so the next consumer
+ * imports it from `data/geography`, not from another game's folder. Pure data,
+ * no imports: the caller adapts it to whatever shape it needs.
  *
- * NOT over-the-air. This is bundled code wired into `suggestions.ts`; growing
- * the decoy crowd reaches users only through an App Store build, same as any
- * logic change. (The city *answers* still live in `lists.ts` and ship OTA.)
+ * First consumer: Top Bins (`games/tenball/suggestions.ts`) unions this into
+ * the `other` type-ahead so the CL-final-cities answers hide in a crowd instead
+ * of being the only suggestions. Note that as bundled code it is NOT
+ * over-the-air — growing the list reaches users through an App Store build.
  *
- * Every `country` MUST be a key of FLAG_IMAGES (flags.generated.ts) — the flag
- * is the only art a place answer shows, and images never ship OTA. A test
- * (`__tests__/cities.test.ts`) pins this, so an unbundled country fails CI
- * rather than rendering a flagless suggestion. Names are deduped by folded
- * label against each other and the list answers, so keep each name unique
- * (that is why there is only one "Córdoba"-style entry per folded name).
+ * Invariants (a test in `__tests__/cities.test.ts` pins them):
+ * - Every `country` MUST be a key of FLAG_IMAGES (flags.generated.ts) so any
+ *   consumer can render a flag; images never ship OTA, so an unbundled country
+ *   would show nothing. Keeps the dataset flag-renderable for all callers.
+ * - Names are unique by folded label (playerSearch.fold), because consumers
+ *   dedupe on it — that is why there is only one "Córdoba"-style entry per
+ *   folded name.
  *
- * `aliases` are lowercase and accent-folded the same way `nameEntry` folds the
- * label (`playerSearch.fold`). Add ASCII spellings only where the folded label
- * still is not ASCII — `ł`/`ø`/`æ` do not fold (so "Wrocław" needs "wroclaw")
- * while `ö`/`á`/`ã` do (so "Malmö" already matches "malmo"). Native/English
- * alternates ("münchen" for Munich, "sevilla" for Seville) help the crowd feel
- * real while typing.
+ * `aliases` are lowercase, accent-folded like `fold` folds the label. Add ASCII
+ * spellings only where the folded label still is not ASCII — `ł`/`ø`/`æ` do not
+ * fold (so "Wrocław" needs "wroclaw") while `ö`/`á`/`ã` do (so "Malmö" already
+ * matches "malmo"). Native/English alternates ("münchen", "sevilla") let a
+ * type-ahead feel real.
  */
 
-/** One decoy city: display name, its flag country (a FLAG_IMAGES key), and
- *  extra folded spellings the type-ahead should also match. */
-export type DecoyCity = {
+/** One city: display name, its flag country (a FLAG_IMAGES key), and extra
+ *  folded spellings a search should also match. */
+export type City = {
   name: string;
   country: string;
   aliases?: string[];
 };
 
-export const CITIES: readonly DecoyCity[] = [
+export const CITIES: readonly City[] = [
   // Nordics
   {name: 'Copenhagen', country: 'Denmark', aliases: ['kobenhavn', 'københavn', 'kbh']},
   {name: 'Aarhus', country: 'Denmark', aliases: ['arhus', 'århus']},
