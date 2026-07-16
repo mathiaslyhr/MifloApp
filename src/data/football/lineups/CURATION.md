@@ -6,6 +6,32 @@ Source of truth for every entry is the match's Wikipedia final page (the
 "Details" lineup box), cross-checked against UEFA/FIFA match reports where
 available.
 
+## Read the wikitext, not the page
+
+`node scripts/wiki-lineup.mjs "1999_UEFA_Champions_League_final"` prints both
+starting XIs with shirt, captain, cards, subs and goals; `node
+scripts/wiki-player.mjs "Robert Huth"` prints a DOB and career from the
+infobox. Use them. Reading a *rendered* page (or asking a model to summarise
+one) has produced real errors: cards read as substitutions, and a substitute's
+goal credited to the XI. The wikitext states each fact as markup.
+
+Traps they already handle, learned the hard way:
+
+- Shirt numbers appear as `'''9'''` **and** `'''9 '''` — the trailing space
+  silently cost Andy Cole his place in the 1999 XI. Both XIs are asserted to
+  be exactly 11; a parser that returns 10 quietly is worse than one that throws.
+- Older pages say `Substitutions:`, newer ones `Substitutes:`.
+- `|goals1 =` may carry its scorers inline or on the lines beneath it, with any
+  spacing.
+- Scorers not in the XI are flagged (`‼ scored but NOT in the XI`): Sheringham
+  and Solskjær in 1999, Marcelo in 2014, Milito in 2010. Only starters exist
+  here, so their goals are simply not recorded.
+- An ambiguous player name resolves to the wrong page — "Carlos Zambrano"
+  returns the *baseball* pitcher (born 1981) rather than Peru's centre-back
+  (born 1989). Always sanity-check the position/nationality it prints back.
+- The scripts do NOT know assists; the wikitext has none. Keep erring toward
+  omission, per the rule below.
+
 ## Per-entry rules
 
 - **Exactly 11 players**, GK first, then formation rows top to bottom. Within
