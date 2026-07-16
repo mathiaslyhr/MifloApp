@@ -132,17 +132,13 @@ function refreshForNotification(notification: PressedNotification | undefined): 
  */
 export function initPushInviteListeners(): () => void {
   const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+    // DELIVERED is deliberately not handled: notifee documents it for TRIGGER
+    // notifications ("sent at the point when the trigger executes"), and it
+    // does not fire for a remote APNs push arriving in the iOS foreground —
+    // tried, and the bell stayed dotless. A push landing while the app is open
+    // is caught by the poll in notificationsStore/requestsStore instead.
     if (type === EventType.PRESS) {
       handleNotificationPress(detail.notification);
-      return;
-    }
-    // A push that ARRIVES while the app is open is news the stores haven't
-    // heard: they only refetch on launch and on foreground, and neither
-    // happens when we're already looking at the screen. Without this the bell
-    // stays dotless until something else happens to refetch — the invite is
-    // sitting on the server, and Home says nothing.
-    if (type === EventType.DELIVERED) {
-      refreshForNotification(detail.notification);
     }
   });
   notifee
