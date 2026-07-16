@@ -4304,6 +4304,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Capoue, Étienne',
+    name: 'Étienne Capoue',
+    nationality: ['France'],
+    positions: ['MF'],
+    born: '1988-07-11',
+    clubs: [
+      {clubId: 'toulouse', from: 2007, to: 2013},
+      {clubId: 'tottenham', from: 2013, to: 2015},
+      {clubId: 'watford', from: 2015, to: 2021},
+      {clubId: 'villarreal', from: 2021, to: 2024},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2021]},
+    ],
+  },
+  {
     id: 'Carragher, Jamie',
     name: 'Jamie Carragher',
     nationality: ['England'],
@@ -5253,6 +5269,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 3, years: [2010, 2013, 2014], clubId: 'bayern'},
       {type: 'champions-league', count: 1, years: [2013]},
       {type: 'league-title', count: 3, years: [2010, 2013, 2014]},
+    ],
+  },
+  {
+    id: 'Coquelin, Francis',
+    name: 'Francis Coquelin',
+    nationality: ['France'],
+    positions: ['MF'],
+    born: '1991-05-13',
+    clubs: [
+      {clubId: 'arsenal', from: 2008, to: 2018},
+      {clubId: 'lorient', from: 2010, to: 2011, loan: true},
+      {clubId: 'freiburg', from: 2013, to: 2014, loan: true},
+      {clubId: 'valencia', from: 2018, to: 2020},
+      {clubId: 'villarreal', from: 2020, to: 2024},
+      {clubId: 'nantes', from: 2025, to: 2026},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 2, years: [2015, 2017], clubId: 'arsenal'},
+      {type: 'domestic-cup', count: 1, years: [2019], clubId: 'valencia'},
+      {type: 'europa-league', count: 1, years: [2021]},
     ],
   },
   {
@@ -12128,6 +12164,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Kambwala, Willy',
+    name: 'Willy Kambwala',
+    fullName: 'Willy Kambwala Ndengushi',
+    nationality: ['DR Congo'],
+    positions: ['DF'],
+    born: '2004-08-25',
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'man-utd', from: 2023, to: 2024},
+      {clubId: 'villarreal', from: 2024},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
+    ],
   },
   {
     id: 'Kane, Harry',
@@ -23634,13 +23686,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1988-11-20',
     shirtNumbers: [10, 20],
     clubs: [
-      {clubId: 'twente', from: 2010, to: 2012},
+      {clubId: 'twente', from: 2012, to: 2014},
       {clubId: 'southampton', from: 2014, to: 2018},
       {clubId: 'ajax', from: 2018, to: 2023},
-      {clubId: 'fenerbahce', from: 2023},
+      {clubId: 'fenerbahce', from: 2023, to: 2025},
     ],
     honours: [
-      {type: 'domestic-cup', count: 1, years: [2011], clubId: 'twente'},
       {type: 'domestic-cup', count: 2, years: [2019, 2021], clubId: 'ajax'},
       {type: 'league-title', count: 3, years: [2019, 2021, 2022]},
     ],
@@ -25766,6 +25817,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'european-championship', count: 1, years: [2004]},
     ],
+  },
+  {
+    id: 'Vušković, Luka',
+    name: 'Luka Vušković',
+    nationality: ['Croatia'],
+    positions: ['DF'],
+    born: '2007-02-24',
+    clubs: [
+      {clubId: 'tottenham', from: 2025, to: 2026},
+      {clubId: 'hamburg', from: 2025, to: 2026, loan: true},
+      {clubId: 'brighton', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Walcott, Theo',
