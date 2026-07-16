@@ -532,6 +532,7 @@
     "removeBody": "Du og {{name}} kan ikke længere se hinandens resultater.",
     "inviteToParty": "Inviter til en kamp",
     "a11yShareCode": "Del din vennekode",
+    "a11yAccept": "Acceptér anmodning fra {{name}}",
     "a11yDecline": "Afvis anmodning fra {{name}}",
     "a11yStreak": "{{count}} dages stime",
     "a11yToggleGames": "Vis {{name}}s daglige spil",

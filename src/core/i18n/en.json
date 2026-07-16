@@ -532,6 +532,7 @@
     "removeBody": "You and {{name}} will no longer see each other's results.",
     "inviteToParty": "Invite to a match",
     "a11yShareCode": "Share your friend code",
+    "a11yAccept": "Accept request from {{name}}",
     "a11yDecline": "Decline request from {{name}}",
     "a11yStreak": "{{count}} day streak",
     "a11yToggleGames": "Show {{name}}'s daily games",

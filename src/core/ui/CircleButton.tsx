@@ -8,6 +8,12 @@ type Props = {
   onPress?: () => void;
   /** Diameter (default 40). */
   size?: number;
+  /**
+   * Wears the brand rim: for the affirmative one of a pair, so two round
+   * buttons side by side don't read as the same offer (accept vs decline).
+   * Same name and job as Tag's `accent`.
+   */
+  accent?: boolean;
   accessibilityLabel?: string;
 };
 
@@ -20,6 +26,7 @@ export function CircleButton({
   children,
   onPress,
   size = 40,
+  accent = false,
   accessibilityLabel,
 }: Props) {
   const press = usePressScale();
@@ -36,6 +43,7 @@ export function CircleButton({
         style={[
           styles.circle,
           {width: size, height: size, borderRadius: radii.pill},
+          accent && styles.accent,
           press.animatedStyle,
         ]}>
         {children}
@@ -54,4 +62,7 @@ const makeStyles = (c: Palette) =>
       borderWidth: 1,
       borderColor: c.divider,
     },
+    // The rim carries the accent, not the fill: it's the quietest way to make
+    // one of a pair read as the offer while both stay the same round control.
+    accent: {borderColor: c.primary},
   });

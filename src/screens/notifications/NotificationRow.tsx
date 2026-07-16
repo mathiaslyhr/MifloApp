@@ -15,7 +15,7 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
-import {X} from 'lucide-react-native';
+import {Check, X} from 'lucide-react-native';
 import {
   Avatar,
   Button,
@@ -125,15 +125,18 @@ export function NotificationRow({item, onJoin, onAfterAction}: Props) {
         </Text>
       </View>
       {item.kind === 'friend-request' ? (
+        // A matched pair of round controls, told apart by weight rather than
+        // shape: accept wears the brand rim and a brighter glyph, decline stays
+        // on the divider rim. Two identical circles would offer the same thing
+        // twice.
         <>
-          <Button
-            label={t('social.accept')}
-            variant="secondary"
-            fullWidth={false}
-            size="sm"
-            disabled={busy}
-            onPress={handleAccept}
-          />
+          <CircleButton
+            size={32}
+            accent
+            onPress={busy ? undefined : handleAccept}
+            accessibilityLabel={t('social.a11yAccept', {name})}>
+            <Check size={16} color={colors.primary} strokeWidth={2.25} />
+          </CircleButton>
           <CircleButton
             size={32}
             onPress={busy ? undefined : handleDecline}
