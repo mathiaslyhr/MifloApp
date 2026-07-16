@@ -12,6 +12,7 @@ import {
   searchNames,
   type NameEntry,
 } from '../shared/nameSearch';
+import {CITIES} from './cities';
 import {LIST_POOL} from './lists';
 import type {TenballKind} from './types';
 
@@ -47,7 +48,16 @@ const POOLS: Record<Exclude<TenballKind, 'player'>, () => NameEntry[]> = {
       ...listEntriesOfKind('manager'),
     ]),
   ),
-  other: derivedFromData(() => dedupeByLabel(listEntriesOfKind('other'))),
+  // Cities have no canonical dataset the way clubs/nations/managers do, so a
+  // curated decoy crowd (CITIES) plays that role: without it the pool is only
+  // the ten answers and a player picks them all blind. Decoys come first so
+  // their flag/label win the dedupe; the list answers merge in their aliases.
+  other: derivedFromData(() =>
+    dedupeByLabel([
+      ...CITIES.map(c => nameEntry(c.name, c.aliases ?? [], c.country)),
+      ...listEntriesOfKind('other'),
+    ]),
+  ),
 };
 
 /** Ranked suggestions for a non-player list kind. A pack can name a kind this
