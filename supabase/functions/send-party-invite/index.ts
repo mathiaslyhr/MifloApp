@@ -125,6 +125,22 @@ Deno.serve(async req => {
     return json(200, {ok: false, reason: 'no_room'});
   }
 
+  // The invite's in-app record (0046), written here on purpose: ABOVE the token
+  // lookup, so a friend with notifications off still gets it in the bell. That
+  // case is the whole reason the bell exists — a log that only exists when a
+  // push lands is not a log. The room is already resolved and the caller's
+  // membership already checked, so by here the invite is known to be real.
+  const {error: logError} = await admin.from('party_invites').insert({
+    from_user_id: callerId,
+    to_user_id: friendUserId,
+    room_id: room.id,
+  });
+  // Never fail an invite because logging it failed: that would be a worse bug
+  // than the one this fixes. The push is the thing the caller asked for.
+  if (logError) {
+    console.error('party_invites insert failed', logError.message);
+  }
+
   const {data: profile} = await admin
     .from('profiles')
     .select('display_name')
@@ -138,6 +154,7 @@ Deno.serve(async req => {
     .eq('user_id', friendUserId)
     .maybeSingle();
   if (!tokenRow) {
+    // No push, but the invite is already logged above — the bell will show it.
     return json(200, {ok: false, reason: 'no_token'});
   }
 
