@@ -208,6 +208,11 @@ export const CLUBS: readonly Club[] = [
   {id: 'viborg', name: 'Viborg FF', country: 'Denmark', league: 'danish-superliga'},
   {id: 'konyaspor', name: 'Konyaspor', country: 'Turkey', league: 'super-lig'},
   {id: 'cadiz', name: 'Cádiz CF', country: 'Spain', league: 'la-liga'},
+
+  // --- Team sheet batch 2026-07-16: career clubs for the Leicester 2016 XI ---
+  // (Stuttgart deliberately absent: already here as `vfb-stuttgart`.)
+  {id: 'middlesbrough', name: 'Middlesbrough', country: 'England', league: 'premier-league'},
+  {id: 'bochum', name: 'VfL Bochum', country: 'Germany', league: 'bundesliga'},
 ];
 
 const clubsById = derivedFromData(

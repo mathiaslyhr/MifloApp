@@ -706,6 +706,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Albrighton, Marc',
+    name: 'Marc Albrighton',
+    nationality: ['England'],
+    positions: ['MF'],
+    born: '1989-11-18',
+    shirtNumbers: [11],
+    clubs: [
+      {clubId: 'aston-villa', from: 2009, to: 2014},
+      {clubId: 'leicester', from: 2014, to: 2024},
+      {clubId: 'west-brom', from: 2023, to: 2023, loan: true},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2021], clubId: 'leicester'},
+      {type: 'league-title', count: 1, years: [2016], clubId: 'leicester'},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Aldair',
     name: 'Aldair',
     nationality: ['Brazil'],
@@ -5851,6 +5869,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Delph, Fabian',
+    name: 'Fabian Delph',
+    nationality: ['England'],
+    positions: ['MF'],
+    born: '1989-11-21',
+    shirtNumbers: [18],
+    clubs: [
+      {clubId: 'leeds', from: 2006, to: 2009},
+      {clubId: 'aston-villa', from: 2009, to: 2015},
+      {clubId: 'man-city', from: 2015, to: 2019},
+      {clubId: 'everton', from: 2019, to: 2022},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2018, 2019], clubId: 'man-city'},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Delvecchio, Marco',
     name: 'Marco Delvecchio',
     nationality: ['Italy'],
@@ -8011,6 +8047,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Fuchs, Christian',
+    name: 'Christian Fuchs',
+    nationality: ['Austria'],
+    positions: ['DF'],
+    born: '1986-04-07',
+    shirtNumbers: [28],
+    clubs: [
+      {clubId: 'bochum', from: 2008, to: 2011},
+      {clubId: 'mainz', from: 2010, to: 2011, loan: true},
+      {clubId: 'schalke', from: 2011, to: 2015},
+      {clubId: 'leicester', from: 2015, to: 2021},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2021], clubId: 'leicester'},
+      {type: 'league-title', count: 1, years: [2016], clubId: 'leicester'},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Führich, Chris',
     name: 'Chris Führich',
     nationality: ['Germany'],
@@ -9701,6 +9756,30 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Hart, Joe',
+    name: 'Joe Hart',
+    nationality: ['England'],
+    positions: ['GK'],
+    born: '1987-04-19',
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'man-city', from: 2006, to: 2018},
+      {clubId: 'torino', from: 2016, to: 2017, loan: true},
+      {clubId: 'west-ham', from: 2017, to: 2018, loan: true},
+      {clubId: 'burnley', from: 2018, to: 2020},
+      {clubId: 'tottenham', from: 2020, to: 2021},
+      {clubId: 'celtic', from: 2021, to: 2024},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 3, years: [2011, 2014, 2016], clubId: 'man-city'},
+      // Two Scottish Cups (2023, 2024) + two League Cups (2022, 2023).
+      {type: 'domestic-cup', count: 4, years: [2022, 2023, 2024], clubId: 'celtic'},
+      {type: 'league-title', count: 2, years: [2012, 2014], clubId: 'man-city'},
+      {type: 'league-title', count: 3, years: [2022, 2023, 2024], clubId: 'celtic'},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Häßler, Thomas',
     name: 'Thomas Häßler',
     nationality: ['Germany'],
@@ -10453,6 +10532,28 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 3, years: [2007, 2019, 2021], clubId: 'ajax'},
       {type: 'domestic-cup', count: 1, years: [2011], clubId: 'schalke'},
       {type: 'league-title', count: 1, years: [2019]},
+    ],
+    tags: ['legends'],
+  },
+  {
+    id: 'Huth, Robert',
+    name: 'Robert Huth',
+    nationality: ['Germany'],
+    positions: ['DF'],
+    born: '1984-08-18',
+    shirtNumbers: [6],
+    clubs: [
+      {clubId: 'chelsea', from: 2002, to: 2006},
+      {clubId: 'middlesbrough', from: 2006, to: 2009},
+      {clubId: 'stoke', from: 2009, to: 2015},
+      {clubId: 'leicester', from: 2015, to: 2019},
+    ],
+    honours: [
+      // Per club, per facts.ts `honourTotal` ("a league title at each of two
+      // clubs is two entries"). 2006 is Chelsea's `to` and Middlesbrough's
+      // `from`; the matcher's `year > from` rule keeps it off Middlesbrough.
+      {type: 'league-title', count: 2, years: [2005, 2006], clubId: 'chelsea'},
+      {type: 'league-title', count: 1, years: [2016], clubId: 'leicester'},
     ],
     tags: ['legends'],
   },
@@ -16872,6 +16973,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars', 'wordle'],
   },
   {
+    id: 'Okazaki, Shinji',
+    name: 'Shinji Okazaki',
+    nationality: ['Japan'],
+    positions: ['FW'],
+    born: '1986-04-16',
+    shirtNumbers: [20],
+    clubs: [
+      {clubId: 'vfb-stuttgart', from: 2011, to: 2013},
+      {clubId: 'mainz', from: 2013, to: 2015},
+      {clubId: 'leicester', from: 2015, to: 2019},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2016], clubId: 'leicester'},
+    ],
+    tags: ['legends'],
+  },
+  {
     id: 'Okocha, Jay-Jay',
     name: 'Jay-Jay Okocha',
     nationality: ['Nigeria'],
@@ -21349,6 +21467,27 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 2, years: [2020, 2021], clubId: 'psg'},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Simpson, Danny',
+    name: 'Danny Simpson',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '1987-01-04',
+    shirtNumbers: [17],
+    clubs: [
+      {clubId: 'man-utd', from: 2006, to: 2010},
+      {clubId: 'sunderland', from: 2007, to: 2007, loan: true},
+      {clubId: 'blackburn', from: 2008, to: 2009, loan: true},
+      {clubId: 'newcastle', from: 2009, to: 2013},
+      {clubId: 'qpr', from: 2013, to: 2014},
+      {clubId: 'leicester', from: 2014, to: 2019},
+    ],
+    honours: [
+      // Championship titles (Sunderland 2007, Newcastle 2010) are second-tier
+      // and deliberately not recorded as league titles.
+      {type: 'league-title', count: 1, years: [2016], clubId: 'leicester'},
+    ],
   },
   {
     id: 'Singh, Sarpreet',

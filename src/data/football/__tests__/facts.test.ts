@@ -42,8 +42,16 @@ function render(fact: Fact, bundle: unknown = en): string {
   return template.replace(/\{\{(\w+)\}\}/g, (_, p) => String(fact.params[p]));
 }
 
-/** A big deterministic sample: enough draws to hit every template. */
-const sample: Fact[] = Array.from({length: 40}, (_, i) =>
+/**
+ * A big deterministic sample: enough draws to hit every template.
+ *
+ * 120, not 40: `leagueTitle` only fires for a player whose league-title honour
+ * carries a `clubId`, and just ~20 of the ~1120 famous players have one (the
+ * other 800-odd league titles are stored without a club). At ~1.8% per draw
+ * that made 40 draws a coin flip — it scraped by with a single hit until the
+ * pool grew. The sample size is not the assertion; every template firing is.
+ */
+const sample: Fact[] = Array.from({length: 120}, (_, i) =>
   matchmakingFacts(12, seededRng(i + 1)),
 ).flat();
 
