@@ -596,6 +596,23 @@
     "deleteProfileDone": "Profil slettet",
     "deleteProfileError": "Kunne ikke slette din profil. Prøv igen."
   },
+  "notifications": {
+    "title": "Notifikationer",
+    "empty": "Intet nyt. Når en ven inviterer dig til en kamp eller vil være venner, lander det her.",
+    "retry": "Kunne ikke hente invitationer. Tryk for at prøve igen.",
+    "friendRequest": "{{name}} vil være venner",
+    "invited": "{{name}} inviterede dig til en kamp",
+    "joined": "Du deltog",
+    "didNotJoin": "Du deltog ikke",
+    "join": "Deltag",
+    "agoMinutes": "{{count}} min. siden",
+    "agoHours": "{{count}} t. siden",
+    "agoHours_plural": "{{count}} t. siden",
+    "agoDays": "{{count}} d. siden",
+    "agoDays_plural": "{{count}} d. siden",
+    "a11yBell": "Notifikationer",
+    "a11yBellUnread": "Notifikationer, {{count}} nye"
+  },
   "hattrick": {
     "title": "Hattrick",
     "loading": "Indlæser…",
@@ -621,7 +638,6 @@
     "beatWinnerYou": "VINDER! Dig",
     "beatMissedThem": "{{name}} brændte",
     "beatTimeoutThem": "{{name}} løb tør for tid",
-    "yourTurn": "Din tur",
     "beatLevel": "UDLIGNING! {{name}}",
     "beatWinner": "VINDER! {{name}}",
     "beatDraw": "UAFGJORT",

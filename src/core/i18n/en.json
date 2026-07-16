@@ -596,6 +596,23 @@
     "deleteProfileDone": "Profile deleted",
     "deleteProfileError": "Couldn't delete your profile. Please try again."
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Nothing new. When a friend invites you to a match or asks to be friends, it lands here.",
+    "retry": "Couldn't load invites. Tap to try again.",
+    "friendRequest": "{{name}} wants to be friends",
+    "invited": "{{name}} invited you to a match",
+    "joined": "You joined",
+    "didNotJoin": "You didn't join",
+    "join": "Join",
+    "agoMinutes": "{{count}}m ago",
+    "agoHours": "{{count}}h ago",
+    "agoHours_plural": "{{count}}h ago",
+    "agoDays": "{{count}}d ago",
+    "agoDays_plural": "{{count}}d ago",
+    "a11yBell": "Notifications",
+    "a11yBellUnread": "Notifications, {{count}} new"
+  },
   "hattrick": {
     "title": "Hattrick",
     "loading": "Loading…",
@@ -621,7 +638,6 @@
     "beatWinnerYou": "WINNER! You",
     "beatMissedThem": "{{name}} missed",
     "beatTimeoutThem": "{{name}} ran out of time",
-    "yourTurn": "Your turn",
     "beatLevel": "LEVEL! {{name}}",
     "beatWinner": "WINNER! {{name}}",
     "beatDraw": "DRAW",
