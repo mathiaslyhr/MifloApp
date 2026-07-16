@@ -36,7 +36,7 @@ import {
   initialsFor,
   toast,
 } from '../../core/ui';
-import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {onRim, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {presenceFor} from '../../core/social/presence';
 import {
@@ -351,13 +351,11 @@ const makeStyles = (c: Palette) =>
     // it reads as lifted off it (same recipe as PersonCard).
     onlineDot: {
       position: 'absolute',
-      right: 0,
-      bottom: 0,
+      right: onRim(44, 12),
+      bottom: onRim(44, 12),
       width: 12,
       height: 12,
       borderRadius: 6,
       backgroundColor: c.success,
-      borderWidth: 2,
-      borderColor: c.surface,
     },
   });

@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {Modal, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Avatar, Tag, Skeleton, Text, toast} from '../../core/ui';
-import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
+import {onRim, radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import {requestPushPermissionAndSync} from '../../core/notifications/pushInvites';
 import {presenceFor} from '../../core/social/presence';
 import {
@@ -278,16 +278,14 @@ const makeStyles = (c: Palette) =>
   },
   rowName: {flex: 1},
   tagText: {color: c.ink},
-  // Same presence disc as the Friends tab's cards.
+  // Same presence disc as the Friends tab's cards. Avatar is the default 28.
   onlineDot: {
     position: 'absolute',
-    right: -1,
-    bottom: -1,
+    right: onRim(28, 10),
+    bottom: onRim(28, 10),
     width: 10,
     height: 10,
     borderRadius: 5,
     backgroundColor: c.success,
-    borderWidth: 2,
-    borderColor: c.surface,
   },
   });

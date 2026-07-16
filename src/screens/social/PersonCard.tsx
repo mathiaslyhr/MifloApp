@@ -11,7 +11,7 @@ import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
 import {ChevronDown, Flame} from 'lucide-react-native';
 import {Avatar, Card, Text, initialsFor} from '../../core/ui';
-import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {onRim, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {DAILY_GAMES, type DailyGame, type DayCellStatus} from '../../core/daily/dailyLog';
 import {DailyRow} from '../../core/daily/DailyRow';
 import {MAX_ACTIVE_AGE_MIN, type Presence} from '../../core/social/presence';
@@ -229,14 +229,12 @@ const makeStyles = (c: Palette) =>
     // corner, rimmed in surface white so it reads on the card.
     onlineDot: {
       position: 'absolute',
-      right: 0,
-      bottom: 0,
+      right: onRim(44, 12),
+      bottom: onRim(44, 12),
       width: 12,
       height: 12,
       borderRadius: 6,
       backgroundColor: c.success,
-      borderWidth: 2,
-      borderColor: c.surface,
     },
     streak: {
       flexDirection: 'row',

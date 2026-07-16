@@ -37,6 +37,7 @@ import {
 } from '../core/notifications/scoutReminder';
 import {
   fonts,
+  onRim,
   screenPadding,
   spacing,
   useColors,
@@ -732,9 +733,17 @@ function Countdown() {
 const TOKEN_WIDTH = 62;
 const CIRCLE = 50;
 const BADGE = 16;
-/** Offset that puts a corner badge's centre exactly on the circle outline
- * at the 45° point: r − r/√2 − badge/2. */
-const BADGE_ON_RIM = CIRCLE / 2 - CIRCLE / (2 * Math.SQRT2) - BADGE / 2;
+const CIRCLE_BORDER = 2;
+/**
+ * Badge centres sit exactly on the circle outline at the 45° point.
+ *
+ * The border argument is the part that's easy to miss: an absolutely positioned
+ * child is laid out against its parent's PADDING box, which starts inside the
+ * circle's border. Without it every badge was pulled inward by the border width
+ * on both axes — 2.83pt diagonally, measured off a screenshot at 22.16pt from
+ * the centre when the rim is at 25pt.
+ */
+const BADGE_ON_RIM = onRim(CIRCLE, BADGE, CIRCLE_BORDER);
 
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
@@ -788,7 +797,7 @@ const makeStyles = (c: Palette) =>
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: c.surface,
-    borderWidth: 2,
+    borderWidth: CIRCLE_BORDER,
     borderColor: c.divider,
   },
   circleSelected: {borderColor: c.primary},
@@ -827,7 +836,10 @@ const makeStyles = (c: Palette) =>
   badgeTopRight: {top: BADGE_ON_RIM, right: BADGE_ON_RIM},
   badgeBottomLeft: {bottom: BADGE_ON_RIM, left: BADGE_ON_RIM},
   badgeBottomRight: {bottom: BADGE_ON_RIM, right: BADGE_ON_RIM},
-  badgeMid: {top: CIRCLE / 2 - BADGE / 2, left: -BADGE / 2},
+  badgeMid: {
+    top: CIRCLE / 2 - BADGE / 2 - CIRCLE_BORDER,
+    left: -BADGE / 2 - CIRCLE_BORDER,
+  },
   cardIcon: {width: 6, height: 9, borderRadius: 1.5},
   // Yellow card is a fixed football colour in both themes.
   cardYellow: {backgroundColor: '#F2C230'},

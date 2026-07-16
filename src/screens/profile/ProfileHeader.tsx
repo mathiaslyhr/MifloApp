@@ -10,7 +10,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Avatar, PressableScale, Text, initialsFor} from '../../core/ui';
-import {fonts, spacing, useThemedStyles, type Palette} from '../../theme';
+import {fonts, onRim, spacing, useThemedStyles, type Palette} from '../../theme';
 import {lastActiveParts, type ActiveUnit, type Presence} from '../../core/social/presence';
 import {formatLastActive} from '../social/PersonCard';
 
@@ -256,19 +256,18 @@ const makeStyles = (c: Palette) =>
       lineHeight: 24,
       color: c.ink,
     },
-    // PersonCard's presence trick, scaled for the 72pt disc — but rimmed in the
-    // PAGE colour, not `surface`. This header sits directly on the canvas (no
-    // card), so a surface-coloured rim read as a lighter ring around the dot.
+    // Presence dot, centred ON the avatar's outline at the 45° point. No rim:
+    // a rounded border over a coloured background leaves an anti-aliased fringe
+    // of that background outside it, so the dot read as a green ring around a
+    // dark ring around a green dot.
     onlineDot: {
       position: 'absolute',
-      right: 2,
-      bottom: 2,
+      right: onRim(72, 14),
+      bottom: onRim(72, 14),
       width: 14,
       height: 14,
       borderRadius: 7,
       backgroundColor: c.success,
-      borderWidth: 2.5,
-      borderColor: c.background,
     },
     actions: {
       flexDirection: 'row',

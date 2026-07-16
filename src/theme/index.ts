@@ -12,6 +12,7 @@ export {
   useColors,
   useThemedStyles,
 } from './SkinProvider';
+export {onRim} from './geometry';
 export {radii} from './radii';
 export type {RadiusToken} from './radii';
 export {shadows} from './shadows';

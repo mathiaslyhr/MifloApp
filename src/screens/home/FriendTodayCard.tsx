@@ -14,7 +14,7 @@ import {DAILY_GAMES, type DailyGame} from '../../core/daily/dailyLog';
 import {DailyRow} from '../../core/daily/DailyRow';
 import type {ChipCell} from '../social/PersonCard';
 import type {Presence} from '../../core/social/presence';
-import {radii, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {onRim, radii, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 
 export function FriendTodayCard({
   name,
@@ -99,13 +99,11 @@ const makeStyles = (c: Palette) =>
     // so it reads on the card surface.
     onlineDot: {
       position: 'absolute',
-      right: 0,
-      bottom: 0,
+      right: onRim(40, 12),
+      bottom: onRim(40, 12),
       width: 12,
       height: 12,
       borderRadius: 6,
       backgroundColor: c.success,
-      borderWidth: 2,
-      borderColor: c.surfaceSunken,
     },
   });
