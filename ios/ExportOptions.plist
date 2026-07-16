@@ -8,5 +8,21 @@
   <string>upload</string>
   <key>teamID</key>
   <string>U326NK67AQ</string>
+  <!--
+    We pick the build number, not Xcode.
+
+    This defaults to YES for app-store-connect uploads, and it renumbers the
+    build SILENTLY at export — after the archive has been made and verified.
+    2026-07-16: an archive verified as CFBundleVersion 20 with PlistBuddy
+    arrived in App Store Connect as 21, leaving a build whose own config.ts
+    still said "1.0 (20)". That mismatch is not cosmetic: APP_VERSION_CODE is
+    what the update gate compares against min_supported_version, so a build can
+    gate itself out under a number it never knew it had.
+
+    With this NO, a colliding number fails the upload loudly instead. A loud
+    failure is recoverable; a silent renumber is not.
+  -->
+  <key>manageAppVersionAndBuildNumber</key>
+  <false/>
 </dict>
 </plist>
