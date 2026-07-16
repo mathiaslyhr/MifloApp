@@ -11,14 +11,17 @@ are scattered or invisible:
 - **Friend requests** live in Profile (`RequestsSection`) and dot the Profile tab.
 - **Party invites** exist ONLY as an APNs push. Dismiss the banner and the invite
   is gone — there is no in-app record of it at all.
-- **Daily reminders** fire and vanish.
+- **Daily reminders** fire and vanish — but they are receipts, not actions, and
+  are out of scope (see the decision below).
 
 The corner should hold the thing you check often, not the thing you read once.
 
 ## What we're building
 
 A bell in Home's header opening a full-screen `Notifications` feed: an activity
-log, newest first, of friend requests, party invites and daily reminders.
+log, newest first, of friend requests and party invites — the two things that are
+actionable and genuinely invisible today. Daily reminders are deliberately out;
+see below.
 
 `HowToPlayScreen` (Profile → menu → How to play) already carries fuller per-game
 rules and becomes the only how-to-play. Home's `?` and `HowToPlayModal` usage go.
@@ -44,32 +47,24 @@ empty and lie. So `send-party-invite` writes a row, and **writes it even when th
 push fails** (`no_token`). That is the entire point: the bell works when
 notifications don't.
 
-### Reminders stay local — and are logged at SCHEDULE time, not fire time
+### Daily reminders are deliberately OUT
 
-Nudges are scheduled on-device (`scoutReminder.ts` / `habit.ts`) and have no
-server row, so their history can only be local. Everything actionable is server
-truth; only "we reminded you" is local.
+The bell earns its place by showing things you can ACT on that you'd otherwise
+miss. A nudge is the opposite: you already saw it on the lock screen, and there
+is nothing to do about it — the row would be a receipt.
 
-The awkward part, which shapes the implementation: a nudge is a
-`createTriggerNotification` with a `TIMESTAMP` trigger. **No code runs when it
-fires.** iOS gives notifee no reliable background DELIVERED event, so there is
-nothing to hook. Logging at fire time is not possible.
+It is also the only part that could be WRONG. A nudge is a
+`createTriggerNotification` with a `TIMESTAMP` trigger scheduled up to 14 days
+ahead; no code runs when it fires, and iOS gives notifee no reliable DELIVERED
+event. A log could only infer "scheduled, not cancelled, time passed" — and would
+claim reminders the OS had suppressed. A notifications screen that lies about
+what it sent you is worse than one that stays quiet.
 
-So the log records the nudge when it is SCHEDULED, storing `fireAt`, and:
+Requests and invites are read from the server: either true or absent.
 
-- the feed shows an entry only once `fireAt <= now` — a nudge scheduled for
-  tomorrow is not history yet;
-- `syncNudges` cancels nudges when you've already played, and cancellation MUST
-  remove the log entry too (`cancelTriggerNotifications` and the log stay in
-  step), or the log claims a reminder that never fired;
-- entries are only recorded when notification permission is granted —
-  `scoutReminder` already checks `AuthorizationStatus`, so a user with
-  notifications off gets an empty reminder log rather than a fictional one.
-
-This is a proxy — "scheduled, not cancelled, and its time has passed" — not proof
-of delivery. If the OS suppressed a nudge, the log would still show it. That is
-the honest limit of what the platform allows, and it is the reason reminders are
-non-actionable rows: they claim only that we meant to remind you.
+Adding reminders later is a small, additive change, independent of this
+plumbing. Doing it in the other order is not. If the bell is often empty, that is
+honest — nothing needs you.
 
 ### Unread is per-device
 
@@ -83,7 +78,6 @@ would cost a table to solve a problem nobody has.
 | --- | --- | --- |
 | Friend requests | `friend_requests` (exists) | `useRequestsStore` (exists) |
 | Party invites | **new** `party_invites` | **new** `my_party_invites()` RPC |
-| Daily reminders | **local** AsyncStorage | new `reminderLog.ts` |
 
 ### Migration 0046
 
@@ -120,19 +114,17 @@ because its logging failed would be a worse bug than the one this fixes.
 
 ### Client
 
-- `src/core/notifications/reminderLog.ts` — local log keyed by the nudge's own
-  notification id, so it upserts exactly as `syncNudges` does. `record(id, title,
-  fireAt)` at schedule time, `forget(ids)` alongside every
-  `cancelTriggerNotifications` call. Reads return only `fireAt <= now`. Caps at
-  30, drops >7 days.
 - `src/core/notifications/notificationsStore.ts` — zustand, mirroring
-  `requestsStore`'s shape. Merges the three sources into one `NotificationItem[]`
+  `requestsStore`'s shape. Merges the two sources into one `NotificationItem[]`
   sorted by time desc, and owns `lastReadAt` + `unreadCount`.
-- `src/screens/NotificationsScreen.tsx` — the feed + empty state.
-- `src/screens/notifications/NotificationRow.tsx` — one row, three variants.
+- `src/screens/NotificationsScreen.tsx` — the feed, empty state, pull to refresh.
+- `src/screens/notifications/NotificationRow.tsx` — one row, two variants.
+- `src/core/rooms/roomService.ts` — add `fetchMyPartyInvites()` beside the other
+  RPC wrappers; the store never calls supabase directly.
 
 `NotificationItem` is a discriminated union on `kind`:
-`'friend-request' | 'invite' | 'reminder'`, each with `at: string` for sorting.
+`'friend-request' | 'invite'`, each with `at: string` for sorting. The union
+exists so a third kind (reminders, activity) is an additive change.
 
 ## The rows
 
@@ -140,7 +132,6 @@ because its logging failed would be a worse bug than the one this fixes.
   `[Accept] [Decline]`. Reuses `RequestsSection`'s existing accept/decline calls.
 - **Invite** — avatar, "{name} invited you to a match", relative time, then
   `[Join]` when `joinable`, else "You joined" / "You didn't join".
-- **Reminder** — game icon, the nudge's own copy, relative time, no action.
 
 Relative time reuses `lastActiveParts`/`formatLastActive` from
 `core/social/presence.ts` — the app already says "2m", "3h", "Yesterday" there,
@@ -163,10 +154,11 @@ Rows follow the existing press-scale rule (`PressableScale`, never bare
 
 ## Error handling
 
-- RPC fails → the feed still renders friend requests + reminders; invites show a
-  quiet retry row. The bell must never be a blank screen because one source blinked.
-- No profile (pre-Friends opt-in) → requests and invites are empty by definition;
-  reminders still show.
+- Invites RPC fails → the feed still renders friend requests, and invites show a
+  quiet retry row. The bell must never be a blank screen because one source
+  blinked. The same the other way round.
+- No profile (pre-Friends opt-in) → both sources are empty by definition; the
+  bell shows its empty state rather than an error.
 - Backend not configured → all server sources no-op, as elsewhere.
 - An invite whose room was deleted → the join returns no row; treat as not
   joinable, show "You didn't join".
@@ -174,8 +166,8 @@ Rows follow the existing press-scale rule (`PressableScale`, never bare
 ## Testing
 
 - `notificationsStore` merge + sort order + `unreadCount` against `lastReadAt`.
-- `reminderLog`: cap, 7-day drop, a future `fireAt` is NOT returned, and
-  `forget()` on cancel removes the entry — the three ways the log could lie.
+- `my_party_invites` derives `joined`/`joinable` correctly: joined room, open
+  room not joined, finished room, deleted room.
 - `my_party_invites` probed against prod with the app's EXACT arg names (PGRST202
   fires on wrong arg names too — see the release runbook).
 - The screen: renders each row variant, an empty state, and `joinable` false
@@ -189,5 +181,5 @@ Rows follow the existing press-scale rule (`PressableScale`, never bare
   every open. The client must degrade to "no invites", not crash.
 - The edge function is deployed separately from the app; an old function means no
   invite rows, which the feed must treat as "no invites yet", not an error.
-- Reminders are local: a reinstall starts an empty reminder log. Acceptable, and
-  invisible to anyone who hasn't reinstalled.
+- The bell will often be empty. That is intended: an empty bell means nothing
+  needs you. Resist padding it with receipts.
