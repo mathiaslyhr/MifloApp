@@ -56,7 +56,12 @@ function scorers(which) {
       out[`(OG) ${name}`] = 1;
       continue;
     }
-    out[name] = (out[name] ?? 0) + g[1].split('|').length;
+    // Count MINUTES, not params: {{goal|68|pen.}} is one goal, and splitting
+    // blindly counted "pen." as a second. That over-reported Gündoğan in 2013
+    // (Dortmund scored 1), Ronaldo in 2014 and Massaro in 1994 — precisely the
+    // class of error this script exists to prevent.
+    const mins = g[1].split('|').filter(p => /^\d+(\+\d+)?$/.test(p.trim()));
+    out[name] = (out[name] ?? 0) + mins.length;
   }
   return out;
 }
