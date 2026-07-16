@@ -1,0 +1,686 @@
+PAGE : 2011_UEFA_Champions_League_final
+MATCH: Barcelona 3–1 Manchester United
+
+=== Barcelona — starting XI ===
+   1 GK  Víctor Valdés            yellow
+   2 RB  Dani Alves               yellow subbedOff:88'
+  14 CB  Javier Mascherano        
+   3 CB  Gerard Piqué             
+  22 LB  Eric Abidal              
+  16 DM  Sergio Busquets          
+   6 CM  Xavi                     CAPTAIN
+   8 CM  Andrés Iniesta           
+   7 RF  David Villa              goals:1 subbedOff:86'
+  10 CF  Lionel Messi             goals:1
+  17 LF  Pedro                    goals:1 subbedOff:90'
+
+=== Manchester United — starting XI ===
+   1 GK  Edwin van der Sar        
+  20 RB  Fábio                    subbedOff:69'
+   5 CB  Rio Ferdinand            
+  15 CB  Nemanja Vidić            CAPTAIN
+   3 LB  Patrice Evra             
+  25 RM  Antonio Valencia         yellow
+  16 CM  Michael Carrick          yellow subbedOff:77'
+  11 CM  Ryan Giggs               
+  13 LM  Park Ji-sung             
+  10 SS  Wayne Rooney             goals:1
+  14 CF  Javier Hernández         
+################################ 2014_UEFA_Champions_League_final
+PAGE : 2014_UEFA_Champions_League_final
+MATCH: Real Madrid 4–1 Atlético Madrid
+
+=== Real Madrid — starting XI ===
+   1 GK  Iker Casillas            CAPTAIN
+  15 RB  Dani Carvajal            
+   2 CB  Raphaël Varane           yellow
+   4 CB  Sergio Ramos             goals:1 yellow
+   5 LB  Fábio Coentrão           subbedOff:59'
+  19 RM  Luka Modrić              
+   6 CM  Sami Khedira             yellow subbedOff:59'
+  22 LM  Ángel Di María           
+  11 RF  Gareth Bale              goals:1
+   9 CF  Karim Benzema            subbedOff:79'
+   7 LF  Cristiano Ronaldo        goals:2 yellow
+  ‼ scored but NOT in the XI: Marcelo
+
+=== Atlético Madrid — starting XI ===
+  13 GK  Thibaut Courtois         
+  20 RB  Juanfran                 yellow
+  23 CB  Miranda                  yellow
+   2 CB  Diego Godín              goals:1 yellow
+   3 LB  Filipe Luís              subbedOff:83'
+   8 RM  Raúl García              yellow subbedOff:66'
+   5 CM  Tiago                    
+  14 CM  Gabi                     CAPTAIN yellow
+   6 LM  Koke                     yellow
+  19 CF  Diego Costa              subbedOff:9'
+   9 CF  David Villa              yellow
+################################ 2010_UEFA_Champions_League_final
+PAGE : 2010_UEFA_Champions_League_final
+MATCH: Bayern Munich 0–2 Inter Milan
+
+=== Bayern Munich — starting XI ===
+  22 GK  Hans-Jörg Butt           
+  21 RB  Philipp Lahm             
+   5 CB  Daniel Van Buyten        
+   6 CB  Martín Demichelis        yellow
+  28 LB  Holger Badstuber         
+  17 CM  Mark van Bommel          CAPTAIN yellow
+  31 CM  Bastian Schweinsteiger   
+  10 RW  Arjen Robben             
+   8 LW  Hamit Altıntop           subbedOff:63'
+  25 CF  Thomas Müller            
+  11 CF  Ivica Olić               subbedOff:74'
+  ‼ scored but NOT in the XI: Milito
+
+=== Inter Milan — starting XI ===
+  12 GK  Júlio César              
+  13 RB  Maicon                   
+   6 CB  Lúcio                    
+  25 CB  Walter Samuel            
+  26 LB  Cristian Chivu           yellow subbedOff:68'
+   4 CM  Javier Zanetti           CAPTAIN
+  19 CM  Esteban Cambiasso        
+  10 AM  Wesley Sneijder          
+   9 RF  Samuel Eto'o             
+  22 CF  Diego Milito             goals:3 subbedOff:90'
+  27 LF  Goran Pandev             subbedOff:79'
+################################ 2013_UEFA_Champions_League_final
+PAGE : 2013_UEFA_Champions_League_final
+MATCH: Borussia Dortmund 1–2 Bayern Munich
+
+=== Borussia Dortmund — starting XI ===
+   1 GK  Roman Weidenfeller       CAPTAIN
+  26 RB  Łukasz Piszczek          
+   4 CB  Neven Subotić            
+  15 CB  Mats Hummels             
+  29 LB  Marcel Schmelzer         
+   6 CM  Sven Bender              subbedOff:90'
+   8 CM  İlkay Gündoğan           goals:2
+  16 RW  Jakub Błaszczykowski     subbedOff:90'
+  11 AM  Marco Reus               
+  19 LW  Kevin Großkreutz         yellow
+   9 CF  Robert Lewandowski       
+
+=== Bayern Munich — starting XI ===
+   1 GK  Manuel Neuer             
+  21 RB  Philipp Lahm             CAPTAIN
+  17 CB  Jérôme Boateng           
+   4 CB  Dante                    yellow
+  27 LB  David Alaba              
+   8 CM  Javi Martínez            
+  31 CM  Bastian Schweinsteiger   
+  10 RW  Arjen Robben             goals:1
+  25 AM  Thomas Müller            
+   7 LW  Franck Ribéry            yellow subbedOff:90'
+   9 CF  Mario Mandžukić          goals:1 subbedOff:90'
+################################ 1992_European_Cup_final
+PAGE : 1992_European_Cup_final
+MATCH: Barcelona 1–0 Sampdoria
+
+=== Barcelona — starting XI ===
+   1 GK  Andoni Zubizarreta       CAPTAIN
+   4 SW  Ronald Koeman            goals:1
+   3 CB  Albert Ferrer            
+   2 CB  Nando                    
+  10 DM  Pep Guardiola            subbedOff:112'
+  11 RWB Eusebio Sacristán        
+   5 LWB Juan Carlos              
+   6 AM  José Mari Bakero         yellow
+   9 AM  Michael Laudrup          
+   8 SS  Hristo Stoichkov         
+   7 CF  Julio Salinas            subbedOff:65'
+
+=== Sampdoria — starting XI ===
+   1 GK  Gianluca Pagliuca        
+   2 RB  Moreno Mannini           yellow
+   5 CB  Pietro Vierchowod        yellow
+   6 CB  Marco Lanna              
+   3 LB  Srečko Katanec           
+   7 RM  Attilio Lombardo         
+   4 CM  Fausto Pari              
+   8 CM  Toninho Cerezo           
+  11 LM  Ivano Bonetti            subbedOff:73'
+  10 CF  Roberto Mancini          CAPTAIN yellow
+   9 CF  Gianluca Vialli          subbedOff:100'
+################################ 1993_UEFA_Champions_League_final
+PAGE : 1993_UEFA_Champions_League_final
+MATCH: Marseille 1–0 Milan
+
+=== Marseille — starting XI ===
+   1 GK  Fabien Barthez           yellow
+   2 RB  Jocelyn Angloma          subbedOff:62'
+   3 LB  Éric Di Meco             yellow
+   4 SW  Basile Boli              goals:1 yellow
+   5 CM  Franck Sauzée            
+   6 CB  Marcel Desailly          
+   7 CM  Jean-Jacques Eydelie     
+   8 CF  Alen Bokšić              
+   9 LF  Rudi Völler              subbedOff:79'
+  10 RF  Abedi Pele               
+  11 CM  Didier Deschamps         CAPTAIN
+
+=== Milan — starting XI ===
+   1 GK  Sebastiano Rossi         
+   2 RB  Mauro Tassotti           
+   5 CB  Alessandro Costacurta    
+   6 CB  Franco Baresi            CAPTAIN
+   3 LB  Paolo Maldini            
+   7 RM  Gianluigi Lentini        yellow
+   4 CM  Demetrio Albertini       
+   8 CM  Frank Rijkaard           
+  10 LM  Roberto Donadoni         subbedOff:58'
+   9 CF  Marco van Basten         subbedOff:86'
+  11 CF  Daniele Massaro          
+################################ 1994_UEFA_Champions_League_final
+PAGE : 1994_UEFA_Champions_League_final
+MATCH: Milan 4–0 Barcelona
+
+=== Milan — starting XI ===
+   1 GK  Sebastiano Rossi         
+   2 RB  Mauro Tassotti           CAPTAIN yellow
+   5 CB  Filippo Galli            
+   6 CB  Paolo Maldini            subbedOff:83'
+   3 LB  Christian Panucci        yellow
+   9 RM  Zvonimir Boban           
+   4 CM  Demetrio Albertini       yellow
+   8 CM  Marcel Desailly          goals:1
+   7 LM  Roberto Donadoni         
+  10 RF  Dejan Savićević          goals:1
+  11 LF  Daniele Massaro          goals:3 yellow
+
+=== Barcelona — starting XI ===
+   1 GK  Andoni Zubizarreta       
+   2 RB  Albert Ferrer            yellow
+   3 DM  Pep Guardiola            
+   4 CB  Ronald Koeman            
+   5 CB  Miguel Ángel Nadal       yellow
+   6 CM  José Mari Bakero         CAPTAIN yellow
+   7 LB  Sergi Barjuán            yellow subbedOff:71'
+   8 RF  Hristo Stoichkov         yellow
+   9 CM  Guillermo Amor           
+  10 CF  Romário                  
+  11 LF  Txiki Begiristain        subbedOff:51'
+################################ 1995_UEFA_Champions_League_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: 1995_UEFA_Champions_League_final
+################################ 1996_UEFA_Champions_League_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: 1996_UEFA_Champions_League_final
+################################ 1997_UEFA_Champions_League_final
+PAGE : 1997_UEFA_Champions_League_final
+MATCH: Borussia Dortmund 3–1 Juventus
+
+=== Borussia Dortmund — starting XI ===
+   1 GK  Stefan Klos              
+   6 SW  Matthias Sammer          CAPTAIN
+  15 CB  Jürgen Kohler            
+  16 CB  Martin Kree              
+   7 RWB Stefan Reuter            
+  17 LWB Jörg Heinrich            
+  14 CM  Paul Lambert             
+  19 CM  Paulo Sousa              yellow
+  10 AM  Andreas Möller           subbedOff:89'
+  13 CF  Karl-Heinz Riedle        goals:3 subbedOff:67'
+   9 CF  Stéphane Chapuisat       subbedOff:70'
+  ‼ scored but NOT in the XI: Ricken
+
+=== Juventus — starting XI ===
+   1 GK  Angelo Peruzzi           CAPTAIN
+   5 RB  Sergio Porrini           yellow subbedOff:46'
+   2 CB  Ciro Ferrara             
+   4 CB  Paolo Montero            
+  13 LB  Mark Iuliano             yellow
+  14 DM  Didier Deschamps         
+   7 RM  Angelo Di Livio          
+  18 LM  Vladimir Jugović         
+  21 AM  Zinedine Zidane          
+  15 CF  Christian Vieri          subbedOff:71'
+   9 CF  Alen Bokšić              subbedOff:87'
+  ‼ scored but NOT in the XI: Del Piero
+################################ 1998_UEFA_Champions_League_final
+PAGE : 1998_UEFA_Champions_League_final
+MATCH: Juventus 0–1 Real Madrid
+
+=== Juventus — starting XI ===
+   1 GK  Angelo Peruzzi           CAPTAIN
+   3 RB  Moreno Torricelli        
+  13 CB  Mark Iuliano             
+   4 CB  Paolo Montero            yellow
+  22 LB  Gianluca Pessotto        subbedOff:70'
+   7 RM  Angelo Di Livio          subbedOff:46'
+  14 CM  Didier Deschamps         subbedOff:77'
+  26 CM  Edgar Davids             yellow
+  10 LM  Alessandro Del Piero     
+  21 AM  Zinedine Zidane          
+   9 CF  Filippo Inzaghi          
+  ‼ scored but NOT in the XI: Mijatović
+
+=== Real Madrid — starting XI ===
+  25 GK  Bodo Illgner             
+  17 RB  Christian Panucci        
+   5 CB  Manolo Sanchís           CAPTAIN
+   4 CB  Fernando Hierro          yellow
+   3 LB  Roberto Carlos           yellow
+  27 DM  Christian Karembeu       yellow
+   6 DM  Fernando Redondo         
+  10 CM  Clarence Seedorf         yellow
+  15 AM  Fernando Morientes       subbedOff:81'
+   8 AM  Predrag Mijatović        goals:1 subbedOff:89'
+   7 CF  Raúl                     subbedOff:90'
+################################ 2002_UEFA_Champions_League_final
+PAGE : 2002_UEFA_Champions_League_final
+MATCH: Bayer Leverkusen 1–2 Real Madrid
+
+=== Bayer Leverkusen — starting XI ===
+   1 GK  Hans-Jörg Butt           
+  26 RB  Zoltán Sebescen          subbedOff:65'
+   6 CB  Boris Živković           
+  19 CB  Lúcio                    goals:1 subbedOff:90'
+  35 LB  Diego Placente           
+  28 DM  Carsten Ramelow          CAPTAIN
+  25 RM  Bernd Schneider          
+  13 CM  Michael Ballack          
+  23 LM  Thomas Brdarić           subbedOff:39'
+  10 AM  Yıldıray Baştürk         
+  27 CF  Oliver Neuville          
+
+=== Real Madrid — starting XI ===
+  13 GK  César                    subbedOff:68'
+   2 RB  Míchel Salgado           yellow
+   4 CB  Fernando Hierro          CAPTAIN
+   6 CB  Iván Helguera            
+   3 LB  Roberto Carlos           yellow
+  24 DM  Claude Makélélé          subbedOff:73'
+  10 RM  Luís Figo                subbedOff:61'
+  21 LM  Santiago Solari          
+   5 AM  Zinedine Zidane          goals:1
+   7 CF  Raúl                     goals:1
+   9 CF  Fernando Morientes       
+################################ 1990_FIFA_World_Cup_final
+PAGE : 1990_FIFA_World_Cup_final
+MATCH: West Germany {{score link|1990 FIFA World Cup knockout stage#Final|1–0|1990 FIFA World Cup final}} Argentina
+
+=== West Germany — starting XI ===
+   1 GK  Bodo Illgner             
+   5 SW  Klaus Augenthaler        
+   6 CB  Guido Buchwald           
+   4 CB  Jürgen Kohler            
+  14 RWB Thomas Berthold          subbedOff:73'
+   3 LWB Andreas Brehme           goals:2
+   8 CM  Thomas Häßler            
+  10 CM  Lothar Matthäus          CAPTAIN
+   7 CM  Pierre Littbarski        
+   9 CF  Rudi Völler              yellow
+  18 CF  Jürgen Klinsmann         
+
+=== Argentina — starting XI ===
+  12 GK  Sergio Goycochea         
+  20 SW  Juan Simón               
+  18 CB  José Serrizuela          
+  19 CB  Oscar Ruggeri            subbedOff:46'
+   4 RWB José Basualdo            
+  17 LWB Roberto Sensini          
+  13 DM  Néstor Lorenzo           
+   7 CM  Jorge Burruchaga         subbedOff:53'
+  21 CM  Pedro Troglio            yellow
+  10 SS  Diego Maradona           CAPTAIN yellow
+   9 CF  Gustavo Dezotti          RED
+################################ UEFA_Euro_1992_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: UEFA_Euro_1992_final
+################################ UEFA_Euro_2004_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: UEFA_Euro_2004_final
+################################ 2015_Copa_América_final
+PAGE : 2015_Copa_América_final
+MATCH: Chile 0–0 Argentina
+
+=== Chile — starting XI ===
+   1 GK  Claudio Bravo            CAPTAIN
+   5 CB  Francisco Silva          yellow
+  21 CB  Marcelo Díaz             yellow
+  17 CB  Gary Medel               yellow
+   4 RM  Mauricio Isla            
+  20 CM  Charles Aránguiz         yellow
+   8 CM  Arturo Vidal             
+  15 LM  Jean Beausejour          
+  10 AM  Jorge Valdivia           subbedOff:75'
+  11 CF  Eduardo Vargas           subbedOff:95'
+   7 CF  Alexis Sánchez           
+
+=== Argentina — starting XI ===
+   1 GK  Sergio Romero            
+   4 RB  Pablo Zabaleta           
+  15 CB  Martín Demichelis        
+  17 CB  Nicolás Otamendi         
+  16 LB  Marcos Rojo              yellow
+   6 CM  Lucas Biglia             
+  14 CM  Javier Mascherano        yellow
+  10 RW  Lionel Messi             CAPTAIN
+  21 AM  Javier Pastore           subbedOff:81'
+   7 LW  Ángel Di María           subbedOff:29'
+  11 CF  Sergio Agüero            subbedOff:74'
+################################ 2019_Copa_América_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: 2019_Copa_América_final
+################################ 2021_Copa_América_final
+file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77
+  throw new Error(`expected 2 "Substitutes:" markers, found ${subIdx.length}`);
+        ^
+
+Error: expected 2 "Substitutes:" markers, found 0
+    at file:///private/tmp/claude-501/-Users-mathiaslyhr-Developer-MifloApp/e066ab76-d7b5-4c3c-b5f0-315b686f623f/scratchpad/lineup.mjs:77:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+Node.js v22.18.0
+  !! FAILED: 2021_Copa_América_final
+################################ 2017_UEFA_Europa_League_final
+PAGE : 2017_UEFA_Europa_League_final
+MATCH: Ajax 0–2 Manchester United
+
+=== Ajax — starting XI ===
+  24 GK  André Onana              
+   3 RB  Joël Veltman             yellow
+   5 CB  Davinson Sánchez         
+  36 CB  Matthijs de Ligt         
+   4 LB  Jaïro Riedewald          yellow subbedOff:82'
+  10 CM  Davy Klaassen            CAPTAIN
+  20 CM  Lasse Schöne             subbedOff:70'
+  22 CM  Hakim Ziyech             
+   9 RF  Bertrand Traoré          
+  25 CF  Kasper Dolberg           subbedOff:62'
+  11 LF  Amin Younes              yellow
+  ‼ scored but NOT in the XI: Pogba, Mkhitaryan
+
+=== Manchester United — starting XI ===
+  20 GK  Sergio Romero            
+  25 RB  Antonio Valencia         CAPTAIN
+  12 CB  Chris Smalling           
+  17 CB  Daley Blind              
+  36 LB  Matteo Darmian           
+  21 DM  Ander Herrera            
+   8 RM  Juan Mata                yellow subbedOff:90'
+  27 CM  Marouane Fellaini        yellow
+   6 CM  Paul Pogba               goals:1
+  22 LM  Henrikh Mkhitaryan       goals:1 yellow subbedOff:74'
+  19 CF  Marcus Rashford          subbedOff:84'
+################################ 2018_UEFA_Europa_League_final
+PAGE : 2018_UEFA_Europa_League_final
+MATCH: Marseille 0–3 Atlético Madrid
+
+=== Marseille — starting XI ===
+  30 GK  Steve Mandanda           
+  17 RB  Bouna Sarr               
+  23 CB  Adil Rami                
+  19 CB  Luiz Gustavo             yellow
+  18 LB  Jordan Amavi             yellow
+  29 CM  André-Frank Zambo Anguissa 
+   8 CM  Morgan Sanson            
+  26 RW  Florian Thauvin          
+  10 AM  Dimitri Payet            CAPTAIN subbedOff:32'
+   5 LW  Lucas Ocampos            subbedOff:55'
+  28 CF  Valère Germain           subbedOff:74'
+  ‼ scored but NOT in the XI: Griezmann, Gabi
+
+=== Atlético Madrid — starting XI ===
+  13 GK  Jan Oblak                
+  16 RB  Šime Vrsaljko            yellow subbedOff:46'
+  24 CB  José Giménez             
+   2 CB  Diego Godín              
+  19 LB  Lucas Hernandez          yellow
+  11 RM  Ángel Correa             subbedOff:88'
+  14 CM  Gabi                     goals:1 CAPTAIN
+   8 CM  Saúl Ñíguez              
+   6 LM  Koke                     
+   7 CF  Antoine Griezmann        goals:3 subbedOff:90'
+  18 CF  Diego Costa              
+################################ 2019_UEFA_Europa_League_final
+PAGE : 2019_UEFA_Europa_League_final
+MATCH: Chelsea 4–1 Arsenal
+
+=== Chelsea — starting XI ===
+   1 GK  Kepa Arrizabalaga        
+  28 RB  César Azpilicueta        CAPTAIN
+  27 CB  Andreas Christensen      yellow
+  30 CB  David Luiz               
+  33 LB  Emerson Palmieri         
+   7 CM  N'Golo Kanté             
+   5 CM  Jorginho                 
+  17 CM  Mateo Kovačić            subbedOff:76'
+  11 RF  Pedro                    goals:1 yellow subbedOff:71'
+  18 CF  Olivier Giroud           goals:1
+  10 LF  Eden Hazard              goals:3 subbedOff:89'
+
+=== Arsenal — starting XI ===
+   1 GK  Petr Čech                
+   5 CB  Sokratis Papastathopoulos 
+   6 CB  Laurent Koscielny        CAPTAIN
+  18 CB  Nacho Monreal            subbedOff:66'
+  15 RM  Ainsley Maitland-Niles   
+  11 CM  Lucas Torreira           subbedOff:66'
+  34 CM  Granit Xhaka             
+  31 LM  Sead Kolašinac           
+  10 AM  Mesut Özil               subbedOff:77'
+   9 CF  Alexandre Lacazette      
+  14 CF  Pierre-Emerick Aubameyang 
+  ‼ scored but NOT in the XI: Iwobi
+################################ 1995_UEFA_Champions_League_final
+PAGE : 1995_UEFA_Champions_League_final
+MATCH: Ajax 1–0 Milan
+
+=== Ajax — starting XI ===
+   1 GK  Edwin van der Sar        
+   2 RB  Michael Reiziger         
+   3 CB  Danny Blind              CAPTAIN yellow
+   4 DM  Frank Rijkaard           
+   5 LB  Frank de Boer            
+   6 RM  Clarence Seedorf         subbedOff:53'
+   7 RF  Finidi George            
+   8 LM  Edgar Davids             
+   9 CF  Ronald de Boer           
+  10 AM  Jari Litmanen            subbedOff:70'
+  11 LF  Marc Overmars            yellow
+  ‼ scored but NOT in the XI: Kluivert
+
+=== Milan — starting XI ===
+   1 GK  Sebastiano Rossi         
+   2 RB  Christian Panucci        
+   5 CB  Alessandro Costacurta    
+   6 CB  Franco Baresi            CAPTAIN
+   3 LB  Paolo Maldini            
+   4 DM  Demetrio Albertini       
+   8 DM  Marcel Desailly          
+   7 RM  Roberto Donadoni         
+  10 LM  Zvonimir Boban           subbedOff:84'
+  11 SS  Marco Simone             
+   9 CF  Daniele Massaro          subbedOff:88'
+################################ 1996_UEFA_Champions_League_final
+PAGE : 1996_UEFA_Champions_League_final
+MATCH: Ajax 1–1 Juventus
+
+=== Ajax — starting XI ===
+   1 GK  Edwin van der Sar        
+   2 RB  Sonny Silooy             
+   3 CB  Danny Blind              CAPTAIN yellow
+   4 DM  Frank de Boer            subbedOff:69'
+   5 LB  Winston Bogarde          
+   6 RM  Ronald de Boer           subbedOff:91'
+   7 RW  Finidi George            yellow
+   8 LM  Edgar Davids             
+   9 CF  Nwankwo Kanu             
+  10 AM  Jari Litmanen            goals:1
+  11 LW  Kiki Musampa             subbedOff:46'
+
+=== Juventus — starting XI ===
+   1 GK  Angelo Peruzzi           
+   4 RB  Moreno Torricelli        yellow
+   2 CB  Ciro Ferrara             
+   5 CB  Pietro Vierchowod        
+   3 LB  Gianluca Pessotto        
+   7 RM  Didier Deschamps         yellow
+   6 CM  Paulo Sousa              subbedOff:57'
+   8 LM  Antonio Conte            subbedOff:44'
+   9 RF  Gianluca Vialli          CAPTAIN
+  11 CF  Fabrizio Ravanelli       goals:1 subbedOff:77'
+  10 LF  Alessandro Del Piero     
+################################ UEFA_Euro_1992_final
+PAGE : UEFA_Euro_1992_final
+MATCH: Denmark {{score link|UEFA Euro 1992 knockout stage#Final|2–0|UEFA Euro 1992 final}} Germany
+
+=== Denmark — starting XI ===
+   1 GK  Peter Schmeichel         
+   4 CB  Lars Olsen               CAPTAIN
+  12 CB  Torben Piechnik          yellow
+   3 CB  Kent Nielsen             
+   2 RWB John Sivebæk             subbedOff:66'
+   6 LWB Kim Christofte           
+   7 CM  John Jensen              goals:1
+  18 CM  Kim Vilfort              goals:1
+  13 AM  Henrik Larsen            
+  11 SS  Brian Laudrup            
+   9 CF  Flemming Povlsen         
+
+=== Germany — starting XI ===
+   1 GK  Bodo Illgner             
+   6 SW  Guido Buchwald           
+   4 CB  Jürgen Kohler            
+  14 CB  Thomas Helmer            
+   2 RWB Stefan Reuter            yellow
+   3 LWB Andreas Brehme           CAPTAIN
+  16 CM  Matthias Sammer          subbedOff:46'
+  17 CM  Stefan Effenberg         yellow subbedOff:80'
+   8 AM  Thomas Häßler            yellow
+  11 CF  Karl-Heinz Riedle        
+  18 CF  Jürgen Klinsmann         yellow
+################################ UEFA_Euro_2004_final
+PAGE : UEFA_Euro_2004_final
+MATCH: Portugal {{score link|UEFA Euro 2004 knockout stage#Final|0–1|UEFA Euro 2004 final}} Greece
+
+=== Portugal — starting XI ===
+   1 GK  Ricardo                  
+  13 RB  Miguel                   subbedOff:43'
+   4 CB  Jorge Andrade            
+  16 CB  Ricardo Carvalho         
+  14 LB  Nuno Valente             yellow
+  18 CM  Maniche                  
+   6 CM  Costinha                 yellow subbedOff:60'
+  17 RW  Cristiano Ronaldo        
+  20 AM  Deco                     
+   7 LW  Luís Figo                CAPTAIN
+   9 CF  Pauleta                  subbedOff:74'
+  ‼ scored but NOT in the XI: Charisteas
+
+=== Greece — starting XI ===
+   1 GK  Antonios Nikopolidis     
+   2 RB  Giourkas Seitaridis      yellow
+  19 CB  Michalis Kapsis          
+   5 CB  Traianos Dellas          
+  14 LB  Takis Fyssas             yellow
+  21 DM  Kostas Katsouranis       
+   7 CM  Theodoros Zagorakis      CAPTAIN
+   6 CM  Angelos Basinas          yellow
+   9 RW  Angelos Charisteas       goals:1
+   8 LW  Stelios Giannakopoulos   subbedOff:76'
+  15 CF  Zisis Vryzas             subbedOff:81'
+################################ 2019_Copa_América_final
+PAGE : 2019_Copa_América_final
+MATCH: Brazil {{score link|2019 Copa América knockout stage#Final|3–1|2019 Copa América Final}} Peru
+
+=== Brazil — starting XI ===
+   1 GK  Alisson                  
+  13 RB  Dani Alves               CAPTAIN
+   4 CB  Marquinhos               
+   2 CB  Thiago Silva             yellow
+  12 LB  Alex Sandro              
+   8 CM  Arthur                   
+   5 CM  Casemiro                 
+   9 RW  Gabriel Jesus            goals:1 RED
+  11 AM  Philippe Coutinho        subbedOff:77'
+  19 LW  Everton                  goals:1 subbedOff:90'
+  20 CF  Roberto Firmino          subbedOff:75'
+  ‼ scored but NOT in the XI: Richarlison
+
+=== Peru — starting XI ===
+   1 GK  Pedro Gallese            
+  17 RB  Luis Advíncula           yellow
+  15 CB  Carlos Zambrano          yellow
+   2 CB  Luis Abram               
+   6 LB  Miguel Trauco            
+  13 CM  Renato Tapia             yellow subbedOff:82'
+  19 CM  Yoshimar Yotún           subbedOff:78'
+  20 RW  Edison Flores            
+   8 AM  Christian Cueva          
+  18 LW  André Carrillo           subbedOff:86'
+   9 CF  Paolo Guerrero           goals:2 CAPTAIN
+################################ 2018_UEFA_Europa_League_final
+PAGE : 2018_UEFA_Europa_League_final
+MATCH: Marseille 0–3 Atlético Madrid
+
+=== Marseille — starting XI ===
+  30 GK  Steve Mandanda           
+  17 RB  Bouna Sarr               
+  23 CB  Adil Rami                
+  19 CB  Luiz Gustavo             yellow
+  18 LB  Jordan Amavi             yellow
+  29 CM  André-Frank Zambo Anguissa 
+   8 CM  Morgan Sanson            
+  26 RW  Florian Thauvin          
+  10 AM  Dimitri Payet            CAPTAIN subbedOff:32'
+   5 LW  Lucas Ocampos            subbedOff:55'
+  28 CF  Valère Germain           subbedOff:74'
+  ‼ scored but NOT in the XI: Griezmann, Gabi
+
+=== Atlético Madrid — starting XI ===
+  13 GK  Jan Oblak                
+  16 RB  Šime Vrsaljko            yellow subbedOff:46'
+  24 CB  José Giménez             
+   2 CB  Diego Godín              
+  19 LB  Lucas Hernandez          yellow
+  11 RM  Ángel Correa             subbedOff:88'
+  14 CM  Gabi                     goals:1 CAPTAIN
+   8 CM  Saúl Ñíguez              
+   6 LM  Koke                     
+   7 CF  Antoine Griezmann        goals:3 subbedOff:90'
+  18 CF  Diego Costa              
