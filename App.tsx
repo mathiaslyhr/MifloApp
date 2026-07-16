@@ -46,6 +46,7 @@ import {flushOutbox} from './src/core/social/outbox';
 import {reconcileStaleDailyProgress} from './src/core/daily/reconcile';
 import {dateKeyFor} from './src/games/scout/dailySeed';
 import {startPresenceHeartbeat} from './src/core/social/presence';
+import {startNotificationsRefresh} from './src/core/notifications/notificationsStore';
 import {startRequestsRefresh} from './src/core/social/requestsStore';
 import {startTransferWatch} from './src/core/transfer/transferStore';
 import {TransferApprovalModal} from './src/screens/transfer/TransferApprovalModal';
@@ -106,6 +107,8 @@ function App(): React.JSX.Element {
     // Friend requests: load them now and on every foreground, so the Friends
     // tab badge is honest even if the push was dismissed. No-op pre-opt-in.
     startRequestsRefresh();
+    // The bell's other half: invites that arrived while we slept.
+    startNotificationsRefresh();
     // Move-to-a-new-phone: watch for an incoming request to hand this profile
     // over (the global approval modal below pops when one arrives). No-op before
     // a profile exists, like the other social watchers.
