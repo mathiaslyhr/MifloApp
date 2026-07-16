@@ -1853,6 +1853,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Bailly, Eric',
+    name: 'Eric Bailly',
+    nationality: ['Ivory Coast'],
+    positions: ['DF'],
+    born: '1994-04-12',
+    clubs: [
+      {clubId: 'villarreal', from: 2015, to: 2016},
+      {clubId: 'man-utd', from: 2016, to: 2023},
+      {clubId: 'marseille', from: 2022, to: 2023, loan: true},
+      {clubId: 'besiktas', from: 2023, to: 2023},
+      {clubId: 'villarreal', from: 2023, to: 2025},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2017]},
+    ],
+  },
+  {
     id: 'Baines, Leighton',
     name: 'Leighton Baines',
     nationality: ['England'],
@@ -4684,7 +4701,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [19, 2],
     clubs: [
       {clubId: 'lille', from: 2018, to: 2022},
-      {clubId: 'roma', from: 2022},
+      {clubId: 'roma', from: 2022, to: 2026},
+      {clubId: 'juventus', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
@@ -7619,7 +7637,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'villarreal', from: 2020, to: 2022},
       {clubId: 'brighton', from: 2022, to: 2025},
-      {clubId: 'ac-milan', from: 2025},
+      {clubId: 'ac-milan', from: 2025, to: 2026},
+      {clubId: 'aston-villa', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -9414,6 +9433,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 2, years: [2017, 2018], clubId: 'barcelona'},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Gomes, João',
+    name: 'João Gomes',
+    nationality: ['Brazil'],
+    positions: ['MF'],
+    born: '2001-02-12',
+    clubs: [
+      {clubId: 'flamengo', from: 2020, to: 2023},
+      {clubId: 'wolves', from: 2023, to: 2026},
+      {clubId: 'aston-villa', from: 2026},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2022], clubId: 'flamengo'},
+      {type: 'league-title', count: 1, years: [2020]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Gomez, Joe',
@@ -13466,6 +13502,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Lamela, Erik',
+    name: 'Erik Lamela',
+    nationality: ['Argentina'],
+    positions: ['FW'],
+    born: '1992-03-04',
+    clubs: [
+      {clubId: 'river-plate', from: 2009, to: 2011},
+      {clubId: 'roma', from: 2011, to: 2013},
+      {clubId: 'tottenham', from: 2013, to: 2021},
+      {clubId: 'sevilla', from: 2021, to: 2024},
+    ],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2023]},
+    ],
+  },
+  {
     id: 'Lammens, Senne',
     name: 'Senne Lammens',
     nationality: ['Belgium'],
@@ -17290,6 +17342,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Ndombele, Tanguy',
+    name: 'Tanguy Ndombele',
+    nationality: ['France'],
+    positions: ['MF'],
+    born: '1996-12-28',
+    clubs: [
+      {clubId: 'lyon', from: 2017, to: 2018, loan: true},
+      {clubId: 'lyon', from: 2018, to: 2019},
+      {clubId: 'tottenham', from: 2019, to: 2024},
+      {clubId: 'lyon', from: 2022, to: 2022, loan: true},
+      {clubId: 'napoli', from: 2022, to: 2023, loan: true},
+      {clubId: 'galatasaray', from: 2023, to: 2024, loan: true},
+      {clubId: 'nice', from: 2024, to: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2023, 2024]},
+    ],
+  },
+  {
     id: 'Ndoye, Dan',
     name: 'Dan Ndoye',
     nationality: ['Switzerland'],
@@ -20008,6 +20079,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Reguilón, Sergio',
+    name: 'Sergio Reguilón',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '1996-12-16',
+    clubs: [
+      {clubId: 'real-madrid', from: 2018, to: 2020},
+      {clubId: 'sevilla', from: 2019, to: 2020, loan: true},
+      {clubId: 'tottenham', from: 2020, to: 2025},
+      {clubId: 'atletico-madrid', from: 2022, to: 2023, loan: true},
+      {clubId: 'man-utd', from: 2023, to: 2024, loan: true},
+      {clubId: 'brentford', from: 2024, to: 2024, loan: true},
+      {clubId: 'inter-miami', from: 2025},
+    ],
+    honours: [
+      {type: 'europa-league', count: 2, years: [2020, 2025]},
+    ],
+  },
+  {
     id: 'Reid, Winston',
     name: 'Winston Reid',
     nationality: ['New Zealand'],
@@ -22724,6 +22814,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'tottenham', from: 2016, to: 2021},
       {clubId: 'watford', from: 2021, to: 2022},
       {clubId: 'nantes', from: 2022, to: 2024},
+      {clubId: 'watford', from: 2024, to: 2026},
+      {clubId: 'panathinaikos', from: 2026},
     ],
     honours: [],
   },
@@ -24793,7 +24885,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [11, 17],
     clubs: [
       {clubId: 'norwich', from: 2021, to: 2022},
-      {clubId: 'club-brugge', from: 2024},
+      {clubId: 'club-brugge', from: 2024, to: 2026},
+      {clubId: 'arsenal', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
