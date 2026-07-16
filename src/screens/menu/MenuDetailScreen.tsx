@@ -17,6 +17,8 @@ type Props = {
   contentStyle?: StyleProp<ViewStyle>;
   /** Exposes the scroll view to children's swipe gestures (SwipeReveal). */
   scrollRef?: React.RefObject<ScrollView | null>;
+  /** Pull-to-refresh, for the pages whose content is server truth. */
+  refreshControl?: React.ComponentProps<typeof ScrollView>['refreshControl'];
 };
 
 /**
@@ -33,6 +35,7 @@ export function MenuDetailScreen({
   children,
   contentStyle,
   scrollRef,
+  refreshControl,
 }: Props) {
   const insets = useSafeAreaInsets();
   const colors = useColors();
@@ -43,6 +46,7 @@ export function MenuDetailScreen({
     <Screen canvas edges={['left', 'right', 'bottom']}>
       <ScrollView
         ref={scrollRef}
+        refreshControl={refreshControl}
         style={styles.scroll}
         contentContainerStyle={[
           {

@@ -52,6 +52,8 @@ export type RootStackParamList = {
   /** Someone's friends. No params = mine (my code, add-by-code, swipe-remove);
    * a userId = a friend's list, which is browsable but not editable. */
   FriendsList: {userId: string; name: string} | undefined;
+  /** The bell's feed: friend requests and party invites, newest first. */
+  Notifications: undefined;
   /** A profile page — the profile travels for instant paint. `relation` is a
    * paint hint only: public_profile's is_friend is the authority, since you
    * might have become friends between the tap and the fetch. */

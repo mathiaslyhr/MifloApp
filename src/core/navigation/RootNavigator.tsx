@@ -26,6 +26,7 @@ import {ScoutScreen} from '../../screens/ScoutScreen';
 import {TopBinsScreen} from '../../screens/TopBinsScreen';
 import {MenuScreen} from '../../screens/menu/MenuScreen';
 import {FriendsListScreen} from '../../screens/profile/FriendsListScreen';
+import {NotificationsScreen} from '../../screens/NotificationsScreen';
 import {FriendProfileScreen} from '../../screens/profile/FriendProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
@@ -76,6 +77,7 @@ export function RootNavigator() {
       <Stack.Screen name="Teamsheet" component={TeamsheetScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
       <Stack.Screen name="FriendsList" component={FriendsListScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="FriendProfile" component={FriendProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
