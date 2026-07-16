@@ -17,6 +17,23 @@ bank can be worked through gradually — no app release needed.
   country/club names (tyskland, frankrig, københavn…).
 - **Values are display strings**; `+` marks a still-counting stat for an
   active player. Prefer closed/historical lists.
+- **The type-ahead needs a crowd to hide the answers in.** Suggestions for a
+  list come from its `kind`'s pool (`suggestions.ts`): `player` → the whole
+  footballer DB, `club` → CLUBS (174), `manager` → MANAGERS (113), `nation` →
+  footballer nationalities (87), `other` → the shared `CITIES` dataset (~190).
+  A list is only fair when that pool is much larger than its 10 answers — else
+  the player just taps the only suggestions and wins blind (this is exactly
+  what happened to `last-10-cl-final-cities` before `CITIES` existed). So:
+  - `player`/`club`/`manager`/`nation` lists are always safe — the datasets are
+    big. Ship them OTA.
+  - An `other` list is only safe if its answers are **cities** (CITIES hides
+    them). A place list of a *different* type — **stadiums/venues by name**,
+    trophies, etc. — has no crowd and needs its own decoy dataset in
+    `data/geography` (or nearby) first. That is bundled code = an app build,
+    not OTA. A venue list keyed on the host *city* (like the CL-final list) is
+    fine as `other`.
+  - A brand-new `kind` has no pool at all (it falls back to cities — trivial
+    *and* wrong). Always ship the decoy dataset + binary before the list.
 - **Data honesty**: numbers only go in `lists.ts` once they are checked
   against a source (Transfermarkt / official league site / Wikipedia record
   pages). Categories below marked NEEDS DATA are good ideas waiting for a
