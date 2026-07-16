@@ -14,6 +14,7 @@ export const FLAG_IMAGES: Record<string, number> = {
   "Bosnia and Herzegovina": require('./flags/ba.png'),
   "Brazil": require('./flags/br.png'),
   "Bulgaria": require('./flags/bg.png'),
+  "Burkina Faso": require('./flags/bf.png'),
   "Cameroon": require('./flags/cm.png'),
   "Canada": require('./flags/ca.png'),
   "Chile": require('./flags/cl.png'),

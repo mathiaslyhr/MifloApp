@@ -25,6 +25,8 @@ const LOGO_SIZE = 96; // ~3x of the ~28–32pt crest chip; crest fit inside, squ
 // clubId → footylogos slug (verified via probe; extend per dataset batch).
 const CLUB_SLUG = {
   agf: 'agf-aarhus', viborg: 'viborg-ff', cadiz: 'cadiz-cf',
+  // slugify() turns "D.C. United" into "d-c-united", which 404s.
+  'dc-united': 'dc-united',
   'man-city': 'manchester-city', 'man-utd': 'manchester-united',
   arsenal: 'arsenal', chelsea: 'chelsea', liverpool: 'liverpool-fc',
   tottenham: 'tottenham-hotspur', 'aston-villa': 'aston-villa',

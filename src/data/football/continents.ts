@@ -86,6 +86,7 @@ const COUNTRY_CONTINENT: Record<string, Continent> = {
   USA: 'North America',
   // Africa
   Algeria: 'Africa',
+  'Burkina Faso': 'Africa',
   Cameroon: 'Africa',
   'DR Congo': 'Africa',
   Egypt: 'Africa',

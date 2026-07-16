@@ -213,6 +213,12 @@ export const CLUBS: readonly Club[] = [
   // (Stuttgart deliberately absent: already here as `vfb-stuttgart`.)
   {id: 'middlesbrough', name: 'Middlesbrough', country: 'England', league: 'premier-league'},
   {id: 'bochum', name: 'VfL Bochum', country: 'Germany', league: 'bundesliga'},
+
+  // --- Counterpart XIs 2026-07-16: Edison Flores needs a club the app knows.
+  // Universitario (his identity club) stays out — there is no Peruvian league
+  // in the quiz topics. AaB stays out too: no crest in the logo mirror, and art
+  // can't ship OTA. D.C. United alone is the Vardy precedent (Leicester only).
+  {id: 'dc-united', name: 'D.C. United', country: 'USA', league: 'mls'},
 ];
 
 const clubsById = derivedFromData(

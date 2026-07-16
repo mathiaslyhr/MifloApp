@@ -59,6 +59,7 @@ export const LOGO_IMAGES: Record<string, number> = {
   "corinthians": require('./logos/corinthians.png'),
   "cruz-azul": require('./logos/cruz-azul.png'),
   "crystal-palace": require('./logos/crystal-palace.png'),
+  "dc-united": require('./logos/dc-united.png'),
   "deportivo": require('./logos/deportivo.png'),
   "dinamo-zagreb": require('./logos/dinamo-zagreb.png'),
   "dortmund": require('./logos/dortmund.png'),

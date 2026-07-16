@@ -293,4 +293,64 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
       {name: 'Pierre-Emerick Aubameyang', position: 'FW', shirt: 14, aliases: ['Aubameyang']},
     ],
   },
+  {
+    id: 'ajax-2017-europa-final',
+    team: 'Ajax',
+    competition: 'Europa League Final',
+    year: 2017,
+    formation: '4-3-3',
+    // Ajax were the administrative home side and wore the new home kit a
+    // season early: the page's template is _ajax1718H, body FFFFFF.
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
+    match: {
+      competitionKey: 'europaFinal',
+      opponent: 'Manchester United',
+      goalsFor: 0,
+      goalsAgainst: 2,
+    },
+    players: [
+      {name: 'André Onana', position: 'GK', shirt: 24, aliases: ['Onana']},
+      {name: 'Joël Veltman', position: 'DF', shirt: 3, aliases: ['Veltman'], yellowCard: true},
+      {name: 'Davinson Sánchez', position: 'DF', shirt: 5, aliases: ['Sanchez']},
+      {name: 'Matthijs de Ligt', position: 'DF', shirt: 36, aliases: ['De Ligt', 'de Ligt']},
+      {name: 'Jaïro Riedewald', position: 'DF', shirt: 4, aliases: ['Riedewald'], yellowCard: true, subbedOff: true},
+      {name: 'Davy Klaassen', position: 'MF', shirt: 10, captain: true},
+      {name: 'Lasse Schöne', position: 'MF', shirt: 20, aliases: ['Schone'], subbedOff: true},
+      {name: 'Hakim Ziyech', position: 'MF', shirt: 22, aliases: ['Ziyech']},
+      {name: 'Bertrand Traoré', position: 'FW', shirt: 9, aliases: ['Traore']},
+      {name: 'Kasper Dolberg', position: 'FW', shirt: 25, aliases: ['Dolberg'], subbedOff: true},
+      {name: 'Amin Younes', position: 'FW', shirt: 11, aliases: ['Younes'], yellowCard: true},
+    ],
+  },
+  {
+    id: 'peru-2019-copa-final',
+    team: 'Peru',
+    competition: 'Copa América Final',
+    year: 2019,
+    formation: '4-2-3-1',
+    // The page's kit template is _per19h, body FFFFFF — the home white with
+    // the red sash.
+    kit: {body: '#F4F4F6', number: '#1A1A1A'},
+    match: {
+      competitionKey: 'copaFinal',
+      opponent: 'Brazil',
+      goalsFor: 1,
+      goalsAgainst: 3,
+    },
+    players: [
+      {name: 'Pedro Gallese', position: 'GK', shirt: 1, aliases: ['Gallese']},
+      {name: 'Luis Advíncula', position: 'DF', shirt: 17, aliases: ['Advincula'], yellowCard: true},
+      // Peru's centre-back, born 1989 — not the baseball pitcher of the same
+      // name, whose page the DOB lookup lands on by default.
+      {name: 'Carlos Zambrano', position: 'DF', shirt: 15, aliases: ['Zambrano'], yellowCard: true},
+      {name: 'Luis Abram', position: 'DF', shirt: 2, aliases: ['Abram']},
+      {name: 'Miguel Trauco', position: 'DF', shirt: 6, aliases: ['Trauco']},
+      {name: 'Renato Tapia', position: 'MF', shirt: 13, aliases: ['Tapia'], yellowCard: true, subbedOff: true},
+      {name: 'Yoshimar Yotún', position: 'MF', shirt: 19, aliases: ['Yotun'], subbedOff: true},
+      {name: 'Edison Flores', position: 'FW', shirt: 20, aliases: ['Flores']},
+      {name: 'Christian Cueva', position: 'MF', shirt: 8, aliases: ['Cueva']},
+      {name: 'André Carrillo', position: 'FW', shirt: 18, aliases: ['Carrillo'], subbedOff: true},
+      {name: 'Paolo Guerrero', position: 'FW', shirt: 9, aliases: ['Guerrero'], captain: true, goals: 1},
+    ],
+  },
 ];
