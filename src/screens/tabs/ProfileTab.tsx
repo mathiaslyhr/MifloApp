@@ -12,9 +12,10 @@
  * Friends are deliberately NOT a section here. Home already shows how they did
  * today, so repeating the feed would be the same answer twice; the header's
  * friends line opens the list instead, which is where browsing, adding and your
- * own code live. What does stay is the pending-requests block: it renders
- * nothing until someone is waiting, and it's what the Profile tab's badge
- * promises — a badge that led nowhere would be a lie.
+ * own code live. Pending friend requests aren't here either: they answer from
+ * Home's bell now, and two places to accept the same request would be two
+ * places to keep in sync. This tab still refreshes them, because the bell reads
+ * the same store.
  *
  * Answers are the owner's privilege: they ride only on days that are closed
  * (see `closed` below), so a live puzzle can never spoil itself.
@@ -43,7 +44,7 @@ import {useAppNavigation} from '../../core/navigation';
 import {dateKeyFor} from '../../games/scout/dailySeed';
 import {optInToSocial} from '../../core/social/onboarding';
 import {flushOutbox} from '../../core/social/outbox';
-import {refreshFriendRequests, useRequestsStore} from '../../core/social/requestsStore';
+import {refreshFriendRequests} from '../../core/social/requestsStore';
 import {
   avatarUrlFor,
   fetchFriends,
@@ -72,7 +73,6 @@ import {FavoritesShowcase, type Favorites} from '../profile/FavoritesShowcase';
 import {StreaksSection} from '../profile/StreaksSection';
 import {HistorySection, type HistoryDay} from '../profile/HistorySection';
 import {CareerSection} from '../profile/CareerSection';
-import {RequestsSection} from '../social/RequestsSection';
 import {useSendFriendRequest} from '../social/useSendFriendRequest';
 import {TabPage} from './TabPage';
 
@@ -104,7 +104,6 @@ export function ProfileTab({isActive = true, addCode}: Props) {
   const [nameInput, setNameInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [renaming, setRenaming] = useState(false);
-  const requests = useRequestsStore(s => s.requests);
 
   // Resolve the profile once: cache first (instant, works offline), then the
   // server as truth when reachable. A stale "no cache" worst case just shows
@@ -384,13 +383,6 @@ export function ProfileTab({isActive = true, addCode}: Props) {
             }}
             editable
             onChange={handleFavorites}
-          />
-
-          {/* Renders nothing until someone is waiting — but when they are, this
-              is what the tab's badge was pointing at. */}
-          <RequestsSection
-            requests={requests?.incoming ?? []}
-            onAccepted={refreshFriends}
           />
 
           <Segmented options={segments} value={segment} onChange={setSegment} />

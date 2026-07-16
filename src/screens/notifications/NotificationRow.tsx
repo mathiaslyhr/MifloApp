@@ -6,9 +6,10 @@
  * only offers Join while the room is still open, which the server decides, not
  * this component.
  *
- * Accept/decline are RequestsSection's calls verbatim (same toasts, same busy
- * guard, same fire-and-forget push): two ways to answer a request would be two
- * things to keep in sync.
+ * Accept/decline are the calls the Profile tab's RequestsSection used to make,
+ * verbatim (same toasts, same busy guard, same fire-and-forget push). That
+ * section is gone: this is now the only place a request gets answered, because
+ * two ways to answer one would be two things to keep in sync.
  */
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';

@@ -12,7 +12,6 @@ import {
   type TabId,
 } from '../core/ui';
 import {motion} from '../theme';
-import {useRequestsStore} from '../core/social/requestsStore';
 import type {RootStackParamList} from '../core/navigation';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Tabs'>;
@@ -57,11 +56,6 @@ export function TabsScreen({route}: Props) {
   ).current;
   const [tab, setTab] = useState<TabId>(initialTab);
   const addCode = route.params?.addCode;
-  // A pending friend request badges Profile — the tab that now holds the
-  // friends list. Without a Friends tab of its own, this dot is the only thing
-  // that says someone is waiting on you, so it's load-bearing.
-  const requests = useRequestsStore(s => s.requests);
-  const hasRequests = (requests?.incoming.length ?? 0) > 0;
 
   // One value per page, not a single interpolated index: an index sweeping
   // 0 → 3 would drag the intermediate pages through visible opacity on a
@@ -172,7 +166,9 @@ export function TabsScreen({route}: Props) {
           and the navbar disappears. Anything stacked above the pages needs a
           number of its own — an absent zIndex is 0 and loses. */}
       <FloatingBar edge="bottom" style={styles.nav}>
-        <IslandTabBar active={tab} onSelect={setTab} badge={{profile: hasRequests}} />
+        {/* No badge: Home's bell is the single "you have something" signal now.
+            A dot on a tab that no longer shows requests would be a dead end. */}
+        <IslandTabBar active={tab} onSelect={setTab} />
       </FloatingBar>
     </View>
   );
