@@ -351,11 +351,11 @@ const makeStyles = (c: Palette) =>
     // it reads as lifted off it (same recipe as PersonCard).
     onlineDot: {
       position: 'absolute',
-      right: onRim(44, 12),
-      bottom: onRim(44, 12),
-      width: 12,
-      height: 12,
-      borderRadius: 6,
+      right: onRim(44, 8),
+      bottom: onRim(44, 8),
+      width: 8,
+      height: 8,
+      borderRadius: 4,
       backgroundColor: c.success,
     },
   });

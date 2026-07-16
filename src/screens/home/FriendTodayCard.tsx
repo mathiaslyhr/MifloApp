@@ -99,11 +99,11 @@ const makeStyles = (c: Palette) =>
     // so it reads on the card surface.
     onlineDot: {
       position: 'absolute',
-      right: onRim(40, 12),
-      bottom: onRim(40, 12),
-      width: 12,
-      height: 12,
-      borderRadius: 6,
+      right: onRim(40, 8),
+      bottom: onRim(40, 8),
+      width: 8,
+      height: 8,
+      borderRadius: 4,
       backgroundColor: c.success,
     },
   });

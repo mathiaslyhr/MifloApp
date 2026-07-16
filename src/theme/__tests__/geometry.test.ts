@@ -24,10 +24,10 @@ describe('onRim', () => {
   // Every real caller. If one of these drifts, a badge has left the outline.
   const cases: [string, number, number, number][] = [
     ['Team sheet clue badge', 50, 16, 2],
-    ['ProfileHeader presence dot', 72, 14, 0],
-    ['PersonCard / FriendsList dot', 44, 12, 0],
-    ['FriendTodayCard dot', 40, 12, 0],
-    ['InviteFriendsSheet dot', 28, 10, 0],
+    ['ProfileHeader presence dot', 72, 9, 0],
+    ['PersonCard / FriendsList dot', 44, 8, 0],
+    ['FriendTodayCard dot', 40, 8, 0],
+    ['InviteFriendsSheet dot', 28, 6, 0],
   ];
 
   it.each(cases)(

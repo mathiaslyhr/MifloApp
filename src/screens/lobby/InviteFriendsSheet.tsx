@@ -281,11 +281,11 @@ const makeStyles = (c: Palette) =>
   // Same presence disc as the Friends tab's cards. Avatar is the default 28.
   onlineDot: {
     position: 'absolute',
-    right: onRim(28, 10),
-    bottom: onRim(28, 10),
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    right: onRim(28, 6),
+    bottom: onRim(28, 6),
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: c.success,
   },
   });

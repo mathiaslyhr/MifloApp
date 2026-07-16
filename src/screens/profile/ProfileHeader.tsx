@@ -262,11 +262,11 @@ const makeStyles = (c: Palette) =>
     // dark ring around a green dot.
     onlineDot: {
       position: 'absolute',
-      right: onRim(72, 14),
-      bottom: onRim(72, 14),
-      width: 14,
-      height: 14,
-      borderRadius: 7,
+      right: onRim(72, 9),
+      bottom: onRim(72, 9),
+      width: 9,
+      height: 9,
+      borderRadius: 4.5,
       backgroundColor: c.success,
     },
     actions: {
