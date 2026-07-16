@@ -31,6 +31,38 @@ Traps they already handle, learned the hard way:
   (born 1989). Always sanity-check the position/nationality it prints back.
 - The scripts do NOT know assists; the wikitext has none. Keep erring toward
   omission, per the rule below.
+- Goals count MINUTES, not template params: `{{goal|68|pen.}}` is one goal. The
+  first version counted "pen." as a second and over-reported Gündoğan 2013,
+  Ronaldo 2014 and Massaro 1994. Fixed — but still check an XI's goals never
+  exceed `goalsFor`.
+
+## Kits: read the page's kit template, not your memory
+
+Each final's wikitext carries a `{{Football kit}}` per side with `pattern_b` and
+`body`. **It beats recollection every time.** The 2026-07-16 counterpart batch
+was curated from memory first and the templates overruled five kits:
+
+- **Manchester United 2011** wore WHITE at Wembley (`_manutda2010`, body
+  `FFFFFF`), not home red.
+- **Manchester United 2017** wore BLUE (`_manutda2016`, body `2d2dd3`) — Ajax
+  were the "home" side. The shipping entry said home red until this batch.
+- **Argentina 1990** wore BLUE (`_argentina1990a`, body `0000C0`), not the
+  sky-blue stripes; West Germany had white.
+- **Juventus 1997** wore BLUE (`_juventusfc9697a`), like the 1996 final.
+- **Sampdoria 1992** wore WHITE (`_ucsampdoria9192a`); Barcelona had the orange.
+- **AC Milan 1995** wore red/black (body `FF0000`) — the same pattern is
+  `FFFFFF` on the 1994 page, so the difference is deliberate: Ajax took the navy
+  change kit that day.
+
+Note `pattern_b` can hold the stripes while `body` reads `ffffff` (Argentina
+2015) — read both before deciding the dominant colour.
+
+**Never use a near-black body.** The board sits on `#121212`/`#1A1A1A` and a true
+black circle vanishes; lift it (Leicester's black away kit is `#2A2A2A` in
+`classics.ts`).
+
+Known-wrong and still unfixed: `ajax-1995-ucl-final` renders white, but the 1995
+page gives Ajax `1F264C` (navy) head to toe.
 
 ## Per-entry rules
 

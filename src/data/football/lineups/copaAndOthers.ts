@@ -98,7 +98,9 @@ export const COPA_AND_OTHERS: readonly FamousLineup[] = [
     competition: 'Europa League Final',
     year: 2017,
     formation: '4-1-4-1',
-    kit: {body: '#DA291C', number: '#F4F4F6'},
+    // Not home red: Ajax were the "home" team, so United wore the outgoing
+    // 2016-17 away kit. The final's own kit template says body=2d2dd3.
+    kit: {body: '#2D2DD3', number: '#F4F4F6'},
     match: {
       competitionKey: 'europaFinal',
       opponent: 'Ajax',
