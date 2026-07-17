@@ -75,7 +75,6 @@ import {FavoritesShowcase, type Favorites} from '../profile/FavoritesShowcase';
 import {StreaksSection} from '../profile/StreaksSection';
 import {HistorySection, type HistoryDay} from '../profile/HistorySection';
 import {CareerSection} from '../profile/CareerSection';
-import {CodeBlock} from '../social/CodeBlock';
 import {useSendFriendRequest} from '../social/useSendFriendRequest';
 import {TabPage} from './TabPage';
 
@@ -375,17 +374,6 @@ export function ProfileTab({isActive = true, addCode}: Props) {
             avatarUri={avatarUrlFor(profile.avatarPath)}
           />
 
-          {/* Your code, in plain sight. It used to live only in the friends
-              list, so people never captured it — and losing it meant losing the
-              only handle for adding friends and moving phones. The one-liner
-              tells them why it's worth keeping. */}
-          <Card style={styles.codeCard}>
-            <CodeBlock code={profile.friendCode} divider={false} />
-            <Text variant="secondary" color="secondary">
-              {t('profile.codeHint')}
-            </Text>
-          </Card>
-
           {/* Above the segments, with the avatar and the name: favourites are
               identity, so they belong to the header rather than to any one
               segment of the body. */}
@@ -450,5 +438,4 @@ const makeStyles = (_c: Palette) =>
   StyleSheet.create({
     body: {gap: spacing.lg},
     onboardCard: {padding: spacing.xl, gap: spacing.md},
-    codeCard: {gap: spacing.sm},
   });

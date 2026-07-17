@@ -185,6 +185,7 @@
     "createMatch": "Create match",
     "joinMatch": "Join match",
     "multiplayer": "Multiplayer",
+    "againstAi": "Against AI",
     "daily": "Daily",
     "findMatch": "Find match",
     "leaderboard": "Leaderboard",
@@ -326,7 +327,6 @@
     "errorFavorite": "Couldn't save your favorite. Try again.",
     "segmentCareer": "Career",
     "segmentDailies": "Daily",
-    "codeHint": "This is your profile code. Keep it to add friends and move to a new phone.",
     "recentMatches": "Recent matches",
     "unknownOpponent": "Someone",
     "outcome": {
@@ -666,6 +666,21 @@
       "player1": "Player 1",
       "player2": "Player 2",
       "exit": "Exit"
+    },
+    "bot": {
+      "title": "Hattrick vs AI",
+      "tagline": "Take on the computer, solo",
+      "chooseDifficulty": "Choose your opponent",
+      "name": "Miflo AI",
+      "you": "You",
+      "surrender": "Surrender",
+      "surrenderedResult": "You surrendered",
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "easyHint": "Sticks to famous names and plays loose",
+      "mediumHint": "Blocks your lines and knows its football",
+      "hardHint": "Plays sharp and rarely misses"
     }
   },
   "redCard": {

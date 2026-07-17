@@ -38,6 +38,9 @@ export type RootStackParamList = {
   RankedLeaderboard: undefined;
   // Pass-and-play on one shared phone — roomless, fully offline.
   HattrickLocal: undefined;
+  /** Solo Hattrick vs the computer — roomless, offline, difficulty picked
+   * in-screen before the grid is dealt. */
+  HattrickBot: undefined;
   RedCardLocal: undefined;
   OffsideLocal: undefined;
   CultHeroLocal: undefined;

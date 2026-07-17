@@ -70,6 +70,12 @@ export type GridState = {
   tieOffer?: TieOffer | null;
   /** Order-independent fingerprint of the grid's axes (repeat-avoidance). */
   signature?: string;
+  /**
+   * Why the board ended early, when it wasn't played out. `'surrender'` = a
+   * player conceded (solo vs AI); the board reveals the "what could have been"
+   * answers in the empty cells, exactly like an agreed tie.
+   */
+  endReason?: 'surrender';
 };
 
 /** A live proposal to end the game in a mutual tie. */

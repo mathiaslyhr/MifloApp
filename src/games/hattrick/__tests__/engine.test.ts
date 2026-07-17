@@ -7,6 +7,7 @@ import {
   passTurn,
   proposeTie,
   respondTie,
+  surrender,
   validatePick,
 } from '../engine';
 import type {Criterion} from '../../../data/football';
@@ -264,5 +265,29 @@ describe('createRematchState', () => {
     expect(next.order[0]).not.toBe(finished.order[0]);
     expect(next.signature).toBeDefined();
     expect(next.signature).not.toBe(finished.signature);
+  });
+});
+
+describe('surrender', () => {
+  it('ends the board for the opponent and flags the reason', () => {
+    const next = surrender(twoPlayerState({turnUserId: 'A'}), 'A');
+    expect(next.winner).toBe('B'); // the other side takes the board
+    expect(next.endReason).toBe('surrender');
+  });
+
+  it('does not move the score (a concession is not a played goal)', () => {
+    const s = twoPlayerState({scores: {A: 2, B: 1}});
+    const next = surrender(s, 'A');
+    expect(matchScores(next)).toEqual({A: 2, B: 1});
+  });
+
+  it('is a no-op once the board is already decided', () => {
+    const s = twoPlayerState({winner: 'A'});
+    expect(surrender(s, 'B')).toBe(s);
+  });
+
+  it('clears any pending tie offer', () => {
+    const s = twoPlayerState({tieOffer: {by: 'A', accepted: ['A']}});
+    expect(surrender(s, 'A').tieOffer).toBeNull();
   });
 });

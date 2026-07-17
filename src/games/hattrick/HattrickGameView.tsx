@@ -80,6 +80,14 @@ type Props = {
   onBack: () => void;
   /** Result screen shows Play again + exit (host online, always local). */
   showResultActions: boolean;
+  /**
+   * Solo-vs-AI only. When set, the board corner offers a single **Surrender**
+   * (instead of Skip / propose-a-Tie — those are "nobody knows another answer"
+   * negotiations between people, and there's nothing to negotiate with the bot).
+   * Conceding ends the board for the AI and reveals the "what could have been"
+   * answers in the empty cells.
+   */
+  onSurrender?: () => void;
 };
 
 const ROW_LABEL_W = 58;
@@ -105,7 +113,9 @@ export function HattrickGameView({
   exitLabel,
   onBack,
   showResultActions,
+  onSurrender,
 }: Props) {
+  const soloSurrender = !!onSurrender;
   const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
@@ -300,8 +310,11 @@ export function HattrickGameView({
   const tieProposerName = tieOffer
     ? state.sides.find(s => s.id === tieOffer.by)?.name ?? t('hattrick.someone')
     : '';
-  // Corner shows Skip (my turn) and/or Tie (no active offer); blank otherwise.
-  const cornerEmpty = !!state.winner || (!myTurn && !!tieOffer);
+  // Corner shows Skip (my turn) and/or Tie (no active offer); vs the AI it holds
+  // a single Surrender instead. Blank (an invisible spacer) once decided.
+  const cornerEmpty = soloSurrender
+    ? !!state.winner
+    : !!state.winner || (!myTurn && !!tieOffer);
 
   function openPicker(index: number) {
     if (!state) {
@@ -356,6 +369,12 @@ export function HattrickGameView({
     onProposeTie();
   }
 
+  // Concede to the AI: ends the board and reveals "what could have been".
+  function handleSurrender() {
+    haptics.warning();
+    onSurrender?.();
+  }
+
   function handleRespondTie(accept: boolean) {
     if (accept) {
       haptics.success();
@@ -369,28 +388,35 @@ export function HattrickGameView({
   // colour (neutral ink on a shared phone). No blocking pop-up — the finished
   // grid stays fully visible. A decided MATCH outranks the board result.
   const matchDone = !!state.matchWinner;
-  const winnerColor = state.matchWinner
-    ? state.matchWinner === 'draw'
-      ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
-      : state.sides.find(s => s.id === state.matchWinner)?.color ?? colors.ink
-    : state.winner === 'tie'
-      ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
-      : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
-  const winnerText = state.matchWinner
-    ? state.matchWinner === 'draw'
-      ? t('hattrick.matchDrawn')
-      : t('hattrick.wonMatch', {
-          name:
-            state.sides.find(s => s.id === state.matchWinner)?.name ??
-            t('hattrick.someone'),
-        })
-    : state.winner
-      ? state.winner === 'tie'
-        ? t('hattrick.tie')
-        : t('hattrick.won', {
-            name: state.sides.find(s => s.id === state.winner)?.name ?? t('hattrick.someone'),
+  // A surrender ends the board as a loss you chose — named plainly, in neutral
+  // ink (not the winner's colour), with the "what could have been" grid below.
+  const surrendered = state.endReason === 'surrender';
+  const winnerColor = surrendered
+    ? colors.ink
+    : state.matchWinner
+      ? state.matchWinner === 'draw'
+        ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
+        : state.sides.find(s => s.id === state.matchWinner)?.color ?? colors.ink
+      : state.winner === 'tie'
+        ? state.sides.find(s => s.id === viewerSideId)?.color ?? colors.ink
+        : state.sides.find(s => s.id === state.winner)?.color ?? colors.ink;
+  const winnerText = surrendered
+    ? t('hattrick.bot.surrenderedResult')
+    : state.matchWinner
+      ? state.matchWinner === 'draw'
+        ? t('hattrick.matchDrawn')
+        : t('hattrick.wonMatch', {
+            name:
+              state.sides.find(s => s.id === state.matchWinner)?.name ??
+              t('hattrick.someone'),
           })
-      : '';
+      : state.winner
+        ? state.winner === 'tie'
+          ? t('hattrick.tie')
+          : t('hattrick.won', {
+              name: state.sides.find(s => s.id === state.winner)?.name ?? t('hattrick.someone'),
+            })
+        : '';
 
   return (
     <Screen canvas>
@@ -429,39 +455,59 @@ export function HattrickGameView({
               // otherwise stay an invisible spacer to keep board alignment.
               cornerEmpty && styles.cornerBlank,
             ]}>
-            {!state.winner && myTurn ? (
-              <PressableScale
-                containerStyle={styles.cornerBtn}
-                onPress={handleSkip}
-                accessibilityRole="button"
-                accessibilityLabel={t('hattrick.skip')}>
-                <Text
-                  variant="caption"
-                  align="center"
-                  numberOfLines={1}
-                  adjustsFontSizeToFit>
-                  {t('hattrick.skipShort')}
-                </Text>
-              </PressableScale>
-            ) : null}
-            {!state.winner && myTurn && !tieOffer ? (
-              <View style={styles.cornerDiv} />
-            ) : null}
-            {!state.winner && !tieOffer ? (
-              <PressableScale
-                containerStyle={styles.cornerBtn}
-                onPress={handleProposeTie}
-                accessibilityRole="button"
-                accessibilityLabel={t('hattrick.proposeTie')}>
-                <Text
-                  variant="caption"
-                  align="center"
-                  numberOfLines={1}
-                  adjustsFontSizeToFit>
-                  {t('hattrick.tieShort')}
-                </Text>
-              </PressableScale>
-            ) : null}
+            {soloSurrender ? (
+              !state.winner ? (
+                <PressableScale
+                  containerStyle={styles.cornerBtn}
+                  onPress={handleSurrender}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('hattrick.bot.surrender')}>
+                  <Text
+                    variant="caption"
+                    align="center"
+                    numberOfLines={1}
+                    adjustsFontSizeToFit>
+                    {t('hattrick.bot.surrender')}
+                  </Text>
+                </PressableScale>
+              ) : null
+            ) : (
+              <>
+                {!state.winner && myTurn ? (
+                  <PressableScale
+                    containerStyle={styles.cornerBtn}
+                    onPress={handleSkip}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('hattrick.skip')}>
+                    <Text
+                      variant="caption"
+                      align="center"
+                      numberOfLines={1}
+                      adjustsFontSizeToFit>
+                      {t('hattrick.skipShort')}
+                    </Text>
+                  </PressableScale>
+                ) : null}
+                {!state.winner && myTurn && !tieOffer ? (
+                  <View style={styles.cornerDiv} />
+                ) : null}
+                {!state.winner && !tieOffer ? (
+                  <PressableScale
+                    containerStyle={styles.cornerBtn}
+                    onPress={handleProposeTie}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('hattrick.proposeTie')}>
+                    <Text
+                      variant="caption"
+                      align="center"
+                      numberOfLines={1}
+                      adjustsFontSizeToFit>
+                      {t('hattrick.tieShort')}
+                    </Text>
+                  </PressableScale>
+                ) : null}
+              </>
+            )}
           </Card>
           <Card style={[styles.card, {width: boardSize, height: headerH, flexDirection: 'row'}]}>
             {state.cols.map((c, i) => (

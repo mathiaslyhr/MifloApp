@@ -205,6 +205,17 @@ export function PlayTab() {
               ))}
             </View>
 
+            {/* Solo lane: take a game on against the computer, no room needed. */}
+            <SectionLabel>{t('play.againstAi')}</SectionLabel>
+            <View style={styles.list}>
+              <GameRow
+                title={t('hattrick.title')}
+                subtitle={t('hattrick.bot.tagline')}
+                Icon={hattrickIcon()}
+                onPress={() => navigation.navigate('HattrickBot' as never)}
+              />
+            </View>
+
             <SectionLabel>{t('play.daily')}</SectionLabel>
             <View style={styles.list}>
               {DAILY_GAMES.map(entry => (

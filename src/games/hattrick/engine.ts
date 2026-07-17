@@ -274,6 +274,29 @@ export function passTurn(
 }
 
 /**
+ * Concede the current board (solo vs AI): it ends at once, the other side takes
+ * it, and `endReason: 'surrender'` tells the view to reveal "what could have
+ * been" in the empty cells. A concession isn't a played goal, so scores don't
+ * move — it just ends the board. No-op once the board is decided.
+ */
+export function surrender(state: GridState, userId: string): GridState {
+  if (state.winner) {
+    return state;
+  }
+  const side = sideOfUser(state, userId);
+  if (!side) {
+    return state;
+  }
+  const opponent = state.sides.find(s => s.id !== side.id);
+  return {
+    ...state,
+    winner: opponent ? opponent.id : 'tie',
+    endReason: 'surrender',
+    tieOffer: null,
+  };
+}
+
+/**
  * Propose ending the game in a mutual tie (used when nobody knows another
  * answer). The proposer implicitly accepts; a fresh proposal replaces any
  * pending one. Any player may propose, not just the turn-holder. No-op once the

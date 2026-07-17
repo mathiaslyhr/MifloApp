@@ -13,7 +13,9 @@ import type {GridState} from './types';
  */
 export function tieExampleAnswers(state: GridState): Map<number, Footballer> {
   const examples = new Map<number, Footballer>();
-  if (state.winner !== 'tie') {
+  // Shown after an agreed tie, or a solo surrender — both end the board early
+  // with empty cells worth revealing. A played-out win never shows ghosts.
+  if (state.winner !== 'tie' && state.endReason !== 'surrender') {
     return examples;
   }
   const used = new Set(state.usedFootballerIds);

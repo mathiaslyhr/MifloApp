@@ -11,6 +11,7 @@ import {LobbyScreen} from '../../screens/LobbyScreen';
 import {GamePickerScreen} from '../../screens/GamePickerScreen';
 import {HattrickScreen} from '../../screens/HattrickScreen';
 import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
+import {HattrickBotScreen} from '../../screens/HattrickBotScreen';
 import {RedCardScreen} from '../../screens/RedCardScreen';
 import {RedCardLocalScreen} from '../../screens/RedCardLocalScreen';
 import {OffsideScreen} from '../../screens/OffsideScreen';
@@ -67,6 +68,8 @@ export function RootNavigator() {
       <Stack.Screen name="RankedLeaderboard" component={RankedLeaderboardScreen} />
       {/* Pass-and-play on one shared phone — roomless, fully offline. */}
       <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} />
+      {/* Solo Hattrick vs the computer — roomless, offline. */}
+      <Stack.Screen name="HattrickBot" component={HattrickBotScreen} />
       <Stack.Screen name="RedCardLocal" component={RedCardLocalScreen} />
       <Stack.Screen name="OffsideLocal" component={OffsideLocalScreen} />
       <Stack.Screen name="CultHeroLocal" component={CultHeroLocalScreen} />

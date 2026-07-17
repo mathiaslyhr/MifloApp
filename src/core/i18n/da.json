@@ -185,6 +185,7 @@
     "createMatch": "Opret kamp",
     "joinMatch": "Deltag i kamp",
     "multiplayer": "Multiplayer",
+    "againstAi": "Mod AI",
     "daily": "Daglig",
     "findMatch": "Find kamp",
     "leaderboard": "Rangliste",
@@ -326,7 +327,6 @@
     "errorFavorite": "Kunne ikke gemme din favorit. Prøv igen.",
     "segmentCareer": "Karriere",
     "segmentDailies": "Daglig",
-    "codeHint": "Det her er din profilkode. Gem den, så du kan tilføje venner og skifte til en ny telefon.",
     "recentMatches": "Seneste kampe",
     "unknownOpponent": "Ukendt",
     "outcome": {
@@ -666,6 +666,21 @@
       "player1": "Spiller 1",
       "player2": "Spiller 2",
       "exit": "Afslut"
+    },
+    "bot": {
+      "title": "Hattrick mod AI",
+      "tagline": "Spil mod computeren alene",
+      "chooseDifficulty": "Vælg din modstander",
+      "name": "Miflo AI",
+      "you": "Dig",
+      "surrender": "Overgiv dig",
+      "surrenderedResult": "Du overgav dig",
+      "easy": "Let",
+      "medium": "Mellem",
+      "hard": "Svær",
+      "easyHint": "Holder sig til kendte navne og spiller løst",
+      "mediumHint": "Blokerer dine rækker og kan sin fodbold",
+      "hardHint": "Spiller skarpt og misser sjældent"
     }
   },
   "redCard": {

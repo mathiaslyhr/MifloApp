@@ -89,6 +89,13 @@ describe('tieExampleAnswers', () => {
     expect(example?.id).toBe(best.id);
   });
 
+  it('reveals ghosts after a surrender, even though a side "won"', () => {
+    // Surrender ends the board for the opponent (winner is a side id, not
+    // 'tie'), but the empty cells should still show what could have been.
+    const state = tiedState({winner: 'B', endReason: 'surrender'});
+    expect(tieExampleAnswers(state).size).toBe(9);
+  });
+
   it('leaves a cell blank when no candidates remain', () => {
     const state = tiedState({
       rows: [{kind: 'nationality', country: 'Atlantis'}, ROWS[1], ROWS[2]],
