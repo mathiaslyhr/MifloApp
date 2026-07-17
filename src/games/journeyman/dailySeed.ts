@@ -59,6 +59,15 @@ export function dailySecretFor(dateKey: string): Footballer {
 }
 
 /**
+ * How many clubs today's career spans (3+). Non-identifying — many players
+ * share a count, and the game reveals the clubs anyway — so Home can show it as
+ * the daily lead ("how well-travelled") without giving the answer away.
+ */
+export function dailyJourneymanClubCountFor(dateKey: string): number {
+  return dailySecretFor(dateKey).clubs.length;
+}
+
+/**
  * Fallback for dates beyond the schedule horizon: each pool-length cycle of
  * days is a fresh seeded permutation of the pool (sorted by id first, so the
  * walk is independent of pack array order), walked one player per day — no

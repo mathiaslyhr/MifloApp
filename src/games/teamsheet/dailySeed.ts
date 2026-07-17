@@ -67,6 +67,14 @@ export function dailyLineupKitFor(dateKey: string): LineupKit | undefined {
 }
 
 /**
+ * Today's team name — public (the game names the XI's team), so Home can show
+ * its crest/flag as the daily lead without touching the eleven secret players.
+ */
+export function dailyLineupTeamFor(dateKey: string): string {
+  return dailyLineupFor(dateKey).team;
+}
+
+/**
  * Fallback for dates beyond the schedule horizon: each pool-length cycle of
  * days is a fresh seeded permutation of the pool (sorted by id first, so the
  * walk is independent of pack array order), walked one lineup per day — no

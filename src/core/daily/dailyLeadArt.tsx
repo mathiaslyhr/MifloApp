@@ -1,48 +1,60 @@
 /**
- * DailyLeadArt — the lead visual for a daily on the Home card, and the ONE
- * place both "what art each daily shows" and the spoiler rules live:
+ * DailyLeadArt — the lead badge for a daily on the Home card, and the ONE place
+ * both "what each daily shows" and the spoiler rules live. Every lead is a real,
+ * per-day fact chosen so it can never give the answer away:
  *
- *   scout      → a masked player silhouette. The secret footballer IS the
- *                answer, so it is NEVER read here — the silhouette is static.
- *   teamsheet  → a disc in today's kit colour. The club is public (the puzzle
- *                is "name this XI"); only the eleven names are secret, so we
- *                read the kit ONLY (dailyLineupKitFor), never the players.
- *   tenball    → a category emblem from the list's `kind` (a category, not an
- *                answer): club → shield, nation → flag, manager → squad, else a
- *                goal net. The entries' own crests/flags are answers and are
- *                never touched.
- *   journeyman → a static career-route glyph. Nationality + clubs ARE the
- *                progressive clues, so nothing per-puzzle is safe to show.
+ *   scout      → a signal-strength glyph = how big a name today's mystery is
+ *                (fame tier). Touches none of Scout's five guess columns.
+ *   teamsheet  → the club crest, or the nation's flag. The team is announced
+ *                in-game; only the eleven names are secret. Kit colour is the
+ *                fallback when no crest/flag is bundled.
+ *   tenball    → the metric the list ranks by (goals → ball, assists → foot,
+ *                titles → trophy…). A metric is never one of the answers.
+ *   journeyman → today's number of career clubs (3+). Non-identifying, and the
+ *                game reveals the clubs anyway.
  *
- * Keep it this way: a future edit that wants richer art must prove, here, that
- * the field it reads is public — the daily card must never leak an answer.
+ * Keep it this way: a future edit must prove the fact it reads is public or
+ * non-identifying, here, in one place.
  */
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Flag, Goal, Route, Shield, Users, type LucideIcon} from 'lucide-react-native';
-import {useColors, useThemedStyles, type Palette} from '../../theme';
+import {Image, StyleSheet, Text, View, type ImageSourcePropType} from 'react-native';
+import {
+  BadgeEuro,
+  Footprints,
+  MapPin,
+  Medal,
+  Route,
+  Shirt,
+  SignalHigh,
+  SignalLow,
+  SignalMedium,
+  Trophy,
+  Volleyball,
+  type LucideIcon,
+} from 'lucide-react-native';
+import {fonts, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {DailyGame} from './dailyLog';
-import {dateKeyFor} from '../../games/scout/dailySeed';
-import {dailyLineupKitFor} from '../../games/teamsheet/dailySeed';
+import {dateKeyFor, dailyScoutFameTier} from '../../games/scout/dailySeed';
+import {dailyLineupKitFor, dailyLineupTeamFor} from '../../games/teamsheet/dailySeed';
+import {teamArt} from '../../games/teamsheet/teamArt';
 import {dailyListFor} from '../../games/tenball/dailyList';
+import {listMetric, type TenballMetric} from '../../games/tenball/metric';
+import {dailyJourneymanClubCountFor} from '../../games/journeyman/dailySeed';
 
 /** Badge diameter — a touch bigger than a bare line icon so it reads as a token. */
 const SIZE = 26;
 
-/** The lucide emblem for a Top Bins list category (spoiler-safe: category, not answer). */
-function tenballEmblem(kind: string | undefined): LucideIcon {
-  switch (kind) {
-    case 'club':
-      return Shield;
-    case 'nation':
-      return Flag;
-    case 'manager':
-      return Users;
-    default:
-      // 'player' | 'other' | undefined → a goal net (fits "top scorers" lists).
-      return Goal;
-  }
-}
+const FAME_ICON = {low: SignalLow, mid: SignalMedium, high: SignalHigh} as const;
+
+const METRIC_ICON: Record<TenballMetric, LucideIcon> = {
+  goals: Volleyball, // the ball, matching Team sheet's goal clue
+  assists: Footprints, // the boot, matching Team sheet's assist clue
+  apps: Shirt,
+  titles: Trophy,
+  awards: Medal,
+  transfers: BadgeEuro,
+  venue: MapPin,
+};
 
 export function DailyLeadArt({game}: {game: DailyGame}): React.JSX.Element {
   const colors = useColors();
@@ -50,34 +62,69 @@ export function DailyLeadArt({game}: {game: DailyGame}): React.JSX.Element {
   const dateKey = dateKeyFor(new Date());
 
   if (game === 'scout') {
-    // Head + shoulders of an unknown player, clipped by the badge circle.
-    return (
-      <View style={styles.badge}>
-        <View style={styles.silhouetteHead} />
-        <View style={styles.silhouetteBody} />
-      </View>
-    );
+    const Icon = FAME_ICON[dailyScoutFameTier(dateKey)];
+    return <Badge Icon={Icon} styles={styles} color={colors.textSecondary} />;
   }
 
   if (game === 'teamsheet') {
-    // The shirt colour itself is the token — the visual Team sheet already uses.
+    const art = teamArt(dailyLineupTeamFor(dateKey));
+    if (art?.kind === 'crest') {
+      return <ArtBadge source={art.source} shape="crest" styles={styles} />;
+    }
+    if (art?.kind === 'flag') {
+      return <ArtBadge source={art.source} shape="flag" styles={styles} />;
+    }
+    // No bundled crest/flag → the kit colour, as a plain disc.
     const body = dailyLineupKitFor(dateKey)?.body ?? colors.primary;
     return <View style={[styles.kit, {backgroundColor: body}]} />;
   }
 
   if (game === 'tenball') {
-    const Emblem = tenballEmblem(dailyListFor(dateKey).kind);
-    return (
-      <View style={styles.badge}>
-        <Emblem size={15} color={colors.textSecondary} strokeWidth={2} />
-      </View>
-    );
+    const Icon = METRIC_ICON[listMetric(dailyListFor(dateKey))];
+    return <Badge Icon={Icon} styles={styles} color={colors.textSecondary} />;
   }
 
-  // journeyman → a static career-route glyph; the secret is never read.
+  // journeyman → the number of clubs today's career spans.
   return (
     <View style={styles.badge}>
-      <Route size={15} color={colors.textSecondary} strokeWidth={2} />
+      <Text style={styles.count}>{dailyJourneymanClubCountFor(dateKey)}</Text>
+      <Route size={9} color={colors.textTertiary} strokeWidth={2} style={styles.countGlyph} />
+    </View>
+  );
+}
+
+function Badge({
+  Icon,
+  color,
+  styles,
+}: {
+  Icon: LucideIcon;
+  color: string;
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  return (
+    <View style={styles.badge}>
+      <Icon size={15} color={color} strokeWidth={2} />
+    </View>
+  );
+}
+
+function ArtBadge({
+  source,
+  shape,
+  styles,
+}: {
+  source: ImageSourcePropType;
+  shape: 'crest' | 'flag';
+  styles: ReturnType<typeof makeStyles>;
+}) {
+  return (
+    <View style={shape === 'flag' ? styles.flag : styles.crest}>
+      <Image
+        source={source}
+        resizeMode={shape === 'flag' ? 'cover' : 'contain'}
+        style={shape === 'flag' ? styles.flagImg : styles.crestImg}
+      />
     </View>
   );
 }
@@ -85,8 +132,8 @@ export function DailyLeadArt({game}: {game: DailyGame}): React.JSX.Element {
 const makeStyles = (c: Palette) =>
   StyleSheet.create({
     // A circular token one rung up from the card surface. The shared shape
-    // unifies every daily's lead as a "badge" — closer to a crest than a bare
-    // line icon, which is the whole point of the change.
+    // unifies every daily's lead as a "badge", closer to a crest than a bare
+    // line icon — which is the whole point of the change.
     badge: {
       width: SIZE,
       height: SIZE,
@@ -98,31 +145,45 @@ const makeStyles = (c: Palette) =>
       justifyContent: 'center',
       overflow: 'hidden',
     },
-    // Kit disc: rimmed in a faint light stroke so a near-black kit still reads
-    // against the card surface.
+    // Journeyman: the club count reads as the token; a tiny route glyph under it
+    // says "journey", not "rank".
+    count: {
+      fontFamily: fonts.medium,
+      fontSize: 13,
+      lineHeight: 15,
+      color: c.ink,
+      fontVariant: ['tabular-nums'],
+    },
+    countGlyph: {marginTop: -1},
+    // Crest: contained in a rounded-square token (crests carry their own
+    // transparent padding); flag: cover-cropped into a round nation roundel.
+    crest: {
+      width: SIZE,
+      height: SIZE,
+      borderRadius: 7,
+      backgroundColor: c.surface2,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.divider,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 3,
+    },
+    crestImg: {width: '100%', height: '100%'},
+    flag: {
+      width: SIZE,
+      height: SIZE,
+      borderRadius: SIZE / 2,
+      overflow: 'hidden',
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.divider,
+    },
+    flagImg: {width: '100%', height: '100%'},
+    // Kit fallback: rimmed so a near-black kit still reads on the card surface.
     kit: {
       width: SIZE,
       height: SIZE,
       borderRadius: SIZE / 2,
       borderWidth: 1,
       borderColor: 'rgba(255, 255, 255, 0.14)',
-    },
-    silhouetteHead: {
-      position: 'absolute',
-      top: 5,
-      left: (SIZE - 8) / 2,
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: c.textTertiary,
-    },
-    silhouetteBody: {
-      position: 'absolute',
-      bottom: -6,
-      left: (SIZE - 17) / 2,
-      width: 17,
-      height: 14,
-      borderRadius: 8,
-      backgroundColor: c.textTertiary,
     },
   });
