@@ -7,11 +7,16 @@
  *
  * The profile is cached in AsyncStorage so the tab renders instantly and the
  * outbox knows social is enabled without a network read. Identity is the anon
- * session: losing it (reinstall) orphans the profile — accepted for v1.
+ * session, anchored durably in the Keychain vault (core/identity/sessionVault),
+ * so a token blip or a reinstall recovers the same uid instead of orphaning the
+ * profile. The cache is *sticky*: only a real profile is ever written to it, and
+ * only deleteAccount clears it — an empty server read never drops the user back
+ * to onboarding.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {decode as decodeBase64} from 'base64-arraybuffer';
 import i18n from '../i18n';
+import {clearSession} from '../identity/sessionVault';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
 import {partitionRequests, type FriendRequestRow} from './requests';
@@ -116,7 +121,14 @@ async function cacheProfile(profile: SocialProfile | null): Promise<void> {
   }
 }
 
-/** This device's profile from the server (refreshes the cache), or null. */
+/**
+ * This device's profile from the server, or null when there's no row for the
+ * current uid. Refreshes the cache with a real profile, but NEVER wipes it on an
+ * empty read: a transient session hiccup that momentarily resolves to a fresh
+ * uid must not delete the cached identity and drop the user into onboarding. The
+ * cache is cleared only by deleteAccount. On genuine first run there is no cache
+ * to keep, so returning null is still correct there.
+ */
 export async function fetchMyProfile(): Promise<SocialProfile | null> {
   const {client, uid} = await requireClient();
   const {data, error} = await client
@@ -127,7 +139,12 @@ export async function fetchMyProfile(): Promise<SocialProfile | null> {
   if (error) {
     throw error;
   }
-  const profile = data ? mapProfile(data) : null;
+  if (!data) {
+    // No row for this uid. Keep whatever real profile is already cached rather
+    // than erasing identity; fall back to null only when nothing is cached.
+    return getCachedProfile();
+  }
+  const profile = mapProfile(data);
   await cacheProfile(profile);
   return profile;
 }
@@ -278,7 +295,10 @@ export async function deleteAccount(): Promise<void> {
   }
 
   // Drop the anonymous session (fresh identity next launch) and wipe local
-  // user data. The server rows are already gone, so this is best-effort.
+  // user data. The server rows are already gone, so this is best-effort. Clear
+  // the Keychain anchor too, or the deleted account would be "recovered" on the
+  // next launch (the vault survives even a reinstall).
+  await clearSession();
   await client.auth.signOut().catch(() => {});
   try {
     const keys = await AsyncStorage.getAllKeys();

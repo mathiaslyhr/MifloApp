@@ -20,3 +20,22 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 jest.mock('@notifee/react-native', () =>
   require('@notifee/react-native/jest-mock'),
 );
+
+// react-native-keychain (the durable identity vault) is a native module with
+// no JS fallback under jest. A tiny in-memory stand-in keeps the vault's
+// callers renderable; tests that exercise the vault mock it explicitly.
+jest.mock('react-native-keychain', () => {
+  let store = null;
+  return {
+    ACCESSIBLE: {AFTER_FIRST_UNLOCK: 'AccessibleAfterFirstUnlock'},
+    setGenericPassword: jest.fn(async (username, password) => {
+      store = {username, password};
+      return true;
+    }),
+    getGenericPassword: jest.fn(async () => store ?? false),
+    resetGenericPassword: jest.fn(async () => {
+      store = null;
+      return true;
+    }),
+  };
+});

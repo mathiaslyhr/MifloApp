@@ -11,6 +11,7 @@
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from '../i18n';
+import {clearSession} from '../identity/sessionVault';
 import {BackendUnavailableError} from '../rooms/roomService';
 import {ensureSession, supabase} from '../supabase/client';
 import {fetchMyProfile} from '../social/socialService';
@@ -230,6 +231,10 @@ export async function awaitRelinquish(
 
 /** Sign out and wipe local user data — the profile now lives on the new phone. */
 async function relinquishLocal(): Promise<void> {
+  // Forget the identity anchor first: the new phone owns this uid now, so the
+  // old phone must not "recover" it on its next launch (the Keychain vault
+  // otherwise outlives even a reinstall).
+  await clearSession();
   if (supabase) {
     await supabase.auth.signOut().catch(() => {});
   }

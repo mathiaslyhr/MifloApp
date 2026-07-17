@@ -11,8 +11,10 @@
  *
  * Friends are deliberately NOT a section here. Home already shows how they did
  * today, so repeating the feed would be the same answer twice; the header's
- * friends line opens the list instead, which is where browsing, adding and your
- * own code live. Pending friend requests aren't here either: they answer from
+ * friends line opens the list instead, which is where browsing and adding live.
+ * Your own code, though, is shown right on this tab (under the header): it's the
+ * one handle for adding friends and moving phones, so it can't stay buried where
+ * people never find it. Pending friend requests aren't here either: they answer from
  * Home's bell now, and two places to accept the same request would be two
  * places to keep in sync. This tab still refreshes them, because the bell reads
  * the same store.
@@ -73,6 +75,7 @@ import {FavoritesShowcase, type Favorites} from '../profile/FavoritesShowcase';
 import {StreaksSection} from '../profile/StreaksSection';
 import {HistorySection, type HistoryDay} from '../profile/HistorySection';
 import {CareerSection} from '../profile/CareerSection';
+import {CodeBlock} from '../social/CodeBlock';
 import {useSendFriendRequest} from '../social/useSendFriendRequest';
 import {TabPage} from './TabPage';
 
@@ -372,6 +375,17 @@ export function ProfileTab({isActive = true, addCode}: Props) {
             avatarUri={avatarUrlFor(profile.avatarPath)}
           />
 
+          {/* Your code, in plain sight. It used to live only in the friends
+              list, so people never captured it — and losing it meant losing the
+              only handle for adding friends and moving phones. The one-liner
+              tells them why it's worth keeping. */}
+          <Card style={styles.codeCard}>
+            <CodeBlock code={profile.friendCode} divider={false} />
+            <Text variant="secondary" color="secondary">
+              {t('profile.codeHint')}
+            </Text>
+          </Card>
+
           {/* Above the segments, with the avatar and the name: favourites are
               identity, so they belong to the header rather than to any one
               segment of the body. */}
@@ -436,4 +450,5 @@ const makeStyles = (_c: Palette) =>
   StyleSheet.create({
     body: {gap: spacing.lg},
     onboardCard: {padding: spacing.xl, gap: spacing.md},
+    codeCard: {gap: spacing.sm},
   });
