@@ -24,6 +24,7 @@ export type {
   CompetitionKey,
   FamousLineup,
   FamousLineupMatch,
+  LineupKit,
   LineupPlayer,
 } from './famousLineups';
 export {

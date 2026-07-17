@@ -66,7 +66,7 @@
     "dailyWaitingOne": "1 dagligt spil venter",
     "dailiesWaiting": "{{count}} daglige spil venter",
     "dailiesDone": "Alt klaret for i dag",
-    "dailiesDoneLead": "Alle daglige udfordringer er klaret.",
+    "dailiesDoneLead": "Fuldtid på dagens spil.",
     "dailiesDoneBye": "Vi ses i morgen, {{name}}",
     "dailiesDoneByeAnon": "Vi ses i morgen",
     "friendPlayedOne": "1 ven har spillet i dag",
@@ -74,8 +74,8 @@
     "friendOnlineOne": "1 ven online",
     "friendsOnline": "{{count}} venner online",
     "friendsOnlineShort": "{{count}} online",
-    "createParty": "Opret kamp",
-    "creating": "Opretter…",
+    "createParty": "Sæt en kamp i gang",
+    "creating": "Sætter i gang…",
     "joinParty": "Deltag i kamp",
     "errorUnavailable": "Kampe er ikke tilgængelige lige nu.",
     "errorCreate": "Kunne ikke oprette en kamp. Prøv igen.",
@@ -173,11 +173,11 @@
     "a11yBadge": "nye venneanmodninger"
   },
   "daily": {
-    "notPlayed": "Ikke spillet endnu",
-    "ongoing": "I gang",
-    "solved": "Løst",
+    "notPlayed": "På bænken",
+    "ongoing": "I spil",
+    "solved": "Fuldtid",
     "surrendered": "Overgivet",
-    "nextLabel": "Nye udfordringer om"
+    "nextLabel": "Næste kamp om"
   },
   "play": {
     "friendlies": "Venskab",
@@ -612,7 +612,7 @@
   },
   "hattrick": {
     "title": "Hattrick",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "back": "Tilbage til lobbyen",
     "legendButton": "Sådan spiller du",
     "help": {
@@ -670,7 +670,7 @@
   },
   "redCard": {
     "title": "Red Card",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "help": {
       "title": "Sådan spiller du",
       "rule": "Alle undtagen snyderen får den samme fodboldspiller. Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen. Efter sidste runde stemmer I om, hvem der skal sendes af banen. Bliver du sendt af banen som snyderen? Gæt spilleren for at vinde det tilbage."
@@ -788,7 +788,7 @@
   },
   "offside": {
     "title": "Offside",
-    "loading": "Indlæser runden…",
+    "loading": "Varmer op…",
     "backToLobby": "Tilbage til lobbyen",
     "round": "Runde {{round}} af {{total}}",
     "roundsPicker": {
@@ -890,7 +890,7 @@
   },
   "cultHero": {
     "title": "Cult Hero",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "help": {
       "title": "Sådan spiller du",
       "rule": "Hver runde stiller ét spørgsmål, og alle vælger i hemmelighed en rigtig fodboldspiller på samme tid. Jo sjældnere dit svar er, jo flere point giver det. Et forkert svar giver ingenting. Flest point efter alle runder vinder."
@@ -986,7 +986,7 @@
     "curiosityNotifBody_6": "Dagens spil ligger og venter, uløste.",
     "title": "Scout",
     "back": "Tilbage",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "instruction": "Gæt den hemmelige spiller",
     "legend": {
       "match": "Rammer",
@@ -1036,7 +1036,7 @@
   "journeyman": {
     "title": "Journeyman",
     "back": "Tilbage",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "instruction": "Hvis karriere er det her?",
     "guessCount": "{{count}} gæt brugt",
     "guessCount_plural": "{{count}} gæt brugt",
@@ -1080,7 +1080,7 @@
   "teamsheet": {
     "title": "Team sheet",
     "back": "Tilbage",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "progress": "{{found}} af 11 fundet",
     "missCount": "{{count}} forbier",
     "missCount_plural": "{{count}} forbiere",
@@ -1128,7 +1128,7 @@
   "tenball": {
     "title": "Top Bins",
     "back": "Tilbage",
-    "loading": "Indlæser…",
+    "loading": "Varmer op…",
     "instruction": "Nævn hele top 10",
     "progress": "{{found}} af 10 fundet",
     "missCount": "{{count}} forbier",

@@ -45,6 +45,8 @@ import {presenceFor} from '../../core/social/presence';
 import type {FriendFeed} from '../../core/social/types';
 import {loadDailyLog, DAILY_GAMES, type DailyGame} from '../../core/daily/dailyLog';
 import {GAME_META} from '../../core/daily/DailyRow';
+import {DailyLeadArt} from '../../core/daily/dailyLeadArt';
+import {CrestWall} from '../../core/ui/CrestWall';
 import {dateKeyFor} from '../../games/scout/dailySeed';
 import {useAppNavigation, type RootStackParamList} from '../../core/navigation';
 import {useCreateParty} from '../../core/rooms/useCreateParty';
@@ -278,6 +280,9 @@ export function HomeTab(): React.JSX.Element {
       {/* The daily card: the headline counts the dailies still open, and each
           row under it is a button straight into that game. */}
       <View style={styles.card}>
+        {/* Cleared the day → a faint wall of real crests behind the sign-off.
+            Only in the "all done" state, where the card is sparse. */}
+        {allDone ? <CrestWall count={20} size={38} opacity={0.08} /> : null}
         <View style={styles.cardInner}>
           {allDone ? (
             // Cleared the lot: a warm sign-off and a live countdown to the next
@@ -307,7 +312,7 @@ export function HomeTab(): React.JSX.Element {
               {waiting && waiting.length > 0 ? (
                 <View style={styles.cardList}>
                   {waiting.map((g, i) => {
-                    const {Icon, titleKey} = GAME_META[g];
+                    const {titleKey} = GAME_META[g];
                     const isLast = i === waiting.length - 1;
                     return (
                       <PressableScale
@@ -316,11 +321,7 @@ export function HomeTab(): React.JSX.Element {
                         accessibilityRole="button"
                         accessibilityLabel={t(titleKey)}
                         style={[styles.cardRow, !isLast && styles.cardDivider]}>
-                        <Icon
-                          size={15}
-                          color={colors.textSecondary}
-                          strokeWidth={2}
-                        />
+                        <DailyLeadArt game={g} />
                         <Text variant="body" style={styles.cardRowText}>
                           {t(titleKey)}
                         </Text>

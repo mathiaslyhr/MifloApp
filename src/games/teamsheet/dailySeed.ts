@@ -14,6 +14,7 @@ import {
   isTeamsheetLineup,
   shuffle,
   type FamousLineup,
+  type LineupKit,
 } from '../../data/football';
 import {hashDateKey, seededRng} from '../scout/dailySeed';
 import {TEAMSHEET_SCHEDULE} from './schedule.generated';
@@ -53,6 +54,16 @@ export function dailyLineupFor(dateKey: string): FamousLineup {
     throw new Error('dailyLineupFor: empty lineup pool');
   }
   return walked;
+}
+
+/**
+ * Just the day's kit colours — the one spoiler-safe fact about today's Team
+ * sheet. The club is public (the puzzle literally names the XI's team); only
+ * the eleven player names are secret. Home reads this so it never has to touch
+ * the answer object. `undefined` when the day's lineup carries no kit.
+ */
+export function dailyLineupKitFor(dateKey: string): LineupKit | undefined {
+  return dailyLineupFor(dateKey).kit;
 }
 
 /**

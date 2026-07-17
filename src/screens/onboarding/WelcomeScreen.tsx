@@ -16,6 +16,7 @@ import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronRight, X} from 'lucide-react-native';
 import {AppMark, Button, CircleButton, Text} from '../../core/ui';
+import {CrestWall} from '../../core/ui/CrestWall';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {EnterCodeFlow} from './EnterCodeFlow';
 import {QuickSetupFlow} from './setup/QuickSetupFlow';
@@ -42,6 +43,9 @@ export function WelcomeScreen({
   return (
     <>
       <View style={styles.canvas}>
+        {/* A faint crest wall behind the whole front door — the first football
+            signal on a fresh install, before a single word is read. */}
+        <CrestWall count={40} size={46} opacity={0.06} />
         {onClose ? (
           <View style={[styles.close, {top: insets.top + spacing.sm}]}>
             <CircleButton onPress={onClose} accessibilityLabel={t('common.close')}>

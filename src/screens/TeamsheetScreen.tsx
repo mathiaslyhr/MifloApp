@@ -58,6 +58,7 @@ import {playerSource} from '../games/shared/searchSources';
 import {dateKeyFor} from '../games/scout/dailySeed';
 import {dailyLineupFor} from '../games/teamsheet/dailySeed';
 import {formationRows, positionLabels} from '../games/teamsheet/positions';
+import {PitchMarkings} from '../games/teamsheet/PitchMarkings';
 import {
   applyGuess,
   createInitialState,
@@ -453,6 +454,7 @@ export function TeamsheetScreen({navigation}: Props) {
             {/* Tapping the pitch background clears the targeted spot. The
                 rows render attack first and GK last, broadcast style. */}
             <Pressable onPress={() => setSelected(null)} style={styles.pitch}>
+            <PitchMarkings />
             {rows
               .map(count => {
                 const start = nextSlot;
@@ -777,7 +779,9 @@ const makeStyles = (c: Palette) =>
   // Five-man lines trim the gap and the tokens' side padding (never the
   // circle) so wide formations stay inside every screen width.
   formationRowTight: {gap: 2},
-  pitch: {gap: spacing.md},
+  // relative so the pitch markings (an absolute-fill layer, first child) sit
+  // behind the rows; the rows stay in normal flow and paint on top.
+  pitch: {gap: spacing.md, position: 'relative'},
   token: {width: TOKEN_WIDTH, alignItems: 'center', gap: 3},
   tokenTight: {width: CIRCLE + 4},
   posLabel: {

@@ -66,7 +66,7 @@
     "dailyWaitingOne": "1 daily is waiting",
     "dailiesWaiting": "{{count}} dailies are waiting",
     "dailiesDone": "All done for today",
-    "dailiesDoneLead": "That's all daily challenges done.",
+    "dailiesDoneLead": "Full time on today's dailies.",
     "dailiesDoneBye": "See you tomorrow, {{name}}",
     "dailiesDoneByeAnon": "See you tomorrow",
     "friendPlayedOne": "1 friend played today",
@@ -74,8 +74,8 @@
     "friendOnlineOne": "1 friend online",
     "friendsOnline": "{{count}} friends online",
     "friendsOnlineShort": "{{count}} online",
-    "createParty": "Create match",
-    "creating": "Creating…",
+    "createParty": "Kick off a match",
+    "creating": "Kicking off…",
     "joinParty": "Join match",
     "errorUnavailable": "Matches aren't available right now.",
     "errorCreate": "Couldn't create a match. Please try again.",
@@ -173,11 +173,11 @@
     "a11yBadge": "new friend requests"
   },
   "daily": {
-    "notPlayed": "Not played yet",
-    "ongoing": "In progress",
-    "solved": "Solved",
+    "notPlayed": "On the bench",
+    "ongoing": "In play",
+    "solved": "Full time",
     "surrendered": "Surrendered",
-    "nextLabel": "New challenges in"
+    "nextLabel": "Next kickoff in"
   },
   "play": {
     "friendlies": "Friendlies",
@@ -612,7 +612,7 @@
   },
   "hattrick": {
     "title": "Hattrick",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "back": "Back to lobby",
     "legendButton": "How to play",
     "help": {
@@ -670,7 +670,7 @@
   },
   "redCard": {
     "title": "Red Card",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "help": {
       "title": "How to play",
       "rule": "Everyone but the faker is given the same footballer. Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one. After the last round you vote on who to send off. Sent off as the faker? Guess the footballer to steal it back."
@@ -788,7 +788,7 @@
   },
   "offside": {
     "title": "Offside",
-    "loading": "Loading the round…",
+    "loading": "Warming up…",
     "backToLobby": "Back to lobby",
     "round": "Round {{round}} of {{total}}",
     "roundsPicker": {
@@ -890,7 +890,7 @@
   },
   "cultHero": {
     "title": "Cult Hero",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "help": {
       "title": "How to play",
       "rule": "Every round asks one question and everyone secretly picks a real footballer at the same time. The rarer your pick, the more points it scores. A wrong answer scores nothing. Highest total after all rounds wins."
@@ -986,7 +986,7 @@
     "curiosityNotifBody_6": "Today's puzzles are sitting there, unsolved.",
     "title": "Scout",
     "back": "Back",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "instruction": "Guess the secret player",
     "legend": {
       "match": "Match",
@@ -1036,7 +1036,7 @@
   "journeyman": {
     "title": "Journeyman",
     "back": "Back",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "instruction": "Whose career is this?",
     "guessCount": "{{count}} guess used",
     "guessCount_plural": "{{count}} guesses used",
@@ -1080,7 +1080,7 @@
   "teamsheet": {
     "title": "Team sheet",
     "back": "Back",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "progress": "{{found}} of 11 found",
     "missCount": "{{count}} miss",
     "missCount_plural": "{{count}} misses",
@@ -1128,7 +1128,7 @@
   "tenball": {
     "title": "Top Bins",
     "back": "Back",
-    "loading": "Loading…",
+    "loading": "Warming up…",
     "instruction": "Name the top 10",
     "progress": "{{found}} of 10 found",
     "missCount": "{{count}} miss",
