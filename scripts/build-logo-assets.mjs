@@ -16,110 +16,18 @@
 // crest can't ship silently.
 import {mkdirSync, writeFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
-import sharp from 'sharp';
 import {CLUBS, root} from './_load-football.mjs';
+import {logoSlug, rasterizeLogo} from './lib/art.mjs';
 
-const BUCKET = 'https://pub-3bd35431294c47068cbf31a95d572166.r2.dev/logos';
-const LOGO_SIZE = 96; // ~3x of the ~28–32pt crest chip; crest fit inside, square.
-
-// clubId → footylogos slug (verified via probe; extend per dataset batch).
-const CLUB_SLUG = {
-  agf: 'agf-aarhus', viborg: 'viborg-ff', cadiz: 'cadiz-cf',
-  // slugify() turns "D.C. United" into "d-c-united", which 404s.
-  'dc-united': 'dc-united',
-  'man-city': 'manchester-city', 'man-utd': 'manchester-united',
-  arsenal: 'arsenal', chelsea: 'chelsea', liverpool: 'liverpool-fc',
-  tottenham: 'tottenham-hotspur', 'aston-villa': 'aston-villa',
-  everton: 'everton', newcastle: 'newcastle-united', 'west-ham': 'west-ham-united',
-  leicester: 'leicester', leeds: 'leeds-united', wolves: 'wolverhampton-wanderers',
-  southampton: 'southampton', qpr: 'queens-park-rangers', barnsley: 'barnsley',
-  fulham: 'fulham',
-  'real-madrid': 'real-madrid', barcelona: 'fc-barcelona',
-  'atletico-madrid': 'atletico-madrid', sevilla: 'sevilla-fc', valencia: 'valencia-cf',
-  villarreal: 'villarreal-cf', 'real-sociedad': 'real-sociedad',
-  'real-betis': 'real-betis-balompie', juventus: 'juventus', inter: 'inter-milan',
-  'ac-milan': 'ac-milan', napoli: 'napoli', roma: 'roma', lazio: 'lazio',
-  fiorentina: 'fiorentina', atalanta: 'atalanta', bologna: 'bologna',
-  bayern: 'bayern-munich', dortmund: 'borussia-dortmund', leverkusen: 'bayer-leverkusen',
-  schalke: 'schalke-04', 'rb-leipzig': 'rb-leipzig', wolfsburg: 'vfl-wolfsburg',
-  monchengladbach: 'borussia-monchengladbach', psg: 'paris-saint-germain-psg',
-  monaco: 'as-monaco', marseille: 'olympique-de-marseille-om', lyon: 'olympique-lyonnais',
-  lille: 'losc-lille', rennes: 'stade-rennais', 'paris-fc': 'paris-fc',
-  'inter-miami': 'inter-miami', lafc: 'los-angeles-fc', 'la-galaxy': 'la-galaxy',
-  vancouver: 'vancouver-whitecaps', 'al-nassr': 'al-nassr', 'al-hilal': 'al-hilal',
-  'al-ittihad': 'al-ittihad', 'al-qadsiah': 'al-qadsiah', 'al-ahli': 'al-ahli',
-  sporting: 'sporting-cp', benfica: 'sl-benfica', porto: 'fc-porto', ajax: 'ajax',
-  santos: 'santos-fc', fluminense: 'fluminense', flamengo: 'flamengo',
-  palmeiras: 'palmeiras',
-  'boca-juniors': 'boca-juniors', 'river-plate': 'river-plate',
-  'rosario-central': 'rosario-central', monterrey: 'monterrey',
-  galatasaray: 'galatasaray', besiktas: 'besiktas', celtic: 'celtic',
-  fenerbahce: 'fenerbahce',
-  // WC 2026 batch: CONCACAF / hosts / OFC
-  'nottingham-forest': 'nottingham-forest', 'crystal-palace': 'crystal-palace',
-  bournemouth: 'afc-bournemouth', burnley: 'burnley', brentford: 'brentford',
-  'werder-bremen': 'werder-bremen', psv: 'psv-eindhoven', feyenoord: 'feyenoord',
-  genoa: 'genoa', nice: 'ogc-nice', 'club-brugge': 'club-brugge',
-  'club-america': 'club-america', guadalajara: 'cd-guadalajara',
-  tigres: 'tigres-uanl', 'cruz-azul': 'cruz-azul', pumas: 'pumas-unam',
-  pachuca: 'pachuca', toluca: 'toluca', 'real-mallorca': 'rcd-mallorca',
-  brighton: 'brighton-and-hove-albion', anderlecht: 'rsc-anderlecht', twente: 'fc-twente',
-  girona: 'girona-fc',
-  // WC 2026 batch: AFC
-  'eintracht-frankfurt': 'eintracht-frankfurt', 'vfb-stuttgart': 'vfb-stuttgart',
-  freiburg: 'sc-freiburg', parma: 'parma', genk: 'krc-genk', lens: 'rc-lens',
-  montpellier: 'montpellier', 'al-sadd': 'al-sadd-sc', 'al-duhail': 'al-duhail-sc',
-  reims: 'stade-de-reims',
-  // WC 2026 batch: CAF
-  'athletic-bilbao': 'athletic-club-bilbao', torino: 'torino', nantes: 'fc-nantes',
-  'al-ahly': 'al-ahly-sc', 'mamelodi-sundowns': 'mamelodi-sundowns',
-  toulouse: 'toulouse-fc', metz: 'fc-metz', lorient: 'fc-lorient', empoli: 'empoli-fc',
-  udinese: 'udinese', trabzonspor: 'trabzonspor', sunderland: 'sunderland',
-  'bristol-city': 'bristol-city', 'union-sg': 'union-saint-gilloise', basel: 'fc-basel',
-  // WC 2026 batch: CONMEBOL
-  getafe: 'getafe-cf', como: 'como-1907', internacional: 'sc-internacional', botafogo: 'botafogo',
-  watford: 'watford', cagliari: 'cagliari', 'hertha-berlin': 'hertha-bsc', 'west-brom': 'west-bromwich-albion',
-  // WC 2026 batch: UEFA
-  hoffenheim: 'tsg-hoffenheim', 'union-berlin': 'union-berlin', mainz: 'mainz-05',
-  'az-alkmaar': 'az-alkmaar', lecce: 'lecce', sampdoria: 'uc-sampdoria',
-  'hellas-verona': 'hellas-verona',
-  'sheffield-united': 'sheffield-united', salzburg: 'red-bull-salzburg',
-  'dinamo-zagreb': 'gnk-dinamo-zagreb', midtjylland: 'fc-midtjylland', copenhagen: 'fc-copenhagen',
-  shakhtar: 'shakhtar-donetsk', 'dynamo-kyiv': 'dynamo-kyiv', ferencvaros: 'ferencvaros-tc',
-  olympiacos: 'olympiacos', augsburg: 'fc-augsburg', spezia: 'spezia',
-  norwich: 'norwich-city', 'al-shabab': 'al-shabab',
-  // Curation batch 2026-07
-  gremio: 'gremio', hamburg: 'hamburger-sv', blackburn: 'blackburn-rovers',
-  'celta-vigo': 'celta-vigo', corinthians: 'corinthians',
-  stoke: 'stoke-city', bolton: 'bolton-wanderers',
-  kaiserslautern: 'fc-kaiserslautern', 'saint-etienne': 'as-saint-etienne',
-  elche: 'elche-cf', cannes: 'as-cannes',
-  'orlando-city': 'orlando-city',
-  // Wave B (famous-lineup legends) 2026-07
-  deportivo: 'deportivo-la-coruna', koln: '1-fc-koln',
-  brondby: 'brondby-if', 'aek-athens': 'aek-athens',
-  // Recent moves 2026-07
-  braga: 'sc-braga', panathinaikos: 'panathinaikos',
-  'rayo-vallecano': 'rayo-vallecano', 'orlando-pirates': 'orlando-pirates',
-  'chicago-fire': 'chicago-fire',
-};
-
-const slugify = s =>
-  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// The clubId → footylogos slug map + slugify() now live in ./lib/art-sources.js
+// (shared with the integrity gate + publish). `logoSlug(club)` applies it,
+// falling back to a slugified club name.
 
 // Every club that ships in the content pack needs a crest: datasetSync's
 // validateContentPack rejects the whole pack on the first club with no bundled
 // logo, so a club reachable only via a manager spell (never a footballer) would
 // still break it. Fetch for all of CLUBS.
 const clubs = [...CLUBS].sort((a, b) => a.id.localeCompare(b.id));
-
-async function fetchLogo(slug) {
-  const url = `${BUCKET}/${slug}/${slug}-logo-footylogos.svg`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${url} → HTTP ${res.status}`);
-  return Buffer.from(await res.arrayBuffer());
-}
 
 async function main() {
   const dir = resolve(root, 'src/games/hattrick/assets');
@@ -130,18 +38,9 @@ async function main() {
   const entries = [];
   const failed = [];
   for (const club of clubs) {
-    const slug = CLUB_SLUG[club.id] ?? slugify(club.name);
+    const slug = logoSlug(club);
     try {
-      const svg = await fetchLogo(slug);
-      // Fit the crest inside a transparent square so every badge occupies the
-      // same box regardless of its native aspect ratio.
-      const png = await sharp(svg, {density: 300, limitInputPixels: false})
-        .resize(LOGO_SIZE, LOGO_SIZE, {
-          fit: 'contain',
-          background: {r: 0, g: 0, b: 0, alpha: 0},
-        })
-        .png({compressionLevel: 9})
-        .toBuffer();
+      const png = await rasterizeLogo(slug);
       writeFileSync(resolve(imgDir, `${club.id}.png`), png);
       entries.push(club.id);
       console.log(`  ✓ ${club.id} (${slug}) ${png.length}b`);

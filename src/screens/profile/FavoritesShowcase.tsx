@@ -29,7 +29,7 @@ import {
   type Palette,
 } from '../../theme';
 import {getById, getClub} from '../../data/football';
-import {flagImage, logoImage} from '../../games/hattrick/criterionIcon';
+import {flagImage, logoImage, type ChipImage} from '../../games/hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../../games/hattrick/assets/playerAvatars';
 import {useSearch} from '../../games/shared/SearchScreen';
 import {
@@ -56,7 +56,7 @@ type Props = {
 type Slot = 'player' | 'club' | 'nation';
 
 /** Portrait for a footballer id, falling back to their nationality flag. */
-function playerImage(id: string): number | null {
+function playerImage(id: string): ChipImage {
   return PLAYER_AVATARS[id] ?? flagImage(getById(id)?.nationality[0]) ?? null;
 }
 
@@ -179,7 +179,7 @@ function Tile({
 }: {
   caption: string;
   label: string | null;
-  image: number | null;
+  image: ChipImage;
   editable: boolean;
   onPress: () => void;
 }) {

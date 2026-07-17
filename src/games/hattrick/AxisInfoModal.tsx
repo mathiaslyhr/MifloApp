@@ -6,13 +6,14 @@
  * Shows the same vector illustration the board uses for that axis.
  */
 import React from 'react';
-import {Image, Modal, Pressable, StyleSheet} from 'react-native';
+import {Modal, Pressable, StyleSheet} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Text} from '../../core/ui';
 import {radii, spacing, useThemedStyles, type Palette} from '../../theme';
 import type {Criterion} from '../../data/football';
 import {criterionValue} from './grid';
 import {criterionImage, criterionIcon} from './criterionIcon';
+import {ArtIcon} from './assets/ArtIcon';
 
 type Props = {
   /** The axis to explain, or null when nothing is open. */
@@ -33,11 +34,7 @@ export function AxisInfoModal({criterion, onClose}: Props) {
       onRequestClose={onClose}>
       <Pressable style={styles.scrim} onPress={onClose}>
         <Pressable style={styles.card} onPress={() => {}}>
-          {image != null ? (
-            <Image source={image} resizeMode="contain" style={styles.icon} />
-          ) : emoji != null ? (
-            <Text style={styles.emoji}>{emoji}</Text>
-          ) : null}
+          <ArtIcon image={image} emoji={emoji} imageStyle={styles.icon} emojiStyle={styles.emoji} />
           <Text variant="body" align="center">
             {criterion != null
               ? t(

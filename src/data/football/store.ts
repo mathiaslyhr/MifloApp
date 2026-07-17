@@ -28,6 +28,19 @@ import {LIST_POOL} from '../../games/tenball/lists';
 import {TENBALL_SCHEDULE} from '../../games/tenball/schedule.generated';
 import type {TenballList} from '../../games/tenball/types';
 
+/**
+ * Over-the-air art: storage paths (relative to the `game-data` bucket) for
+ * crests / flags / portraits this binary may NOT have bundled. Keyed exactly
+ * like the bundled require-maps (clubId, dataset country name, footballer id) so
+ * the render layer can fall back bundled → remote. Optional: a fully-bundled
+ * pack omits it. See src/games/hattrick/assets/remoteArt.ts.
+ */
+export type RemoteArt = {
+  logos?: Record<string, string>;
+  flags?: Record<string, string>;
+  portraits?: Record<string, string>;
+};
+
 export type ContentPack = {
   footballers?: Footballer[];
   clubs?: Club[];
@@ -45,6 +58,8 @@ export type ContentPack = {
   };
   /** Team sheet daily schedule; the lineups themselves ride `famousLineups`. */
   teamsheetSchedule?: {schedule: Record<string, string>; poolSignature?: number};
+  /** OTA art the render layer may need for clubs/nations this binary lacks. */
+  remoteArt?: RemoteArt;
 };
 
 function replaceArray<T>(target: readonly T[], next: readonly T[]): void {
@@ -53,8 +68,9 @@ function replaceArray<T>(target: readonly T[], next: readonly T[]): void {
   arr.push(...next);
 }
 
-/** The bundled data as shipped in this binary, captured before any hydrate. */
-const BUNDLED: Required<Omit<ContentPack, 'redCardQuestions' | 'tenball'>> &
+/** The bundled data as shipped in this binary, captured before any hydrate.
+ * `remoteArt` is intentionally excluded — a binary's own art is all bundled. */
+const BUNDLED: Required<Omit<ContentPack, 'redCardQuestions' | 'tenball' | 'remoteArt'>> &
   Pick<ContentPack, 'redCardQuestions' | 'tenball'> = {
   footballers: [...FOOTBALLERS],
   clubs: [...CLUBS],

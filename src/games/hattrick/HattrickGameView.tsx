@@ -1,7 +1,6 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {
   Animated,
-  Image,
   Pressable,
   StyleSheet,
   useWindowDimensions,
@@ -35,6 +34,7 @@ import {HelpModal} from './HelpModal';
 import {getById} from '../../data/football';
 import {criterionLabel, criterionShortLabel} from './grid';
 import {criterionIcon, criterionImage} from './criterionIcon';
+import {ArtIcon} from './assets/ArtIcon';
 import {useSearch} from '../shared/SearchScreen';
 import {playerSource} from '../shared/searchSources';
 import {
@@ -681,15 +681,12 @@ function AxisCell({
         divider === 'top' && styles.divTop,
         pressed && styles.axisPressed,
       ]}>
-      {image != null ? (
-        <Image
-          source={image}
-          resizeMode="contain"
-          style={criterion.kind === 'nationality' ? styles.axisFlag : styles.axisLogo}
-        />
-      ) : emoji ? (
-        <Text style={styles.axisIcon}>{emoji}</Text>
-      ) : null}
+      <ArtIcon
+        image={image}
+        emoji={emoji}
+        imageStyle={criterion.kind === 'nationality' ? styles.axisFlag : styles.axisLogo}
+        emojiStyle={styles.axisIcon}
+      />
       <Text
         align="center"
         // A single word must never wrap ("Teammat / e") — shrink it instead;

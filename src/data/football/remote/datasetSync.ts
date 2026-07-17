@@ -23,6 +23,7 @@ import i18n from '../../../core/i18n';
 import {currentRouteName} from '../../../core/navigation/navigationRef';
 import {FLAG_IMAGES} from '../../../games/hattrick/assets/flags.generated';
 import {LOGO_IMAGES} from '../../../games/hattrick/assets/logos.generated';
+import {hydrateRemoteArt} from '../../../games/hattrick/assets/remoteArt';
 import {hashDateKey} from '../../../games/scout/dailySeed';
 import type {FamousLineup} from '../famousLineups';
 import {hydrate, type ContentPack} from '../store';
@@ -67,6 +68,9 @@ function isApplySafe(): boolean {
 
 function applyPack(pack: ContentPack, version: string): void {
   hydrate(pack);
+  // OTA art for clubs/nations this binary may not bundle (see remoteArt.ts).
+  // Cleared when the pack carries none, so a stale URL never outlives its pack.
+  hydrateRemoteArt(pack.remoteArt);
   const strings = pack.redCardQuestions?.i18n;
   if (strings) {
     for (const lang of ['en', 'da'] as const) {
@@ -136,16 +140,26 @@ export function validateContentPack(payload: unknown): string | null {
     return 'managers/trebleSquads/famousLineups missing';
   }
 
+  // Art may be bundled in THIS binary OR ride the pack as an OTA URL. Reject
+  // only when a reference has neither — that art would render blank.
+  const remoteArt = p.remoteArt;
+  if (remoteArt !== undefined && (typeof remoteArt !== 'object' || remoteArt === null)) {
+    return 'remoteArt malformed';
+  }
+  const hasCrest = (id: string) => !!LOGO_IMAGES[id] || !!remoteArt?.logos?.[id];
+  const hasFlag = (country: string) =>
+    !!FLAG_IMAGES[country] || !!remoteArt?.flags?.[country];
+
   const clubIds = new Set<string>();
   for (const club of p.clubs as Club[]) {
     if (typeof club?.id !== 'string' || typeof club.name !== 'string') {
       return 'malformed club';
     }
-    if (!LOGO_IMAGES[club.id]) {
-      return `no bundled crest for club '${club.id}'`;
+    if (!hasCrest(club.id)) {
+      return `no crest (bundled or remote) for club '${club.id}'`;
     }
-    if (!FLAG_IMAGES[club.country]) {
-      return `no bundled flag for club country '${club.country}'`;
+    if (!hasFlag(club.country)) {
+      return `no flag (bundled or remote) for club country '${club.country}'`;
     }
     clubIds.add(club.id);
   }
@@ -163,8 +177,8 @@ export function validateContentPack(payload: unknown): string | null {
       return `malformed footballer '${String(f?.id)}'`;
     }
     for (const country of f.nationality) {
-      if (!FLAG_IMAGES[country]) {
-        return `no bundled flag for nationality '${country}' (${f.id})`;
+      if (!hasFlag(country)) {
+        return `no flag (bundled or remote) for nationality '${country}' (${f.id})`;
       }
     }
     for (const spell of f.clubs) {

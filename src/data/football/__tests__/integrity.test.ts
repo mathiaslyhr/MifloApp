@@ -15,6 +15,20 @@ import {all, byCategory} from '../repository';
 import type {Rng} from '../repository';
 import {FLAG_IMAGES} from '../../../games/hattrick/assets/flags.generated';
 import {LOGO_IMAGES} from '../../../games/hattrick/assets/logos.generated';
+// Art-source maps drive the OTA path: a country/club not bundled in THIS binary
+// can still ship its flag/crest over the air, but only if publish can FETCH it —
+// i.e. it has a flagcdn ISO / footylogos slug entry. See scripts/lib/art.mjs.
+import {COUNTRY_ISO, CLUB_SLUG} from '../../../../scripts/lib/art-sources';
+
+/** Every dataset country must have a flag either bundled here or fetchable OTA. */
+const hasFlagSource = (country: string): boolean =>
+  FLAG_IMAGES[country] !== undefined || COUNTRY_ISO[country] !== undefined;
+
+/** Every club must have a crest either bundled here or (for OTA) an explicit
+ * footylogos slug — the slugify() fallback is unverifiable without a network
+ * fetch, so a not-yet-bundled club needs a real CLUB_SLUG entry. */
+const hasCrestSource = (clubId: string): boolean =>
+  LOGO_IMAGES[clubId] !== undefined || CLUB_SLUG[clubId] !== undefined;
 
 /** Leagues the data is allowed to use — a typo like "seria-a" must fail here. */
 const KNOWN_LEAGUES = new Set([
@@ -170,23 +184,23 @@ describe('club + shape integrity', () => {
 });
 
 describe('every criterion has a real image asset', () => {
-  // Guarantees a new nation/club added in a dataset batch can't ship without
-  // its flag/crest — regenerate with `npm run assets:flags && assets:logos`.
-  it('every nationality + club country has a bundled flag', () => {
+  // Guarantees a new nation/club can't ship without a way to GET its flag/crest
+  // — either bundled here (npm run assets:flags && assets:logos) or, for an
+  // over-the-air add, a flagcdn/footylogos source publish can upload. The
+  // publish script then actually fetches + uploads any not-yet-bundled art.
+  it('every nationality + club country has a flag source (bundled or OTA)', () => {
     const countries = new Set<string>();
     for (const f of all()) for (const n of f.nationality) countries.add(n);
     for (const c of CLUBS) countries.add(c.country);
-    for (const country of countries) {
-      expect(FLAG_IMAGES[country]).toBeDefined();
-    }
+    const missing = [...countries].filter(c => !hasFlagSource(c));
+    expect(missing).toEqual([]);
   });
 
-  it('every club a footballer played for has a bundled crest', () => {
+  it('every club a footballer played for has a crest source (bundled or OTA)', () => {
     const usedClubIds = new Set<string>();
     for (const f of all()) for (const s of f.clubs) usedClubIds.add(s.clubId);
-    for (const clubId of usedClubIds) {
-      expect(LOGO_IMAGES[clubId]).toBeDefined();
-    }
+    const missing = [...usedClubIds].filter(id => !hasCrestSource(id));
+    expect(missing).toEqual([]);
   });
 });
 
@@ -217,17 +231,19 @@ describe('manager integrity', () => {
     }
   });
 
-  it('every manager nationality and national-team spell has a bundled flag', () => {
+  it('every manager nationality and national-team spell has a flag source', () => {
+    const missing: string[] = [];
     for (const manager of MANAGERS) {
       for (const country of manager.nationality) {
-        expect(FLAG_IMAGES[country]).toBeDefined();
+        if (!hasFlagSource(country)) missing.push(`${manager.id}:${country}`);
       }
       for (const spell of manager.spells) {
-        if ('country' in spell && spell.country) {
-          expect(FLAG_IMAGES[spell.country]).toBeDefined();
+        if ('country' in spell && spell.country && !hasFlagSource(spell.country)) {
+          missing.push(`${manager.id}:${spell.country}`);
         }
       }
     }
+    expect(missing).toEqual([]);
   });
 
   it('no manager spell ends before it starts', () => {

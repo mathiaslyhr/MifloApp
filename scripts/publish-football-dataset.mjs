@@ -6,10 +6,11 @@
 //
 // Flow: regenerate the frozen Scout schedule → refuse to publish uncommitted
 // data (the repo must record exactly what went live) → run the data test
-// suites (unique ids, club refs, flag/crest coverage — the hard gate that
-// keeps packs renderable on old binaries) → build one JSON pack (footballers,
-// clubs, managers, trebles, lineups, Scout schedule, Red Card questions +
-// en/da strings) → upload it content-addressed next to a tiny manifest:
+// suites (unique ids, club refs, flag/crest SOURCE coverage) → rasterize +
+// upload any crest/flag/portrait this binary does not bundle so it ships OTA
+// (see remoteArt.ts) → build one JSON pack (footballers, clubs, managers,
+// trebles, lineups, Scout schedule, Red Card questions + en/da strings, plus
+// remoteArt paths) → upload it content-addressed next to a tiny manifest:
 //
 //   game-data/manifest.json                 {version, path, checksum} — cache 60s
 //   game-data/datasets/dataset-<hash>.json  immutable, cached for a year
@@ -19,11 +20,18 @@
 // Clients poll the manifest with If-None-Match (see remote/datasetSync.ts).
 import {execSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-import {writeFileSync} from 'node:fs';
+import {existsSync, readdirSync, readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {tmpdir} from 'node:os';
 import {resolve} from 'node:path';
 import {root} from './_load-football.mjs';
+import {
+  flagIso,
+  logoSlug,
+  rasterizeFlag,
+  rasterizeLogo,
+  rasterizePortrait,
+} from './lib/art.mjs';
 
 const require = createRequire(import.meta.url);
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -177,6 +185,112 @@ for (const lineup of football.FAMOUS_LINEUPS) {
   }
 }
 
+// ---- 4b. Resolve OTA art -----------------------------------------------------
+// Rasterize + queue any crest / flag / portrait this binary does NOT bundle, so
+// a club/nation/portrait added since the last App Store build ships over the air
+// (installed apps load it as a remote {uri} — see remoteArt.ts). Art already
+// bundled here stays the fast, offline path and is NOT re-uploaded.
+const logosDir = resolve(root, 'src/games/hattrick/assets/logos');
+const flagsDir = resolve(root, 'src/games/hattrick/assets/flags');
+const bundledClubIds = new Set(
+  readdirSync(logosDir).filter(f => f.endsWith('.png')).map(f => f.slice(0, -4)),
+);
+const bundledFlagIsos = new Set(
+  readdirSync(flagsDir).filter(f => f.endsWith('.png')).map(f => f.slice(0, -4)),
+);
+
+const remoteArt = {logos: {}, flags: {}, portraits: {}};
+const artUploads = []; // [{path, buffer}]
+const hash8 = buf => createHash('sha256').update(buf).digest('hex').slice(0, 8);
+
+// Every country a flag can render for (players, clubs, managers).
+const referencedCountries = new Set();
+for (const f of football.FOOTBALLERS) for (const n of f.nationality) referencedCountries.add(n);
+for (const c of football.CLUBS) referencedCountries.add(c.country);
+for (const m of football.MANAGERS) {
+  for (const n of m.nationality) referencedCountries.add(n);
+  for (const s of m.spells) if (s.country) referencedCountries.add(s.country);
+}
+
+const isoPath = new Map(); // iso → uploaded path (rasterize each flag once)
+for (const country of [...referencedCountries].sort()) {
+  const iso = flagIso(country);
+  if (!iso) {
+    fail(`no flagcdn ISO for '${country}' — add it to scripts/lib/art-sources.js.`);
+  }
+  if (bundledFlagIsos.has(iso)) {
+    continue; // bundled in this binary — fast path, no OTA needed
+  }
+  if (!isoPath.has(iso)) {
+    try {
+      const png = await rasterizeFlag(iso);
+      const p = `art/flags/${iso}-${hash8(png)}.png`;
+      isoPath.set(iso, p);
+      artUploads.push({path: p, buffer: png});
+      console.log(`  + OTA flag ${country} (${iso}) ${png.length}b`);
+    } catch (e) {
+      fail(`could not fetch OTA flag for '${country}' (${iso}): ${e.message}`);
+    }
+  }
+  remoteArt.flags[country] = isoPath.get(iso);
+}
+
+// validateContentPack requires a crest for EVERY club in the pack.
+for (const club of [...football.CLUBS].sort((a, b) => a.id.localeCompare(b.id))) {
+  if (bundledClubIds.has(club.id)) {
+    continue;
+  }
+  const slug = logoSlug(club);
+  try {
+    const png = await rasterizeLogo(slug);
+    const p = `art/logos/${club.id}-${hash8(png)}.png`;
+    remoteArt.logos[club.id] = p;
+    artUploads.push({path: p, buffer: png});
+    console.log(`  + OTA crest ${club.id} (${slug}) ${png.length}b`);
+  } catch (e) {
+    fail(
+      `could not fetch OTA crest for '${club.id}' (tried "${slug}"): ${e.message}` +
+        ' — add a slug to scripts/lib/art-sources.js.',
+    );
+  }
+}
+
+// Portraits never gate a pack: only what an explicit staging manifest lists
+// ships. scripts/staging/portraits.json = {"<footballerId>": "<png path from repo root>"}.
+const portraitManifest = resolve(root, 'scripts/staging/portraits.json');
+if (existsSync(portraitManifest)) {
+  const entries = JSON.parse(readFileSync(portraitManifest, 'utf8'));
+  for (const [playerId, rel] of Object.entries(entries)) {
+    const file = resolve(root, rel);
+    if (!existsSync(file)) {
+      console.warn(`  warning: staged portrait for '${playerId}' not at ${rel} — skipped.`);
+      continue;
+    }
+    const png = await rasterizePortrait(readFileSync(file));
+    const slug = playerId
+      .normalize('NFD')
+      .replace(/[^a-zA-Z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .toLowerCase();
+    const p = `art/portraits/${slug}-${hash8(png)}.png`;
+    remoteArt.portraits[playerId] = p;
+    artUploads.push({path: p, buffer: png});
+    console.log(`  + OTA portrait ${playerId} ${png.length}b`);
+  }
+}
+
+// Drop empty subsections so a fully-bundled pack stays byte-identical to before
+// (unchanged content hash ⇒ "already live / nothing to publish" still holds).
+for (const key of Object.keys(remoteArt)) {
+  if (Object.keys(remoteArt[key]).length === 0) {
+    delete remoteArt[key];
+  }
+}
+const hasRemoteArt = Object.keys(remoteArt).length > 0;
+if (artUploads.length) {
+  console.log(`OTA art: ${artUploads.length} file(s) not bundled in this binary.`);
+}
+
 // ---- 5. Build the content-addressed pack ------------------------------------
 const sections = {
   footballers: football.FOOTBALLERS,
@@ -202,6 +316,7 @@ const sections = {
     schedule: TEAMSHEET_SCHEDULE,
     poolSignature: TEAMSHEET_POOL_SIGNATURE,
   },
+  ...(hasRemoteArt ? {remoteArt} : {}),
 };
 const version = createHash('sha256')
   .update(JSON.stringify(sections))
@@ -232,6 +347,12 @@ if (DRY_RUN) {
   const out = resolve(tmpdir(), `miflo-dataset-${version}.json`);
   writeFileSync(out, body);
   writeFileSync(resolve(tmpdir(), 'miflo-manifest.json'), manifest);
+  if (artUploads.length) {
+    console.log(`Would upload ${artUploads.length} OTA art file(s):`);
+    for (const a of artUploads) {
+      console.log(`  ${a.path} (${a.buffer.length}b)`);
+    }
+  }
   console.log(`Dry run — wrote ${out} (and miflo-manifest.json). Nothing uploaded.`);
   process.exit(0);
 }
@@ -255,6 +376,21 @@ if (current.ok) {
   if (live?.version === version) {
     console.log(`Version ${version} is already live — nothing to publish.`);
     process.exit(0);
+  }
+}
+
+// Upload OTA art FIRST — the pack references these paths, so they must exist
+// before installed apps fetch the new manifest. Paths are content-hashed, so
+// re-uploading identical bytes is a harmless "already exists".
+for (const {path: artPath, buffer} of artUploads) {
+  console.log(`Uploading ${artPath}…`);
+  const up = await supabase.storage.from(BUCKET).upload(artPath, buffer, {
+    contentType: 'image/png',
+    cacheControl: '31536000',
+    upsert: false,
+  });
+  if (up.error && !/already exists|duplicate/i.test(up.error.message)) {
+    fail(`art upload failed (${artPath}): ${up.error.message}`);
   }
 }
 

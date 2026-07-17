@@ -4,12 +4,25 @@
  * for nations, trophies for honours, etc.). Pure presentation; the matching
  * logic and text labels stay in engine.ts / grid.ts.
  */
+import type {ImageSourcePropType} from 'react-native';
 import type {Criterion} from '../../data/football';
 import {FLAG_IMAGES} from './assets/flags.generated';
 import {LOGO_IMAGES} from './assets/logos.generated';
 import {TROPHY_IMAGES, LEAGUE_TITLE_IMAGES} from './assets/trophies.generated';
 import {CRITERION_IMAGES} from './assets/criteria.generated';
 import {PLAYER_AVATARS} from './assets/playerAvatars';
+import {
+  remoteFlagSource,
+  remoteLogoSource,
+  remotePortraitSource,
+} from './assets/remoteArt';
+
+/**
+ * An <Image> source for a chip: a bundled Metro asset id (number) or, for art
+ * this binary lacks but the content pack ships over the air, a `{uri}`. Null
+ * means fall back to the emoji/text layer.
+ */
+export type ChipImage = ImageSourcePropType | null;
 
 /**
  * Full English country name → flag emoji. Keyed to the exact strings used in
@@ -74,22 +87,28 @@ export function flagOf(country: string | undefined): string | null {
  * anything without a real image.
  */
 
-/** Real flag image (Image source id) for a country, or null. */
-export function flagImage(country: string | undefined): number | null {
-  return country ? FLAG_IMAGES[country] ?? null : null;
+/** Flag image for a country: bundled PNG, else an OTA `{uri}`, else null. */
+export function flagImage(country: string | undefined): ChipImage {
+  if (!country) {
+    return null;
+  }
+  return FLAG_IMAGES[country] ?? remoteFlagSource(country);
 }
 
-/** Real club crest image (Image source id) for a clubId, or null. */
-export function logoImage(clubId: string | undefined): number | null {
-  return clubId ? LOGO_IMAGES[clubId] ?? null : null;
+/** Club crest for a clubId: bundled PNG, else an OTA `{uri}`, else null. */
+export function logoImage(clubId: string | undefined): ChipImage {
+  if (!clubId) {
+    return null;
+  }
+  return LOGO_IMAGES[clubId] ?? remoteLogoSource(clubId);
 }
 
 /**
- * Real bundled image for an axis criterion, or null. Every criterion kind now
- * resolves to a custom vector (flags/crests/trophies plus the criteria set), so
- * a chip is never an emoji — the only fallback is a country without a flag PNG.
+ * Image for an axis criterion: a bundled vector/PNG, an over-the-air `{uri}`
+ * (crests/flags/portraits this binary lacks), or null to fall back to the
+ * emoji/text layer.
  */
-export function criterionImage(c: Criterion): number | null {
+export function criterionImage(c: Criterion): ChipImage {
   switch (c.kind) {
     case 'nationality':
       return flagImage(c.country);
@@ -99,8 +118,14 @@ export function criterionImage(c: Criterion): number | null {
       // Custom vector trophy illustration (assets/trophies).
       return TROPHY_IMAGES[c.honour] ?? null;
     case 'teammate':
-      // Player illustration when supplied, else the generic teammate vector.
-      return PLAYER_AVATARS[c.playerId] ?? CRITERION_IMAGES.teammate ?? null;
+      // Player illustration when supplied (bundled, else OTA), else the generic
+      // teammate vector.
+      return (
+        PLAYER_AVATARS[c.playerId] ??
+        remotePortraitSource(c.playerId) ??
+        CRITERION_IMAGES.teammate ??
+        null
+      );
     case 'tag':
       return CRITERION_IMAGES[c.tag === 'current-stars' ? 'tag-current-stars' : 'tag-notable'] ?? null;
     case 'position':

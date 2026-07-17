@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
   AppState,
-  Image,
   Pressable,
   StyleSheet,
   useWindowDimensions,
@@ -49,6 +48,7 @@ import {
 import {getById, type Criterion} from '../data/football';
 import {generateGrid, criterionShortLabel} from '../games/hattrick/grid';
 import {criterionIcon, criterionImage} from '../games/hattrick/criterionIcon';
+import {ArtIcon} from '../games/hattrick/assets/ArtIcon';
 import {useSearch} from '../games/shared/SearchScreen';
 import {playerSource} from '../games/shared/searchSources';
 import {
@@ -620,15 +620,12 @@ function AxisCell({
         divider === 'left' && styles.divLeft,
         divider === 'top' && styles.divTop,
       ]}>
-      {image != null ? (
-        <Image
-          source={image}
-          resizeMode="contain"
-          style={criterion.kind === 'nationality' ? styles.axisFlag : styles.axisLogo}
-        />
-      ) : emoji ? (
-        <Text style={styles.axisIcon}>{emoji}</Text>
-      ) : null}
+      <ArtIcon
+        image={image}
+        emoji={emoji}
+        imageStyle={criterion.kind === 'nationality' ? styles.axisFlag : styles.axisLogo}
+        emojiStyle={styles.axisIcon}
+      />
       <Text
         align="center"
         numberOfLines={label.includes(' ') ? 2 : 1}

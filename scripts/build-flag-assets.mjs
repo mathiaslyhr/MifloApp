@@ -15,37 +15,10 @@
 // script fails loudly if a used country has no ISO mapping.
 import {mkdirSync, writeFileSync, rmSync} from 'node:fs';
 import {resolve} from 'node:path';
-import sharp from 'sharp';
 import {FOOTBALLERS, CLUBS, root} from './_load-football.mjs';
-
-const FLAG_WIDTH = 120; // ~3x of the ~22–40pt flag chip; height follows aspect.
-
-// Country name (as used in the dataset) → flagcdn code (ISO 3166-1 alpha-2,
-// lowercase; home nations use the gb-* subdivision codes flagcdn supports).
-// Deliberately broad so future dataset batches rarely need a code added.
-const COUNTRY_ISO = {
-  Algeria: 'dz', Angola: 'ao', Argentina: 'ar', Armenia: 'am', Australia: 'au',
-  Austria: 'at', Belarus: 'by', Belgium: 'be', Bolivia: 'bo', 'Bosnia and Herzegovina': 'ba',
-  Brazil: 'br', Bulgaria: 'bg', 'Burkina Faso': 'bf', Cameroon: 'cm', Canada: 'ca',
-  'Cape Verde': 'cv', Chile: 'cl', China: 'cn', Colombia: 'co', 'Costa Rica': 'cr',
-  Croatia: 'hr', Curacao: 'cw', 'Czech Republic': 'cz', 'DR Congo': 'cd',
-  Denmark: 'dk', Ecuador: 'ec', Egypt: 'eg', England: 'gb-eng',
-  'Equatorial Guinea': 'gq', Finland: 'fi', France: 'fr', Gabon: 'ga',
-  Gambia: 'gm', Georgia: 'ge', Germany: 'de', Ghana: 'gh', Greece: 'gr', Guinea: 'gn',
-  Honduras: 'hn', Hungary: 'hu', Iceland: 'is', 'Ivory Coast': 'ci', Iran: 'ir',
-  Iraq: 'iq', Ireland: 'ie', Israel: 'il', Italy: 'it', Jamaica: 'jm',
-  Japan: 'jp', Jordan: 'jo', Kosovo: 'xk', Liberia: 'lr', Mali: 'ml', Mexico: 'mx',
-  Montenegro: 'me', Morocco: 'ma', Mozambique: 'mz', Netherlands: 'nl', 'New Zealand': 'nz',
-  Nigeria: 'ng', 'North Macedonia': 'mk', 'Northern Ireland': 'gb-nir',
-  Norway: 'no', Panama: 'pa', Paraguay: 'py', Peru: 'pe', Poland: 'pl',
-  Portugal: 'pt', Qatar: 'qa', Romania: 'ro', Russia: 'ru', 'Saudi Arabia': 'sa',
-  Scotland: 'gb-sct', Senegal: 'sn', Serbia: 'rs', Slovakia: 'sk',
-  Slovenia: 'si', 'South Africa': 'za', 'South Korea': 'kr', Spain: 'es',
-  Sweden: 'se', Switzerland: 'ch', Togo: 'tg', 'Trinidad and Tobago': 'tt',
-  Tunisia: 'tn', Turkey: 'tr', Ukraine: 'ua', 'United Arab Emirates': 'ae',
-  Uruguay: 'uy', USA: 'us', Uzbekistan: 'uz', Venezuela: 've', Wales: 'gb-wls',
-  Uganda: 'ug', Zambia: 'zm', Zimbabwe: 'zw',
-};
+import art from './lib/art-sources.js';
+import {rasterizeFlag} from './lib/art.mjs';
+const {COUNTRY_ISO} = art;
 
 // Every distinct country the dataset actually uses.
 const used = new Set();
@@ -62,13 +35,6 @@ if (missing.length) {
   process.exit(1);
 }
 
-async function fetchSvg(iso) {
-  const url = `https://flagcdn.com/${iso}.svg`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`${url} → HTTP ${res.status}`);
-  return Buffer.from(await res.arrayBuffer());
-}
-
 async function main() {
   const dir = resolve(root, 'src/games/hattrick/assets');
   const imgDir = resolve(dir, 'flags');
@@ -78,11 +44,7 @@ async function main() {
   const entries = [];
   for (const country of countries) {
     const iso = COUNTRY_ISO[country];
-    const svg = await fetchSvg(iso);
-    const png = await sharp(svg, {density: 300})
-      .resize({width: FLAG_WIDTH})
-      .png({compressionLevel: 9})
-      .toBuffer();
+    const png = await rasterizeFlag(iso);
     writeFileSync(resolve(imgDir, `${iso}.png`), png);
     entries.push([country, iso]);
     console.log(`  ✓ ${country} (${iso}) ${png.length}b`);

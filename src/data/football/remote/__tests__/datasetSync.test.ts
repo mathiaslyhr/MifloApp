@@ -116,6 +116,34 @@ describe('validateContentPack', () => {
     expect(validateContentPack(packWithClub)).not.toBeNull();
   });
 
+  it('accepts art the binary lacks when the pack carries a remote URL for it', () => {
+    const pack = JSON.parse(serialize(testPack()).body);
+    const atlantean = {
+      ...pack.footballers[0],
+      id: 'Atlantis, Player',
+      nationality: ['Atlantis'],
+      clubs: [{clubId: 'no-crest-fc'}],
+    };
+    pack.footballers = [...pack.footballers, atlantean];
+    pack.clubs = [
+      ...pack.clubs,
+      {id: 'no-crest-fc', name: 'Atlantis FC', country: 'Atlantis', league: 'premier-league'},
+    ];
+    // Without remoteArt: rejected (would render blank).
+    expect(validateContentPack(pack)).not.toBeNull();
+    // With remoteArt covering both the crest and the flag: accepted.
+    pack.remoteArt = {
+      logos: {'no-crest-fc': 'art/logos/no-crest-fc-abc123.png'},
+      flags: {Atlantis: 'art/flags/atlantis-def456.png'},
+    };
+    expect(validateContentPack(pack)).toBeNull();
+  });
+
+  it('rejects a malformed remoteArt section', () => {
+    const pack = JSON.parse(serialize(testPack()).body);
+    expect(validateContentPack({...pack, remoteArt: 'nope'})).not.toBeNull();
+  });
+
   it('rejects unknown club refs, schedule ids, and uncovered question ids', () => {
     const base = () => JSON.parse(serialize(testPack()).body);
 
