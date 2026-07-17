@@ -1931,6 +1931,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Bakker, Mitchel',
+    name: 'Mitchel Bakker',
+    nationality: ['Netherlands'],
+    positions: ['DF'],
+    born: '2000-06-20',
+    clubs: [
+      {clubId: 'ajax', from: 2018, to: 2019},
+      {clubId: 'psg', from: 2019, to: 2021},
+      {clubId: 'leverkusen', from: 2021, to: 2023},
+      {clubId: 'atalanta', from: 2023},
+      {clubId: 'lille', from: 2024, to: 2025, loan: true},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2019], clubId: 'ajax'},
+      {type: 'domestic-cup', count: 1, years: [2020], clubId: 'psg'},
+      {type: 'league-title', count: 1, years: [2020]},
+      {type: 'europa-league', count: 1, years: [2024]},
+    ],
+  },
+  {
     id: 'Balde, Alejandro',
     name: 'Alejandro Balde',
     nationality: ['Spain'],
@@ -3192,6 +3212,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 1, years: [1993]},
       {type: 'domestic-cup', count: 3, years: [1991, 1994, 1999]},
     ],
+  },
+  {
+    id: 'Boey, Sacha',
+    name: 'Sacha Boey',
+    nationality: ['France'],
+    positions: ['DF'],
+    born: '2000-09-13',
+    clubs: [
+      {clubId: 'rennes', from: 2019, to: 2021},
+      {clubId: 'galatasaray', from: 2021, to: 2024},
+      {clubId: 'bayern', from: 2024},
+      {clubId: 'galatasaray', from: 2026, to: 2026, loan: true},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2023, 2025]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Bogarde, Winston',
