@@ -23,18 +23,14 @@ import {
   Footprints,
   MapPin,
   Medal,
-  Route,
   Shirt,
-  SignalHigh,
-  SignalLow,
-  SignalMedium,
   Trophy,
   Volleyball,
   type LucideIcon,
 } from 'lucide-react-native';
 import {fonts, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {DailyGame} from './dailyLog';
-import {dateKeyFor, dailyScoutFameTier} from '../../games/scout/dailySeed';
+import {dateKeyFor} from '../../games/scout/dailySeed';
 import {dailyLineupKitFor, dailyLineupTeamFor} from '../../games/teamsheet/dailySeed';
 import {teamArt} from '../../games/teamsheet/teamArt';
 import {dailyListFor} from '../../games/tenball/dailyList';
@@ -43,8 +39,6 @@ import {dailyJourneymanClubCountFor} from '../../games/journeyman/dailySeed';
 
 /** Badge diameter — a touch bigger than a bare line icon so it reads as a token. */
 const SIZE = 26;
-
-const FAME_ICON = {low: SignalLow, mid: SignalMedium, high: SignalHigh} as const;
 
 const METRIC_ICON: Record<TenballMetric, LucideIcon> = {
   goals: Volleyball, // the ball, matching Team sheet's goal clue
@@ -62,8 +56,12 @@ export function DailyLeadArt({game}: {game: DailyGame}): React.JSX.Element {
   const dateKey = dateKeyFor(new Date());
 
   if (game === 'scout') {
-    const Icon = FAME_ICON[dailyScoutFameTier(dateKey)];
-    return <Badge Icon={Icon} styles={styles} color={colors.textSecondary} />;
+    // Pure deduction — nothing is free to show, so a clean "unknown player" mark.
+    return (
+      <View style={styles.badge}>
+        <Text style={styles.mystery}>?</Text>
+      </View>
+    );
   }
 
   if (game === 'teamsheet') {
@@ -84,11 +82,10 @@ export function DailyLeadArt({game}: {game: DailyGame}): React.JSX.Element {
     return <Badge Icon={Icon} styles={styles} color={colors.textSecondary} />;
   }
 
-  // journeyman → the number of clubs today's career spans.
+  // journeyman → the number of clubs today's career spans, as the token itself.
   return (
     <View style={styles.badge}>
       <Text style={styles.count}>{dailyJourneymanClubCountFor(dateKey)}</Text>
-      <Route size={9} color={colors.textTertiary} strokeWidth={2} style={styles.countGlyph} />
     </View>
   );
 }
@@ -145,16 +142,21 @@ const makeStyles = (c: Palette) =>
       justifyContent: 'center',
       overflow: 'hidden',
     },
-    // Journeyman: the club count reads as the token; a tiny route glyph under it
-    // says "journey", not "rank".
+    // Journeyman: the club count IS the token — clean numeral, nothing else.
     count: {
       fontFamily: fonts.medium,
-      fontSize: 13,
-      lineHeight: 15,
+      fontSize: 15,
+      lineHeight: 17,
       color: c.ink,
       fontVariant: ['tabular-nums'],
     },
-    countGlyph: {marginTop: -1},
+    // Scout: an "unknown player" mark, dimmer than Journeyman's real count.
+    mystery: {
+      fontFamily: fonts.medium,
+      fontSize: 15,
+      lineHeight: 17,
+      color: c.textSecondary,
+    },
     // Crest: contained in a rounded-square token (crests carry their own
     // transparent padding); flag: cover-cropped into a round nation roundel.
     crest: {

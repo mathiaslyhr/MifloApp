@@ -6,7 +6,6 @@
  * always yields the same secret and the tests can assert stability.
  */
 import {FOOTBALLERS, getById, getClub, shuffle, type Footballer, type Rng} from '../../data/football';
-import {famePrior} from '../cult-hero/famePrior';
 import {DAILY_SECRETS} from './schedule.generated';
 
 /** Epoch for the daily sequence: cycle 0, index 0 falls on this day. */
@@ -122,28 +121,6 @@ export function dailySecretFor(dateKey: string): Footballer {
     }
   }
   return secretFor(dateKey, dailyPool());
-}
-
-/** Renown of today's mystery, within the (active-only) pool. */
-export type ScoutFameTier = 'low' | 'mid' | 'high';
-
-/**
- * How big a name today's mystery is — a renown tier by the app's fame prior.
- * It touches none of Scout's five columns (nationality/position/club/league/
- * age), so it hints difficulty without giving anything away. Terciles of the
- * live pool, so the tiers self-adjust as the dataset grows.
- */
-export function dailyScoutFameTier(dateKey: string): ScoutFameTier {
-  const scores = dailyPool()
-    .map(famePrior)
-    .sort((a, b) => a - b);
-  const lo = scores[Math.floor(scores.length / 3)];
-  const hi = scores[Math.floor((2 * scores.length) / 3)];
-  const me = famePrior(dailySecretFor(dateKey));
-  if (me >= hi) {
-    return 'high';
-  }
-  return me >= lo ? 'mid' : 'low';
 }
 
 /**
