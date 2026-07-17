@@ -41,7 +41,6 @@ import {
   applyMove,
   boardNumberOf,
   cellCriteria,
-  MATCH_BOARDS,
   matchScores,
   passTurn,
   sideOfUser,
@@ -750,24 +749,59 @@ function TurnTimer({deadline, nowTs}: {deadline: number; nowTs: number}) {
   );
 }
 
-/** The match scoreline ("Mathias 2 – Test 1") + the board count, always in
- * view above the board — colored per side, tallies in tabular figures.
+/** The match scoreline + the board count, always in view above the board.
  *
- * The score is the point of this strip, so it is the one thing that never
- * yields: each side is a shrinkable name beside a fixed number, and two long
- * names simply truncate towards the middle. Names arrive from profiles and run
- * to 20 characters, which is wider than any phone can hold twice over. */
+ * The score is the point of this strip, so it never yields to a name: in the
+ * 1v1 case (every online/local friendly) it sits on its own centered row, so a
+ * long profile name can never shove it off-centre, with the two names smaller
+ * on the row below — each owning half the width and truncating into it. Names
+ * arrive from profiles and run to 20 characters. Teams / >2 sides fall back to
+ * the compact inline "name value" per side. */
 function ScoreStrip({state}: {state: GridState}) {
   const {t} = useTranslation();
   const styles = useThemedStyles(makeStyles);
   const scores = matchScores(state);
+  const boardLabel = (
+    <Text variant="caption" color="tertiary" align="center">
+      {t('hattrick.board', {n: boardNumberOf(state)})}
+    </Text>
+  );
+
+  if (state.sides.length === 2) {
+    const [a, b] = state.sides;
+    return (
+      <View style={styles.scoreStrip} accessibilityRole="text">
+        <View style={styles.scoreRow}>
+          <Text variant="wordmark" style={[styles.scoreValue, {color: a.color}]}>
+            {scores[a.id] ?? 0}
+          </Text>
+          <Text variant="wordmark" color="tertiary" style={styles.scoreDash}>
+            –
+          </Text>
+          <Text variant="wordmark" style={[styles.scoreValue, {color: b.color}]}>
+            {scores[b.id] ?? 0}
+          </Text>
+        </View>
+        <View style={styles.nameRow}>
+          <Text numberOfLines={1} style={[styles.nameLeft, {color: a.color}]}>
+            {a.name}
+          </Text>
+          <Text numberOfLines={1} style={[styles.nameRight, {color: b.color}]}>
+            {b.name}
+          </Text>
+        </View>
+        {boardLabel}
+      </View>
+    );
+  }
+
   return (
     <View style={styles.scoreStrip} accessibilityRole="text">
-      <View style={styles.scoreRow}>
+      <View style={styles.scoreRowInline}>
         {state.sides.map((s, i) => (
           <React.Fragment key={s.id}>
             {i > 0 ? (
-              <Text variant="section" color="tertiary" style={styles.scoreDash}>
+              <Text variant="section" color="tertiary" style={styles.scoreDashInline}>
                 –
               </Text>
             ) : null}
@@ -778,16 +812,14 @@ function ScoreStrip({state}: {state: GridState}) {
                 style={[styles.scoreName, {color: s.color}]}>
                 {s.name}
               </Text>
-              <Text variant="section" style={[styles.scoreValue, {color: s.color}]}>
+              <Text variant="section" style={[styles.scoreValueInline, {color: s.color}]}>
                 {scores[s.id] ?? 0}
               </Text>
             </View>
           </React.Fragment>
         ))}
       </View>
-      <Text variant="caption" color="tertiary" align="center">
-        {t('hattrick.board', {n: boardNumberOf(state), total: MATCH_BOARDS})}
-      </Text>
+      {boardLabel}
     </View>
   );
 }
@@ -939,22 +971,36 @@ const makeStyles = (c: Palette) =>
   title: {flex: 1},
   center: {flex: 1, justifyContent: 'center'},
   // Match scoreline + board count, sitting quietly above the turn line.
-  scoreStrip: {alignItems: 'center', gap: 2, paddingTop: spacing.sm},
-  // Stretched, not content-sized: a shrinkable child can only shrink inside a
-  // bounded parent, and `maxWidth: '100%'` alone let the row spill instead.
-  scoreRow: {
+  scoreStrip: {alignItems: 'center', gap: 2, paddingTop: spacing.sm, alignSelf: 'stretch'},
+  // 1v1: the score on its own centered row — symmetric, so it lands on true
+  // screen centre no matter how long either name is.
+  scoreRow: {flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center'},
+  scoreValue: {fontVariant: ['tabular-nums']},
+  scoreDash: {marginHorizontal: spacing.sm},
+  // 1v1: the two names below, each owning half the width and truncating into
+  // the middle, so the strip stays balanced around the score above it.
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    alignSelf: 'stretch',
+    paddingHorizontal: spacing.lg,
+  },
+  nameLeft: {flex: 1, textAlign: 'right', paddingRight: spacing.sm, fontSize: 15, lineHeight: 20},
+  nameRight: {flex: 1, textAlign: 'left', paddingLeft: spacing.sm, fontSize: 15, lineHeight: 20},
+  // Teams / >2 sides: the compact inline "name value" per side. Both sides
+  // shrink together so two long names give way rather than losing a score off
+  // the edge of the screen.
+  scoreRowInline: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
     paddingHorizontal: spacing.lg,
   },
-  // Both sides shrink, so two long names give way together rather than the
-  // second one losing its score off the edge of the screen.
   scoreSide: {flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1},
   scoreName: {flexShrink: 1},
-  scoreValue: {flexShrink: 0, fontVariant: ['tabular-nums']},
-  scoreDash: {flexShrink: 0, marginHorizontal: spacing.md},
+  scoreValueInline: {flexShrink: 0, fontVariant: ['tabular-nums']},
+  scoreDashInline: {flexShrink: 0, marginHorizontal: spacing.md},
   turnRow: {paddingVertical: spacing.lg, alignItems: 'center'},
   topRow: {flexDirection: 'row', alignSelf: 'center', marginBottom: LABEL_GAP},
   bottomRow: {flexDirection: 'row', alignSelf: 'center'},

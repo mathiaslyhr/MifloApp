@@ -627,7 +627,7 @@
     "tie": "It's a tie!",
     "wonMatch": "{{name}} won the match",
     "matchDrawn": "Match drawn",
-    "board": "Board {{n}} of {{total}}",
+    "board": "Board {{n}}",
     "nextBoard": "Next board",
     "beatGoal": "GOAL! {{name}}",
     "beatGoalYou": "GOAL! You",

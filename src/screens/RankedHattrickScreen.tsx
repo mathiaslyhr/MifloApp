@@ -434,35 +434,40 @@ export function RankedHattrickScreen({route, navigation}: Props) {
           </View>
         ) : (
           <>
-            {/* Clocks + scoreline */}
-            <View style={styles.clocks}>
-              <ClockChip
-                name={me?.name ?? t('rankedHattrick.you')}
-                color={me?.color ?? colors.primary}
-                ms={me ? liveRemaining(state, me.userId, Date.now()) : 0}
-                active={!!me && state.turnUserId === me.userId && !finished}
-                out={!!(me && state.clocks[me.userId]?.out)}
-              />
-              <View style={styles.scoreWrap}>
-                <Text style={styles.score}>
+            {/* Scoreline on its own centered row, the two clocks beneath it —
+                score can't be pushed off-centre by a long name. */}
+            <View style={styles.scoreHeader}>
+              <View style={styles.scoreRow}>
+                <Text style={[styles.scoreNum, {color: me?.color ?? colors.primary}]}>
                   {me ? state.scores[me.userId] ?? 0 : 0}
-                  {'  '}–{'  '}
+                </Text>
+                <Text style={[styles.scoreNum, styles.scoreDash]}>–</Text>
+                <Text style={[styles.scoreNum, {color: opponent?.color ?? colors.error}]}>
                   {opponent ? state.scores[opponent.userId] ?? 0 : 0}
                 </Text>
-                <Text variant="caption" color="muted">
-                  {t('rankedHattrick.board', {n: state.boardNumber, of: MATCH_BOARDS})}
-                </Text>
               </View>
-              <ClockChip
-                name={opponent?.name ?? '—'}
-                color={opponent?.color ?? colors.error}
-                ms={opponent ? liveRemaining(state, opponent.userId, Date.now()) : 0}
-                active={!!opponent && state.turnUserId === opponent.userId && !finished}
-                out={!!(opponent && state.clocks[opponent.userId]?.out)}
-                left={!!(opponent && (state.blurs?.[opponent.userId] ?? 0) > 0)}
-                leftLabel={t('rankedHattrick.leftAppShort')}
-                align="right"
-              />
+              <View style={styles.clocksRow}>
+                <ClockChip
+                  name={me?.name ?? t('rankedHattrick.you')}
+                  color={me?.color ?? colors.primary}
+                  ms={me ? liveRemaining(state, me.userId, Date.now()) : 0}
+                  active={!!me && state.turnUserId === me.userId && !finished}
+                  out={!!(me && state.clocks[me.userId]?.out)}
+                />
+                <ClockChip
+                  name={opponent?.name ?? '—'}
+                  color={opponent?.color ?? colors.error}
+                  ms={opponent ? liveRemaining(state, opponent.userId, Date.now()) : 0}
+                  active={!!opponent && state.turnUserId === opponent.userId && !finished}
+                  out={!!(opponent && state.clocks[opponent.userId]?.out)}
+                  left={!!(opponent && (state.blurs?.[opponent.userId] ?? 0) > 0)}
+                  leftLabel={t('rankedHattrick.leftAppShort')}
+                  align="right"
+                />
+              </View>
+              <Text variant="caption" color="muted" align="center" style={styles.boardCaption}>
+                {t('rankedHattrick.board', {n: state.boardNumber, of: MATCH_BOARDS})}
+              </Text>
             </View>
 
             {!finished ? (
@@ -735,12 +740,21 @@ const makeStyles = (c: Palette) =>
     center: {flex: 1, alignItems: 'center', justifyContent: 'center'},
     chromeBar: {paddingHorizontal: screenPadding},
     chromeRow: {flexDirection: 'row', alignItems: 'center', height: 44, marginTop: spacing.sm},
-    clocks: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: screenPadding,
+    scoreHeader: {paddingHorizontal: screenPadding, gap: spacing.xs},
+    scoreRow: {flexDirection: 'row', alignItems: 'baseline', justifyContent: 'center'},
+    scoreNum: {
+      fontFamily: fonts.medium,
+      fontSize: 24,
+      lineHeight: 30,
+      fontVariant: ['tabular-nums'],
     },
+    scoreDash: {color: c.textTertiary, marginHorizontal: spacing.sm},
+    clocksRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+    },
+    boardCaption: {marginTop: 2},
     clockChip: {flex: 1, gap: 2},
     clockRight: {alignItems: 'flex-end'},
     clockName: {flexDirection: 'row', alignItems: 'center', gap: 6},
@@ -754,14 +768,6 @@ const makeStyles = (c: Palette) =>
     },
     clockOut: {color: c.error},
     leftApp: {color: c.error, fontSize: 11, lineHeight: 14},
-    scoreWrap: {alignItems: 'center', gap: 2, paddingHorizontal: spacing.md},
-    score: {
-      fontFamily: fonts.medium,
-      fontSize: 26,
-      lineHeight: 30,
-      color: c.ink,
-      fontVariant: ['tabular-nums'],
-    },
     turnBanner: {marginTop: spacing.md},
     // Board (ported from HattrickGameView).
     boardArea: {marginTop: spacing.md},

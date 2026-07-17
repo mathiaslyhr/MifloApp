@@ -627,7 +627,7 @@
     "tie": "Det er uafgjort!",
     "wonMatch": "{{name}} vandt kampen",
     "matchDrawn": "Kampen endte uafgjort",
-    "board": "Bræt {{n}} af {{total}}",
+    "board": "Bræt {{n}}",
     "nextBoard": "Næste bræt",
     "beatGoal": "MÅL! {{name}}",
     "beatGoalYou": "MÅL! Dig",

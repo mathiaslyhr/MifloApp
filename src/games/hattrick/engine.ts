@@ -23,9 +23,6 @@ export const PALETTE = [
 export const TURN_SECONDS = 120;
 const TURN_MS = TURN_SECONDS * 1000;
 
-/** Boards per match: whoever leads after the last board wins the match. */
-export const MATCH_BOARDS = 5;
-
 /** The match scoreline, with every side present (0 for pre-match states). */
 export function matchScores(state: GridState): Record<string, number> {
   const scores: Record<string, number> = {};
@@ -44,28 +41,12 @@ function nextBeat(state: GridState, beat: Omit<Beat, 'seq'>): Beat {
   return {...beat, seq: (state.beat?.seq ?? 0) + 1};
 }
 
-/** The leading sideId, or 'draw' when the top score is shared. */
-function decideMatch(scores: Record<string, number>): string | 'draw' {
-  let leader: string | 'draw' = 'draw';
-  let best = -1;
-  let shared = false;
-  for (const [id, score] of Object.entries(scores)) {
-    if (score > best) {
-      leader = id;
-      best = score;
-      shared = false;
-    } else if (score === best) {
-      shared = true;
-    }
-  }
-  return shared ? 'draw' : leader;
-}
-
 /**
- * Settle a finished board into match terms: bump the scorer's goal tally, and
- * on the final board decide the match. Returns the fields to merge plus the
- * commentary beat for the moment (null for a mid-match board tie — the
- * existing tie presentation carries that).
+ * Settle a finished board into match terms: bump the scorer's goal tally and
+ * pick the commentary beat for the moment. Friendlies are open-ended — the
+ * match is never auto-decided, so the running tally just climbs board after
+ * board until the players stop. `matchWinner` therefore stays null here (the
+ * field survives only so a stale cross-version state still renders sanely).
  */
 function settleBoard(
   state: GridState,
@@ -74,17 +55,6 @@ function settleBoard(
   const scores = matchScores(state);
   if (boardWinner !== 'tie') {
     scores[boardWinner] = (scores[boardWinner] ?? 0) + 1;
-  }
-  if (boardNumberOf(state) >= MATCH_BOARDS) {
-    const matchWinner = decideMatch(scores);
-    return {
-      scores,
-      matchWinner,
-      beat:
-        matchWinner === 'draw'
-          ? nextBeat(state, {kind: 'draw'})
-          : nextBeat(state, {kind: 'winner', sideId: matchWinner}),
-    };
   }
   if (boardWinner === 'tie') {
     return {scores, matchWinner: null, beat: state.beat ?? null};

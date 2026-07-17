@@ -47,11 +47,12 @@ export type GridState = {
    * states written before matches existed — read via `matchScores()`.
    */
   scores?: Record<string, number>;
-  /** 1-based board number within the match (a match = MATCH_BOARDS boards). */
+  /** 1-based board number. Friendlies are open-ended — it just keeps climbing. */
   boardNumber?: number;
   /**
-   * The decided match: the leading sideId after the final board, or 'draw'
-   * when the scores are level. Null/absent while boards remain.
+   * Legacy: a decided best-of-N match winner. Friendlies no longer set this
+   * (they play open-ended); kept only so a stale cross-version state that still
+   * carries it renders sanely.
    */
   matchWinner?: string | 'draw' | null;
   /**

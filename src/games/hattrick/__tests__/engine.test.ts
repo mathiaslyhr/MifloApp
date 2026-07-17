@@ -3,7 +3,6 @@ import {
   applyMove,
   createNextBoardState,
   createRematchState,
-  MATCH_BOARDS,
   matchScores,
   passTurn,
   proposeTie,
@@ -182,32 +181,34 @@ describe('match scores + commentary beats', () => {
     expect(s.beat?.sideId).toBe('A');
   });
 
-  it('the final board decides the match for the leader (WINNER)', () => {
+  it('never crowns a match winner — friendlies are open-ended', () => {
+    // A board win at a high board number is still just a GOAL, not a WINNER:
+    // the tally climbs and the match keeps going.
     const s = winBoard(
-      twoPlayerState({scores: {A: 1, B: 1}, boardNumber: MATCH_BOARDS}),
+      twoPlayerState({scores: {A: 1, B: 1}, boardNumber: 5}),
     );
     expect(matchScores(s)).toEqual({A: 2, B: 1});
-    expect(s.matchWinner).toBe('A');
-    expect(s.beat?.kind).toBe('winner');
+    expect(s.matchWinner ?? null).toBeNull();
+    expect(s.beat?.kind).toBe('goal');
     expect(s.beat?.sideId).toBe('A');
   });
 
-  it('level scores after the final board is a DRAW', () => {
+  it('a levelling goal at any board number is a LEVEL, never a DRAW-decided match', () => {
     const s = winBoard(
-      twoPlayerState({scores: {A: 0, B: 1}, boardNumber: MATCH_BOARDS}),
+      twoPlayerState({scores: {A: 0, B: 1}, boardNumber: 5}),
     );
     expect(matchScores(s)).toEqual({A: 1, B: 1});
-    expect(s.matchWinner).toBe('draw');
-    expect(s.beat?.kind).toBe('draw');
+    expect(s.matchWinner ?? null).toBeNull();
+    expect(s.beat?.kind).toBe('level');
   });
 
-  it('an agreed tie on the final board also decides the match', () => {
-    let s = twoPlayerState({scores: {A: 2, B: 0}, boardNumber: MATCH_BOARDS});
+  it('an agreed tie at any board number settles the board, never the match', () => {
+    let s = twoPlayerState({scores: {A: 2, B: 0}, boardNumber: 5});
     s = proposeTie(s, 'A');
     s = respondTie(s, 'B', true);
     expect(s.winner).toBe('tie');
-    expect(s.matchWinner).toBe('A');
-    expect(s.beat?.kind).toBe('winner');
+    expect(s.matchWinner ?? null).toBeNull();
+    expect(matchScores(s)).toEqual({A: 2, B: 0});
   });
 
   it('a mid-match board tie scores nobody and stays quiet', () => {
@@ -229,7 +230,7 @@ describe('match scores + commentary beats', () => {
     expect(skipped.beat).toEqual(timedOut.beat);
   });
 
-  it('the next board carries the scoreline and beat seq; a rematch resets', () => {
+  it('the next board carries the scoreline and beat seq; advanceBoard always advances', () => {
     const done = winBoard(twoPlayerState({scores: {A: 0, B: 2}, boardNumber: 3}));
     const next = createNextBoardState(done);
     expect(matchScores(next)).toEqual({A: 1, B: 2});
@@ -238,15 +239,11 @@ describe('match scores + commentary beats', () => {
     // The finished board's beat rides along unchanged — clients de-dupe on seq.
     expect(next.beat).toEqual(done.beat);
 
-    // advanceBoard: mid-match → next board; decided match → fresh match.
-    expect(advanceBoard(done).boardNumber).toBe(4);
-    const decided = winBoard(
-      twoPlayerState({scores: {A: 2, B: 2}, boardNumber: MATCH_BOARDS}),
-    );
-    const fresh = advanceBoard(decided);
-    expect(matchScores(fresh)).toEqual({A: 0, B: 0});
-    expect(fresh.boardNumber).toBe(1);
-    expect(fresh.matchWinner ?? null).toBeNull();
+    // Open-ended: advanceBoard always moves to the next board, carrying the
+    // tally — there is no match end to reset to.
+    const advanced = advanceBoard(done);
+    expect(advanced.boardNumber).toBe(4);
+    expect(matchScores(advanced)).toEqual({A: 1, B: 2});
   });
 });
 
