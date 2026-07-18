@@ -5,7 +5,8 @@
  * PRNG -> index into the fairness-filtered pool. All pure, so the same day
  * always yields the same secret and the tests can assert stability.
  */
-import {FOOTBALLERS, getById, getClub, shuffle, type Footballer, type Rng} from '../../data/football';
+import {FOOTBALLERS, getById, leaguesOf, shuffle, type Footballer, type Rng} from '../../data/football';
+import {famePrior} from '../cult-hero/famePrior';
 import {DAILY_SECRETS} from './schedule.generated';
 
 /** Epoch for the daily sequence: cycle 0, index 0 falls on this day. */
@@ -19,6 +20,14 @@ const TOP5_LEAGUES = new Set([
   'bundesliga',
   'ligue-1',
 ]);
+
+/**
+ * Notability floor (a `famePrior` score) a **rest-of-world** player must clear
+ * to be a daily answer. Top-5-league careers are recognizable by default; a
+ * player with no top-5 pedigree needs real editorial fame to qualify, so an
+ * obscure honour-holder like a Scottish-only cup winner is never the secret.
+ */
+const SCOUT_FAME_FLOOR = 10;
 
 /** Local calendar day as `YYYY-MM-DD`. The single source of the daily boundary. */
 export function dateKeyFor(date: Date): string {
@@ -76,9 +85,18 @@ export function seededRng(seed: number): Rng {
  * The candidate players for the daily secret: **active + recognizable** only.
  * Active = tagged `current-stars`, or a still-open club spell (catches active
  * "legends" like Messi/Ronaldo); **retired** legends (last spell has an end
- * year) are excluded. Recognizable = has an honour, currently plays a top-5
- * league, or is hand-vetted (`wordle`). Everyone stays guessable — only the
- * *answer* is gated. Pure and deterministic (dataset order preserved).
+ * year) are excluded.
+ *
+ * Recognizable is a notability *step*, not "has any honour" (which let obscure
+ * small-league cup winners through and made Palma-in-Scotland an answer):
+ *   - `wordle` tag  → hand-vetted, always in (force-include a name the fame
+ *                     score can't see, e.g. a beloved rest-of-world legend);
+ *   - top-5-league career exposure → recognizable by default (keeps every
+ *     Premier League / La Liga / … player, honours or not);
+ *   - otherwise (rest of the world) → only if `famePrior >= SCOUT_FAME_FLOOR`.
+ *
+ * Everyone stays guessable — only the *answer* is gated. Pure and
+ * deterministic (dataset order preserved).
  */
 export function dailyPool(pool: readonly Footballer[] = FOOTBALLERS): Footballer[] {
   return pool.filter(f => {
@@ -88,12 +106,13 @@ export function dailyPool(pool: readonly Footballer[] = FOOTBALLERS): Footballer
     if (!active) {
       return false;
     }
-    if (f.honours.length > 0 || tags.includes('wordle')) {
+    if (tags.includes('wordle')) {
       return true;
     }
-    const current = f.clubs.find(s => s.to === undefined) ?? last;
-    const league = current ? getClub(current.clubId)?.league : undefined;
-    return league ? TOP5_LEAGUES.has(league) : false;
+    if (leaguesOf(f).some(l => TOP5_LEAGUES.has(l))) {
+      return true;
+    }
+    return famePrior(f) >= SCOUT_FAME_FLOOR;
   });
 }
 

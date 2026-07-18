@@ -46,16 +46,21 @@ describe('dailyPool', () => {
     expect(dailyPool().map(f => f.id)).toEqual(pool.map(f => f.id));
   });
 
-  it('includes decorated stars and excludes a low-signal player', () => {
+  it('gates rest-of-world answers by notability, not honours', () => {
     const ids = new Set(dailyPool().map(f => f.id));
     // Honour-laden global stars are always in.
     expect(ids.has('Messi, Lionel')).toBe(true);
     expect(ids.has('Ronaldo, Cristiano')).toBe(true);
-    // Abraham: current-star tag but no honours and a non-top-5 current club
-    // (Beşiktaş) → filtered out as too obscure for a fair daily secret.
+    // Top-5-league career = recognizable by default, honours or not: Abraham
+    // (Chelsea/Roma) has zero honours yet is a fair, known secret.
     const abraham = getById('Abraham, Tammy');
     expect(abraham?.honours).toHaveLength(0);
-    expect(ids.has('Abraham, Tammy')).toBe(false);
+    expect(ids.has('Abraham, Tammy')).toBe(true);
+    // Rest of the world without top-5 pedigree needs real fame: Palma has
+    // Scottish honours but no top-5 career and a fame prior below the floor,
+    // so he is too obscure to be the daily secret.
+    expect(getById('Palma, Luis')?.honours.length).toBeGreaterThan(0);
+    expect(ids.has('Palma, Luis')).toBe(false);
   });
 });
 
