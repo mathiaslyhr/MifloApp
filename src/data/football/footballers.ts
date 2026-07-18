@@ -19542,7 +19542,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'lyon', from: 2010, to: 2014},
       {clubId: 'nice', from: 2014, to: 2018},
-      {clubId: 'monchengladbach', from: 2018},
+      {clubId: 'monchengladbach', from: 2018, to: 2025},
+      {clubId: 'psv', from: 2025},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2012], clubId: 'lyon'},
