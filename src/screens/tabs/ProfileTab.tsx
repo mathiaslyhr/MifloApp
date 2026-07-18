@@ -23,7 +23,7 @@
  * (see `closed` below), so a live puzzle can never spoil itself.
  */
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ActionSheetIOS, StyleSheet, View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -50,6 +50,7 @@ import {flushOutbox} from '../../core/social/outbox';
 import {refreshFriendRequests} from '../../core/social/requestsStore';
 import {
   avatarUrlFor,
+  clearAvatar,
   fetchFriends,
   fetchMyProfile,
   getCachedProfile,
@@ -282,6 +283,60 @@ export function ProfileTab({isActive = true, addCode}: Props) {
   }
 
   /**
+   * Tap the avatar: with a picture set, offer choose/remove; otherwise go
+   * straight to the picker (nothing to remove yet).
+   */
+  function onAvatarPress() {
+    if (!hasProfile || avatarBusy) {
+      return;
+    }
+    if (!(profile as SocialProfile).avatarPath) {
+      pickAvatar();
+      return;
+    }
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: [
+          t('profile.avatarChoose'),
+          t('profile.avatarRemove'),
+          t('common.cancel'),
+        ],
+        destructiveButtonIndex: 1,
+        cancelButtonIndex: 2,
+      },
+      index => {
+        if (index === 0) {
+          pickAvatar();
+        } else if (index === 1) {
+          removeAvatar();
+        }
+      },
+    );
+  }
+
+  /** Clear the avatar back to initials. Optimistic, mirroring pickAvatar. */
+  async function removeAvatar() {
+    if (!hasProfile || avatarBusy) {
+      return;
+    }
+    const before = profile as SocialProfile;
+    setAvatarBusy(true);
+    setProfile({...before, avatarPath: null});
+    try {
+      await clearAvatar();
+      setAvatarBust(Date.now());
+      toast.success(t('profile.avatarRemoved'));
+    } catch (err) {
+      setProfile(before);
+      toast.error(
+        isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorAvatar'),
+      );
+    } finally {
+      setAvatarBusy(false);
+    }
+  }
+
+  /**
    * Pick a photo, upload it, and point the profile at it. Optimistic: the
    * server row is the truth, so any failure reverts and toasts. The base64 body
    * (not a blob) is what uploadAvatar needs to write a valid object in bare RN.
@@ -423,7 +478,7 @@ export function ProfileTab({isActive = true, addCode}: Props) {
             friendCount={friends?.length ?? null}
             onPressFriends={() => navigation.navigate('FriendsList')}
             onEditName={() => setRenaming(true)}
-            onPressAvatar={pickAvatar}
+            onPressAvatar={onAvatarPress}
             avatarUri={avatarUrlFor(profile.avatarPath, avatarBust)}
           />
 
