@@ -10,6 +10,7 @@ import {hashDateKey} from '../../../../games/scout/dailySeed';
 import {dailyListIdFor} from '../../../../games/tenball/dailyList';
 import {getListById} from '../../../../games/tenball/lists';
 import {getById} from '../../index';
+import {LOGO_IMAGES} from '../../../../games/hattrick/assets/logos.generated';
 import {bundledSnapshot, hydrate, type ContentPack} from '../../store';
 import {
   checkForUpdate,
@@ -52,6 +53,18 @@ function testPack(): ContentPack {
       },
     },
   };
+  // bundledSnapshot() omits remoteArt by design, but a real over-the-wire pack
+  // carries a remoteArt path for every crest this binary doesn't bundle (publish
+  // uploads them). Mirror that so an OTA-only club (e.g. SC Bastia) validates.
+  const remoteLogos: Record<string, string> = {};
+  for (const club of pack.clubs!) {
+    if (!LOGO_IMAGES[club.id]) {
+      remoteLogos[club.id] = `art/logos/${club.id}-test.png`;
+    }
+  }
+  if (Object.keys(remoteLogos).length > 0) {
+    pack.remoteArt = {...pack.remoteArt, logos: remoteLogos};
+  }
   return pack;
 }
 
@@ -131,10 +144,12 @@ describe('validateContentPack', () => {
     ];
     // Without remoteArt: rejected (would render blank).
     expect(validateContentPack(pack)).not.toBeNull();
-    // With remoteArt covering both the crest and the flag: accepted.
+    // With remoteArt covering both the crest and the flag: accepted. Merge so
+    // any baseline OTA-only art from testPack() (e.g. SC Bastia) is preserved.
     pack.remoteArt = {
-      logos: {'no-crest-fc': 'art/logos/no-crest-fc-abc123.png'},
-      flags: {Atlantis: 'art/flags/atlantis-def456.png'},
+      ...pack.remoteArt,
+      logos: {...pack.remoteArt?.logos, 'no-crest-fc': 'art/logos/no-crest-fc-abc123.png'},
+      flags: {...pack.remoteArt?.flags, Atlantis: 'art/flags/atlantis-def456.png'},
     };
     expect(validateContentPack(pack)).toBeNull();
   });

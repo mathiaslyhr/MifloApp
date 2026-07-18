@@ -210,4 +210,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-11': 'arsenal-2019-europa-final',
   '2027-01-12': 'juventus-2017-ucl-final',
   '2027-01-13': 'manchester-city-2016-league-classic',
+  '2027-01-14': 'atletico-madrid-2018-europa-final',
 };

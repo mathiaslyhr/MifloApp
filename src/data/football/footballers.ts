@@ -17020,7 +17020,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'fenerbahce', from: 2019, to: 2020},
       {clubId: 'lazio', from: 2020, to: 2022},
-      {clubId: 'real-mallorca', from: 2022},
+      {clubId: 'real-mallorca', from: 2022, to: 2026},
+      {clubId: 'fenerbahce', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -18295,6 +18296,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2006-04-06',
     shirtNumbers: [8, 27],
     clubs: [
+      {clubId: 'bastia', from: 2024, to: 2025},
       {clubId: 'trabzonspor', from: 2025},
     ],
     honours: [],

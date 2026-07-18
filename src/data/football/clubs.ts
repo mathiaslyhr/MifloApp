@@ -142,6 +142,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'empoli', name: 'Empoli', country: 'Italy', league: 'serie-a'},
   {id: 'udinese', name: 'Udinese', country: 'Italy', league: 'serie-a'},
   {id: 'trabzonspor', name: 'Trabzonspor', country: 'Turkey', league: 'super-lig'},
+  {id: 'bastia', name: 'SC Bastia', country: 'France', league: 'ligue-1'},
   {id: 'sunderland', name: 'Sunderland', country: 'England', league: 'premier-league'},
   {id: 'bristol-city', name: 'Bristol City', country: 'England', league: 'championship'},
   {id: 'union-sg', name: 'Union Saint-Gilloise', country: 'Belgium', league: 'belgian-pro-league'},

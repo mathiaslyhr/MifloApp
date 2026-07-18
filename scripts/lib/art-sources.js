@@ -94,6 +94,7 @@ const CLUB_SLUG = {
   'al-ahly': 'al-ahly-sc', 'mamelodi-sundowns': 'mamelodi-sundowns',
   toulouse: 'toulouse-fc', metz: 'fc-metz', lorient: 'fc-lorient', empoli: 'empoli-fc',
   udinese: 'udinese', trabzonspor: 'trabzonspor', sunderland: 'sunderland',
+  bastia: 'sc-bastia',
   'bristol-city': 'bristol-city', 'union-sg': 'union-saint-gilloise', basel: 'fc-basel',
   // WC 2026 batch: CONMEBOL
   getafe: 'getafe-cf', como: 'como-1907', internacional: 'sc-internacional', botafogo: 'botafogo',
