@@ -78,9 +78,13 @@ export async function ensureSession(): Promise<string | null> {
   // from the durable anchor.
   const anchor = await readSession();
   if (anchor?.refreshToken) {
-    const {data, error} = await supabase.auth.setSession({
+    // Redeem the anchored refresh token for a fresh access+refresh pair.
+    // refreshSession (not setSession with an empty access_token) is what yields
+    // a real authenticated session, so the recovered session actually carries a
+    // valid user JWT — without it, Storage/RPC calls go out with auth.uid() NULL
+    // and RLS rejects every authenticated write (e.g. the avatars upload 403s).
+    const {data, error} = await supabase.auth.refreshSession({
       refresh_token: anchor.refreshToken,
-      access_token: '',
     });
     if (!error && data.session) {
       return data.session.user.id;

@@ -7,7 +7,7 @@
 
 type AuthMock = {
   getSession: jest.Mock;
-  setSession: jest.Mock;
+  refreshSession: jest.Mock;
   signInAnonymously: jest.Mock;
   onAuthStateChange: jest.Mock;
 };
@@ -36,7 +36,7 @@ function loadClient(auth: AuthMock) {
 function makeAuth(overrides: Partial<AuthMock> = {}): AuthMock {
   return {
     getSession: jest.fn(async () => ({data: {session: null}})),
-    setSession: jest.fn(async () => ({data: {session: null}, error: null})),
+    refreshSession: jest.fn(async () => ({data: {session: null}, error: null})),
     signInAnonymously: jest.fn(async () => ({data: {user: {id: 'NEW'}}, error: null})),
     onAuthStateChange: jest.fn(),
     ...overrides,
@@ -51,13 +51,13 @@ describe('ensureSession', () => {
     const {ensureSession} = loadClient(auth);
 
     await expect(ensureSession()).resolves.toBe('U1');
-    expect(auth.setSession).not.toHaveBeenCalled();
+    expect(auth.refreshSession).not.toHaveBeenCalled();
     expect(auth.signInAnonymously).not.toHaveBeenCalled();
   });
 
   it('recovers the same uid from the vault when the live session is gone', async () => {
     const auth = makeAuth({
-      setSession: jest.fn(async () => ({
+      refreshSession: jest.fn(async () => ({
         data: {session: {user: {id: 'U1'}}},
         error: null,
       })),
@@ -66,9 +66,8 @@ describe('ensureSession', () => {
     readSession.mockResolvedValue({refreshToken: 'r-token', uid: 'U1'});
 
     await expect(ensureSession()).resolves.toBe('U1');
-    expect(auth.setSession).toHaveBeenCalledWith({
+    expect(auth.refreshSession).toHaveBeenCalledWith({
       refresh_token: 'r-token',
-      access_token: '',
     });
     // The core guarantee: no new identity minted when we had one.
     expect(auth.signInAnonymously).not.toHaveBeenCalled();
@@ -81,12 +80,12 @@ describe('ensureSession', () => {
 
     await expect(ensureSession()).resolves.toBe('NEW');
     expect(auth.signInAnonymously).toHaveBeenCalledTimes(1);
-    expect(auth.setSession).not.toHaveBeenCalled();
+    expect(auth.refreshSession).not.toHaveBeenCalled();
   });
 
   it('fails closed (null, never a new uid) when vault recovery fails', async () => {
     const auth = makeAuth({
-      setSession: jest.fn(async () => ({
+      refreshSession: jest.fn(async () => ({
         data: {session: null},
         error: {message: 'invalid_grant'},
       })),

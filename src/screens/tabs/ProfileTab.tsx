@@ -26,6 +26,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {Menu} from 'lucide-react-native';
 import {
   Button,
@@ -53,8 +54,10 @@ import {
   fetchMyProfile,
   getCachedProfile,
   isNameTakenError,
+  setAvatarPath,
   setDisplayName,
   setFavorites,
+  uploadAvatar,
 } from '../../core/social/socialService';
 import type {SocialProfile} from '../../core/social/types';
 import {
@@ -106,6 +109,10 @@ export function ProfileTab({isActive = true, addCode}: Props) {
   const [nameInput, setNameInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [renaming, setRenaming] = useState(false);
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  // A timestamp appended to the avatar URL so a fresh upload isn't masked by the
+  // CDN's cache of the previous image at the same (stable) object key.
+  const [avatarBust, setAvatarBust] = useState<number | undefined>(undefined);
 
   // Resolve the profile once: cache first (instant, works offline), then the
   // server as truth when reachable. A stale "no cache" worst case just shows
@@ -274,6 +281,51 @@ export function ProfileTab({isActive = true, addCode}: Props) {
     }
   }
 
+  /**
+   * Pick a photo, upload it, and point the profile at it. Optimistic: the
+   * server row is the truth, so any failure reverts and toasts. The base64 body
+   * (not a blob) is what uploadAvatar needs to write a valid object in bare RN.
+   */
+  async function pickAvatar() {
+    if (!hasProfile || avatarBusy) {
+      return;
+    }
+    const res = await launchImageLibrary({
+      mediaType: 'photo',
+      maxWidth: 512,
+      maxHeight: 512,
+      quality: 0.7,
+      includeBase64: true,
+      selectionLimit: 1,
+    }).catch(() => null);
+    if (!res || res.didCancel) {
+      return;
+    }
+    const base64 = res.assets?.[0]?.base64;
+    if (res.errorCode || !base64) {
+      if (res.errorCode) {
+        toast.error(t('profile.errorAvatar'));
+      }
+      return;
+    }
+    const before = profile as SocialProfile;
+    setAvatarBusy(true);
+    try {
+      const path = await uploadAvatar(base64);
+      await setAvatarPath(path);
+      setProfile({...before, avatarPath: path});
+      setAvatarBust(Date.now());
+      toast.success(t('profile.avatarUpdated'));
+    } catch (err) {
+      setProfile(before);
+      toast.error(
+        isNetworkError(err) ? t('common.errorNetwork') : t('profile.errorAvatar'),
+      );
+    } finally {
+      setAvatarBusy(false);
+    }
+  }
+
   async function handleFavorites(next: Favorites) {
     if (!hasProfile) {
       return;
@@ -371,7 +423,8 @@ export function ProfileTab({isActive = true, addCode}: Props) {
             friendCount={friends?.length ?? null}
             onPressFriends={() => navigation.navigate('FriendsList')}
             onEditName={() => setRenaming(true)}
-            avatarUri={avatarUrlFor(profile.avatarPath)}
+            onPressAvatar={pickAvatar}
+            avatarUri={avatarUrlFor(profile.avatarPath, avatarBust)}
           />
 
           {/* Above the segments, with the avatar and the name: favourites are
