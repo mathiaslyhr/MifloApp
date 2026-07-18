@@ -20677,7 +20677,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [27],
     born: '2002-07-26',
     clubs: [
-      {clubId: 'aston-villa', from: 2024},
+      {clubId: 'aston-villa', from: 2024, to: 2026},
+      {clubId: 'chelsea', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
