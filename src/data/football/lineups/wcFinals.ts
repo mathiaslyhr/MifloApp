@@ -917,4 +917,62 @@ export const WC_FINALS: readonly FamousLineup[] = [
       {name: 'Julián Álvarez', position: 'FW', shirt: 9, footballerId: 'Álvarez, Julián', aliases: ['Julian Alvarez'], subbedOff: true},
     ],
   },
+  {
+    id: 'france-2026-world-cup-third-place',
+    team: 'France',
+    competition: 'World Cup third place play-off',
+    year: 2026,
+    formation: '4-2-3-1',
+    kit: {body: '#21304E', number: '#F4F4F6'},
+    // Barcola and Dembélé also scored, but both came on at half time, so the
+    // XI carries only Mbappé's two.
+    match: {
+      competitionKey: 'worldCupThirdPlace',
+      opponent: 'England',
+      goalsFor: 4,
+      goalsAgainst: 6,
+    },
+    players: [
+      {name: 'Mike Maignan', position: 'GK', shirt: 16, footballerId: 'Maignan, Mike'},
+      {name: 'Théo Hernández', position: 'DF', shirt: 19, footballerId: 'Hernández, Théo', aliases: ['Theo Hernandez', 'Theo'], subbedOff: true},
+      {name: 'Maxence Lacroix', position: 'DF', shirt: 26},
+      {name: 'Ibrahima Konaté', position: 'DF', shirt: 15, footballerId: 'Konaté, Ibrahima', aliases: ['Konate'], subbedOff: true},
+      {name: 'Malo Gusto', position: 'DF', shirt: 2, footballerId: 'Gusto, Malo', subbedOff: true},
+      {name: 'Adrien Rabiot', position: 'MF', shirt: 14, footballerId: 'Rabiot, Adrien'},
+      {name: 'Warren Zaïre-Emery', position: 'MF', shirt: 18, footballerId: 'Zaïre-Emery, Warren', aliases: ['Zaire-Emery']},
+      {name: 'Désiré Doué', position: 'MF', shirt: 20, footballerId: 'Doué, Désiré', aliases: ['Desire Doue', 'Doue'], subbedOff: true},
+      {name: 'Rayan Cherki', position: 'MF', shirt: 24, footballerId: 'Cherki, Rayan', subbedOff: true},
+      {name: 'Michael Olise', position: 'FW', shirt: 11, footballerId: 'Olise, Michael', assists: 2},
+      {name: 'Kylian Mbappé', position: 'FW', shirt: 10, footballerId: 'Mbappé, Kylian', captain: true, goals: 2, assists: 1},
+    ],
+  },
+  {
+    id: 'england-2026-world-cup-third-place',
+    team: 'England',
+    competition: 'World Cup third place play-off',
+    year: 2026,
+    formation: '4-1-4-1',
+    kit: {body: '#F4F4F6', number: '#232B4A'},
+    // Saka's hat-trick plus Konsa and Rice; Bellingham's sixth came off the
+    // bench.
+    match: {
+      competitionKey: 'worldCupThirdPlace',
+      opponent: 'France',
+      goalsFor: 6,
+      goalsAgainst: 4,
+    },
+    players: [
+      {name: 'Dean Henderson', position: 'GK', shirt: 13, footballerId: 'Henderson, Dean'},
+      {name: 'Jarell Quansah', position: 'DF', shirt: 26, subbedOff: true},
+      {name: 'Ezri Konsa', position: 'DF', shirt: 2, goals: 1},
+      {name: 'Marc Guéhi', position: 'DF', shirt: 6, footballerId: 'Guéhi, Marc', aliases: ['Guehi'], subbedOff: true},
+      {name: 'Djed Spence', position: 'DF', shirt: 25},
+      {name: 'Declan Rice', position: 'MF', shirt: 4, footballerId: 'Rice, Declan', captain: true, goals: 1, assists: 1},
+      {name: 'Morgan Rogers', position: 'MF', shirt: 17, footballerId: 'Rogers, Morgan'},
+      {name: 'Eberechi Eze', position: 'MF', shirt: 21, footballerId: 'Eze, Eberechi', assists: 1, subbedOff: true},
+      {name: 'Bukayo Saka', position: 'FW', shirt: 7, footballerId: 'Saka, Bukayo', goals: 3},
+      {name: 'Marcus Rashford', position: 'FW', shirt: 11, footballerId: 'Rashford, Marcus', assists: 1, subbedOff: true},
+      {name: 'Ivan Toney', position: 'FW', shirt: 22, footballerId: 'Toney, Ivan', subbedOff: true},
+    ],
+  },
 ];

@@ -63,6 +63,9 @@ export type LineupPlayer = {
  */
 export const COMPETITION_KEYS = [
   'worldCupFinal',
+  // Binaries without this key in their i18n fall back to the legacy
+  // `competition` string, so it is safe to ship over the air.
+  'worldCupThirdPlace',
   'euroFinal',
   'uclFinal',
   'europeanCupFinal',

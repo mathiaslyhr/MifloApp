@@ -13126,6 +13126,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Konsa, Ezri',
+    name: 'Ezri Konsa',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '1997-10-23',
+    shirtNumbers: [2, 4],
+    clubs: [
+      {clubId: 'brentford', from: 2018, to: 2019},
+      {clubId: 'aston-villa', from: 2019},
+    ],
+    honours: [],
+  },
+  {
     id: 'Koopmeiners, Teun',
     name: 'Teun Koopmeiners',
     nationality: ['Netherlands'],
@@ -13488,6 +13501,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2020], clubId: 'arsenal'},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Lacroix, Maxence',
+    name: 'Maxence Lacroix',
+    nationality: ['France'],
+    positions: ['DF'],
+    born: '2000-04-06',
+    shirtNumbers: [26, 5],
+    clubs: [
+      {clubId: 'wolfsburg', from: 2020, to: 2024},
+      {clubId: 'crystal-palace', from: 2024},
+    ],
+    honours: [],
   },
   {
     id: 'Lahm, Philipp',
@@ -19845,6 +19871,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Quansah, Jarell',
+    name: 'Jarell Quansah',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '2003-01-29',
+    shirtNumbers: [26, 5],
+    clubs: [
+      {clubId: 'liverpool', from: 2022, to: 2025},
+      {clubId: 'leverkusen', from: 2025},
+    ],
+    honours: [],
+  },
+  {
     id: 'Quaresma, Ricardo',
     name: 'Ricardo Quaresma',
     nationality: ['Portugal'],
@@ -23375,6 +23414,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [{type: 'league-title', count: 1, years: [1992]}],
     tags: ['legends'],
+  },
+  {
+    id: 'Spence, Djed',
+    name: 'Djed Spence',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '2000-08-09',
+    shirtNumbers: [25, 24],
+    clubs: [
+      {clubId: 'middlesbrough', from: 2018, to: 2022},
+      {clubId: 'tottenham', from: 2022},
+    ],
+    honours: [],
   },
   {
     id: 'Spence, Joe',

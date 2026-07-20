@@ -1131,6 +1131,7 @@
     },
     "competitions": {
       "worldCupFinal": "VM-finalen {{year}}",
+      "worldCupThirdPlace": "VM-bronzekampen {{year}}",
       "euroFinal": "EM-finalen {{year}}",
       "uclFinal": "Champions League-finalen {{year}}",
       "europeanCupFinal": "Europa Cup-finalen {{year}}",

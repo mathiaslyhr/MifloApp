@@ -1131,6 +1131,7 @@
     },
     "competitions": {
       "worldCupFinal": "World Cup Final {{year}}",
+      "worldCupThirdPlace": "World Cup third place play-off {{year}}",
       "euroFinal": "Euro Final {{year}}",
       "uclFinal": "Champions League Final {{year}}",
       "europeanCupFinal": "European Cup Final {{year}}",
