@@ -29,7 +29,7 @@ function listEntriesOfKind(kind: TenballKind): NameEntry[] {
 const POOLS: Record<Exclude<TenballKind, 'player'>, () => NameEntry[]> = {
   club: derivedFromData(() =>
     dedupeByLabel([
-      ...CLUBS.map(c => nameEntry(c.name, [], c.country)),
+      ...CLUBS.map(c => nameEntry(c.name, [], c.country, c.id)),
       ...listEntriesOfKind('club'),
     ]),
   ),
