@@ -122,6 +122,8 @@ const CLUB_SLUG = {
   braga: 'sc-braga', panathinaikos: 'panathinaikos',
   'rayo-vallecano': 'rayo-vallecano', 'orlando-pirates': 'orlando-pirates',
   'chicago-fire': 'chicago-fire',
+  // Transfers 2026-07
+  ipswich: 'ipswich-town',
 };
 
 const slugify = s =>

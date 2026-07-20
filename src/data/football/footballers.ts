@@ -5727,6 +5727,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'salzburg', from: 2017, to: 2021},
       {clubId: 'leicester', from: 2021, to: 2026},
+      {clubId: 'hamburg', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 3, years: [2019, 2020, 2021], clubId: 'salzburg'},
@@ -6842,6 +6843,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2006-11-27',
     shirtNumbers: [19],
     clubs: [{clubId: 'rb-leipzig', from: 2025}],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Diop, Issa',
+    name: 'Issa Diop',
+    nationality: ['France'],
+    positions: ['DF'],
+    born: '1997-01-09',
+    shirtNumbers: [23, 31],
+    clubs: [
+      {clubId: 'toulouse', from: 2015, to: 2018},
+      {clubId: 'west-ham', from: 2018, to: 2023},
+      {clubId: 'fulham', from: 2023, to: 2026},
+      {clubId: 'ipswich', from: 2026},
+    ],
     honours: [],
     tags: ['current-stars'],
   },

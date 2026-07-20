@@ -90,6 +90,7 @@ const CLUB_SHORT: Record<string, string> = {
   'saint-etienne': 'STE', elche: 'ELC', cannes: 'ACA',
   'orlando-city': 'ORL',
   deportivo: 'DEP', koln: 'KOE', brondby: 'BIF', 'aek-athens': 'AEK',
+  ipswich: 'IPS',
 };
 
 /** Country → short 3-letter code (a flag is shown alongside it). */

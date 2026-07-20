@@ -220,6 +220,9 @@ export const CLUBS: readonly Club[] = [
   // in the quiz topics. AaB stays out too: no crest in the logo mirror, and art
   // can't ship OTA. D.C. United alone is the Vardy precedent (Leicester only).
   {id: 'dc-united', name: 'D.C. United', country: 'USA', league: 'mls'},
+
+  // --- Transfers 2026-07 ---
+  {id: 'ipswich', name: 'Ipswich Town', country: 'England', league: 'premier-league'},
 ];
 
 const clubsById = derivedFromData(
