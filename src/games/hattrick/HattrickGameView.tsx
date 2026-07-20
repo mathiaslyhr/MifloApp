@@ -10,6 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronLeft, HelpCircle, Plus} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {
+  BOARD_TEXT_SCALE,
   Button,
   CircleButton,
   Card,
@@ -572,6 +573,7 @@ export function HattrickGameView({
                           numberOfLines={2}
                           adjustsFontSizeToFit
                           minimumFontScale={0.8}
+                          maxFontSizeMultiplier={BOARD_TEXT_SCALE}
                           style={[styles.cellName, {color: side?.color ?? colors.ink}]}>
                           {f?.name ?? '?'}
                         </Text>
@@ -592,6 +594,7 @@ export function HattrickGameView({
                           numberOfLines={2}
                           adjustsFontSizeToFit
                           minimumFontScale={0.8}
+                          maxFontSizeMultiplier={BOARD_TEXT_SCALE}
                           style={[styles.cellName, styles.cellGhost]}>
                           {example.name}
                         </Text>
@@ -740,6 +743,7 @@ function AxisCell({
         numberOfLines={label.includes(' ') ? 2 : 1}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
+        maxFontSizeMultiplier={BOARD_TEXT_SCALE}
         style={[
           styles.axisText,
           criterion.kind === 'shirtNumber'

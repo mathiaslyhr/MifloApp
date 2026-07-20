@@ -14,6 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  BOARD_TEXT_SCALE,
   CircleButton,
   EdgeFade,
   FloatingBar,
@@ -396,7 +397,11 @@ export function JourneymanScreen({navigation}: Props) {
                 </Text>
                 {spell.loan ? (
                   <View style={styles.loanTag}>
-                    <Text variant="caption" color="secondary" style={styles.loanText}>
+                    <Text
+                      variant="caption"
+                      color="secondary"
+                      maxFontSizeMultiplier={BOARD_TEXT_SCALE}
+                      style={styles.loanText}>
                       {t('journeyman.loan')}
                     </Text>
                   </View>
@@ -524,7 +529,7 @@ function Stat({
   const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
-      <Text style={[styles.statValue, highlight && styles.statValueHot]}>
+      <Text variant="stat" style={highlight && styles.statValueHot}>
         {value}
       </Text>
       <Text variant="caption" color="muted">
@@ -655,7 +660,6 @@ const makeStyles = (c: Palette) =>
   answerFlag: {width: 24, height: 18, borderRadius: 2},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
   statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},

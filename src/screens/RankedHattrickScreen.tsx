@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next';
 import type {TFunction} from 'i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  BOARD_TEXT_SCALE,
   Button,
   CircleButton,
   FloatingBar,
@@ -631,6 +632,7 @@ function AxisCell({
         numberOfLines={label.includes(' ') ? 2 : 1}
         adjustsFontSizeToFit
         minimumFontScale={0.7}
+        maxFontSizeMultiplier={BOARD_TEXT_SCALE}
         style={[
           styles.axisText,
           criterion.kind === 'shirtNumber'
@@ -678,6 +680,7 @@ function BoardCell({
           numberOfLines={2}
           adjustsFontSizeToFit
           minimumFontScale={0.8}
+          maxFontSizeMultiplier={BOARD_TEXT_SCALE}
           style={[styles.cellName, {color: owner?.color ?? colors.ink}]}>
           {f?.name ?? '?'}
         </Text>

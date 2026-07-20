@@ -1,10 +1,12 @@
 import React from 'react';
-import {Animated, Pressable, StyleSheet, View} from 'react-native';
-import {CalendarDays, CircleUserRound, Gamepad2, Home, type LucideIcon} from 'lucide-react-native';
+import {Animated, Pressable, StyleSheet, Text, View} from 'react-native';
+import {CalendarDays, CircleUserRound, Home, Volleyball, type LucideIcon} from 'lucide-react-native';
 import {useTranslation} from 'react-i18next';
 import {
+  fonts,
   radii,
   shadows,
+  type as typeScale,
   useSkin,
   useThemedStyles,
   type Palette,
@@ -18,12 +20,22 @@ export type TabId = 'home' | 'daily' | 'play' | 'profile';
  * height plus its top breathing room. Screens add this (+ safe-area inset) to
  * their content's bottom padding so nothing hides behind the shell nav.
  */
-export const NAV_HEIGHT = 70;
+export const NAV_HEIGHT = 81;
 
+// Play is a ball, not a gamepad: a gamepad reads as *video games*, the one
+// thing this app isn't. The ball is the only glyph that says football AND "a
+// match is on" in the same shape — a tab icon has to carry the action, not just
+// the subject. Two rejected on the way: lucide's `Goal` renders at 22pt as a
+// target with a play arrow (reads as a record button), and `Shirt` is football
+// but signals kit/identity rather than playing. It shares its glyph with Top
+// Bins' game icon, which is acceptable: they only ever co-appear on the Daily
+// tab, where one is chrome and the other is content.
+// Home/Daily/Profile keep conventional icons — the labels below them carry the
+// meaning, so the icons only have to avoid misleading.
 const ITEMS: {id: TabId; labelKey: string; Icon: LucideIcon}[] = [
   {id: 'home', labelKey: 'tabs.home', Icon: Home},
   {id: 'daily', labelKey: 'tabs.daily', Icon: CalendarDays},
-  {id: 'play', labelKey: 'tabs.play', Icon: Gamepad2},
+  {id: 'play', labelKey: 'tabs.play', Icon: Volleyball},
   {id: 'profile', labelKey: 'tabs.profile', Icon: CircleUserRound},
 ];
 
@@ -76,6 +88,15 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
                   <Icon size={22} color={color} strokeWidth={2} />
                   {dotted ? <View style={styles.badgeDot} /> : null}
                 </View>
+                {/* The label is the tab's real name. Icons alone left Daily
+                    (a calendar) and Play indistinguishable to anyone who
+                    hadn't already learned the app. */}
+                <Text
+                  numberOfLines={1}
+                  maxFontSizeMultiplier={1.2}
+                  style={[styles.label, {color}]}>
+                  {label}
+                </Text>
               </Pressable>
             );
           })}
@@ -106,15 +127,25 @@ const makeStyles = (c: Palette) =>
     backgroundColor: c.surface,
     overflow: 'hidden',
   },
-  // paddingVertical 11 + the 22pt icon = a 44pt tap target (HIG minimum).
+  // paddingVertical 8 + icon 22 + gap 3 + label 14 = a 55pt tap target, still
+  // well clear of the 44pt HIG minimum. minWidth 66 fits the longest label
+  // ("Profile", ~40pt at 12/Medium) inside the 10pt side padding.
   item: {
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: 60,
-    paddingHorizontal: 14,
-    paddingVertical: 11,
+    minWidth: 66,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    gap: 3,
   },
   iconWrap: {position: 'relative'},
+  // caption from the scale, in Medium — small enough to stay quiet under the
+  // icon, on-scale rather than another bespoke size.
+  label: {
+    fontFamily: fonts.medium,
+    fontSize: typeScale.caption.fontSize,
+    lineHeight: 14,
+  },
   // "Something new" marker: a small accent disc pinned to the icon's top-right
   // corner, rimmed so it reads on the pill (same trick as onlineDot).
   badgeDot: {

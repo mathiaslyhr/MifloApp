@@ -8,7 +8,7 @@ import {
 import type {LucideIcon} from 'lucide-react-native';
 import {spacing, useColors} from '../../theme';
 import {CircleButton} from './CircleButton';
-import {Text} from './Text';
+import {BOARD_TEXT_SCALE, Text} from './Text';
 
 // Same swipe-reveal geometry as GameTile's leading action, extracted for
 // arbitrary rows (friend cards use it for remove).
@@ -184,6 +184,7 @@ export function SwipeReveal({
           <Text
             variant="caption"
             numberOfLines={1}
+            maxFontSizeMultiplier={BOARD_TEXT_SCALE}
             style={[styles.leadingLabel, {color: tint}]}>
             {label}
           </Text>

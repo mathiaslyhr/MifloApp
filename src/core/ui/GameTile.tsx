@@ -15,7 +15,7 @@ import {
 } from '../../theme';
 import {CircleButton} from './CircleButton';
 import {PressableScale} from './PressableScale';
-import {Text} from './Text';
+import {BOARD_TEXT_SCALE, Text} from './Text';
 
 /** Swipe-reveal geometry: the action column (circle + label) is this wide. */
 const ACTION_SIZE = 48;
@@ -306,6 +306,7 @@ export function GameTile({
             variant="caption"
             color="secondary"
             numberOfLines={1}
+            maxFontSizeMultiplier={BOARD_TEXT_SCALE}
             style={styles.leadingLabel}>
             {secondaryLabel}
           </Text>

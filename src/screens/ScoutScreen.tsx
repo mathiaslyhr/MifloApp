@@ -14,6 +14,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  BOARD_TEXT_SCALE,
   CircleButton,
   EdgeFade,
   FloatingBar,
@@ -389,6 +390,7 @@ export function ScoutScreen({navigation}: Props) {
           {COLUMNS.map(key => (
             <Text
               key={key}
+              maxFontSizeMultiplier={BOARD_TEXT_SCALE}
               style={styles.columnLabel}
               numberOfLines={1}
               adjustsFontSizeToFit>
@@ -665,7 +667,7 @@ function Stat({
   const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
-      <Text style={[styles.statValue, highlight && styles.statValueHot]}>
+      <Text variant="stat" style={highlight && styles.statValueHot}>
         {value}
       </Text>
       <Text variant="caption" color="muted">
@@ -805,7 +807,6 @@ const makeStyles = (c: Palette) =>
   answerCrest: {width: 22, height: 22},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
   statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},

@@ -41,6 +41,13 @@ export const type = {
   label: {fontFamily: fonts.medium, fontSize: 15, lineHeight: 20},
   /** Captions / meta. iOS Caption 1 metrics. */
   caption: {fontFamily: fonts.regular, fontSize: 12, lineHeight: 16},
+  /**
+   * A stat readout — the big figure in a results row (guesses used, misses,
+   * streak). Medium for weight at a small size, tabular figures applied at the
+   * call site where the number can change. Lived as a copy-pasted local
+   * `statValue` in all four daily screens before it was named here.
+   */
+  stat: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24},
 } as const satisfies Record<string, Variant>;
 
 export type TypeVariant = keyof typeof type;

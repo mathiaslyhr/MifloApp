@@ -17,7 +17,7 @@ export {radii} from './radii';
 export type {RadiusToken} from './radii';
 export {shadows} from './shadows';
 export type {ShadowToken} from './shadows';
-export {spacing, space, screenPadding, minTapTarget} from './spacing';
+export {spacing, screenPadding, minTapTarget} from './spacing';
 export type {SpacingToken} from './spacing';
 export {fonts, type} from './typography';
 export type {TypeVariant} from './typography';

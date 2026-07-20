@@ -5,7 +5,7 @@
 export {Screen} from './Screen';
 export {BootSplash} from './BootSplash';
 export {ErrorBoundary} from './ErrorBoundary';
-export {Text} from './Text';
+export {BOARD_TEXT_SCALE, Text} from './Text';
 export {Button} from './Button';
 export type {ButtonVariant} from './Button';
 export {CircleButton} from './CircleButton';

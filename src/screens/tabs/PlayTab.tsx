@@ -46,18 +46,10 @@ import {
   type MyValue,
 } from '../../core/rooms/rankedService';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
-import {VALUE_CAP} from '../../games/ranked-hattrick/constants';
+import {tierFor} from '../../games/ranked-hattrick/tiers';
 import {GAMES, type GameEntry, type GameType} from '../gamesCatalog';
 
-/** Solo daily games → their screens (mirrors DailyTab's ROUTE map). */
-const DAILY_ROUTE: Record<string, string> = {
-  scout: 'Scout',
-  tenball: 'TopBins',
-  journeyman: 'Journeyman',
-  teamsheet: 'Teamsheet',
-};
-
-/** Roomless pass-and-play routes, revealed by the swipe on a multiplayer card. */
+/** Roomless pass-and-play routes, reachable from the row's phone button. */
 const LOCAL_ROUTES: Record<string, string> = {
   hattrick: 'HattrickLocal',
   'red-card': 'RedCardLocal',
@@ -66,12 +58,17 @@ const LOCAL_ROUTES: Record<string, string> = {
 };
 
 const MULTIPLAYER_GAMES = GAMES.filter(g => !g.single && g.available);
-const DAILY_GAMES = GAMES.filter(g => g.single && g.available);
 
 type Mode = 'friendlies' | 'competitive';
 
-/** Play — the home for every game: casual "Friendlies" matches + solo dailies,
- * plus a "Competitive" ranked lane, played with Hattrick (UI only for now). */
+/**
+ * Play — football against other people: casual "Friendlies" (with friends, vs
+ * the computer, or pass-and-play on one phone) and a "Competitive" ranked lane.
+ *
+ * The solo dailies deliberately do NOT live here. They were a third entry point
+ * alongside Home's waiting card and the Daily tab, and they're the one thing on
+ * this tab that isn't played against anybody. Daily is now their only index.
+ */
 export function PlayTab() {
   const {t} = useTranslation();
   const colors = useColors();
@@ -90,18 +87,9 @@ export function PlayTab() {
     readCachedValue();
   }, []);
 
-  const openGame = (entry: GameEntry) => {
-    if (entry.single) {
-      const route = DAILY_ROUTE[entry.gameType];
-      if (route) {
-        navigation.navigate(route as never);
-      }
-      return;
-    }
-    // Multiplayer: mint a match locked to this game; the host gathers players in
-    // the lobby. Error toasts are handled inside the hook.
-    createParty(entry.gameType);
-  };
+  // Mint a match locked to this game; the host gathers players in the lobby.
+  // Error toasts are handled inside the hook.
+  const openGame = (entry: GameEntry) => createParty(entry.gameType);
 
   const openLocal = (gameType: GameType) => {
     const route = LOCAL_ROUTES[gameType];
@@ -216,18 +204,6 @@ export function PlayTab() {
               />
             </View>
 
-            <SectionLabel>{t('play.daily')}</SectionLabel>
-            <View style={styles.list}>
-              {DAILY_GAMES.map(entry => (
-                <GameRow
-                  key={entry.gameType}
-                  title={t(`games.${entry.i18nKey}.title`)}
-                  subtitle={t(`games.${entry.i18nKey}.tagline`)}
-                  Icon={entry.Icon}
-                  onPress={() => openGame(entry)}
-                />
-              ))}
-            </View>
           </>
         ) : (
           <>
@@ -326,6 +302,24 @@ function GameRow({
           style={styles.cardSubtitle}>
           {subtitle}
         </Text>
+        {/* The one-phone route, visible at rest. It used to exist ONLY behind a
+            swipe — undiscoverable enough that it needed a help modal, a menu
+            page and a line in How to play to explain it. Three explainers for
+            one gesture is the gesture failing. The swipe still works, as a
+            shortcut for people who already know it. */}
+        {onLocal ? (
+          <PressableScale
+            onPress={onLocal}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={t('games.localPlay')}
+            style={styles.localChip}>
+            <Smartphone size={12} color={colors.textSecondary} strokeWidth={2} />
+            <Text variant="caption" color="secondary">
+              {t('games.oneDeviceShort')}
+            </Text>
+          </PressableScale>
+        ) : null}
       </View>
       <View style={styles.trailing}>
         {count ? (
@@ -450,10 +444,14 @@ function ValueCard() {
 
   const shown = useValueCountUp(data ? data.value : null, change);
 
-  // One long run from the floor to the €250M cap — no rungs. Driven by the
-  // animated €, so the bar and the pill tick up with the count-up for free.
-  const pct =
-    shown != null ? Math.round(Math.max(0, Math.min(1, shown / VALUE_CAP)) * 100) : 0;
+  // Progress through the CURRENT tier, not the whole run to the €250M cap. One
+  // unbroken bar to the cap put a new player at 4% and a typical one in the
+  // left tenth: technically honest, motivationally useless, because the next
+  // meaningful step was never visible. The rungs already existed (tiers.ts,
+  // pure + tested) and simply weren't wired to anything. Driven by the animated
+  // €, so bar and pill still tick up with the count-up for free.
+  const standing = shown != null ? tierFor(shown) : null;
+  const pct = standing ? Math.round(standing.progress * 100) : 0;
   // Centre the pill on the fill's end, but never let it hang off either edge:
   // a fresh €10M account sits at ~4%, where an uncentred pill would clip.
   const pillLeft = Math.max(
@@ -488,6 +486,21 @@ function ValueCard() {
           </View>
         ) : null}
       </View>
+
+      {/* Where you stand and what's next — the bar below measures the gap
+          between exactly these two labels. */}
+      {standing ? (
+        <View style={styles.tierRow}>
+          <Text variant="caption" color="secondary">
+            {t(`play.tiers.${standing.tier.key}`)}
+          </Text>
+          {standing.next ? (
+            <Text variant="caption" color="muted">
+              {t(`play.tiers.${standing.next.key}`)}
+            </Text>
+          ) : null}
+        </View>
+      ) : null}
 
       <View
         style={styles.barRow}
@@ -575,6 +588,21 @@ const makeStyles = (c: Palette) =>
     // Plain white icon, no square and no background.
     iconSlot: {width: 40, alignItems: 'center', justifyContent: 'center'},
     body: {flex: 1, gap: 2},
+    // Sits under the tagline as its own control: surface2 so it reads as a
+    // raised chip against the card, pill-shaped like every other small control.
+    localChip: {
+      alignSelf: 'flex-start',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      marginTop: spacing.xs + 2,
+      paddingVertical: spacing.xs,
+      paddingHorizontal: spacing.sm,
+      borderRadius: radii.pill,
+      backgroundColor: c.surface2,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: c.divider,
+    },
     cardTitle: {},
     cardSubtitle: {},
     trailing: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
@@ -592,7 +620,14 @@ const makeStyles = (c: Palette) =>
     },
     // Only shown right after a match: what that result was worth.
     deltaChip: {flexDirection: 'row', alignItems: 'center', gap: 2},
-    // Progress toward the €250M cap. The row is pill-height so the pill can
+    // Current rung on the left, the one you're climbing toward on the right.
+    tierRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: spacing.xs,
+    },
+    // Progress through the current tier. The row is pill-height so the pill can
     // overhang the track it rides on.
     barRow: {height: 22, justifyContent: 'center', marginTop: spacing.xs},
     track: {

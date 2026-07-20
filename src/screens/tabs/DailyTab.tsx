@@ -134,7 +134,7 @@ function DailyGameCard({game, cell, streak, onPress}: CardProps) {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={t(titleKey)}
-      style={[styles.card, !played && styles.cardDim]}>
+      style={styles.card}>
       {/* Top row: game icon + title, then the streak flame and the chevron. */}
       <View style={styles.top}>
         <Icon size={20} color={colors.ink} strokeWidth={2} />
@@ -202,7 +202,6 @@ const makeStyles = (c: Palette) =>
       paddingTop: spacing.md,
       paddingBottom: spacing.sm + 2,
     },
-    cardDim: {opacity: 0.7},
     top: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
     title: {flex: 1},
     streak: {flexDirection: 'row', alignItems: 'center', gap: 3},

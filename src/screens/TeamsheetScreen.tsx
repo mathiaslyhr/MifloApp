@@ -20,6 +20,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
+  BOARD_TEXT_SCALE,
   CircleButton,
   EdgeFade,
   FloatingBar,
@@ -608,6 +609,7 @@ function PlayerToken({
         numberOfLines={1}
         adjustsFontSizeToFit
         minimumFontScale={0.65}
+        maxFontSizeMultiplier={BOARD_TEXT_SCALE}
         style={[
           styles.tokenName,
           tight && styles.tokenNameTight,
@@ -641,19 +643,19 @@ function PlayerToken({
         ) : null}
         {player.captain ? (
           <View style={[styles.badge, styles.badgeTopRight]}>
-            <Text style={styles.captainText}>C</Text>
+            <Text maxFontSizeMultiplier={BOARD_TEXT_SCALE} style={styles.captainText}>C</Text>
           </View>
         ) : null}
         {goals > 0 ? (
           <View style={[styles.badge, styles.badgeBottomLeft, goals > 1 && styles.badgeWide]}>
             <Volleyball size={9} color={colors.ink} strokeWidth={2.25} />
-            {goals > 1 ? <Text style={styles.badgeCount}>{goals}</Text> : null}
+            {goals > 1 ? <Text maxFontSizeMultiplier={BOARD_TEXT_SCALE} style={styles.badgeCount}>{goals}</Text> : null}
           </View>
         ) : null}
         {assists > 0 ? (
           <View style={[styles.badge, styles.badgeBottomRight, assists > 1 && styles.badgeWide]}>
             <Footprints size={9} color={colors.ink} strokeWidth={2.25} />
-            {assists > 1 ? <Text style={styles.badgeCount}>{assists}</Text> : null}
+            {assists > 1 ? <Text maxFontSizeMultiplier={BOARD_TEXT_SCALE} style={styles.badgeCount}>{assists}</Text> : null}
           </View>
         ) : null}
         {player.redCard || player.yellowCard ? (
@@ -667,7 +669,9 @@ function PlayerToken({
           </View>
         ) : null}
       </View>
-      <Text style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
+      <Text
+        maxFontSizeMultiplier={BOARD_TEXT_SCALE}
+        style={[styles.posLabel, selectedToken && styles.posLabelSelected]}>
         {label}
       </Text>
     </Pressable>
@@ -686,7 +690,7 @@ function Stat({
   const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
-      <Text style={[styles.statValue, highlight && styles.statValueHot]}>
+      <Text variant="stat" style={highlight && styles.statValueHot}>
         {value}
       </Text>
       <Text variant="caption" color="muted">
@@ -886,7 +890,6 @@ const makeStyles = (c: Palette) =>
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
   statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},

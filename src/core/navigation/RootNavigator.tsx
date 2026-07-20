@@ -38,12 +38,28 @@ import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+/**
+ * Swipe-back OFF. Two different reasons, both real:
+ *
+ *  - **In-page gestures.** An edge swipe collides with a game board's own
+ *    handling, or with a swipe-reveal row (FriendsList's swipe-to-remove).
+ *    This is the collision that originally turned the gesture off everywhere.
+ *  - **Live state.** Lobby and the online/ranked matches have a room behind
+ *    them; leaving is a real action with a real exit flow, not a back button.
+ *
+ * Everything else — the menu pages, the info pages, the profile pages, the
+ * daily puzzles (whose progress persists, so leaving and returning is free) —
+ * has neither problem, and turning the gesture off there just cost users the
+ * most ingrained navigation gesture on iOS for nothing.
+ *
+ * Note this list is the exception, not the rule: a new screen gets the platform
+ * behaviour by default. If you add a screen with its own horizontal gesture or
+ * live server state, add it here.
+ */
+const NO_SWIPE_BACK = {gestureEnabled: false} as const;
+
 export function RootNavigator() {
   return (
-    // Swipe-back is off everywhere: every pushed page has an explicit back
-    // button, and edge swipes kept colliding with in-page gestures (game
-    // boards, swipe-reveal rows).
-    //
     // The push transition is deliberately left at the platform default — this
     // was evaluated during the motion-system pass and kept on purpose. iOS
     // substitutes a cross-dissolve for the slide when Reduce Motion is on, but
@@ -53,33 +69,39 @@ export function RootNavigator() {
     // same reason as swipe-back: it reintroduces the swipe-down dismiss this
     // navigator turns off. Don't add transition options here without a reason
     // that outweighs losing the OS behaviour.
-    <Stack.Navigator screenOptions={{headerShown: false, gestureEnabled: false}}>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Tabs" component={TabsScreen} />
       <Stack.Screen name="Join" component={JoinScreen} />
-      <Stack.Screen name="Lobby" component={LobbyScreen} />
+      {/* Live room behind it — leaving is the explicit Leave match flow. */}
+      <Stack.Screen name="Lobby" component={LobbyScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="GamePicker" component={GamePickerScreen} />
-      <Stack.Screen name="Hattrick" component={HattrickScreen} />
-      <Stack.Screen name="RedCard" component={RedCardScreen} />
-      <Stack.Screen name="Offside" component={OffsideScreen} />
-      <Stack.Screen name="CultHero" component={CultHeroScreen} />
-      {/* Competitive Hattrick — matchmaking then the live ranked match. */}
-      <Stack.Screen name="RankedSearch" component={RankedSearchScreen} />
-      <Stack.Screen name="RankedHattrick" component={RankedHattrickScreen} />
+      {/* Online matches: board gestures + a room that outlives the screen. */}
+      <Stack.Screen name="Hattrick" component={HattrickScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="RedCard" component={RedCardScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="Offside" component={OffsideScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="CultHero" component={CultHeroScreen} options={NO_SWIPE_BACK} />
+      {/* Competitive Hattrick — matchmaking then the live ranked match. An
+          accidental swipe out of a ranked match forfeits it. */}
+      <Stack.Screen name="RankedSearch" component={RankedSearchScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="RankedHattrick" component={RankedHattrickScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="RankedLeaderboard" component={RankedLeaderboardScreen} />
-      {/* Pass-and-play on one shared phone — roomless, fully offline. */}
-      <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} />
+      {/* Pass-and-play on one shared phone — roomless, fully offline. Still
+          gesture-free: the handoff gate must not be swipeable past. */}
+      <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} options={NO_SWIPE_BACK} />
       {/* Solo Hattrick vs the computer — roomless, offline. */}
-      <Stack.Screen name="HattrickBot" component={HattrickBotScreen} />
-      <Stack.Screen name="RedCardLocal" component={RedCardLocalScreen} />
-      <Stack.Screen name="OffsideLocal" component={OffsideLocalScreen} />
-      <Stack.Screen name="CultHeroLocal" component={CultHeroLocalScreen} />
-      {/* Single-player daily puzzles; leave via the header back button. */}
+      <Stack.Screen name="HattrickBot" component={HattrickBotScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="RedCardLocal" component={RedCardLocalScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="OffsideLocal" component={OffsideLocalScreen} options={NO_SWIPE_BACK} />
+      <Stack.Screen name="CultHeroLocal" component={CultHeroLocalScreen} options={NO_SWIPE_BACK} />
+      {/* Single-player daily puzzles — progress persists, so swiping out and
+          coming back resumes exactly where you were. */}
       <Stack.Screen name="Scout" component={ScoutScreen} />
       <Stack.Screen name="TopBins" component={TopBinsScreen} />
       <Stack.Screen name="Journeyman" component={JourneymanScreen} />
       <Stack.Screen name="Teamsheet" component={TeamsheetScreen} />
       <Stack.Screen name="Menu" component={MenuScreen} />
-      <Stack.Screen name="FriendsList" component={FriendsListScreen} />
+      {/* Swipe-to-remove rows: an edge swipe would fight them. */}
+      <Stack.Screen name="FriendsList" component={FriendsListScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="FriendProfile" component={FriendProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />

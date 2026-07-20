@@ -14,7 +14,7 @@ import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {ArrowDownRight, ArrowUpRight} from 'lucide-react-native';
 import {Button, Card, Skeleton, Text} from '../../core/ui';
-import {fonts, spacing, useColors, useThemedStyles, type Palette} from '../../theme';
+import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
 import {seriesFrom} from '../../games/ranked-hattrick/history';
 import {ValueChart} from './ValueChart';
@@ -98,7 +98,7 @@ export function CareerSection({history, value, todayKey, empty}: Props) {
             <Text variant="caption" color="muted">
               {t('profile.valueLabel').toUpperCase()}
             </Text>
-            <Text style={[styles.value, {color: colors.primary}]}>
+            <Text variant="title" style={[styles.value, {color: colors.primary}]}>
               {formatValue(standing)}
             </Text>
           </View>
@@ -166,13 +166,9 @@ const makeStyles = (c: Palette) =>
     heroLead: {flex: 1, gap: spacing.xs},
     // The page's one deliberate "moment" above the section scale — the € is
     // what this whole segment is about.
-    value: {
-      fontFamily: fonts.regular,
-      fontSize: 28,
-      lineHeight: 34,
-      letterSpacing: -0.5,
-      fontVariant: ['tabular-nums'],
-    },
+    // Metrics come from the `title` variant; only the tabular figures are
+    // local (the € ticks, and proportional digits would jitter it).
+    value: {fontVariant: ['tabular-nums']},
     deltaChip: {flexDirection: 'row', alignItems: 'center', gap: spacing.xs},
     recordCard: {
       flexDirection: 'row',

@@ -24,7 +24,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {Bell, ChevronRight, Timer} from 'lucide-react-native';
-import {Button, CircleButton, PressableScale, Text} from '../../core/ui';
+import {Button, CircleButton, PressableScale, Skeleton, Text} from '../../core/ui';
 import {
   onRim,
   radii,
@@ -284,7 +284,32 @@ export function HomeTab(): React.JSX.Element {
             Only in the "all done" state, where the card is sparse. */}
         {allDone ? <CrestWall count={20} size={38} opacity={0.08} /> : null}
         <View style={styles.cardInner}>
-          {allDone ? (
+          {waiting === null ? (
+            // Still reading the log. The card is the page's primary content, so
+            // it holds its own shape rather than popping in like the friends
+            // block below — a ghost of the headline and three rows keeps
+            // everything under it from shifting when the real list lands.
+            <>
+              <Skeleton width="55%" height={20} radius={6} />
+              {/* Four rows, not three: the common cold-launch case is a fresh
+                  day with every daily still waiting, so four is the shape the
+                  real list most often settles into — and the whole point of the
+                  ghost is that nothing below it moves when it does. */}
+              <View style={styles.cardList}>
+                {DAILY_GAMES.map((g, i) => (
+                  <View
+                    key={g}
+                    style={[
+                      styles.cardRow,
+                      i < DAILY_GAMES.length - 1 && styles.cardDivider,
+                    ]}>
+                    <Skeleton width={26} height={26} radius={8} />
+                    <Skeleton width="45%" height={14} radius={6} />
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : allDone ? (
             // Cleared the lot: a warm sign-off and a live countdown to the next
             // drop, in place of the waiting list.
             <>

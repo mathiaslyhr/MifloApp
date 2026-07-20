@@ -507,7 +507,7 @@ function Stat({
   const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.stat}>
-      <Text style={[styles.statValue, highlight && styles.statValueHot]}>
+      <Text variant="stat" style={highlight && styles.statValueHot}>
         {value}
       </Text>
       <Text variant="caption" color="muted">
@@ -617,7 +617,6 @@ const makeStyles = (c: Palette) =>
   finishPanel: {gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.sm},
   streakRow: {flexDirection: 'row', justifyContent: 'center', gap: spacing.xl},
   stat: {alignItems: 'center', gap: 2},
-  statValue: {fontFamily: fonts.medium, fontSize: 20, lineHeight: 24, color: c.ink},
   statValueHot: {color: c.primary},
   countdownWrap: {alignItems: 'center', gap: 2},
   countdown: {fontVariant: ['tabular-nums'], letterSpacing: 1},
