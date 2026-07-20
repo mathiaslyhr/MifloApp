@@ -13513,7 +13513,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'wolfsburg', from: 2020, to: 2024},
       {clubId: 'crystal-palace', from: 2024},
     ],
-    honours: [],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'crystal-palace'},
+    ],
   },
   {
     id: 'Lahm, Philipp',
@@ -19881,7 +19883,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'liverpool', from: 2022, to: 2025},
       {clubId: 'leverkusen', from: 2025},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 1, years: [2025]},
+    ],
   },
   {
     id: 'Quaresma, Ricardo',
@@ -23426,7 +23430,9 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'middlesbrough', from: 2018, to: 2022},
       {clubId: 'tottenham', from: 2022},
     ],
-    honours: [],
+    honours: [
+      {type: 'europa-league', count: 1, years: [2025]},
+    ],
   },
   {
     id: 'Spence, Joe',
