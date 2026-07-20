@@ -211,4 +211,6 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-12': 'serie-a-titles-clubs',
   '2027-01-13': 'wc-top-scorers',
   '2027-01-14': 'last-10-europa-winners',
+  '2027-01-15': 'last-10-ballon-dor',
+  '2027-01-16': 'last-10-wc-golden-boot',
 };

@@ -40,12 +40,12 @@ export const BUNDLED_LISTS: TenballList[] = [
     id: 'wc-top-scorers',
     kind: 'player',
     entries: [
-      {rank: 1, name: 'Miroslav Klose', value: '16', aliases: ['klose', 'miroslav klose'], footballerId: 'Klose, Miroslav'},
-      {rank: 2, name: 'Ronaldo Nazário', value: '15', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
-      {rank: 3, name: 'Gerd Müller', value: '14', aliases: ['gerd muller', 'gerd mueller', 'gerd', 'der bomber'], footballerId: 'Müller, Gerd'},
-      {rank: 4, name: 'Just Fontaine', value: '13', aliases: ['fontaine', 'just fontaine'], footballerId: 'Fontaine, Just'},
-      {rank: 5, name: 'Lionel Messi', value: '13', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
-      {rank: 6, name: 'Kylian Mbappé', value: '12+', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      {rank: 1, name: 'Kylian Mbappé', value: '22', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      {rank: 2, name: 'Lionel Messi', value: '21', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
+      {rank: 3, name: 'Miroslav Klose', value: '16', aliases: ['klose', 'miroslav klose'], footballerId: 'Klose, Miroslav'},
+      {rank: 4, name: 'Ronaldo Nazário', value: '15', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
+      {rank: 5, name: 'Gerd Müller', value: '14', aliases: ['gerd muller', 'gerd mueller', 'gerd', 'der bomber'], footballerId: 'Müller, Gerd'},
+      {rank: 6, name: 'Just Fontaine', value: '13', aliases: ['fontaine', 'just fontaine'], footballerId: 'Fontaine, Just'},
       {rank: 7, name: 'Pelé', value: '12', aliases: ['pele'], footballerId: 'Pelé'},
       {rank: 8, name: 'Sándor Kocsis', value: '11', aliases: ['kocsis', 'sandor kocsis'], footballerId: 'Kocsis, Sándor'},
       {rank: 9, name: 'Jürgen Klinsmann', value: '11', aliases: ['klinsmann', 'jurgen klinsmann'], footballerId: 'Klinsmann, Jürgen'},
@@ -236,7 +236,8 @@ export const BUNDLED_LISTS: TenballList[] = [
     id: 'last-10-wc-golden-boot',
     kind: 'player',
     entries: [
-      {rank: 1, name: 'Kylian Mbappé', value: '2022 (8)', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      // Back-to-back winner; one slot per player, so both years share an entry.
+      {rank: 1, name: 'Kylian Mbappé', value: '2026 (10), 2022 (8)', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
       {rank: 2, name: 'Harry Kane', value: '2018 (6)', aliases: ['kane', 'harry kane'], footballerId: 'Kane, Harry'},
       {rank: 3, name: 'James Rodríguez', value: '2014 (6)', aliases: ['james rodriguez', 'james'], footballerId: 'Rodríguez, James'},
       {rank: 4, name: 'Thomas Müller', value: '2010 (5)', aliases: ['muller', 'mueller', 'thomas muller', 'thomas mueller'], footballerId: 'Müller, Thomas'},
@@ -575,9 +576,10 @@ export const BUNDLED_LISTS: TenballList[] = [
     entries: [
       {rank: 1, name: 'Just Fontaine', value: '13 (1958)', aliases: ['fontaine', 'just fontaine'], footballerId: 'Fontaine, Just'},
       {rank: 2, name: 'Sándor Kocsis', value: '11 (1954)', aliases: ['kocsis', 'sandor kocsis'], footballerId: 'Kocsis, Sándor'},
-      {rank: 3, name: 'Gerd Müller', value: '10 (1970)', aliases: ['gerd muller', 'gerd mueller', 'gerd', 'der bomber'], footballerId: 'Müller, Gerd'},
-      {rank: 4, name: 'Eusébio', value: '9 (1966)', aliases: ['eusebio'], footballerId: 'Eusébio'},
-      {rank: 5, name: 'Kylian Mbappé', value: '8 (2022)', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      // One slot per player, so Mbappé's 2026 haul replaces his 8 from 2022.
+      {rank: 3, name: 'Kylian Mbappé', value: '10 (2026)', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      {rank: 4, name: 'Gerd Müller', value: '10 (1970)', aliases: ['gerd muller', 'gerd mueller', 'gerd', 'der bomber'], footballerId: 'Müller, Gerd'},
+      {rank: 5, name: 'Eusébio', value: '9 (1966)', aliases: ['eusebio'], footballerId: 'Eusébio'},
       {rank: 6, name: 'Ronaldo Nazário', value: '8 (2002)', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
       {rank: 7, name: 'Ademir', value: '8 (1950)', aliases: ['ademir'], footballerId: 'Ademir'},
       {rank: 8, name: 'Guillermo Stábile', value: '8 (1930)', aliases: ['stabile', 'guillermo stabile'], footballerId: 'Stábile, Guillermo'},

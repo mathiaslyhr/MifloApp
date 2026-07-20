@@ -1779,6 +1779,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'atletico-madrid', from: 2025},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'european-championship', count: 1, years: [2024]},
     ],
     tags: ['current-stars'],
@@ -5646,6 +5647,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2024},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
       {type: 'league-title', count: 2, years: [2025, 2026]},
     ],
@@ -5665,6 +5667,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'chelsea', from: 2022},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'european-championship', count: 1, years: [2024]},
     ],
     tags: ['current-stars'],
@@ -8908,6 +8911,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2024},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'league-title', count: 3, years: [2021, 2023, 2025]},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
     ],
@@ -8939,6 +8943,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2025},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'league-title', count: 1, years: [2026]},
     ],
     tags: ['current-stars'],
@@ -9019,6 +9024,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2021},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
       {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
     ],
@@ -9780,6 +9786,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'leverkusen', from: 2023},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 2, years: [2015, 2016], clubId: 'barcelona'},
       {type: 'domestic-cup', count: 1, years: [2017], clubId: 'benfica'},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'leverkusen'},
@@ -11290,6 +11297,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 6, years: [2020, 2022, 2023, 2024, 2025, 2026]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Iglesias, Borja',
+    name: 'Borja Iglesias',
+    nationality: ['Spain'],
+    positions: ['FW'],
+    born: '1993-01-17',
+    shirtNumbers: [9, 26],
+    clubs: [
+      {clubId: 'real-betis', from: 2019, to: 2024},
+      {clubId: 'celta-vigo', from: 2024},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
+      {type: 'domestic-cup', count: 1, years: [2022], clubId: 'real-betis'},
+    ],
   },
   {
     id: 'Iheanacho, Kelechi',
@@ -13652,6 +13675,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'athletic-bilbao', from: 2025},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 2, years: [2019, 2023], clubId: 'man-city'},
       {type: 'champions-league', count: 1, years: [2023]},
       {type: 'european-championship', count: 1, years: [2024]},
@@ -14349,6 +14373,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'atletico-madrid', from: 2019},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'champions-league', count: 1, years: [2018]},
       {type: 'league-title', count: 1, years: [2021]},
     ],
@@ -15379,6 +15404,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Martínez, Lisandro',
+    name: 'Lisandro Martínez',
+    nationality: ['Argentina'],
+    positions: ['DF'],
+    born: '1998-01-18',
+    shirtNumbers: [6, 25],
+    clubs: [
+      {clubId: 'ajax', from: 2019, to: 2022},
+      {clubId: 'man-utd', from: 2022},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2022]},
+      {type: 'league-title', count: 2, years: [2021, 2022]},
+      {type: 'domestic-cup', count: 1, years: [2021], clubId: 'ajax'},
+      {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
+    ],
+  },
+  {
     id: 'Martins, Gelson',
     name: 'Gelson Martins',
     nationality: ['Portugal'],
@@ -16021,6 +16064,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'arsenal', from: 2024},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2020], clubId: 'real-sociedad'},
       {type: 'league-title', count: 1, years: [2026]},
       {type: 'european-championship', count: 1, years: [2024]},
@@ -16996,6 +17040,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'crystal-palace'},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Muñoz, Víctor',
+    name: 'Víctor Muñoz',
+    nationality: ['Spain'],
+    positions: ['FW'],
+    born: '2003-07-13',
+    shirtNumbers: [25],
+    clubs: [
+      {clubId: 'liverpool', from: 2026},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
+    ],
   },
   {
     id: 'Murillo, Michael',
@@ -18078,6 +18136,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2024},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 2, years: [2022, 2023], clubId: 'rb-leipzig'},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
       {type: 'european-championship', count: 1, years: [2024]},
@@ -18387,6 +18446,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'real-sociedad', from: 2015},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2020], clubId: 'real-sociedad'},
       {type: 'european-championship', count: 1, years: [2024]},
     ],
@@ -18936,6 +18996,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2020},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 2, years: [2021, 2025], clubId: 'barcelona'},
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
@@ -19346,6 +19407,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'crystal-palace', from: 2025},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'europa-league', count: 1, years: [2021]},
     ],
     tags: ['current-stars'],
@@ -19650,6 +19712,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'tottenham', from: 2023},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'europa-league', count: 1, years: [2025]},
       {type: 'league-title', count: 1, years: [2021]},
     ],
@@ -19699,6 +19762,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Pubill, Marc',
+    name: 'Marc Pubill',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '2003-06-20',
+    shirtNumbers: [2],
+    clubs: [
+      {clubId: 'atletico-madrid', from: 2025},
+    ],
+    honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
+    ],
   },
   {
     id: 'Puig, Riqui',
@@ -20075,6 +20152,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'arsenal', from: 2023},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'league-title', count: 1, years: [2026]},
     ],
     tags: ['current-stars'],
@@ -20608,6 +20686,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'man-city', from: 2019},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2023], clubId: 'man-city'},
       {type: 'champions-league', count: 1, years: [2023]},
       {type: 'league-title', count: 4, years: [2021, 2022, 2023, 2024]},
@@ -21123,6 +21202,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'psg', from: 2022},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2020], clubId: 'napoli'},
       {type: 'domestic-cup', count: 2, years: [2024, 2025], clubId: 'psg'},
       {type: 'european-championship', count: 1, years: [2024]},
@@ -22747,6 +22827,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'athletic-bilbao', from: 2018},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'athletic-bilbao'},
       {type: 'european-championship', count: 1, years: [2024]},
     ],
@@ -24533,6 +24614,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2022},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2019], clubId: 'valencia'},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
       {type: 'league-title', count: 3, years: [2021, 2025, 2026]},
@@ -26231,6 +26313,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'athletic-bilbao', from: 2021},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'athletic-bilbao'},
       {type: 'european-championship', count: 1, years: [2024]},
     ],
@@ -26513,6 +26596,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'barcelona', from: 2023},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'barcelona'},
       {type: 'european-championship', count: 1, years: [2024]},
       {type: 'league-title', count: 3, years: [2023, 2025, 2026]},
@@ -27111,6 +27195,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'arsenal', from: 2025},
     ],
     honours: [
+      {type: 'world-cup', count: 1, years: [2026]},
       {type: 'domestic-cup', count: 1, years: [2020], clubId: 'real-sociedad'},
       {type: 'league-title', count: 1, years: [2026]},
       {type: 'european-championship', count: 1, years: [2024]},
