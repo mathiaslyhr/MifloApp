@@ -56,7 +56,7 @@ export const BUNDLED_LISTS: TenballList[] = [
     id: 'wc-most-matches',
     kind: 'player',
     entries: [
-      {rank: 1, name: 'Lionel Messi', value: '26', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
+      {rank: 1, name: 'Lionel Messi', value: '34', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
       {rank: 2, name: 'Lothar Matthäus', value: '25', aliases: ['matthaus', 'matthaeus', 'lothar matthaus'], footballerId: 'Matthäus, Lothar'},
       {rank: 3, name: 'Miroslav Klose', value: '24', aliases: ['klose', 'miroslav klose'], footballerId: 'Klose, Miroslav'},
       {rank: 4, name: 'Paolo Maldini', value: '23', aliases: ['maldini', 'paolo maldini'], footballerId: 'Maldini, Paolo'},
