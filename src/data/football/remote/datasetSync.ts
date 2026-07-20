@@ -39,7 +39,7 @@ const SAFE_ROUTES = new Set([
   'Settings',
   'HowToPlay',
   'About',
-  'OneDevice',
+  'GameMode',
 ]);
 
 type Manifest = {

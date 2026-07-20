@@ -203,17 +203,19 @@
     "players1v1": "1v1",
     "playersSolo": "Solo",
     "playersRange": "{{min}}-{{max}}",
-    "helpOneDevice": "Spil på én telefon",
     "helpCompetitive": "Sådan virker Konkurrence",
     "help": {
-      "oneDeviceTitle": "Spil på én telefon",
-      "oneDevice1": "Kun én telefon? Stryg til højre på et multiplayer spil for at få knappen \"1 enhed\" frem.",
-      "oneDevice2": "Tryk på den, og telefonen går rundt i rummet. Alle tager deres tur bag et \"Send telefonen videre\" skærmbillede, så ingen ser noget, de ikke må se.",
-      "oneDevice3": "Ingen kode, intet internet. Det virker i flytilstand.",
       "competitiveTitle": "Sådan virker Konkurrence",
       "competitive1": "Konkurrence er Hattrick, én mod én. En kamp går over fem baner, og den, der vinder flest, tager den.",
       "competitive2": "I skiftes til at spille, og hver tur har to minutter på uret.",
       "competitive3": "Vinder du, stiger din værdi. Taber du, falder den. Værdien er det eneste, du tager med dig, fra €1M op til €250M."
+    },
+    "mode": {
+      "prompt": "Hvordan vil du spille?",
+      "onlineTitle": "Lav en kamp",
+      "onlineBody": "Inviter venner med en kode",
+      "localTitle": "Én telefon",
+      "localBody": "Send telefonen rundt, ingen internet nødvendig"
     }
   },
   "rankedHattrick": {
@@ -359,8 +361,6 @@
       "party": "3+"
     },
     "daily": "Daglig",
-    "localPlay": "Spil på denne telefon",
-    "oneDeviceShort": "1 enhed",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Quiz × tre på stribe",
@@ -370,7 +370,7 @@
           "Hver fodboldspiller kan kun bruges én gang pr. bræt, og et forkert gæt giver turen videre til modstanderen.",
           "Få tre celler på stribe for at vinde.",
           "Gået i stå? Spring din tur over, eller foreslå uafgjort, som alle er enige om.",
-          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
+          "Ingen internet? Tryk på spillet og vælg Én telefon."
         ]
       }
     },
@@ -382,7 +382,7 @@
           "Alle undtagen snyderen får den samme fodboldspiller.",
           "Hver runde stiller appen ét spørgsmål, og alle skriver et hemmeligt svar. Svarene afsløres ét ad gangen. Efter sidste runde stemmer I om, hvem der skal sendes af banen.",
           "Sendt af banen som snyderen? Nævn fodboldspilleren for at stjæle sejren tilbage.",
-          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
+          "Ingen internet? Tryk på spillet og vælg Én telefon."
         ]
       }
     },
@@ -449,7 +449,7 @@
           "Hver runde viser fire fodboldspillere. Tre af dem har noget skjult til fælles, fx en klub, et land eller et trofæ, og én har det ikke.",
           "Alle kapper om at trykke på den der stikker ud, før tiden løber ud. Jo hurtigere du er, jo flere point giver et rigtigt svar.",
           "Efter sidste runde vinder den højeste score.",
-          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
+          "Ingen internet? Tryk på spillet og vælg Én telefon."
         ]
       }
     },
@@ -462,7 +462,7 @@
           "Alle vælger i hemmelighed en rigtig fodboldspiller på samme tid.",
           "Sjældne svar giver mange point, kendte svar giver få, og et forkert svar giver ingenting.",
           "Flest point efter alle runder vinder.",
-          "Ingen internet? Stryg til højre på spilkortet for at spille på én telefon."
+          "Ingen internet? Tryk på spillet og vælg Én telefon."
         ]
       }
     }
@@ -581,7 +581,6 @@
     "faq": "FAQ",
     "privacy": "Privatlivspolitik",
     "reportBug": "Rapportér en fejl",
-    "oneDevice": "Én enhed",
     "version": "MifloBall v{{version}}",
     "playerCount": "{{n}} fodboldspillere",
     "errorLink": "Kunne ikke åbne linket.",
@@ -1354,16 +1353,6 @@
     "step2Title": "Vælg et spil",
     "step2Desc": "Værten vælger et spil, når mindst to spillere er med.",
     "gamesHeading": "Spillene"
-  },
-  "oneDevice": {
-    "title": "Én enhed",
-    "intro": "Flere af spillene kan også spilles sammen på én telefon. Der kræves ikke internet, så det virker på et fly og alle andre steder uden forbindelse.",
-    "step1Title": "Stryg til højre på spillet",
-    "step1Desc": "Stryg til højre på et spil med 1 enhed-knappen under Spil.",
-    "step2Title": "Tryk på telefonknappen",
-    "step2Desc": "En rund 1 enhed-knap dukker op til venstre på kortet. Tryk på den for at starte.",
-    "step3Title": "Send telefonen rundt",
-    "step3Desc": "I skiftes på én telefon. Skærmen fortæller altid, hvem der må kigge, før noget hemmeligt vises."
   },
   "transfer": {
     "title": "Skift til ny telefon",

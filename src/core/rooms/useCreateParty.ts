@@ -23,14 +23,26 @@ export function useCreateParty() {
   const {t} = useTranslation();
   const [busy, setBusy] = useState(false);
 
-  async function createParty(gameType: string = NO_GAME_YET) {
+  /**
+   * `replace` swaps the calling screen for the Lobby instead of pushing over
+   * it — used by the game-mode sheet, which must not sit in the stack
+   * underneath a live room.
+   */
+  async function createParty(
+    gameType: string = NO_GAME_YET,
+    {replace = false}: {replace?: boolean} = {},
+  ) {
     if (busy) {
       return;
     }
     setBusy(true);
     try {
       const room = await createRoom(gameType, [], 0, await myPlayerName());
-      navigation.navigate('Lobby', {roomId: room.id});
+      if (replace) {
+        navigation.replace('Lobby', {roomId: room.id});
+      } else {
+        navigation.navigate('Lobby', {roomId: room.id});
+      }
     } catch (err) {
       toast.error(
         err instanceof BackendUnavailableError

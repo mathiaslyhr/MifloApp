@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-// Gesture-handler's ScrollView so a card's swipe-right pan and the vertical
-// scroll arbitrate natively (the swipe reveals "play on 1 device").
+// Gesture-handler's ScrollView, kept after the row swipe was retired: it still
+// arbitrates with the native stack's own gestures more cleanly than RN's.
 import {ScrollView} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useTranslation} from 'react-i18next';
@@ -9,7 +9,6 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   ChevronRight,
-  Smartphone,
   Swords,
   Users,
   type LucideIcon,
@@ -23,8 +22,6 @@ import {
   PressableScale,
   Screen,
   Segmented,
-  SwipeReveal,
-  closeOpenSwipeReveal,
   Text,
 } from '../../core/ui';
 import {
@@ -47,15 +44,7 @@ import {
 } from '../../core/rooms/rankedService';
 import {formatDelta, formatValue} from '../../games/ranked-hattrick/value';
 import {tierFor} from '../../games/ranked-hattrick/tiers';
-import {GAMES, type GameEntry, type GameType} from '../gamesCatalog';
-
-/** Roomless pass-and-play routes, reachable from the row's phone button. */
-const LOCAL_ROUTES: Record<string, string> = {
-  hattrick: 'HattrickLocal',
-  'red-card': 'RedCardLocal',
-  offside: 'OffsideLocal',
-  'cult-hero': 'CultHeroLocal',
-};
+import {GAMES, type GameEntry} from '../gamesCatalog';
 
 const MULTIPLAYER_GAMES = GAMES.filter(g => !g.single && g.available);
 
@@ -71,7 +60,6 @@ type Mode = 'friendlies' | 'competitive';
  */
 export function PlayTab() {
   const {t} = useTranslation();
-  const colors = useColors();
   const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
   const navigation = useAppNavigation();
@@ -87,16 +75,11 @@ export function PlayTab() {
     readCachedValue();
   }, []);
 
-  // Mint a match locked to this game; the host gathers players in the lobby.
-  // Error toasts are handled inside the hook.
-  const openGame = (entry: GameEntry) => createParty(entry.gameType);
-
-  const openLocal = (gameType: GameType) => {
-    const route = LOCAL_ROUTES[gameType];
-    if (route) {
-      navigation.navigate(route as never);
-    }
-  };
+  // Ask HOW to play before committing to anything. Tapping a game used to mint
+  // an online room on the spot, which made you the host of a live room in one
+  // tap — with backing out deleting it. The sheet owns both routes now.
+  const openGame = (entry: GameEntry) =>
+    navigation.navigate('GameMode', {gameType: entry.gameType});
 
   const friendlies = mode === 'friendlies';
 
@@ -122,35 +105,27 @@ export function PlayTab() {
           paddingTop: insets.top + spacing.sm,
           paddingBottom: NAV_HEIGHT + insets.bottom + spacing.xl,
         }}
-        onScrollBeginDrag={closeOpenSwipeReveal}
         showsVerticalScrollIndicator={false}>
         {/* Wordmark header scrolls off the top (canonical chrome). */}
         <View style={styles.header}>
           <Text variant="wordmark" align="center">
             {t('tabs.play')}
           </Text>
-          {/* The corner explains whichever segment you're on, and its icon says
-              which: a phone for the one-phone trick, a ? for the ranked rules. */}
-          <View style={styles.headerRight}>
-            <CircleButton
-              size={30}
-              accessibilityLabel={
-                friendlies ? t('play.helpOneDevice') : t('play.helpCompetitive')
-              }
-              onPress={() => setShowHelp(true)}>
-              {friendlies ? (
-                <Smartphone
-                  size={15}
-                  color={colors.textSecondary}
-                  strokeWidth={2}
-                />
-              ) : (
+          {/* Competitive only. Friendlies used to carry a phone icon explaining
+              the one-phone trick; the GameMode sheet now says it in words at the
+              moment of choosing, so the explainer had nothing left to explain. */}
+          {!friendlies ? (
+            <View style={styles.headerRight}>
+              <CircleButton
+                size={30}
+                accessibilityLabel={t('play.helpCompetitive')}
+                onPress={() => setShowHelp(true)}>
                 <Text variant="label" color="secondary">
                   ?
                 </Text>
-              )}
-            </CircleButton>
-          </View>
+              </CircleButton>
+            </View>
+          ) : null}
         </View>
 
         <View style={styles.toggle}>
@@ -185,10 +160,6 @@ export function PlayTab() {
                   Icon={entry.Icon}
                   count={countText(entry)}
                   onPress={() => openGame(entry)}
-                  onLocal={
-                    entry.localPlay ? () => openLocal(entry.gameType) : undefined
-                  }
-                  scrollRef={scrollRef}
                 />
               ))}
             </View>
@@ -228,20 +199,12 @@ export function PlayTab() {
       <HowToPlayModal
         visible={showHelp}
         onClose={() => setShowHelp(false)}
-        title={friendlies ? t('play.help.oneDeviceTitle') : t('play.help.competitiveTitle')}
-        lines={
-          friendlies
-            ? [
-                {text: t('play.help.oneDevice1')},
-                {text: t('play.help.oneDevice2')},
-                {text: t('play.help.oneDevice3')},
-              ]
-            : [
-                {text: t('play.help.competitive1')},
-                {text: t('play.help.competitive2')},
-                {text: t('play.help.competitive3')},
-              ]
-        }
+        title={t('play.help.competitiveTitle')}
+        lines={[
+          {text: t('play.help.competitive1')},
+          {text: t('play.help.competitive2')},
+          {text: t('play.help.competitive3')},
+        ]}
       />
     </Screen>
   );
@@ -258,29 +221,24 @@ function SectionLabel({children}: {children: React.ReactNode}) {
 }
 
 /** One game row: a plain white icon (no square, no fill) + title + subtitle +
- * trailing count/chevron. When `onLocal` is set, a swipe-right reveals a
- * "1 device" pass-and-play action. */
+ * trailing count/chevron. Tapping it asks HOW to play (the GameMode sheet);
+ * the row itself no longer carries a second affordance. */
 function GameRow({
   title,
   subtitle,
   Icon,
   count,
   onPress,
-  onLocal,
-  scrollRef,
 }: {
   title: string;
   subtitle: string;
   Icon: LucideIcon;
   count?: string;
   onPress: () => void;
-  onLocal?: () => void;
-  scrollRef?: React.RefObject<ScrollView | null>;
 }) {
-  const {t} = useTranslation();
   const colors = useColors();
   const styles = useThemedStyles(makeStyles);
-  const row = (
+  return (
     <PressableScale
       style={styles.card}
       onPress={onPress}
@@ -302,24 +260,6 @@ function GameRow({
           style={styles.cardSubtitle}>
           {subtitle}
         </Text>
-        {/* The one-phone route, visible at rest. It used to exist ONLY behind a
-            swipe — undiscoverable enough that it needed a help modal, a menu
-            page and a line in How to play to explain it. Three explainers for
-            one gesture is the gesture failing. The swipe still works, as a
-            shortcut for people who already know it. */}
-        {onLocal ? (
-          <PressableScale
-            onPress={onLocal}
-            hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel={t('games.localPlay')}
-            style={styles.localChip}>
-            <Smartphone size={12} color={colors.textSecondary} strokeWidth={2} />
-            <Text variant="caption" color="secondary">
-              {t('games.oneDeviceShort')}
-            </Text>
-          </PressableScale>
-        ) : null}
       </View>
       <View style={styles.trailing}>
         {count ? (
@@ -330,20 +270,6 @@ function GameRow({
         <ChevronRight size={18} color={colors.textTertiary} strokeWidth={2} />
       </View>
     </PressableScale>
-  );
-
-  if (!onLocal) {
-    return row;
-  }
-  return (
-    <SwipeReveal
-      Icon={Smartphone}
-      label={t('games.oneDeviceShort')}
-      actionAccessibilityLabel={t('games.localPlay')}
-      onAction={onLocal}
-      scrollRef={scrollRef}>
-      {row}
-    </SwipeReveal>
   );
 }
 
@@ -588,21 +514,6 @@ const makeStyles = (c: Palette) =>
     // Plain white icon, no square and no background.
     iconSlot: {width: 40, alignItems: 'center', justifyContent: 'center'},
     body: {flex: 1, gap: 2},
-    // Sits under the tagline as its own control: surface2 so it reads as a
-    // raised chip against the card, pill-shaped like every other small control.
-    localChip: {
-      alignSelf: 'flex-start',
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: spacing.xs,
-      marginTop: spacing.xs + 2,
-      paddingVertical: spacing.xs,
-      paddingHorizontal: spacing.sm,
-      borderRadius: radii.pill,
-      backgroundColor: c.surface2,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: c.divider,
-    },
     cardTitle: {},
     cardSubtitle: {},
     trailing: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},

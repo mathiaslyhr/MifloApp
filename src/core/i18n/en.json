@@ -203,17 +203,19 @@
     "players1v1": "1v1",
     "playersSolo": "Solo",
     "playersRange": "{{min}}-{{max}}",
-    "helpOneDevice": "Play on one phone",
     "helpCompetitive": "How Competitive works",
     "help": {
-      "oneDeviceTitle": "Play on one phone",
-      "oneDevice1": "No second phone? Swipe right on any multiplayer game to reveal a 1 device button.",
-      "oneDevice2": "Tap it and the phone goes around the room. Everyone takes their turn behind a \"Pass the phone\" screen, so nobody sees anything they shouldn't.",
-      "oneDevice3": "No code, no internet. It works in flight mode.",
       "competitiveTitle": "How Competitive works",
       "competitive1": "Competitive is Hattrick, one on one. A match runs over five boards and whoever wins the most takes it.",
       "competitive2": "You take turns, and each turn has two minutes on the clock.",
       "competitive3": "Win and your value climbs, lose and it slips. Value is the only thing you carry, from €1M up to €250M."
+    },
+    "mode": {
+      "prompt": "How do you want to play?",
+      "onlineTitle": "Create a match",
+      "onlineBody": "Invite friends with a code",
+      "localTitle": "One phone",
+      "localBody": "Pass this phone around, no internet needed"
     }
   },
   "rankedHattrick": {
@@ -359,8 +361,6 @@
       "party": "3+"
     },
     "daily": "Daily",
-    "localPlay": "Play on this phone",
-    "oneDeviceShort": "1 device",
     "hattrick": {
       "title": "Hattrick",
       "tagline": "Trivia × three in a row",
@@ -370,7 +370,7 @@
           "Each footballer can only be used once per board, and a wrong pick hands the turn to your opponent.",
           "Claim three cells in a row to win.",
           "Stuck? Skip your turn or propose a tie that everyone agrees to.",
-          "No internet? Swipe right on the game card to play on one phone."
+          "No internet? Tap the game and pick One phone."
         ]
       }
     },
@@ -382,7 +382,7 @@
           "Everyone but the faker is given the same footballer.",
           "Each round the app asks one question and everyone types a secret answer. The answers are revealed one by one. After the last round you vote on who to send off.",
           "Sent off as the faker? Name the footballer to steal the win back.",
-          "No internet? Swipe right on the game card to play on one phone."
+          "No internet? Tap the game and pick One phone."
         ]
       }
     },
@@ -449,7 +449,7 @@
           "Every round shows four footballers. Three share something hidden, like a club, a country or a trophy, and one does not.",
           "Everyone races to tap the odd one out before the clock runs dry. The faster you are, the more points a correct pick earns.",
           "After the last round the highest total wins.",
-          "No internet? Swipe right on the game card to play on one phone."
+          "No internet? Tap the game and pick One phone."
         ]
       }
     },
@@ -462,7 +462,7 @@
           "Everyone secretly picks a real footballer at the same time.",
           "Rare picks score big, famous picks score little, and a wrong answer scores nothing.",
           "Highest total after all rounds wins.",
-          "No internet? Swipe right on the game card to play on one phone."
+          "No internet? Tap the game and pick One phone."
         ]
       }
     }
@@ -581,7 +581,6 @@
     "faq": "FAQ",
     "privacy": "Privacy Policy",
     "reportBug": "Report a bug",
-    "oneDevice": "One device",
     "version": "MifloBall v{{version}}",
     "playerCount": "{{n}} footballers",
     "errorLink": "Couldn't open the link.",
@@ -1354,16 +1353,6 @@
     "step2Title": "Pick a game",
     "step2Desc": "The host picks a game once at least two players have joined.",
     "gamesHeading": "The games"
-  },
-  "oneDevice": {
-    "title": "One device",
-    "intro": "Several of the games can also be played together on a single phone. No internet needed, so it works on a plane or anywhere offline.",
-    "step1Title": "Swipe right on the game",
-    "step1Desc": "On the Play tab, swipe right on any game that offers 1 device play.",
-    "step2Title": "Tap the phone button",
-    "step2Desc": "A round 1 device button appears on the left of the card. Tap it to start.",
-    "step3Title": "Pass the phone around",
-    "step3Desc": "Take turns on one phone. The screen always says who may look before anything secret is shown."
   },
   "transfer": {
     "title": "Move to a new phone",

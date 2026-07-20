@@ -9,6 +9,7 @@ import {TabsScreen} from '../../screens/TabsScreen';
 import {JoinScreen} from '../../screens/JoinScreen';
 import {LobbyScreen} from '../../screens/LobbyScreen';
 import {GamePickerScreen} from '../../screens/GamePickerScreen';
+import {GameModeSheet} from '../../screens/GameModeSheet';
 import {HattrickScreen} from '../../screens/HattrickScreen';
 import {HattrickLocalScreen} from '../../screens/HattrickLocalScreen';
 import {HattrickBotScreen} from '../../screens/HattrickBotScreen';
@@ -32,8 +33,8 @@ import {FriendProfileScreen} from '../../screens/profile/FriendProfileScreen';
 import {SettingsScreen} from '../../screens/menu/SettingsScreen';
 import {HowToPlayScreen} from '../../screens/menu/HowToPlayScreen';
 import {AboutScreen} from '../../screens/menu/AboutScreen';
-import {OneDeviceScreen} from '../../screens/menu/OneDeviceScreen';
 import {MoveToPhoneScreen} from '../../screens/menu/MoveToPhoneScreen';
+import {useColors} from '../../theme';
 import type {RootStackParamList} from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -59,6 +60,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const NO_SWIPE_BACK = {gestureEnabled: false} as const;
 
 export function RootNavigator() {
+  // Only the sheet needs a colour here: a formSheet is drawn by UIKit, whose
+  // own backdrop is white. Every other route paints its own canvas.
+  const colors = useColors();
   return (
     // The push transition is deliberately left at the platform default — this
     // was evaluated during the motion-system pass and kept on purpose. iOS
@@ -75,6 +79,22 @@ export function RootNavigator() {
       {/* Live room behind it — leaving is the explicit Leave match flow. */}
       <Stack.Screen name="Lobby" component={LobbyScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="GamePicker" component={GamePickerScreen} />
+      {/* The one deliberate exception to the no-modal note above: this screen
+          IS a sheet, so the swipe-down dismiss that rule protects against is
+          the whole point. UIKit draws it — grabber, rubber-band, drag — so
+          there is no animation code and no Reanimated. `fitToContents` sizes
+          it to the two rows instead of a half-screen slab. */}
+      <Stack.Screen
+        name="GameMode"
+        component={GameModeSheet}
+        options={{
+          presentation: 'formSheet',
+          sheetAllowedDetents: 'fitToContents',
+          sheetGrabberVisible: true,
+          sheetCornerRadius: 28,
+          contentStyle: {backgroundColor: colors.background},
+        }}
+      />
       {/* Online matches: board gestures + a room that outlives the screen. */}
       <Stack.Screen name="Hattrick" component={HattrickScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="RedCard" component={RedCardScreen} options={NO_SWIPE_BACK} />
@@ -107,7 +127,6 @@ export function RootNavigator() {
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="HowToPlay" component={HowToPlayScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
-      <Stack.Screen name="OneDevice" component={OneDeviceScreen} />
       <Stack.Screen name="MoveToPhone" component={MoveToPhoneScreen} />
     </Stack.Navigator>
   );

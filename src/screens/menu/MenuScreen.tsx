@@ -15,7 +15,6 @@ import {
   Info,
   Settings,
   Shield,
-  Smartphone,
   SmartphoneNfc,
   Trash2,
 } from 'lucide-react-native';
@@ -104,11 +103,6 @@ export function MenuScreen({navigation}: Props) {
           label={t('menu.settings')}
           Icon={Settings}
           onPress={() => navigation.navigate('Settings')}
-        />
-        <MenuRow
-          label={t('menu.oneDevice')}
-          Icon={Smartphone}
-          onPress={() => navigation.navigate('OneDevice')}
         />
       </MenuGroup>
 

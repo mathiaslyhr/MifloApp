@@ -6,6 +6,7 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import type {SocialProfile} from '../social/types';
+import type {GameType} from '../../screens/gamesCatalog';
 import type {TabId} from '../ui';
 
 export type RootStackParamList = {
@@ -27,6 +28,9 @@ export type RootStackParamList = {
       gameType: string,
     ) => Promise<'Hattrick' | 'RedCard' | 'Offside' | 'CultHero' | undefined>;
   };
+  /** "How do you want to play?" — the ways into one multiplayer game, on a
+   * native sheet. Both choices replace it, so it never lingers in the stack. */
+  GameMode: {gameType: GameType};
   Hattrick: {roomId: string};
   RedCard: {roomId: string};
   Offside: {roomId: string};
@@ -64,7 +68,6 @@ export type RootStackParamList = {
   Settings: undefined;
   HowToPlay: undefined;
   About: undefined;
-  OneDevice: undefined;
   /** Explains moving a profile to a new phone (the device-linking flow). */
   MoveToPhone: undefined;
 };
