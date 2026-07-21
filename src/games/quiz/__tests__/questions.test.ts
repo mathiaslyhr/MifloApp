@@ -106,7 +106,7 @@ describe('buildQuestions', () => {
     for (const q of trophy) {
       const label = q.prompt.match(/has won the (.+)\?$/)![1];
       const type: HonourType =
-        label === 'World Cup' ? 'world-cup' : 'champions-league';
+        label === 'world championship' ? 'world-cup' : 'champions-league';
       const correct = playerByName.get(q.options[q.correctIndex])!;
       expect(hasHonour(correct, type)).toBe(true);
       q.options

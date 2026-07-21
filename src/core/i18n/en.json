@@ -226,11 +226,11 @@
       "honourCount": {
         "champions-league": "{{name}} has won the Champions League {{times}} times.",
         "europa-league": "{{name}} has won the Europa League {{times}} times.",
-        "world-cup": "{{name}} has won the World Cup {{times}} times.",
+        "world-cup": "{{name}} has been world champion {{times}} times.",
         "european-championship": "{{name}} has won the European Championship {{times}} times.",
         "league-title": "{{name}} has won {{times}} league titles.",
         "domestic-cup": "{{name}} has won {{times}} domestic cups.",
-        "ballon-dor": "{{name}} has won the Ballon d'Or {{times}} times.",
+        "ballon-dor": "{{name}} has been named the world's best player {{times}} times.",
         "golden-boot": "{{name}} has won {{times}} Golden Boots.",
         "copa-america": "{{name}} has won the Copa América {{times}} times.",
         "player-of-the-season": "{{name}} has been named Player of the Season {{times}} times."
@@ -238,9 +238,9 @@
       "honourYear": {
         "champions-league": "{{name}} won the Champions League in {{year}}.",
         "europa-league": "{{name}} won the Europa League in {{year}}.",
-        "world-cup": "{{name}} won the World Cup in {{year}}.",
+        "world-cup": "{{name}} was a world champion in {{year}}.",
         "european-championship": "{{name}} won the European Championship in {{year}}.",
-        "ballon-dor": "{{name}} won the Ballon d'Or in {{year}}.",
+        "ballon-dor": "{{name}} was named the world's best player in {{year}}.",
         "copa-america": "{{name}} won the Copa América in {{year}}."
       },
       "leagueTitle": "{{name}} won the league with {{club}} in {{year}}.",
@@ -728,7 +728,7 @@
       "q18": "Would you buy his shirt?",
       "q19": "How many yellow cards would he pick up in a season?",
       "q20": "Rate his goal celebrations from 1 to 10.",
-      "q21": "What would his highest FIFA rating be?",
+      "q21": "What overall rating out of 99 would he get?",
       "q26": "Would you trust him with a penalty in a final?",
       "q27": "Rate his haircuts over the years from 1 to 10.",
       "q30": "Which national team would he improve the most?",
@@ -737,7 +737,7 @@
       "q48": "Rate his weak foot from 1 to 10.",
       "q49": "Which position would he be worst at?",
       "q50": "Which club that he never played for fits him best?",
-      "q51": "Where would he finish in the Ballon d'Or in his best year?",
+      "q51": "Where would he rank among the world's best players in his best year?",
       "q53": "Rate his big-game performances from 1 to 10.",
       "q57": "What would make him a better player?",
       "q58": "Is he underrated or overrated?"
@@ -835,8 +835,8 @@
     "explanation": {
       "honour": {
         "champions-league": "{{name}} never won the Champions League. The other three all did.",
-        "world-cup": "{{name}} never won the World Cup. The other three all did.",
-        "ballon-dor": "{{name}} never won the Ballon d'Or. The other three all did.",
+        "world-cup": "{{name}} was never a world champion. The other three all were.",
+        "ballon-dor": "{{name}} was never named the world's best player. The other three all were.",
         "european-championship": "{{name}} never won the European Championship. The other three all did.",
         "europa-league": "{{name}} never won the Europa League. The other three all did.",
         "copa-america": "{{name}} never won the Copa América. The other three all did.",
@@ -920,10 +920,10 @@
       "honour": {
         "champions-league": "Name a player who has won the Champions League",
         "europa-league": "Name a player who has won the Europa League",
-        "world-cup": "Name a World Cup winner",
+        "world-cup": "Name a world champion",
         "european-championship": "Name a player who has won the Euros",
         "copa-america": "Name a player who has won the Copa América",
-        "ballon-dor": "Name a Ballon d'Or winner",
+        "ballon-dor": "Name a player voted the world's best",
         "golden-boot": "Name a Golden Boot winner"
       }
     },
@@ -1129,8 +1129,8 @@
       "daily": "A new team sheet drops every day, the same for everyone."
     },
     "competitions": {
-      "worldCupFinal": "World Cup Final {{year}}",
-      "worldCupThirdPlace": "World Cup third place play-off {{year}}",
+      "worldCupFinal": "World final {{year}}",
+      "worldCupThirdPlace": "Third place {{year}}",
       "euroFinal": "Euro Final {{year}}",
       "uclFinal": "Champions League Final {{year}}",
       "europeanCupFinal": "European Cup Final {{year}}",
@@ -1180,16 +1180,16 @@
     },
     "lists": {
       "most-ballon-dor": {
-        "title": "Most Ballon d'Or wins",
-        "note": "Includes the 2025 Ballon d'Or"
+        "title": "Most times named the world's best player",
+        "note": "Includes 2025"
       },
       "wc-top-scorers": {
-        "title": "World Cup all-time top scorers",
-        "note": "Includes the 2026 World Cup"
+        "title": "World finals all-time top scorers",
+        "note": "Includes the 2026 finals"
       },
       "wc-most-matches": {
-        "title": "Most World Cup matches played",
-        "note": "Includes the 2026 World Cup"
+        "title": "Most world-finals matches played",
+        "note": "Includes the 2026 finals"
       },
       "pl-top-scorers": {
         "title": "Premier League all-time top scorers",
@@ -1228,16 +1228,16 @@
         "note": "Includes summer 2026"
       },
       "last-10-ballon-dor": {
-        "title": "The last 10 different Ballon d'Or winners",
-        "note": "Includes the 2025 Ballon d'Or"
+        "title": "The last 10 players voted the world's best",
+        "note": "Includes 2025"
       },
       "last-10-wc-golden-ball": {
-        "title": "The last 10 different World Cup Golden Ball winners",
-        "note": "Includes the 2026 World Cup"
+        "title": "The last 10 different world-finals best players",
+        "note": "Includes the 2026 finals"
       },
       "last-10-wc-golden-boot": {
-        "title": "The last 10 World Cup top scorers",
-        "note": "Includes the 2026 World Cup"
+        "title": "The last 10 world-finals top scorers",
+        "note": "Includes the 2026 finals"
       },
       "last-10-cl-winners": {
         "title": "The last 10 different Champions League winners",
@@ -1316,8 +1316,8 @@
         "note": "Includes the 2025/26 season"
       },
       "wc-goals-tournament": {
-        "title": "Most goals at a single World Cup",
-        "note": "Includes the 2026 World Cup"
+        "title": "Most goals at a single world finals",
+        "note": "Includes the 2026 finals"
       },
       "man-united-top-scorers": {
         "title": "Manchester United's all-time top scorers",

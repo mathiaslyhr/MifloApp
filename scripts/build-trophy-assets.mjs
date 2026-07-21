@@ -34,13 +34,20 @@ const plinth = (y = 52) =>
 const wrap = inner => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">${inner}</svg>`;
 
 const TROPHIES = {
-  // FIFA World Cup — gold globe on a spiralling base.
+  // World title — a laurel wreath around a star. A generic "champion of the
+  // world" mark, deliberately sharing no shape with any real trophy.
   'world-cup': wrap(
-    plinth(50) +
-    `<path d="M26 50 C23 40 25 31 32 26 C39 31 41 40 38 50 Z" fill="${GOLD}"/>` +
-    `<path d="M32 26 C29 34 29 42 30 50" stroke="${GOLD_D}" stroke-width="1.4" fill="none"/>` +
-    `<circle cx="32" cy="19" r="10" fill="${GOLD_L}" stroke="${GOLD_D}" stroke-width="1.6"/>` +
-    `<path d="M22 19h20M32 9v20M24.5 13.5q7.5 5 15 0M24.5 24.5q7.5-5 15 0" stroke="${GOLD_D}" stroke-width="1.1" fill="none"/>`,
+    `<path d="M32 53 C22 51 17 41 19 29" fill="none" stroke="${GOLD}" stroke-width="2.4" stroke-linecap="round"/>` +
+    `<path d="M32 53 C42 51 47 41 45 29" fill="none" stroke="${GOLD}" stroke-width="2.4" stroke-linecap="round"/>` +
+    `<g fill="${GOLD_L}">` +
+    `<ellipse cx="18" cy="31" rx="2.3" ry="3.8" transform="rotate(-32 18 31)"/>` +
+    `<ellipse cx="19.5" cy="39" rx="2.3" ry="3.8" transform="rotate(-12 19.5 39)"/>` +
+    `<ellipse cx="23.5" cy="46" rx="2.3" ry="3.8" transform="rotate(22 23.5 46)"/>` +
+    `<ellipse cx="46" cy="31" rx="2.3" ry="3.8" transform="rotate(32 46 31)"/>` +
+    `<ellipse cx="44.5" cy="39" rx="2.3" ry="3.8" transform="rotate(12 44.5 39)"/>` +
+    `<ellipse cx="40.5" cy="46" rx="2.3" ry="3.8" transform="rotate(-22 40.5 46)"/>` +
+    `</g>` +
+    `<path d="M32 19 l2.9 6 6.5.9 -4.7 4.6 1.1 6.5 -5.8-3 -5.8 3 1.1-6.5 -4.7-4.6 6.5-.9 Z" fill="${GOLD}" stroke="${GOLD_D}" stroke-width="1"/>`,
   ),
   // Champions League — silver "big ears" cup.
   'champions-league': wrap(

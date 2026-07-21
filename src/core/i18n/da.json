@@ -230,7 +230,7 @@
         "european-championship": "{{name}} har vundet EM {{times}} gange.",
         "league-title": "{{name}} har vundet {{times}} mesterskaber.",
         "domestic-cup": "{{name}} har vundet {{times}} pokaltitler.",
-        "ballon-dor": "{{name}} har vundet Ballon d'Or {{times}} gange.",
+        "ballon-dor": "{{name}} er blevet kåret til verdens bedste spiller {{times}} gange.",
         "golden-boot": "{{name}} har vundet {{times}} guldstøvler.",
         "copa-america": "{{name}} har vundet Copa América {{times}} gange.",
         "player-of-the-season": "{{name}} er blevet kåret til årets spiller {{times}} gange."
@@ -240,7 +240,7 @@
         "europa-league": "{{name}} vandt Europa League i {{year}}.",
         "world-cup": "{{name}} vandt VM i {{year}}.",
         "european-championship": "{{name}} vandt EM i {{year}}.",
-        "ballon-dor": "{{name}} vandt Ballon d'Or i {{year}}.",
+        "ballon-dor": "{{name}} blev kåret til verdens bedste spiller i {{year}}.",
         "copa-america": "{{name}} vandt Copa América i {{year}}."
       },
       "leagueTitle": "{{name}} vandt mesterskabet med {{club}} i {{year}}.",
@@ -728,7 +728,7 @@
       "q18": "Ville du købe hans trøje?",
       "q19": "Hvor mange gule kort ville han få på en sæson?",
       "q20": "Giv hans målfejringer point fra 1 til 10.",
-      "q21": "Hvad ville hans højeste FIFA-rating være?",
+      "q21": "Hvilken samlet rating ud af 99 ville han få?",
       "q26": "Ville du stole på ham til et straffespark i en finale?",
       "q27": "Giv hans frisurer gennem tiden point fra 1 til 10.",
       "q30": "Hvilket landshold ville han forbedre mest?",
@@ -737,7 +737,7 @@
       "q48": "Giv hans svage fod point fra 1 til 10.",
       "q49": "Hvilken position ville han være dårligst på?",
       "q50": "Hvilken klub, han aldrig har spillet for, passer bedst til ham?",
-      "q51": "Hvor ville han slutte i Ballon d'Or-afstemningen i sit bedste år?",
+      "q51": "Hvor ville han placere sig blandt verdens bedste spillere i sit bedste år?",
       "q53": "Giv hans præstationer i store kampe point fra 1 til 10.",
       "q57": "Hvad ville gøre ham til en bedre spiller?",
       "q58": "Er han undervurderet eller overvurderet?"
@@ -836,7 +836,7 @@
       "honour": {
         "champions-league": "{{name}} har aldrig vundet Champions League. De tre andre har.",
         "world-cup": "{{name}} har aldrig vundet VM. De tre andre har.",
-        "ballon-dor": "{{name}} har aldrig vundet Ballon d'Or. De tre andre har.",
+        "ballon-dor": "{{name}} er aldrig blevet kåret til verdens bedste spiller. De tre andre er.",
         "european-championship": "{{name}} har aldrig vundet EM. De tre andre har.",
         "europa-league": "{{name}} har aldrig vundet Europa League. De tre andre har.",
         "copa-america": "{{name}} har aldrig vundet Copa América. De tre andre har.",
@@ -923,7 +923,7 @@
         "world-cup": "Nævn en spiller der har vundet VM",
         "european-championship": "Nævn en spiller der har vundet EM",
         "copa-america": "Nævn en spiller der har vundet Copa América",
-        "ballon-dor": "Nævn en spiller der har vundet Ballon d'Or",
+        "ballon-dor": "Nævn en spiller der er kåret til verdens bedste",
         "golden-boot": "Nævn en spiller der har vundet en Golden Boot"
       }
     },
@@ -1180,8 +1180,8 @@
     },
     "lists": {
       "most-ballon-dor": {
-        "title": "Flest Ballon d'Or-titler",
-        "note": "Inkluderer Ballon d'Or 2025"
+        "title": "Flest gange kåret til verdens bedste spiller",
+        "note": "Inkluderer 2025"
       },
       "wc-top-scorers": {
         "title": "Flest VM-mål nogensinde",
@@ -1228,11 +1228,11 @@
         "note": "Inkluderer sommeren 2026"
       },
       "last-10-ballon-dor": {
-        "title": "De sidste 10 forskellige Ballon d'Or-vindere",
-        "note": "Inkluderer Ballon d'Or 2025"
+        "title": "De sidste 10 kåret til verdens bedste spiller",
+        "note": "Inkluderer 2025"
       },
       "last-10-wc-golden-ball": {
-        "title": "De sidste 10 forskellige vindere af VM's Golden Ball",
+        "title": "De sidste 10 kåret til bedste spiller ved VM",
         "note": "Inkluderer VM 2026"
       },
       "last-10-wc-golden-boot": {

@@ -117,9 +117,9 @@ const NATION_SHORT: Record<string, string> = {
 };
 
 const HONOUR_SHORT: Record<string, string> = {
-  'champions-league': 'UCL', 'europa-league': 'UEL', 'world-cup': 'WC',
+  'champions-league': 'UCL', 'europa-league': 'UEL', 'world-cup': 'World',
   'european-championship': 'Euros', 'league-title': 'League title', 'domestic-cup': 'Domestic cup',
-  'ballon-dor': 'Ballon', 'golden-boot': 'Golden Boot', 'copa-america': 'Copa',
+  'ballon-dor': 'Best player', 'golden-boot': 'Golden Boot', 'copa-america': 'Copa',
   'player-of-the-season': 'POTS',
 };
 

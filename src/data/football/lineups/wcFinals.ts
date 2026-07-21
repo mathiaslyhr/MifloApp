@@ -7,7 +7,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-1970-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1970,
     formation: '4-2-4',
     match: {
@@ -33,7 +33,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-2002-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2002,
     formation: '3-5-2',
     kit: {body: '#FFDC02', number: '#1E7A34'},
@@ -60,7 +60,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'france-1998-world-cup-final',
     team: 'France',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1998,
     formation: '4-3-1-2',
     kit: {body: '#21304E', number: '#F4F4F6'},
@@ -87,7 +87,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'germany-2014-world-cup-final',
     team: 'Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2014,
     formation: '4-3-3',
     kit: {body: '#F4F4F6', number: '#1A1A1A'},
@@ -115,7 +115,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'spain-2010-world-cup-final',
     team: 'Spain',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2010,
     formation: '4-2-3-1',
     kit: {body: '#1D2951', number: '#F4F4F6'},
@@ -143,7 +143,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-2022-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2022,
     formation: '4-3-3',
     kit: {body: '#9DC6E8', number: '#1A1A1A'},
@@ -173,7 +173,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'france-2018-world-cup-final',
     team: 'France',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2018,
     formation: '4-2-3-1',
     kit: {body: '#21304E', number: '#F4F4F6'},
@@ -201,7 +201,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'croatia-2018-world-cup-final',
     team: 'Croatia',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2018,
     formation: '4-2-3-1',
     kit: {body: '#F4F4F6', number: '#E0271A'},
@@ -228,7 +228,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'west-germany-1954-world-cup-final',
     team: 'West Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1954,
     formation: '3-2-2-3',
     match: {
@@ -254,7 +254,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'hungary-1954-world-cup-final',
     team: 'Hungary',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1954,
     formation: '3-2-2-3',
     match: {
@@ -280,7 +280,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-1958-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1958,
     formation: '4-2-4',
     match: {
@@ -306,7 +306,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-1962-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1962,
     formation: '4-3-3',
     match: {
@@ -332,7 +332,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'england-1966-world-cup-final',
     team: 'England',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1966,
     formation: '4-4-2',
     match: {
@@ -359,7 +359,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'west-germany-1966-world-cup-final',
     team: 'West Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1966,
     formation: '4-3-3',
     match: {
@@ -386,7 +386,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'west-germany-1974-world-cup-final',
     team: 'West Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1974,
     formation: '4-3-3',
     match: {
@@ -412,7 +412,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'netherlands-1974-world-cup-final',
     team: 'Netherlands',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1974,
     formation: '4-3-3',
     match: {
@@ -438,7 +438,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-1978-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1978,
     formation: '4-3-3',
     match: {
@@ -465,7 +465,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'netherlands-1978-world-cup-final',
     team: 'Netherlands',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1978,
     formation: '4-4-2',
     match: {
@@ -492,7 +492,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'italy-1982-world-cup-final',
     team: 'Italy',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1982,
     formation: '5-3-2',
     match: {
@@ -518,7 +518,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-1986-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1986,
     formation: '3-5-2',
     match: {
@@ -544,7 +544,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'west-germany-1990-world-cup-final',
     team: 'West Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1990,
     formation: '5-3-2',
     kit: {body: '#F4F4F6', number: '#1A1A1A'},
@@ -571,7 +571,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-1994-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1994,
     formation: '4-4-2',
     kit: {body: '#FFDC02', number: '#1E7A34'},
@@ -601,7 +601,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'italy-1994-world-cup-final',
     team: 'Italy',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1994,
     formation: '4-4-2',
     kit: {body: '#1B62A8', number: '#F4F4F6'},
@@ -631,7 +631,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'brazil-1998-world-cup-final',
     team: 'Brazil',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1998,
     formation: '4-4-2',
     kit: {body: '#FFDC02', number: '#1E7A34'},
@@ -658,7 +658,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'germany-2002-world-cup-final',
     team: 'Germany',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2002,
     formation: '5-3-2',
     kit: {body: '#F4F4F6', number: '#1A1A1A'},
@@ -685,7 +685,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'italy-2006-world-cup-final',
     team: 'Italy',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2006,
     formation: '4-2-3-1',
     kit: {body: '#1B62A8', number: '#F4F4F6'},
@@ -715,7 +715,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'france-2006-world-cup-final',
     team: 'France',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2006,
     formation: '4-2-3-1',
     kit: {body: '#21304E', number: '#F4F4F6'},
@@ -745,7 +745,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'netherlands-2010-world-cup-final',
     team: 'Netherlands',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2010,
     formation: '4-2-3-1',
     kit: {body: '#F36C21', number: '#F4F4F6'},
@@ -773,7 +773,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-2014-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2014,
     formation: '4-2-3-1',
     kit: {body: '#1A2A56', number: '#F4F4F6'},
@@ -801,7 +801,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'france-2022-world-cup-final',
     team: 'France',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2022,
     formation: '4-2-3-1',
     kit: {body: '#21304E', number: '#F4F4F6'},
@@ -831,7 +831,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-1990-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 1990,
     formation: '5-3-2',
     // West Germany wore white, so Argentina took their blue change shirt
@@ -862,7 +862,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'spain-2026-world-cup-final',
     team: 'Spain',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2026,
     formation: '4-2-3-1',
     kit: {body: '#C60B1E', number: '#F7D117'},
@@ -892,7 +892,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'argentina-2026-world-cup-final',
     team: 'Argentina',
-    competition: 'World Cup Final',
+    competition: 'World final',
     year: 2026,
     formation: '4-4-2',
     kit: {body: '#9DC6E8', number: '#1A1A1A'},
@@ -920,7 +920,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'france-2026-world-cup-third-place',
     team: 'France',
-    competition: 'World Cup third place play-off',
+    competition: 'Third place',
     year: 2026,
     formation: '4-2-3-1',
     kit: {body: '#21304E', number: '#F4F4F6'},
@@ -949,7 +949,7 @@ export const WC_FINALS: readonly FamousLineup[] = [
   {
     id: 'england-2026-world-cup-third-place',
     team: 'England',
-    competition: 'World Cup third place play-off',
+    competition: 'Third place',
     year: 2026,
     formation: '4-1-4-1',
     kit: {body: '#F4F4F6', number: '#232B4A'},
