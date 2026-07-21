@@ -7,6 +7,7 @@
  * same either way — only the number of sides and the turn `order` differ.
  */
 import type {Criterion} from '../../data/football';
+import type {BoardTier} from './grid';
 
 export type Mode = 'individual' | 'teams';
 
@@ -70,6 +71,13 @@ export type GridState = {
   tieOffer?: TieOffer | null;
   /** Order-independent fingerprint of the grid's axes (repeat-avoidance). */
   signature?: string;
+  /**
+   * How gentle the BOARD should be, carried on the state so every later board
+   * of the same session (rematch, next board) is generated the same way without
+   * threading a parameter through every caller. Only solo-vs-AI sets it; absent
+   * means the full-strength board that online, ranked and pass-and-play use.
+   */
+  boardTier?: BoardTier;
   /**
    * Why the board ended early, when it wasn't played out. `'surrender'` = a
    * player conceded (solo vs AI); the board reveals the "what could have been"

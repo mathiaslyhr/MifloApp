@@ -4,7 +4,7 @@
  * via `play_move`; the server only checks it's their turn).
  */
 import {getById, matches} from '../../data/football';
-import {generateGrid, gridSignature, type Grid} from './grid';
+import {generateGrid, gridSignature, type BoardTier, type Grid} from './grid';
 import type {Beat, Cell, GridState, Side} from './types';
 
 /** Distinct side colours (individual mode uses one per player). */
@@ -98,7 +98,7 @@ type RosterEntry = {userId: string; name: string};
 export function createIndividualState(
   grid: Grid,
   roster: RosterEntry[],
-  opts: {avoidStarter?: string} = {},
+  opts: {avoidStarter?: string; boardTier?: BoardTier} = {},
 ): GridState {
   // Randomise the turn order so the starter isn't always the host. If the same
   // player would start again (avoidStarter), swap them out of the lead so the
@@ -131,6 +131,7 @@ export function createIndividualState(
     matchWinner: null,
     beat: null,
     signature: gridSignature(grid),
+    boardTier: opts.boardTier,
   };
 }
 
@@ -169,8 +170,12 @@ export function createRematchState(state: GridState): GridState {
   }));
   const grid = generateGrid(Math.random, {
     avoid: state.signature ? [state.signature] : [],
+    difficulty: state.boardTier,
   });
-  return createIndividualState(grid, roster, {avoidStarter: state.order[0]});
+  return createIndividualState(grid, roster, {
+    avoidStarter: state.order[0],
+    boardTier: state.boardTier,
+  });
 }
 
 /** The row + col criteria that meet at a cell. */

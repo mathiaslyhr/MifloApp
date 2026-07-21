@@ -9,6 +9,15 @@
  * the i18n catalogs; an OTA content pack ships new lists together with their
  * title strings (same model as the Red Card question pool).
  *
+ * Beside the title, every list carries `tenball.lists.<id>.note` — one line
+ * saying WHERE THE DATA STOPS ("Including the 2026 World Cup", "Through the
+ * 2025/26 season"). It renders under the title while playing. This is not
+ * decoration: without it a player has no way to know whether a just-finished
+ * tournament is in the answers, and a correct-feeling guess scores as a miss.
+ * The note must describe the data as authored below, so re-check it whenever
+ * you refresh a list's values. Both the lists test and data:publish fail
+ * without an English note.
+ *
  * Curation rules (enforced by __tests__/lists.test.ts where possible):
  * - exactly 10 entries, ranks 1..10; real-world ties get a curator order.
  * - aliases are pre-folded (lowercase, accents stripped) and unique across
@@ -220,16 +229,16 @@ export const BUNDLED_LISTS: TenballList[] = [
     id: 'last-10-wc-golden-ball',
     kind: 'player',
     entries: [
-      {rank: 1, name: 'Lionel Messi', value: '2022', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
-      {rank: 2, name: 'Luka Modrić', value: '2018', aliases: ['modric', 'luka modric'], footballerId: 'Modrić, Luka'},
-      {rank: 3, name: 'Diego Forlán', value: '2010', aliases: ['forlan', 'diego forlan'], footballerId: 'Forlán, Diego'},
-      {rank: 4, name: 'Zinédine Zidane', value: '2006', aliases: ['zidane', 'zinedine zidane', 'zizou'], footballerId: 'Zidane, Zinédine'},
-      {rank: 5, name: 'Oliver Kahn', value: '2002', aliases: ['kahn', 'oliver kahn'], footballerId: 'Kahn, Oliver'},
-      {rank: 6, name: 'Ronaldo Nazário', value: '1998', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
-      {rank: 7, name: 'Romário', value: '1994', aliases: ['romario'], footballerId: 'Romário'},
-      {rank: 8, name: 'Salvatore Schillaci', value: '1990', aliases: ['schillaci', 'salvatore schillaci', 'toto schillaci'], footballerId: 'Schillaci, Salvatore'},
-      {rank: 9, name: 'Diego Maradona', value: '1986', aliases: ['maradona', 'diego maradona'], footballerId: 'Maradona, Diego'},
-      {rank: 10, name: 'Paolo Rossi', value: '1982', aliases: ['paolo rossi', 'rossi'], footballerId: 'Rossi, Paolo'},
+      {rank: 1, name: 'Kylian Mbappé', value: '2026', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      {rank: 2, name: 'Lionel Messi', value: '2022', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
+      {rank: 3, name: 'Luka Modrić', value: '2018', aliases: ['modric', 'luka modric'], footballerId: 'Modrić, Luka'},
+      {rank: 4, name: 'Diego Forlán', value: '2010', aliases: ['forlan', 'diego forlan'], footballerId: 'Forlán, Diego'},
+      {rank: 5, name: 'Zinédine Zidane', value: '2006', aliases: ['zidane', 'zinedine zidane', 'zizou'], footballerId: 'Zidane, Zinédine'},
+      {rank: 6, name: 'Oliver Kahn', value: '2002', aliases: ['kahn', 'oliver kahn'], footballerId: 'Kahn, Oliver'},
+      {rank: 7, name: 'Ronaldo Nazário', value: '1998', aliases: ['ronaldo', 'ronaldo nazario', 'r9', 'il fenomeno', 'el fenomeno'], footballerId: 'Ronaldo'},
+      {rank: 8, name: 'Romário', value: '1994', aliases: ['romario'], footballerId: 'Romário'},
+      {rank: 9, name: 'Salvatore Schillaci', value: '1990', aliases: ['schillaci', 'salvatore schillaci', 'toto schillaci'], footballerId: 'Schillaci, Salvatore'},
+      {rank: 10, name: 'Diego Maradona', value: '1986', aliases: ['maradona', 'diego maradona'], footballerId: 'Maradona, Diego'},
     ],
   },
   {

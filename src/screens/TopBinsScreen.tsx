@@ -338,6 +338,7 @@ export function TopBinsScreen({navigation}: Props) {
     other: 'tenball.inputPlaceholderOther',
   } as const;
   const inputPlaceholder = t(placeholderByKind[list.kind ?? 'player']);
+  const listNote = t(`tenball.lists.${state.listId}.note`, {defaultValue: ''});
   const keptStreak = state.status === 'won' && misses <= STREAK_MISS_LIMIT;
   const streakStillAlive = misses <= STREAK_MISS_LIMIT;
 
@@ -367,6 +368,15 @@ export function TopBinsScreen({navigation}: Props) {
                 : t('tenball.revealedTitle')
               : t(`tenball.lists.${state.listId}.title`)}
           </Text>
+          {/* What the list counts up to. Without it a player can't tell whether
+              a just-finished tournament is in the answers, and a right-feeling
+              guess scores as a miss. Optional: a pack predating the notes (or a
+              list that genuinely needs none) simply renders no row. */}
+          {!finished && listNote ? (
+            <Text variant="caption" color="muted" align="center">
+              {listNote}
+            </Text>
+          ) : null}
           {/* While playing the counter carries the score; once finished the
               list title moves down here so the payoff line can take over. */}
           <Text variant="caption" color="muted" align="center">

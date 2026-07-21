@@ -165,6 +165,14 @@ for (const id of listIds) {
   if (!daLists[id]?.title) {
     console.warn(`  warning: Top Bins list '${id}' has no Danish title.`);
   }
+  // Every list must say where its data stops, or a right-feeling answer scores
+  // as a miss (see the 2026 World Cup on wc-top-scorers).
+  if (!enLists[id]?.note) {
+    fail(`Top Bins list '${id}' has no English 'note' (data cutoff) in en.json.`);
+  }
+  if (!daLists[id]?.note) {
+    console.warn(`  warning: Top Bins list '${id}' has no Danish note.`);
+  }
 }
 const lineupIds = new Set(football.FAMOUS_LINEUPS.map(l => l.id));
 for (const [dateKey, id] of Object.entries(TEAMSHEET_SCHEDULE)) {

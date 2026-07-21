@@ -23,6 +23,7 @@ import {
   type Criterion,
   type Rng,
 } from '../../data/football';
+import {famePrior} from '../cult-hero/famePrior';
 import {PLAYER_AVATARS} from './assets/playerAvatars';
 
 const LEAGUE_LABELS: Record<string, string> = {
@@ -477,12 +478,70 @@ const KIND_CAP: Partial<Record<Criterion['kind'], number>> = {
   treble: 1,
 };
 
+/**
+ * How hard the BOARD is, as opposed to how well the opponent plays it (that is
+ * `BOT_TIERS` in bot.ts — the two are siblings and should be read together).
+ * Picking "easy" used to hand a beginner a full-strength grid and merely a
+ * dumber bot; these tiers make the puzzle itself gentler:
+ *
+ * - `minPerLadder` — required distinct answers per cell, tried in order. More
+ *   answers per cell = more ways to be right.
+ * - `kinds` — restricts which axis kinds may appear. Easy sticks to the axes a
+ *   casual fan can actually reason about (clubs, nations, headline honours) and
+ *   never draws "Played with Cancelo", a shirt number or a treble.
+ * - `cellStar` — every cell must hold at least one answer this famous. This is
+ *   the lever that matters most: four players nobody has heard of is not an
+ *   easy cell just because it is four.
+ *
+ * `hard` reproduces the historical behaviour exactly, and an absent tier
+ * resolves to `hard`, so online, ranked and pass-and-play are untouched.
+ */
+export type BoardTier = 'easy' | 'medium' | 'hard';
+
+type TierSpec = {
+  minPerLadder: readonly number[];
+  kinds: ReadonlySet<Criterion['kind']> | null;
+  cellStar: number | null;
+};
+
+const BOARD_TIERS: Record<BoardTier, TierSpec> = {
+  easy: {
+    minPerLadder: [4, 3, 2],
+    kinds: new Set<Criterion['kind']>(['club', 'nationality', 'honour']),
+    cellStar: 20,
+  },
+  medium: {minPerLadder: [3, 2], kinds: null, cellStar: 12},
+  hard: {minPerLadder: [2, 1], kinds: null, cellStar: null},
+};
+
+/**
+ * famePrior for every footballer, computed once per dataset generation. The
+ * search below asks about fame on every grid that clears the disjoint-assignment
+ * check, and famePrior walks a player's whole honour/club history each call.
+ */
+const famePriorById = derivedFromData(() => {
+  const byId = new Map<string, number>();
+  for (const f of FOOTBALLERS) {
+    byId.set(f.id, famePrior(f));
+  }
+  return byId;
+});
+
 export function generateGrid(
   rng: Rng = Math.random,
-  opts: {avoid?: readonly string[]} = {},
+  opts: {avoid?: readonly string[]; difficulty?: BoardTier} = {},
 ): Grid {
-  const pool = candidatePool();
+  const tier = BOARD_TIERS[opts.difficulty ?? 'hard'];
+  const fame = famePriorById();
+  const pool = tier.kinds
+    ? candidatePool().filter(cand => tier.kinds!.has(cand.c.kind))
+    : candidatePool();
   const avoid = new Set(opts.avoid ?? []);
+
+  /** Does every cell hold at least one answer famous enough for this tier? */
+  const everyCellHasAStar = (cellIds: string[][]): boolean =>
+    tier.cellStar === null ||
+    cellIds.every(ids => ids.some(id => (fame.get(id) ?? 0) >= tier.cellStar!));
 
   const attempt = (minPer: number): Grid | null => {
     // Remember the first solvable grid so we never fail even if none clears the
@@ -551,6 +610,10 @@ export function generateGrid(
         if (!hasDisjointAssignment(cellIds, minPer)) {
           continue;
         }
+        // Gentler tiers additionally demand a recognisable name in every cell.
+        if (!everyCellHasAStar(cellIds)) {
+          continue;
+        }
         const candidate = {rows: rows.map(r => r.c), cols: cols.map(c => c.c)};
         const fresh = !avoid.has(gridSignature(candidate));
         if (fresh && peakPlayerCoverage(rows, cols) <= MAX_SUPERSTAR_CELLS) {
@@ -565,9 +628,17 @@ export function generateGrid(
     return fallback;
   };
 
-  const grid = attempt(2) ?? attempt(1);
-  if (!grid) {
-    throw new Error('Could not generate a solvable hattrick grid');
+  for (const minPer of tier.minPerLadder) {
+    const grid = attempt(minPer);
+    if (grid) {
+      return grid;
+    }
   }
-  return grid;
+  // A gentle tier's constraints (famous answer in all 9 cells, from a third of
+  // the axis pool) can genuinely be unsatisfiable within the shuffle budget on
+  // some datasets. Degrading to a normal board beats failing the match.
+  if (opts.difficulty && opts.difficulty !== 'hard') {
+    return generateGrid(rng, {avoid: opts.avoid});
+  }
+  throw new Error('Could not generate a solvable hattrick grid');
 }

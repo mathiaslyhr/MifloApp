@@ -266,6 +266,21 @@ describe('createRematchState', () => {
     expect(next.signature).toBeDefined();
     expect(next.signature).not.toBe(finished.signature);
   });
+
+  it('keeps the board difficulty across a rematch and the next board', () => {
+    // Solo-vs-AI deals board 2 from inside the engine, so an easy match that
+    // silently reverted to a full-strength grid would be invisible until play.
+    const easy = twoPlayerState({winner: 'A', boardTier: 'easy'});
+    expect(createRematchState(easy).boardTier).toBe('easy');
+    expect(createNextBoardState(easy).boardTier).toBe('easy');
+    for (const c of [...createRematchState(easy).rows, ...createRematchState(easy).cols]) {
+      expect(['club', 'nationality', 'honour']).toContain(c.kind);
+    }
+  });
+
+  it('leaves online/local rematches on the full-strength board', () => {
+    expect(createRematchState(twoPlayerState({winner: 'A'})).boardTier).toBeUndefined();
+  });
 });
 
 describe('surrender', () => {

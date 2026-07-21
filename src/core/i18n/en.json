@@ -669,7 +669,7 @@
     "bot": {
       "title": "Hattrick vs AI",
       "tagline": "Take on the computer, solo",
-      "chooseDifficulty": "Choose your opponent",
+      "chooseDifficulty": "Choose your difficulty",
       "name": "Miflo AI",
       "you": "You",
       "surrender": "Surrender",
@@ -677,9 +677,9 @@
       "easy": "Easy",
       "medium": "Medium",
       "hard": "Hard",
-      "easyHint": "Sticks to famous names and plays loose",
-      "mediumHint": "Blocks your lines and knows its football",
-      "hardHint": "Plays sharp and rarely misses"
+      "easyHint": "Friendly grid, and it plays loose",
+      "mediumHint": "Trickier grid, and it blocks your lines",
+      "hardHint": "Full strength grid, and it rarely misses"
     }
   },
   "redCard": {
@@ -1180,127 +1180,168 @@
     },
     "lists": {
       "most-ballon-dor": {
-        "title": "Most Ballon d'Or wins"
+        "title": "Most Ballon d'Or wins",
+        "note": "Through the 2025 Ballon d'Or"
       },
       "wc-top-scorers": {
-        "title": "World Cup all-time top scorers"
+        "title": "World Cup all-time top scorers",
+        "note": "Including the 2026 World Cup"
       },
       "wc-most-matches": {
-        "title": "Most World Cup matches played"
+        "title": "Most World Cup matches played",
+        "note": "Including the 2026 World Cup"
       },
       "pl-top-scorers": {
-        "title": "Premier League all-time top scorers"
+        "title": "Premier League all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "pl-most-appearances": {
-        "title": "Most Premier League appearances"
+        "title": "Most Premier League appearances",
+        "note": "Through the 2025/26 season"
       },
       "pl-most-assists": {
-        "title": "Most Premier League assists"
+        "title": "Most Premier League assists",
+        "note": "Through the 2025/26 season"
       },
       "ucl-top-scorers": {
-        "title": "Champions League all-time top scorers"
+        "title": "Champions League all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "record-transfers": {
-        "title": "Most expensive transfers ever"
+        "title": "Most expensive transfers ever",
+        "note": "Through summer 2026"
       },
       "intl-goals-men": {
-        "title": "Most international goals (men)"
+        "title": "Most international goals (men)",
+        "note": "Through summer 2026"
       },
       "serie-a-top-scorers": {
-        "title": "Serie A all-time top scorers"
+        "title": "Serie A all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "dk-most-caps": {
-        "title": "Most caps for Denmark"
+        "title": "Most caps for Denmark",
+        "note": "Through summer 2026"
       },
       "dk-top-scorers": {
-        "title": "Denmark's all-time top scorers"
+        "title": "Denmark's all-time top scorers",
+        "note": "Through summer 2026"
       },
       "last-10-ballon-dor": {
-        "title": "The last 10 different Ballon d'Or winners"
+        "title": "The last 10 different Ballon d'Or winners",
+        "note": "Counted back from 2025"
       },
       "last-10-wc-golden-ball": {
-        "title": "The last 10 different World Cup Golden Ball winners"
+        "title": "The last 10 different World Cup Golden Ball winners",
+        "note": "Including the 2026 World Cup"
       },
       "last-10-wc-golden-boot": {
-        "title": "The last 10 World Cup top scorers"
+        "title": "The last 10 World Cup top scorers",
+        "note": "Including the 2026 World Cup"
       },
       "last-10-cl-winners": {
-        "title": "The last 10 different Champions League winners"
+        "title": "The last 10 different Champions League winners",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-cl-managers": {
-        "title": "The last 10 different Champions League winning managers"
+        "title": "The last 10 different Champions League winning managers",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-europa-winners": {
-        "title": "The last 10 different Europa League winners"
+        "title": "The last 10 different Europa League winners",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-fa-cup-winners": {
-        "title": "The last 10 different FA Cup winners"
+        "title": "The last 10 different FA Cup winners",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-english-champions": {
-        "title": "The last 10 different English champions"
+        "title": "The last 10 different English champions",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-pl-managers": {
-        "title": "The last 10 different Premier League winning managers"
+        "title": "The last 10 different Premier League winning managers",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-serie-a-champions": {
-        "title": "The last 10 different Serie A champions"
+        "title": "The last 10 different Serie A champions",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-pl-golden-boot": {
-        "title": "The last 10 different Premier League top scorers"
+        "title": "The last 10 different Premier League top scorers",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-pfa-poty": {
-        "title": "The last 10 different PFA Players of the Year"
+        "title": "The last 10 different PFA Players of the Year",
+        "note": "Counted back from the 2024/25 season"
       },
       "last-10-cl-final-cities": {
-        "title": "The last 10 Champions League final cities"
+        "title": "The last 10 Champions League final cities",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-superliga-champions": {
-        "title": "The last 10 different Danish champions"
+        "title": "The last 10 different Danish champions",
+        "note": "Counted back from the 2025/26 season"
       },
       "last-10-african-poty": {
-        "title": "The last 10 different African Footballers of the Year"
+        "title": "The last 10 different African Footballers of the Year",
+        "note": "Counted back from 2025"
       },
       "cl-titles-clubs": {
-        "title": "Clubs with most Champions League titles"
+        "title": "Clubs with most Champions League titles",
+        "note": "Through the 2025/26 season"
       },
       "english-titles-clubs": {
-        "title": "Clubs with most English league titles"
+        "title": "Clubs with most English league titles",
+        "note": "Through the 2025/26 season"
       },
       "serie-a-titles-clubs": {
-        "title": "Clubs with most Italian league titles"
+        "title": "Clubs with most Italian league titles",
+        "note": "Through the 2025/26 season"
       },
       "german-titles-clubs": {
-        "title": "Clubs with most German league titles"
+        "title": "Clubs with most German league titles",
+        "note": "Through the 2025/26 season"
       },
       "fa-cups-clubs": {
-        "title": "Clubs with most FA Cups"
+        "title": "Clubs with most FA Cups",
+        "note": "Through the 2025/26 season"
       },
       "euro-titles-nations": {
-        "title": "Countries with most European Championships"
+        "title": "Countries with most European Championships",
+        "note": "Through Euro 2024"
       },
       "pl-goals-season": {
-        "title": "Most goals in one Premier League season"
+        "title": "Most goals in one Premier League season",
+        "note": "Through the 2025/26 season"
       },
       "wc-goals-tournament": {
-        "title": "Most goals at a single World Cup"
+        "title": "Most goals at a single World Cup",
+        "note": "Including the 2026 World Cup"
       },
       "man-united-top-scorers": {
-        "title": "Manchester United's all-time top scorers"
+        "title": "Manchester United's all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "liverpool-top-scorers": {
-        "title": "Liverpool's all-time top scorers"
+        "title": "Liverpool's all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "real-madrid-top-scorers": {
-        "title": "Real Madrid's all-time top scorers"
+        "title": "Real Madrid's all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "arsenal-top-scorers": {
-        "title": "Arsenal's all-time top scorers"
+        "title": "Arsenal's all-time top scorers",
+        "note": "Through the 2025/26 season"
       },
       "man-united-appearances": {
-        "title": "Most appearances for Manchester United"
+        "title": "Most appearances for Manchester United",
+        "note": "Through the 2025/26 season"
       },
       "liverpool-appearances": {
-        "title": "Most appearances for Liverpool"
+        "title": "Most appearances for Liverpool",
+        "note": "Through the 2025/26 season"
       }
     }
   },

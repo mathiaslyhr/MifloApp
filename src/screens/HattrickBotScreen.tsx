@@ -48,10 +48,17 @@ export function HattrickBotScreen({navigation}: Props) {
   const start = (level: Difficulty) => {
     setDifficulty(level);
     setState(
-      createIndividualState(generateGrid(Math.random), [
-        {userId: HUMAN_ID, name: t('hattrick.bot.you')},
-        {userId: BOT_ID, name: t('hattrick.bot.name')},
-      ]),
+      // The level tunes both halves: how well the bot plays (BOT_TIERS) and how
+      // gentle the board itself is (BOARD_TIERS). `boardTier` rides on the
+      // state so "Play again" deals another board of the same difficulty.
+      createIndividualState(
+        generateGrid(Math.random, {difficulty: level}),
+        [
+          {userId: HUMAN_ID, name: t('hattrick.bot.you')},
+          {userId: BOT_ID, name: t('hattrick.bot.name')},
+        ],
+        {boardTier: level},
+      ),
     );
   };
 

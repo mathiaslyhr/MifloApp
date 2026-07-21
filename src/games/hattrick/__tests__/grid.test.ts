@@ -1,5 +1,6 @@
 import {candidatePool, generateGrid, hasDisjointAssignment} from '../grid';
 import {intersection} from '../../../data/football';
+import {famePrior} from '../../cult-hero/famePrior';
 import {bundledSnapshot, hydrate} from '../../../data/football/store';
 
 describe('hasDisjointAssignment', () => {
@@ -80,6 +81,76 @@ describe('generateGrid', () => {
     }
     // Comfortably under 20% of grids should breach the cap via fallback.
     expect(overCap).toBeLessThan(runs * 0.2);
+  });
+});
+
+describe('generateGrid difficulty', () => {
+  /** Answers per cell, row-major, for a generated grid. */
+  const cellPools = ({rows, cols}: ReturnType<typeof generateGrid>) =>
+    rows.flatMap(r => cols.map(c => intersection(r, c)));
+
+  it('draws easy boards only from axes a casual fan can reason about', () => {
+    for (let i = 0; i < 30; i++) {
+      const {rows, cols} = generateGrid(Math.random, {difficulty: 'easy'});
+      for (const c of [...rows, ...cols]) {
+        expect(['club', 'nationality', 'honour']).toContain(c.kind);
+      }
+    }
+  });
+
+  it('puts a famous answer in every cell of an easy board', () => {
+    for (let i = 0; i < 30; i++) {
+      for (const pool of cellPools(generateGrid(Math.random, {difficulty: 'easy'}))) {
+        expect(pool.some(f => famePrior(f) >= 20)).toBe(true);
+        // …and the gentler ladder still means several ways to be right.
+        expect(pool.length).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it('makes easy boards measurably easier than hard ones', () => {
+    const meanAnswers = (difficulty: 'easy' | 'hard') => {
+      let total = 0;
+      const runs = 40;
+      for (let i = 0; i < runs; i++) {
+        const pools = cellPools(generateGrid(Math.random, {difficulty}));
+        total += pools.reduce((s, p) => s + p.length, 0) / pools.length;
+      }
+      return total / runs;
+    };
+    expect(meanAnswers('easy')).toBeGreaterThan(meanAnswers('hard'));
+  });
+
+  it('leaves an unspecified difficulty on the full-strength board', () => {
+    // Absent tier === 'hard', so online/ranked/pass-and-play are untouched:
+    // the special axis kinds easy filters out must still be reachable.
+    const kinds = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      const {rows, cols} = generateGrid();
+      [...rows, ...cols].forEach(c => kinds.add(c.kind));
+    }
+    expect([...kinds].some(k => !['club', 'nationality', 'honour'].includes(k))).toBe(
+      true,
+    );
+  });
+
+  it('falls back to a normal board rather than failing an unsatisfiable tier', () => {
+    // Shrink the dataset until "famous answer in all 9 cells" is hopeless. The
+    // match must still get a grid — a thrown generator would break the screen.
+    const snapshot = bundledSnapshot();
+    hydrate({
+      ...snapshot,
+      footballers: (snapshot.footballers ?? []).map(f => ({
+        ...f,
+        honours: [],
+        tags: [],
+      })),
+    });
+    expect(() => generateGrid(Math.random, {difficulty: 'easy'})).not.toThrow();
+  });
+
+  afterEach(() => {
+    hydrate(bundledSnapshot());
   });
 });
 

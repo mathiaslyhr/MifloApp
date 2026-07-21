@@ -69,6 +69,32 @@ describe('bundled Top Bins lists', () => {
     }
   });
 
+  it('every list states what it counts up to, in both catalogs', () => {
+    // A list that doesn't say where its data stops turns a right-feeling answer
+    // into a miss (the 2026 World Cup did exactly that on wc-top-scorers).
+    for (const list of BUNDLED_LISTS) {
+      const notes = (id: string, cat: typeof en) =>
+        (cat.tenball.lists as Record<string, {note?: string}>)[id]?.note;
+      expect(notes(list.id, en)).toBeTruthy();
+      expect(notes(list.id, da)).toBeTruthy();
+    }
+  });
+
+  it('keeps copy free of dashes as punctuation', () => {
+    for (const list of BUNDLED_LISTS) {
+      for (const cat of [en, da]) {
+        const {title, note} = (cat.tenball.lists as Record<
+          string,
+          {title: string; note?: string}
+        >)[list.id];
+        for (const s of [title, note ?? '']) {
+          expect(s).not.toContain('—');
+          expect(s).not.toContain(' - ');
+        }
+      }
+    }
+  });
+
   it('getListById resolves pool entries and misses unknown ids', () => {
     expect(getListById(LIST_POOL[0].id)).toBe(LIST_POOL[0]);
     expect(getListById('nope')).toBeUndefined();
