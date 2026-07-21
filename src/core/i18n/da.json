@@ -1181,167 +1181,167 @@
     "lists": {
       "most-ballon-dor": {
         "title": "Flest Ballon d'Or-titler",
-        "note": "Til og med Ballon d'Or 2025"
+        "note": "Inkluderer Ballon d'Or 2025"
       },
       "wc-top-scorers": {
         "title": "Flest VM-mål nogensinde",
-        "note": "Inklusive VM 2026"
+        "note": "Inkluderer VM 2026"
       },
       "wc-most-matches": {
         "title": "Flest VM-kampe nogensinde",
-        "note": "Inklusive VM 2026"
+        "note": "Inkluderer VM 2026"
       },
       "pl-top-scorers": {
         "title": "Flest mål i Premier League",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "pl-most-appearances": {
         "title": "Flest kampe i Premier League",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "pl-most-assists": {
         "title": "Flest assister i Premier League",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "ucl-top-scorers": {
         "title": "Flest mål i Champions League",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "record-transfers": {
         "title": "Dyreste transfers nogensinde",
-        "note": "Til og med sommeren 2026"
+        "note": "Inkluderer sommeren 2026"
       },
       "intl-goals-men": {
         "title": "Flest A-landskampsmål (herrer)",
-        "note": "Til og med sommeren 2026"
+        "note": "Inkluderer sommeren 2026"
       },
       "serie-a-top-scorers": {
         "title": "Flest mål i Serie A",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "dk-most-caps": {
         "title": "Flest landskampe for Danmark",
-        "note": "Til og med sommeren 2026"
+        "note": "Inkluderer sommeren 2026"
       },
       "dk-top-scorers": {
         "title": "Flest mål for Danmark",
-        "note": "Til og med sommeren 2026"
+        "note": "Inkluderer sommeren 2026"
       },
       "last-10-ballon-dor": {
         "title": "De sidste 10 forskellige Ballon d'Or-vindere",
-        "note": "Regnet tilbage fra 2025"
+        "note": "Inkluderer Ballon d'Or 2025"
       },
       "last-10-wc-golden-ball": {
         "title": "De sidste 10 forskellige vindere af VM's Golden Ball",
-        "note": "Inklusive VM 2026"
+        "note": "Inkluderer VM 2026"
       },
       "last-10-wc-golden-boot": {
         "title": "De sidste 10 VM-topscorere",
-        "note": "Inklusive VM 2026"
+        "note": "Inkluderer VM 2026"
       },
       "last-10-cl-winners": {
         "title": "De sidste 10 forskellige Champions League-vindere",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-cl-managers": {
         "title": "De sidste 10 forskellige trænere, der vandt Champions League",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-europa-winners": {
         "title": "De sidste 10 forskellige Europa League-vindere",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-fa-cup-winners": {
         "title": "De sidste 10 forskellige FA Cup-vindere",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-english-champions": {
         "title": "De sidste 10 forskellige engelske mestre",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-pl-managers": {
         "title": "De sidste 10 forskellige trænere, der vandt Premier League",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-serie-a-champions": {
         "title": "De sidste 10 forskellige Serie A-mestre",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-pl-golden-boot": {
         "title": "De sidste 10 forskellige Premier League-topscorere",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-pfa-poty": {
         "title": "De sidste 10 forskellige PFA Årets Spiller",
-        "note": "Regnet tilbage fra sæsonen 2024/25"
+        "note": "Inkluderer 2024/25, ikke 2025/26"
       },
       "last-10-cl-final-cities": {
         "title": "De sidste 10 byer med Champions League-finalen",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-superliga-champions": {
         "title": "De sidste 10 forskellige danske mestre",
-        "note": "Regnet tilbage fra sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "last-10-african-poty": {
         "title": "De sidste 10 forskellige Årets Fodboldspiller i Afrika",
-        "note": "Regnet tilbage fra 2025"
+        "note": "Inkluderer prisen fra 2025"
       },
       "cl-titles-clubs": {
         "title": "Klubber med flest Champions League-titler",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "english-titles-clubs": {
         "title": "Klubber med flest engelske mesterskaber",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "serie-a-titles-clubs": {
         "title": "Klubber med flest italienske mesterskaber",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "german-titles-clubs": {
         "title": "Klubber med flest tyske mesterskaber",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "fa-cups-clubs": {
         "title": "Klubber med flest FA Cup-titler",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "euro-titles-nations": {
         "title": "Lande med flest EM-titler",
-        "note": "Til og med EM 2024"
+        "note": "Inkluderer EM 2024"
       },
       "pl-goals-season": {
         "title": "Flest mål i én Premier League-sæson",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "wc-goals-tournament": {
         "title": "Flest mål ved én VM-slutrunde",
-        "note": "Inklusive VM 2026"
+        "note": "Inkluderer VM 2026"
       },
       "man-united-top-scorers": {
         "title": "Flest mål for Manchester United",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "liverpool-top-scorers": {
         "title": "Flest mål for Liverpool",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "real-madrid-top-scorers": {
         "title": "Flest mål for Real Madrid",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "arsenal-top-scorers": {
         "title": "Flest mål for Arsenal",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "man-united-appearances": {
         "title": "Flest kampe for Manchester United",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       },
       "liverpool-appearances": {
         "title": "Flest kampe for Liverpool",
-        "note": "Til og med sæsonen 2025/26"
+        "note": "Inkluderer sæsonen 2025/26"
       }
     }
   },
