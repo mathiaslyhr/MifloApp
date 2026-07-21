@@ -944,4 +944,5 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-17': 'Gvardiol, Joško',
   '2028-07-18': 'Paredes, Leandro',
   '2028-07-19': 'Areola, Alphonse',
+  '2028-07-20': 'Azmoun, Sardar',
 };

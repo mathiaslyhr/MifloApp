@@ -764,4 +764,5 @@ export const JOURNEYMAN_SCHEDULE: Record<string, string> = {
   '2028-07-17': 'Immobile, Ciro',
   '2028-07-18': 'Acerbi, Francesco',
   '2028-07-19': 'Richarlison',
+  '2028-07-20': 'Modrić, Luka',
 };
