@@ -4554,7 +4554,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'real-madrid', from: 2013, to: 2022},
       {clubId: 'porto', from: 2014, to: 2015, loan: true},
-      {clubId: 'man-utd', from: 2022},
+      {clubId: 'man-utd', from: 2022, to: 2026},
+      {clubId: 'inter-miami', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
@@ -9005,7 +9006,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [17, 49],
     clubs: [
       {clubId: 'man-utd', from: 2020, to: 2025},
-      {clubId: 'chelsea', from: 2025},
+      {clubId: 'chelsea', from: 2025, to: 2026},
+      {clubId: 'aston-villa', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
@@ -16866,7 +16868,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '1995-05-10',
     shirtNumbers: [5, 25],
     clubs: [
-      {clubId: 'sporting', from: 2022},
+      {clubId: 'sporting', from: 2022, to: 2026},
+      {clubId: 'hull', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'sporting'},
@@ -18246,6 +18249,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2023], clubId: 'inter'},
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
       {type: 'league-title', count: 3, years: [2019, 2021, 2022]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Onyedika, Raphael',
+    name: 'Raphael Onyedika',
+    nationality: ['Nigeria'],
+    positions: ['MF'],
+    born: '2001-04-05',
+    shirtNumbers: [20, 5],
+    clubs: [
+      {clubId: 'midtjylland', from: 2020, to: 2022},
+      {clubId: 'club-brugge', from: 2022, to: 2026},
+      {clubId: 'eintracht-frankfurt', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2024], clubId: 'club-brugge'},
+      {type: 'domestic-cup', count: 1, years: [2025], clubId: 'club-brugge'},
     ],
     tags: ['current-stars'],
   },
@@ -23837,7 +23858,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     born: '2001-10-30',
     clubs: [
       {clubId: 'leeds', from: 2020, to: 2024},
-      {clubId: 'west-ham', from: 2024},
+      {clubId: 'west-ham', from: 2024, to: 2026},
+      {clubId: 'al-hilal', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],

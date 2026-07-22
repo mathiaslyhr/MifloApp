@@ -123,7 +123,7 @@ const CLUB_SLUG = {
   'rayo-vallecano': 'rayo-vallecano', 'orlando-pirates': 'orlando-pirates',
   'chicago-fire': 'chicago-fire',
   // Transfers 2026-07
-  ipswich: 'ipswich-town',
+  ipswich: 'ipswich-town', hull: 'hull-city',
 };
 
 const slugify = s =>
