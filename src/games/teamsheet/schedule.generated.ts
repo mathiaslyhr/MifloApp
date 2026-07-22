@@ -215,4 +215,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-16': 'portugal-2004-euro-final',
   '2027-01-17': 'real-madrid-2014-ucl-final',
   '2027-01-18': 'italy-1994-world-cup-final',
+  '2027-01-19': 'brazil-2002-world-cup-final',
 };
