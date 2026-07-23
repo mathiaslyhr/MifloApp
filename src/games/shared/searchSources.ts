@@ -121,8 +121,24 @@ export function nationSource(limit = 30): SearchSource {
 }
 
 /** Top Bins' non-player pools (club/nation/manager/other historic names); pick
- * returns the submit text. Art is the country flag when the entry carries one,
- * mirroring the old inline type-ahead. */
+ * returns the submit text.
+ *
+ * Art is the club's own crest where we have one, else the country flag. The
+ * type-ahead used to be flag-only for every kind, inherited from the days when
+ * every list was a player list: on a club list ("the last different English
+ * champions") that meant ten identical England flags, which tells you nothing
+ * about which row is which. */
+/** Crest first, flag second, nothing third. `logoImage` covers both bundled art
+ * and the OTA `{uri}` for crests this binary lacks; the publish gate refuses a
+ * club whose art resolves nowhere, so a dataset club always has one. Entries
+ * with no id at all (list-sourced historic names) keep the flag. */
+function suggestionArt(e: NameEntry): ImageSourcePropType | undefined {
+  return (
+    logoImage(e.clubId) ??
+    (e.flagCountry ? flagImage(e.flagCountry) ?? undefined : undefined)
+  );
+}
+
 export function suggestionSource(
   kind: Exclude<TenballKind, 'player'>,
   limit = 30,
@@ -132,7 +148,7 @@ export function suggestionSource(
       searchSuggestions(kind, query, limit).map(e => ({
         id: e.submitText,
         label: e.label,
-        image: e.flagCountry ? flagImage(e.flagCountry) ?? undefined : undefined,
+        image: suggestionArt(e),
       })),
   };
 }

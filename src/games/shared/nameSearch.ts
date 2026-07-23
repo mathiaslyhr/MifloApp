@@ -14,6 +14,13 @@ export type NameEntry = {
   searchTexts: string[];
   /** Nationality string for `flagImage()` when the entry has one. */
   flagCountry?: string;
+  /**
+   * Club id for `logoImage()`. A club answer should wear its own crest, not
+   * the flag of the country it plays in — but only dataset-backed clubs have
+   * an id, so `flagCountry` stays the fallback for list-sourced historic names
+   * (Pro Vercelli and friends) and for any club whose art we cannot resolve.
+   */
+  clubId?: string;
 };
 
 /** Build a NameEntry, folding label + aliases into searchTexts. */
@@ -21,9 +28,10 @@ export function nameEntry(
   label: string,
   aliases: readonly string[] = [],
   flagCountry?: string,
+  clubId?: string,
 ): NameEntry {
   const searchTexts = [...new Set([fold(label), ...aliases.map(fold)])];
-  return {label, submitText: label, searchTexts, flagCountry};
+  return {label, submitText: label, searchTexts, flagCountry, clubId};
 }
 
 /** 5 exact · 3 text-prefix · 2 token-prefix · 1 substring (playerSearch ladder). */
