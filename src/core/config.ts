@@ -3,9 +3,10 @@
  */
 
 /**
- * Where the Home QR code points — meant to be the App Store listing so friends
- * can scan to download Miflo. Placeholder until the app ships; swap in the real
- * App Store URL here.
+ * Where the Home QR code points — the App Store listing, so friends can scan to
+ * download Miflo. Apple's canonical short form: it redirects to the visitor's
+ * own storefront, so never hardcode /dk/ or /us/ here. Same URL as the
+ * "Get the app" button on miflo.dk.
  */
 export const APP_STORE_URL = 'https://apps.apple.com/app/id6786893093';
 
