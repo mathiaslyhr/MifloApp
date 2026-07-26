@@ -17104,6 +17104,21 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Murillo',
+    name: 'Murillo',
+    fullName: 'Murillo Santiago Costa dos Santos',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    born: '2002-07-04',
+    shirtNumbers: [5],
+    clubs: [
+      {clubId: 'corinthians', from: 2022, to: 2023},
+      {clubId: 'nottingham-forest', from: 2023},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Murillo, Michael',
     name: 'Michael Amir Murillo',
     nationality: ['Panama'],
