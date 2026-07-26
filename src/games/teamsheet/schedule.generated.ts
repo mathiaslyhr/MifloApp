@@ -216,4 +216,7 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-17': 'real-madrid-2014-ucl-final',
   '2027-01-18': 'italy-1994-world-cup-final',
   '2027-01-19': 'brazil-2002-world-cup-final',
+  '2027-01-20': 'inter-milan-2010-ucl-final',
+  '2027-01-21': 'liverpool-2019-ucl-final',
+  '2027-01-22': 'barcelona-2011-ucl-final',
 };
