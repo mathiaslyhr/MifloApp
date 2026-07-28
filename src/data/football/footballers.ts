@@ -108,6 +108,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Abline, Matthis',
+    name: 'Matthis Abline',
+    nationality: ['France'],
+    positions: ['FW'],
+    born: '2003-03-28',
+    clubs: [
+      {clubId: 'rennes', from: 2020, to: 2024},
+      {clubId: 'nantes', from: 2023, to: 2024, loan: true},
+      {clubId: 'nantes', from: 2024, to: 2026},
+      {clubId: 'monaco', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Abraham, Tammy',
     name: 'Tammy Abraham',
     nationality: ['England'],
@@ -1457,6 +1471,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Arokodare, Tolu',
+    name: 'Tolu Arokodare',
+    nationality: ['Nigeria'],
+    positions: ['FW'],
+    born: '2000-11-23',
+    clubs: [
+      {clubId: 'genk', from: 2023, to: 2025},
+      {clubId: 'wolves', from: 2025},
+      {clubId: 'ajax', from: 2026, loan: true},
+    ],
+    honours: [],
+  },
+  {
     id: 'Arrizabalaga, Kepa',
     name: 'Kepa Arrizabalaga',
     nationality: ['Spain'],
@@ -2063,6 +2090,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 4, years: [2008, 2009, 2010, 2012]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Bamba, Aladji',
+    name: 'Aladji Bamba',
+    nationality: ['France'],
+    positions: ['MF'],
+    born: '2006-07-14',
+    clubs: [
+      {clubId: 'monaco', from: 2025, to: 2026},
+      {clubId: 'newcastle', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Bamba, Jonathan',
@@ -2750,7 +2789,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [4, 7],
     clubs: [
       {clubId: 'empoli', from: 2017, to: 2019},
-      {clubId: 'ac-milan', from: 2019},
+      {clubId: 'ac-milan', from: 2019, to: 2026},
+      {clubId: 'al-gharafa', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2022]},
@@ -4644,7 +4684,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW'],
     born: '2004-09-18',
     clubs: [
-      {clubId: 'bologna', from: 2024},
+      {clubId: 'bologna', from: 2024, to: 2026},
+      {clubId: 'roma', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2025]},
@@ -5277,6 +5318,18 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 11, years: [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2025]},
     ],
     tags: ['current-stars'],
+  },
+  {
+    id: 'Comuzzo, Pietro',
+    name: 'Pietro Comuzzo',
+    nationality: ['Italy'],
+    positions: ['DF'],
+    born: '2005-02-20',
+    clubs: [
+      {clubId: 'fiorentina', from: 2023, to: 2026},
+      {clubId: 'torino', from: 2026},
+    ],
+    honours: [],
   },
   {
     id: 'Conceição, Francisco',
@@ -7034,7 +7087,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [9, 11],
     clubs: [
       {clubId: 'girona', from: 2023, to: 2024},
-      {clubId: 'roma', from: 2024},
+      {clubId: 'roma', from: 2024, to: 2026},
+      {clubId: 'bologna', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -10005,7 +10059,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'aston-villa', from: 2015, to: 2016},
       {clubId: 'everton', from: 2016, to: 2019},
       {clubId: 'psg', from: 2019, to: 2022},
-      {clubId: 'everton', from: 2022},
+      {clubId: 'everton', from: 2022, to: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2020, 2021], clubId: 'psg'},
@@ -10716,7 +10770,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'west-ham', from: 2017, to: 2019},
       {clubId: 'sevilla', from: 2019, to: 2020},
       {clubId: 'la-galaxy', from: 2020, to: 2023},
-      {clubId: 'guadalajara', from: 2024},
+      {clubId: 'guadalajara', from: 2024, to: 2026},
     ],
     honours: [
       {type: 'league-title', count: 2, years: [2011, 2013]},
@@ -12405,6 +12459,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Karetsas, Konstantinos',
+    name: 'Konstantinos Karetsas',
+    nicknames: ['Kosta'],
+    nationality: ['Greece'],
+    positions: ['MF'],
+    born: '2007-11-19',
+    clubs: [
+      {clubId: 'genk', from: 2024, to: 2026},
+      {clubId: 'dortmund', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Karius, Loris',
     name: 'Loris Karius',
     nationality: ['Germany'],
@@ -13530,7 +13597,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [26, 5],
     clubs: [
       {clubId: 'wolfsburg', from: 2020, to: 2024},
-      {clubId: 'crystal-palace', from: 2024},
+      {clubId: 'crystal-palace', from: 2024, to: 2026},
+      {clubId: 'chelsea', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2025], clubId: 'crystal-palace'},
@@ -18297,6 +18365,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'lens', from: 2022, to: 2023},
       {clubId: 'rb-leipzig', from: 2023, to: 2025},
       {clubId: 'juventus', from: 2025},
+      {clubId: 'lyon', from: 2026, loan: true},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -22214,7 +22283,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
   {
     id: 'Schjelderup, Andreas',
     name: 'Andreas Schjelderup',
-    nationality: ['Denmark'],
+    nationality: ['Norway'],
     positions: ['FW', 'MF'],
     born: '2004-06-01',
     shirtNumbers: [10, 47],
@@ -23663,7 +23732,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'barnsley', from: 2011, to: 2013},
       {clubId: 'everton', from: 2013, to: 2016},
-      {clubId: 'man-city', from: 2016},
+      {clubId: 'man-city', from: 2016, to: 2026},
+      {clubId: 'inter', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2019, 2023], clubId: 'man-city'},
@@ -24816,7 +24886,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'man-city', from: 2020, to: 2023},
       {clubId: 'burnley', from: 2023, to: 2025},
-      {clubId: 'man-city', from: 2025},
+      {clubId: 'man-city', from: 2025, to: 2026},
+      {clubId: 'leeds', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2023], clubId: 'man-city'},

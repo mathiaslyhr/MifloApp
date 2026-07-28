@@ -124,6 +124,8 @@ const CLUB_SLUG = {
   'chicago-fire': 'chicago-fire',
   // Transfers 2026-07
   ipswich: 'ipswich-town', hull: 'hull-city',
+  // Transfers 2026-07 wave 2
+  'al-gharafa': 'al-gharafa-sc',
 };
 
 const slugify = s =>

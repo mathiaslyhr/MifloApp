@@ -128,6 +128,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'montpellier', name: 'Montpellier', country: 'France', league: 'ligue-1'},
   {id: 'al-sadd', name: 'Al Sadd', country: 'Qatar', league: 'qatar-stars-league'},
   {id: 'al-duhail', name: 'Al Duhail', country: 'Qatar', league: 'qatar-stars-league'},
+  {id: 'al-gharafa', name: 'Al Gharafa', country: 'Qatar', league: 'qatar-stars-league'},
   {id: 'reims', name: 'Stade de Reims', country: 'France', league: 'ligue-1'},
 
   // --- WC 2026 batch: CAF ---
