@@ -1,5 +1,5 @@
 import {candidatePool, generateGrid, hasDisjointAssignment} from '../grid';
-import {intersection} from '../../../data/football';
+import {FOOTBALLERS, intersection, matches} from '../../../data/football';
 import {famePrior} from '../../cult-hero/famePrior';
 import {bundledSnapshot, hydrate} from '../../../data/football/store';
 
@@ -98,12 +98,30 @@ describe('generateGrid difficulty', () => {
     }
   });
 
-  it('puts a famous answer in every cell of an easy board', () => {
+  it('puts two very famous answers in every cell of an easy board', () => {
     for (let i = 0; i < 30; i++) {
       for (const pool of cellPools(generateGrid(Math.random, {difficulty: 'easy'}))) {
-        expect(pool.some(f => famePrior(f) >= 20)).toBe(true);
+        expect(pool.filter(f => famePrior(f) >= 22).length).toBeGreaterThanOrEqual(2);
         // …and the gentler ladder still means several ways to be right.
         expect(pool.length).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it('only puts famous clubs and top footballing nations on easy axes', () => {
+    // The axis pool itself must be recognisable, not just one answer within it:
+    // no "Trabzonspor × Paraguay" boards on easy. The 10×fame-20 gate lands on
+    // the top-10 football nations of the bundled dataset.
+    for (let i = 0; i < 30; i++) {
+      const {rows, cols} = generateGrid(Math.random, {difficulty: 'easy'});
+      for (const c of [...rows, ...cols]) {
+        if (c.kind !== 'club' && c.kind !== 'nationality') {
+          continue;
+        }
+        const famous = FOOTBALLERS.filter(
+          f => matches(f, c) && famePrior(f) >= 20,
+        );
+        expect(famous.length).toBeGreaterThanOrEqual(10);
       }
     }
   });

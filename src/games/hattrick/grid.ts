@@ -489,9 +489,14 @@ const KIND_CAP: Partial<Record<Criterion['kind'], number>> = {
  * - `kinds` — restricts which axis kinds may appear. Easy sticks to the axes a
  *   casual fan can actually reason about (clubs, nations, headline honours) and
  *   never draws "Played with Cancelo", a shirt number or a treble.
- * - `cellStar` — every cell must hold at least one answer this famous. This is
- *   the lever that matters most: four players nobody has heard of is not an
- *   easy cell just because it is four.
+ * - `cellStar`/`cellStarCount` — every cell must hold `cellStarCount` answers
+ *   at least `cellStar` famous. This is the lever that matters most: four
+ *   players nobody has heard of is not an easy cell just because it is four.
+ * - `axisStars` — an axis is only allowed when its own pool holds `count`
+ *   players at least `fame` famous. Kind-gating alone still dealt boards like
+ *   "Trabzonspor × Paraguay"; this keeps easy to famous clubs and the top
+ *   footballing nations (10×fame-20 = exactly the bundled dataset's top-10
+ *   nations and its household-name clubs; honour axes pass trivially).
  *
  * `hard` reproduces the historical behaviour exactly, and an absent tier
  * resolves to `hard`, so online, ranked and pass-and-play are untouched.
@@ -502,16 +507,34 @@ type TierSpec = {
   minPerLadder: readonly number[];
   kinds: ReadonlySet<Criterion['kind']> | null;
   cellStar: number | null;
+  cellStarCount: number;
+  axisStars: {count: number; fame: number} | null;
 };
 
 const BOARD_TIERS: Record<BoardTier, TierSpec> = {
   easy: {
     minPerLadder: [4, 3, 2],
     kinds: new Set<Criterion['kind']>(['club', 'nationality', 'honour']),
-    cellStar: 20,
+    // 22 matches the easy bot's fameFloor, so every star the board guarantees
+    // is a name the bot is also allowed to play.
+    cellStar: 22,
+    cellStarCount: 2,
+    axisStars: {count: 10, fame: 20},
   },
-  medium: {minPerLadder: [3, 2], kinds: null, cellStar: 12},
-  hard: {minPerLadder: [2, 1], kinds: null, cellStar: null},
+  medium: {
+    minPerLadder: [3, 2],
+    kinds: null,
+    cellStar: 12,
+    cellStarCount: 1,
+    axisStars: null,
+  },
+  hard: {
+    minPerLadder: [2, 1],
+    kinds: null,
+    cellStar: null,
+    cellStarCount: 1,
+    axisStars: null,
+  },
 };
 
 /**
@@ -533,17 +556,51 @@ export function generateGrid(
 ): Grid {
   const tier = BOARD_TIERS[opts.difficulty ?? 'hard'];
   const fame = famePriorById();
-  const pool = tier.kinds
-    ? candidatePool().filter(cand => tier.kinds!.has(cand.c.kind))
-    : candidatePool();
   const avoid = new Set(opts.avoid ?? []);
 
-  /** Does every cell hold at least one answer famous enough for this tier? */
-  const everyCellHasAStar = (cellIds: string[][]): boolean =>
-    tier.cellStar === null ||
-    cellIds.every(ids => ids.some(id => (fame.get(id) ?? 0) >= tier.cellStar!));
+  /** The axes a spec allows: kind-gated, then famous enough for `axisStars`. */
+  const axesFor = (spec: TierSpec): Candidate[] => {
+    const kindGated = spec.kinds
+      ? candidatePool().filter(cand => spec.kinds!.has(cand.c.kind))
+      : candidatePool();
+    if (!spec.axisStars) {
+      return kindGated;
+    }
+    const {count, fame: floor} = spec.axisStars;
+    return kindGated.filter(cand => {
+      let stars = 0;
+      for (const id of cand.ids) {
+        if ((fame.get(id) ?? 0) >= floor && ++stars >= count) {
+          return true;
+        }
+      }
+      return false;
+    });
+  };
 
-  const attempt = (minPer: number): Grid | null => {
+  /** Does every cell hold enough answers famous enough for this spec? */
+  const cellsStarredFor =
+    (spec: TierSpec) =>
+    (cellIds: string[][]): boolean =>
+      spec.cellStar === null ||
+      cellIds.every(ids => {
+        let stars = 0;
+        for (const id of ids) {
+          if (
+            (fame.get(id) ?? 0) >= spec.cellStar! &&
+            ++stars >= spec.cellStarCount
+          ) {
+            return true;
+          }
+        }
+        return false;
+      });
+
+  const attempt = (
+    minPer: number,
+    pool: Candidate[],
+    cellsOk: (cellIds: string[][]) => boolean,
+  ): Grid | null => {
     // Remember the first solvable grid so we never fail even if none clears the
     // superstar-coverage guard / recent-grid avoidance within the budget.
     let fallback: Grid | null = null;
@@ -610,8 +667,8 @@ export function generateGrid(
         if (!hasDisjointAssignment(cellIds, minPer)) {
           continue;
         }
-        // Gentler tiers additionally demand a recognisable name in every cell.
-        if (!everyCellHasAStar(cellIds)) {
+        // Gentler tiers additionally demand recognisable names in every cell.
+        if (!cellsOk(cellIds)) {
           continue;
         }
         const candidate = {rows: rows.map(r => r.c), cols: cols.map(c => c.c)};
@@ -628,17 +685,27 @@ export function generateGrid(
     return fallback;
   };
 
-  for (const minPer of tier.minPerLadder) {
-    const grid = attempt(minPer);
-    if (grid) {
-      return grid;
-    }
+  // A gentle tier's constraints (famous axes, famous names in all 9 cells)
+  // can genuinely be unsatisfiable within the shuffle budget on some datasets.
+  // Degrade softly: first drop only the axis gate (still a kind-gated,
+  // starred board), and only then hand out a full-strength board — either
+  // beats failing the match.
+  const specs: TierSpec[] = [tier];
+  if (tier.axisStars) {
+    specs.push({...tier, axisStars: null});
   }
-  // A gentle tier's constraints (famous answer in all 9 cells, from a third of
-  // the axis pool) can genuinely be unsatisfiable within the shuffle budget on
-  // some datasets. Degrading to a normal board beats failing the match.
-  if (opts.difficulty && opts.difficulty !== 'hard') {
-    return generateGrid(rng, {avoid: opts.avoid});
+  if (tier !== BOARD_TIERS.hard) {
+    specs.push(BOARD_TIERS.hard);
+  }
+  for (const spec of specs) {
+    const pool = axesFor(spec);
+    const cellsOk = cellsStarredFor(spec);
+    for (const minPer of spec.minPerLadder) {
+      const grid = attempt(minPer, pool, cellsOk);
+      if (grid) {
+        return grid;
+      }
+    }
   }
   throw new Error('Could not generate a solvable hattrick grid');
 }
