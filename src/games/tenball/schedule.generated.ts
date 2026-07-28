@@ -219,4 +219,6 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-20': 'arsenal-top-scorers',
   '2027-01-21': 'last-10-english-champions',
   '2027-01-22': 'serie-a-titles-clubs',
+  '2027-01-23': 'cl-titles-clubs',
+  '2027-01-24': 'last-10-pfa-poty',
 };
