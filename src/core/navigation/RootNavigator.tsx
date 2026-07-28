@@ -21,6 +21,7 @@ import {CultHeroScreen} from '../../screens/CultHeroScreen';
 import {CultHeroLocalScreen} from '../../screens/CultHeroLocalScreen';
 import {RankedSearchScreen} from '../../screens/RankedSearchScreen';
 import {RankedLeaderboardScreen} from '../../screens/RankedLeaderboardScreen';
+import {BallKnowledgeScreen} from '../../screens/social/BallKnowledgeScreen';
 import {RankedHattrickScreen} from '../../screens/RankedHattrickScreen';
 import {JourneymanScreen} from '../../screens/JourneymanScreen';
 import {TeamsheetScreen} from '../../screens/TeamsheetScreen';
@@ -105,6 +106,7 @@ export function RootNavigator() {
       <Stack.Screen name="RankedSearch" component={RankedSearchScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="RankedHattrick" component={RankedHattrickScreen} options={NO_SWIPE_BACK} />
       <Stack.Screen name="RankedLeaderboard" component={RankedLeaderboardScreen} />
+      <Stack.Screen name="BallKnowledge" component={BallKnowledgeScreen} />
       {/* Pass-and-play on one shared phone — roomless, fully offline. Still
           gesture-free: the handoff gate must not be swipeable past. */}
       <Stack.Screen name="HattrickLocal" component={HattrickLocalScreen} options={NO_SWIPE_BACK} />

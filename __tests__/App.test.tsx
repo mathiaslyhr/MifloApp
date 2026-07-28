@@ -5,6 +5,7 @@ import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SearchProvider} from '../src/games/shared/SearchScreen';
 import {HomeTab} from '../src/screens/tabs/HomeTab';
 
 // Keep the smoke test hermetic: the Home tab's focus effect loads the daily
@@ -21,15 +22,18 @@ const Stack = createNativeStackNavigator();
 // Smoke test of the Home tab. Full-screen rendering is verified on device;
 // this just guards against a broken import/render. Home reads the navigator
 // via useAppNavigation and useFocusEffect, so it must mount as a real screen
-// inside a navigator.
+// inside a navigator — and inside a SearchProvider, which App.tsx wraps the
+// whole tree in (the Ball Knowledge card's favorite picker reads it).
 test('renders the Home tab without crashing', async () => {
   await ReactTestRenderer.act(async () => {
     ReactTestRenderer.create(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Tabs" component={HomeTab} />
-        </Stack.Navigator>
-      </NavigationContainer>,
+      <SearchProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Tabs" component={HomeTab} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SearchProvider>,
     );
     // Let the focus effect's daily-log + friends-feed promises settle inside
     // act, so their setState calls don't fire after the test ends.

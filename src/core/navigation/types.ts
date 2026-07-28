@@ -40,6 +40,8 @@ export type RootStackParamList = {
   RankedHattrick: {roomId: string};
   /** The ranked board: everyone (or just friends) by € value. */
   RankedLeaderboard: undefined;
+  /** The fan-group competition board; `dimension` preselects Club|Country. */
+  BallKnowledge: {dimension?: 'club' | 'nation'} | undefined;
   // Pass-and-play on one shared phone — roomless, fully offline.
   HattrickLocal: undefined;
   /** Solo Hattrick vs the computer — roomless, offline, difficulty picked

@@ -52,6 +52,7 @@ import {useAppNavigation, type RootStackParamList} from '../../core/navigation';
 import {useCreateParty} from '../../core/rooms/useCreateParty';
 import {friendCellsFor, friendStreak} from '../social/PersonCard';
 import {FriendTodayCard} from '../home/FriendTodayCard';
+import {BallKnowledgeCard} from '../home/BallKnowledgeCard';
 import {TabPage} from './TabPage';
 
 /** Fraction of the screen a friend card fills, so the next card peeks. */
@@ -438,6 +439,14 @@ export function HomeTab(): React.JSX.Element {
           )}
         </>
       ) : null}
+
+      {/* Ball Knowledge — the fan-group competition's doorway. Deliberately
+          BELOW the friends feed: the feed is Home's social heart and keeps its
+          place; this row earns attention with a number, not position. */}
+      <Text variant="section" style={styles.sectionHeading}>
+        {t('ballKnowledge.title')}
+      </Text>
+      <BallKnowledgeCard />
     </TabPage>
   );
 }
