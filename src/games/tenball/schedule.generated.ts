@@ -221,4 +221,6 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-22': 'serie-a-titles-clubs',
   '2027-01-23': 'cl-titles-clubs',
   '2027-01-24': 'last-10-pfa-poty',
+  '2027-01-25': 'english-titles-clubs',
+  '2027-01-26': 'last-10-cl-winners',
 };
