@@ -229,7 +229,7 @@ export const BUNDLED_LISTS: TenballList[] = [
     id: 'last-10-wc-golden-ball',
     kind: 'player',
     entries: [
-      {rank: 1, name: 'Kylian Mbappé', value: '2026', aliases: ['mbappe', 'kylian mbappe'], footballerId: 'Mbappé, Kylian'},
+      {rank: 1, name: 'Rodri', value: '2026', aliases: ['rodri', 'rodrigo hernandez'], footballerId: 'Rodri'},
       {rank: 2, name: 'Lionel Messi', value: '2022', aliases: ['messi', 'lionel messi', 'leo messi'], footballerId: 'Messi, Lionel'},
       {rank: 3, name: 'Luka Modrić', value: '2018', aliases: ['modric', 'luka modric'], footballerId: 'Modrić, Luka'},
       {rank: 4, name: 'Diego Forlán', value: '2010', aliases: ['forlan', 'diego forlan'], footballerId: 'Forlán, Diego'},
