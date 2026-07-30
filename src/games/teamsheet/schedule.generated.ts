@@ -221,4 +221,6 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-22': 'barcelona-2011-ucl-final',
   '2027-01-23': 'atletico-madrid-2014-ucl-final',
   '2027-01-24': 'ac-milan-1994-ucl-final',
+  '2027-01-25': 'ajax-2017-europa-final',
+  '2027-01-26': 'ac-milan-1993-ucl-final',
 };
