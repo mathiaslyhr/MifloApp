@@ -225,6 +225,8 @@ export const CLUBS: readonly Club[] = [
   // --- Transfers 2026-07 ---
   {id: 'ipswich', name: 'Ipswich Town', country: 'England', league: 'premier-league'},
   {id: 'hull', name: 'Hull City', country: 'England', league: 'championship'},
+  {id: 'basaksehir', name: 'Başakşehir', country: 'Turkey', league: 'super-lig'},
+  {id: 'excelsior', name: 'Excelsior', country: 'Netherlands', league: 'eredivisie'},
 ];
 
 const clubsById = derivedFromData(

@@ -126,6 +126,8 @@ const CLUB_SLUG = {
   ipswich: 'ipswich-town', hull: 'hull-city',
   // Transfers 2026-07 wave 2
   'al-gharafa': 'al-gharafa-sc',
+  // Transfers 2026-07 wave 3
+  basaksehir: 'basaksehir', excelsior: 'excelsior',
 };
 
 const slugify = s =>

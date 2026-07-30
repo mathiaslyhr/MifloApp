@@ -8344,6 +8344,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [],
   },
   {
+    id: 'Fitz-Jim, Kian',
+    name: 'Kian Fitz-Jim',
+    nationality: ['Netherlands'],
+    positions: ['MF'],
+    born: '2003-07-05',
+    shirtNumbers: [28],
+    clubs: [
+      {clubId: 'ajax', from: 2023, to: 2026},
+      {clubId: 'excelsior', from: 2023, to: 2024, loan: true},
+      {clubId: 'torino', from: 2026},
+    ],
+    honours: [],
+  },
+  {
     id: 'Flores, Edison',
     name: 'Edison Flores',
     nationality: ['Peru'],
@@ -10708,7 +10722,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'sunderland', from: 2008, to: 2011},
       {clubId: 'liverpool', from: 2011, to: 2023},
       {clubId: 'ajax', from: 2024, to: 2025},
-      {clubId: 'brentford', from: 2025},
+      {clubId: 'brentford', from: 2025, to: 2026},
+      {clubId: 'chelsea', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2022], clubId: 'liverpool'},
@@ -13150,9 +13165,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'nantes', from: 2018, to: 2022},
       {clubId: 'eintracht-frankfurt', from: 2022, to: 2023},
-      {clubId: 'psg', from: 2023},
+      {clubId: 'psg', from: 2023, to: 2026},
       {clubId: 'juventus', from: 2025, to: 2025, loan: true},
       {clubId: 'tottenham', from: 2025, to: 2026, loan: true},
+      {clubId: 'juventus', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2022], clubId: 'nantes'},
@@ -23144,7 +23160,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [11, 7],
     clubs: [
       {clubId: 'bologna', from: 2019, to: 2022},
-      {clubId: 'club-brugge', from: 2022},
+      {clubId: 'club-brugge', from: 2022, to: 2026},
+      {clubId: 'basaksehir', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -26387,7 +26404,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'sunderland', from: 2010, to: 2011, loan: true},
       {clubId: 'arsenal', from: 2014, to: 2019},
       {clubId: 'watford', from: 2019, to: 2020},
-      {clubId: 'brighton', from: 2020},
+      {clubId: 'brighton', from: 2020, to: 2026},
+      {clubId: 'chelsea', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2015, 2017], clubId: 'arsenal'},
