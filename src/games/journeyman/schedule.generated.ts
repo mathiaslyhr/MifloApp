@@ -772,4 +772,6 @@ export const JOURNEYMAN_SCHEDULE: Record<string, string> = {
   '2028-07-25': 'Sanson, Morgan',
   '2028-07-26': 'Gudmundsson, Albert',
   '2028-07-27': 'Mertens, Dries',
+  '2028-07-28': 'Areola, Alphonse',
+  '2028-07-29': 'Hakimi, Achraf',
 };

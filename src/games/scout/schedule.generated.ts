@@ -952,4 +952,6 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-25': 'Suzuki, Zion',
   '2028-07-26': 'Maupay, Neal',
   '2028-07-27': 'Henderson, Dean',
+  '2028-07-28': 'Mittelstädt, Maximilian',
+  '2028-07-29': 'Robertson, Andrew',
 };
