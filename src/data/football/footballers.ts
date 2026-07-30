@@ -1554,8 +1554,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'real-madrid', from: 2015, to: 2023},
       {clubId: 'psg', from: 2023, to: 2025},
       {clubId: 'aston-villa', from: 2025, to: 2025, loan: true},
-      {clubId: 'fenerbahce', from: 2025, to: 2026},
-      {clubId: 'tottenham', from: 2026},
+      {clubId: 'fenerbahce', from: 2025},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2023], clubId: 'real-madrid'},
