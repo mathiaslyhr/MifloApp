@@ -51,10 +51,9 @@ describe('dailyPool', () => {
     // Honour-laden global stars are always in.
     expect(ids.has('Messi, Lionel')).toBe(true);
     expect(ids.has('Ronaldo, Cristiano')).toBe(true);
-    // Top-5-league career = recognizable by default, honours or not: Abraham
-    // (Chelsea/Roma) has zero honours yet is a fair, known secret.
-    const abraham = getById('Abraham, Tammy');
-    expect(abraham?.honours).toHaveLength(0);
+    // Top-5-league career = recognizable by default: Abraham qualified on
+    // exposure alone for years before his 2026 Europa League win, and the
+    // gate must not depend on honours either way.
     expect(ids.has('Abraham, Tammy')).toBe(true);
     // Rest of the world without top-5 pedigree needs real fame: Palma has
     // Scottish honours but no top-5 career and a fame prior below the floor,
