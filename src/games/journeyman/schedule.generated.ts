@@ -776,4 +776,5 @@ export const JOURNEYMAN_SCHEDULE: Record<string, string> = {
   '2028-07-29': 'Aubameyang, Pierre-Emerick',
   '2028-07-30': 'Correa, Ángel',
   '2028-07-31': 'Otamendi, Nicolás',
+  '2028-08-01': 'Abdulhamid, Saud',
 };

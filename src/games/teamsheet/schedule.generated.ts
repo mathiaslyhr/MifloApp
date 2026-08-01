@@ -225,4 +225,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-26': 'ac-milan-1993-ucl-final',
   '2027-01-27': 'arsenal-2006-ucl-final',
   '2027-01-28': 'juventus-1997-ucl-final',
+  '2027-01-29': 'argentina-1990-world-cup-final',
 };

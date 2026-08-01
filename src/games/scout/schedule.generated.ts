@@ -956,4 +956,5 @@ export const DAILY_SECRETS: Record<string, string> = {
   '2028-07-29': 'Gomes, João',
   '2028-07-30': 'Robertson, Andrew',
   '2028-07-31': 'Raum, David',
+  '2028-08-01': 'Militão, Éder',
 };
