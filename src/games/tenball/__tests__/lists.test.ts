@@ -4,7 +4,7 @@
  */
 import en from '../../../core/i18n/en.json';
 import da from '../../../core/i18n/da.json';
-import {getById} from '../../../data/football';
+import {CLUBS, FOOTBALLERS, getById, MANAGERS} from '../../../data/football';
 import {fold} from '../../hattrick/playerSearch';
 import {FLAG_IMAGES} from '../../hattrick/assets/flags.generated';
 import {BUNDLED_LISTS, getListById, LIST_POOL} from '../lists';
@@ -93,6 +93,42 @@ describe('bundled Top Bins lists', () => {
         }
       }
     }
+  });
+
+  it('an answer that names a dataset club/nation/manager wears its exact name', () => {
+    // The type-ahead unions each kind's canonical dataset with all list
+    // entries, and binaries in the field dedupe that union by folded label
+    // only. A list entry that answers to a dataset name under a different
+    // label ("Brøndby IF" carrying the alias 'brøndby') therefore renders as
+    // a second suggestion row on every installed app. Before adding an
+    // entry, check whether the dataset already knows the club — if it does,
+    // that IS the entry: use the dataset's spelling as the name and keep the
+    // variant spellings as aliases.
+    const canonical: Partial<Record<string, Map<string, string>>> = {
+      club: new Map(CLUBS.map(c => [fold(c.name), c.name])),
+      nation: new Map(
+        FOOTBALLERS.flatMap(f => f.nationality).map(n => [fold(n), n]),
+      ),
+      manager: new Map(MANAGERS.map(m => [fold(m.name), m.name])),
+    };
+    const bad: string[] = [];
+    for (const list of BUNDLED_LISTS) {
+      const names = canonical[list.kind ?? 'player'];
+      if (!names) {
+        continue;
+      }
+      for (const entry of list.entries) {
+        for (const text of new Set([fold(entry.name), ...entry.aliases])) {
+          const match = names.get(text);
+          if (match !== undefined && fold(entry.name) !== text) {
+            bad.push(
+              `${list.id}: "${entry.name}" also answers to dataset name "${match}" — rename it to match`,
+            );
+          }
+        }
+      }
+    }
+    expect(bad).toEqual([]);
   });
 
   it('getListById resolves pool entries and misses unknown ids', () => {

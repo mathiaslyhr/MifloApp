@@ -225,4 +225,5 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-26': 'last-10-cl-winners',
   '2027-01-27': 'wc-most-matches',
   '2027-01-28': 'last-10-cl-final-cities',
+  '2027-01-29': 'last-10-superliga-champions',
 };

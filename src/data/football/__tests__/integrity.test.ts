@@ -95,6 +95,41 @@ describe('referential integrity', () => {
     expect(dupes).toEqual([]);
   });
 
+  it('no player is a name-subset of a compatriot', () => {
+    // 'Anguissa, Frank' vs 'Zambo Anguissa, Frank' slipped past the
+    // equal-tokens check above because one spelling carries an extra word.
+    // When every token of one player's name appears in a same-nationality
+    // player's name, that is almost certainly one person added twice. Before
+    // adding a player, search footballers.ts for the surname — if a similar
+    // entry exists, extend it instead of adding a new one.
+    const tokens = (name: string) =>
+      new Set(
+        name
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .toLowerCase()
+          .replace(/[^a-z0-9 ]/g, ' ')
+          .split(/\s+/)
+          .filter(Boolean),
+      );
+    const players = all().map(f => ({f, t: tokens(f.name)}));
+    const dupes: string[] = [];
+    for (let i = 0; i < players.length; i++) {
+      for (let j = i + 1; j < players.length; j++) {
+        const a = players[i];
+        const b = players[j];
+        if (!a.f.nationality.some(n => b.f.nationality.includes(n))) {
+          continue;
+        }
+        const [small, big] = a.t.size <= b.t.size ? [a.t, b.t] : [b.t, a.t];
+        if (small.size >= 2 && [...small].every(t => big.has(t))) {
+          dupes.push(`'${a.f.id}' and '${b.f.id}'`);
+        }
+      }
+    }
+    expect(dupes).toEqual([]);
+  });
+
   it('every referenced clubId exists in CLUBS', () => {
     for (const f of all()) {
       for (const spell of f.clubs) {
@@ -141,6 +176,17 @@ describe('club + shape integrity', () => {
   it('every club id is unique', () => {
     const ids = CLUBS.map(c => c.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('every club display name is unique (accent-folded)', () => {
+    // Two ids for one club put the same club twice in every club type-ahead
+    // (the Gladbach dupe). Before adding a club, search clubs.ts for the
+    // name and its short forms — if it exists, reuse that id.
+    const key = (n: string) =>
+      n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const names = CLUBS.map(c => key(c.name));
+    const dupes = names.filter((n, i) => names.indexOf(n) !== i);
+    expect(dupes).toEqual([]);
   });
 
   it('every club league is a known league', () => {

@@ -79,21 +79,39 @@ export function searchNames(
 }
 
 /**
- * One entry per folded label, keeping the first (canonical) entry's label and
- * flag but merging every duplicate's searchTexts — a club list's aliases
+ * One entry per entity, keeping the first (canonical) entry's label and flag
+ * but merging every duplicate's searchTexts — a club list's aliases
  * ("inter milan") must keep matching after the CLUBS-sourced entry wins.
+ *
+ * Two entries are the same entity when their folded labels match, or when one
+ * side's LABEL appears among the other's known names ("Brøndby IF" carrying
+ * the alias 'brøndby' is the dataset's "Brøndby", not a second club). A
+ * merely-shared alias is NOT identity — two clubs could both answer to a
+ * short nickname without being the same club.
  */
 export function dedupeByLabel(entries: readonly NameEntry[]): NameEntry[] {
   const byLabel = new Map<string, NameEntry>();
+  const byText = new Map<string, NameEntry>();
   for (const entry of entries) {
     const key = fold(entry.label);
-    const kept = byLabel.get(key);
+    const kept =
+      byText.get(key) ??
+      entry.searchTexts.map(t => byLabel.get(t)).find(Boolean);
     if (!kept) {
-      byLabel.set(key, {...entry, searchTexts: [...entry.searchTexts]});
+      const copy = {...entry, searchTexts: [...entry.searchTexts]};
+      byLabel.set(key, copy);
+      for (const text of copy.searchTexts) {
+        if (!byText.has(text)) {
+          byText.set(text, copy);
+        }
+      }
     } else {
       for (const text of entry.searchTexts) {
         if (!kept.searchTexts.includes(text)) {
           kept.searchTexts.push(text);
+        }
+        if (!byText.has(text)) {
+          byText.set(text, kept);
         }
       }
     }
