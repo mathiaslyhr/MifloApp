@@ -387,28 +387,29 @@ export function JourneymanScreen({navigation}: Props) {
                 {crest != null ? (
                   <Image source={crest} resizeMode="contain" style={styles.spellCrest} />
                 ) : null}
-                <Text
-                  variant="body"
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.75}
-                  style={styles.spellClub}>
-                  {club?.name ?? spell.clubId}
-                </Text>
-                {spell.loan ? (
-                  <View style={styles.loanTag}>
-                    <Text
-                      variant="caption"
-                      color="secondary"
-                      maxFontSizeMultiplier={BOARD_TEXT_SCALE}
-                      style={styles.loanText}>
-                      {t('journeyman.loan')}
+                <View style={styles.spellText}>
+                  <View style={styles.spellNameRow}>
+                    <Text variant="body" numberOfLines={1} style={styles.spellClub}>
+                      {club?.name ?? spell.clubId}
                     </Text>
+                    {spell.loan ? (
+                      <View style={styles.loanTag}>
+                        <Text
+                          variant="caption"
+                          color="secondary"
+                          maxFontSizeMultiplier={BOARD_TEXT_SCALE}
+                          style={styles.loanText}>
+                          {t('journeyman.loan')}
+                        </Text>
+                      </View>
+                    ) : null}
                   </View>
-                ) : null}
-                <Text variant="secondary" color="tertiary" style={styles.spellYears}>
-                  {years}
-                </Text>
+                  {years !== '' ? (
+                    <Text variant="caption" color="tertiary" style={styles.spellYears}>
+                      {years}
+                    </Text>
+                  ) : null}
+                </View>
               </View>
             );
           })}
@@ -594,13 +595,15 @@ const makeStyles = (c: Palette) =>
   boardWrap: {flex: 1, marginTop: spacing.md},
   board: {flex: 1},
   boardContent: {gap: spacing.sm, paddingVertical: spacing.md},
-  // One career step: a surface card — step number, crest, club, loan
-  // tag, years.
+  // One career step: a surface card — step number, crest, then a stacked
+  // text block (club + loan tag on top, years underneath). The club name
+  // never shrinks; a too-long name ellipsizes instead.
   spell: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
     minHeight: 44,
+    paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     borderRadius: radii.card,
     backgroundColor: c.surface,
@@ -621,7 +624,9 @@ const makeStyles = (c: Palette) =>
   // pushes the digit off-centre inside the 26pt circle.
   stepText: {fontFamily: fonts.medium, fontSize: 13, lineHeight: 16, color: c.muted},
   spellCrest: {width: 22, height: 22},
-  spellClub: {flex: 1},
+  spellText: {flex: 1},
+  spellNameRow: {flexDirection: 'row', alignItems: 'center', gap: spacing.sm},
+  spellClub: {flexShrink: 1},
   loanTag: {
     paddingHorizontal: spacing.sm,
     paddingVertical: 1,

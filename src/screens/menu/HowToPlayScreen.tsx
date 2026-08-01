@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Card, Text} from '../../core/ui';
+import {Button, Card, Text, startTour} from '../../core/ui';
 import {spacing, useColors, useThemedStyles, type Palette} from '../../theme';
 import type {RootStackParamList} from '../../core/navigation';
 import {GAMES} from '../gamesCatalog';
@@ -42,6 +42,16 @@ export function HowToPlayScreen({navigation}: Props) {
       <Text variant="secondary" color="secondary">
         {t('howToPlay.intro')}
       </Text>
+
+      {/* Replay the first-launch walkthrough: land on Home, then start it. */}
+      <Button
+        label={t('tour.replay')}
+        variant="outline"
+        onPress={() => {
+          navigation.navigate('Tabs', {tab: 'home', at: Date.now()});
+          startTour();
+        }}
+      />
 
       {steps.map(s => (
         <View key={s.n} style={styles.step}>

@@ -1439,6 +1439,43 @@
     "step2Desc": "The host picks a game once at least two players have joined.",
     "gamesHeading": "The games"
   },
+  "tour": {
+    "skip": "Skip tour",
+    "next": "Next",
+    "replay": "Take the tour again",
+    "playScout": "Play Scout",
+    "explore": "I will look around myself",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to Miflo",
+        "body": "Football games with friends. Here is a quick look around."
+      },
+      "dailies": {
+        "title": "Four daily puzzles",
+        "body": "New puzzles land here every day. You play these alone, and your streaks grow."
+      },
+      "matches": {
+        "title": "Matches",
+        "body": "Live games with friends. Play together on one phone, or everyone on their own."
+      },
+      "tabDaily": {
+        "title": "The Daily tab",
+        "body": "All four daily puzzles live here, with your results and streaks."
+      },
+      "tabPlay": {
+        "title": "The Play tab",
+        "body": "Matches live here. Friendlies are just for fun, Competitive counts on the ladder."
+      },
+      "tabProfile": {
+        "title": "The Profile tab",
+        "body": "Your profile, your friends and your history."
+      },
+      "finish": {
+        "title": "That is it",
+        "body": "Your first daily puzzle is waiting."
+      }
+    }
+  },
   "transfer": {
     "title": "Move to a new phone",
     "intro": "Your profile lives on this phone, not in an account. To carry it to a new phone, set up Miflo there, enter your code, then approve the move here. Keep this phone nearby until it is done.",

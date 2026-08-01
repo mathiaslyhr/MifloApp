@@ -24,7 +24,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {Bell, ChevronRight, Timer} from 'lucide-react-native';
-import {Button, CircleButton, PressableScale, Skeleton, Text} from '../../core/ui';
+import {Button, CircleButton, PressableScale, Skeleton, Text, TourTarget} from '../../core/ui';
 import {
   onRim,
   radii,
@@ -279,8 +279,9 @@ export function HomeTab(): React.JSX.Element {
       ) : null}
 
       {/* The daily card: the headline counts the dailies still open, and each
-          row under it is a button straight into that game. */}
-      <View style={styles.card}>
+          row under it is a button straight into that game. TourTarget so the
+          guided tour can spotlight it when explaining the dailies. */}
+      <TourTarget id="homeDailyCard" style={styles.card}>
         {/* Cleared the day → a faint wall of real crests behind the sign-off.
             Only in the "all done" state, where the card is sparse. */}
         {allDone ? <CrestWall count={20} size={38} opacity={0.08} /> : null}
@@ -365,10 +366,10 @@ export function HomeTab(): React.JSX.Element {
             </>
           )}
         </View>
-      </View>
+      </TourTarget>
 
       {/* Match — the two quick actions, one tight pair. */}
-      <View style={styles.actions}>
+      <TourTarget id="homeMatchButtons" style={styles.actions}>
         <Button
           label={busy ? t('home.creating') : t('home.createParty')}
           variant="primary"
@@ -383,7 +384,7 @@ export function HomeTab(): React.JSX.Element {
           variant="secondary"
           onPress={() => navigation.navigate('Join')}
         />
-      </View>
+      </TourTarget>
 
       {/* Friends feed — heading + carousel. The heading holds its place once
           the feed has loaded, so the group doesn't pop in and out. An empty
@@ -400,16 +401,18 @@ export function HomeTab(): React.JSX.Element {
                 onPress={() => navigation.navigate('FriendsList')}
                 accessibilityRole="button"
                 accessibilityLabel={t('home.addFriends')}
-                style={styles.emptyRow}>
-                <Text variant="secondary" color="secondary">
+                style={styles.emptyCard}>
+                <Text variant="secondary" color="secondary" style={styles.emptyText}>
                   {t('home.friendsTodayNone')}
                 </Text>
                 <ChevronRight size={15} color={colors.textSecondary} />
               </PressableScale>
             ) : (
-              <Text variant="secondary" color="secondary">
-                {t('home.friendsTodayEmpty')}
-              </Text>
+              <View style={styles.emptyCard}>
+                <Text variant="secondary" color="secondary" style={styles.emptyText}>
+                  {t('home.friendsTodayEmpty')}
+                </Text>
+              </View>
             )
           ) : (
             <ScrollView
@@ -520,14 +523,20 @@ const makeStyles = (c: Palette) =>
     actions: {marginTop: spacing.xxl, gap: spacing.sm + 2},
     // New group; the heading hugs its carousel.
     sectionHeading: {marginTop: spacing.xxl, marginBottom: spacing.md},
-    // The empty line doubles as a button, so it reads as one: text left,
-    // chevron right, the row's own press target.
-    emptyRow: {
+    // The empty state is a card, so the section reads like Ball Knowledge's:
+    // one padded row on a surface — text left, chevron right when it presses.
+    emptyCard: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: spacing.sm,
+      gap: spacing.md,
+      paddingVertical: spacing.md,
+      paddingHorizontal: spacing.lg,
+      backgroundColor: c.surface,
+      borderWidth: 1,
+      borderColor: c.divider,
+      borderRadius: radii.card,
     },
+    emptyText: {flex: 1},
     // Full-bleed: cancel the screen's side padding so cards scroll
     // edge-to-edge, then re-inset so the first card lines up with the rest.
     carousel: {marginHorizontal: -screenPadding},

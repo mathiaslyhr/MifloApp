@@ -413,21 +413,10 @@ function ValueCard() {
         ) : null}
       </View>
 
-      {/* Where you stand and what's next — the bar below measures the gap
-          between exactly these two labels. */}
-      {standing ? (
-        <View style={styles.tierRow}>
-          <Text variant="caption" color="secondary">
-            {t(`play.tiers.${standing.tier.key}`)}
-          </Text>
-          {standing.next ? (
-            <Text variant="caption" color="muted">
-              {t(`play.tiers.${standing.next.key}`)}
-            </Text>
-          ) : null}
-        </View>
-      ) : null}
-
+      {/* Progress through the current value rung. The rung NAMES (Squad
+          player, First team, …) were cut on request: just the bar, no
+          categories. tierFor still segments the run so the bar moves
+          meaningfully instead of crawling toward the €250M cap. */}
       <View
         style={styles.barRow}
         onLayout={e => setTrackW(e.nativeEvent.layout.width)}
@@ -531,13 +520,6 @@ const makeStyles = (c: Palette) =>
     },
     // Only shown right after a match: what that result was worth.
     deltaChip: {flexDirection: 'row', alignItems: 'center', gap: 2},
-    // Current rung on the left, the one you're climbing toward on the right.
-    tierRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      marginTop: spacing.xs,
-    },
     // Progress through the current tier. The row is pill-height so the pill can
     // overhang the track it rides on.
     barRow: {height: 22, justifyContent: 'center', marginTop: spacing.xs},

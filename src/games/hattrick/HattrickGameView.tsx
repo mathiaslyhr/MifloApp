@@ -467,7 +467,8 @@ export function HattrickGameView({
                     variant="caption"
                     align="center"
                     numberOfLines={1}
-                    adjustsFontSizeToFit>
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.7}>
                     {t('hattrick.bot.surrender')}
                   </Text>
                 </PressableScale>
@@ -484,7 +485,8 @@ export function HattrickGameView({
                       variant="caption"
                       align="center"
                       numberOfLines={1}
-                      adjustsFontSizeToFit>
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.7}>
                       {t('hattrick.skipShort')}
                     </Text>
                   </PressableScale>
@@ -502,7 +504,8 @@ export function HattrickGameView({
                       variant="caption"
                       align="center"
                       numberOfLines={1}
-                      adjustsFontSizeToFit>
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.7}>
                       {t('hattrick.tieShort')}
                     </Text>
                   </PressableScale>

@@ -393,7 +393,8 @@ export function ScoutScreen({navigation}: Props) {
               maxFontSizeMultiplier={BOARD_TEXT_SCALE}
               style={styles.columnLabel}
               numberOfLines={1}
-              adjustsFontSizeToFit>
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}>
               {t(`scout.columns.${key}`)}
             </Text>
           ))}

@@ -38,7 +38,7 @@ import {getById, getClub} from '../../../data/football';
 import {flagImage, logoImage, type ChipImage} from '../../../games/hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../../../games/hattrick/assets/playerAvatars';
 import {fonts, radii, spacing, useColors, useThemedStyles, type Palette} from '../../../theme';
-import {StepProgress} from './StepProgress';
+import {StepProgress} from '../../../core/ui/StepProgress';
 
 const TOTAL_STEPS = 3;
 

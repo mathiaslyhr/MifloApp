@@ -1439,6 +1439,43 @@
     "step2Desc": "Værten vælger et spil, når mindst to spillere er med.",
     "gamesHeading": "Spillene"
   },
+  "tour": {
+    "skip": "Spring rundturen over",
+    "next": "Næste",
+    "replay": "Tag rundturen igen",
+    "playScout": "Spil Scout",
+    "explore": "Jeg kigger selv rundt",
+    "steps": {
+      "welcome": {
+        "title": "Velkommen til Miflo",
+        "body": "Fodboldspil med venner. Her er en hurtig rundtur."
+      },
+      "dailies": {
+        "title": "Fire daglige opgaver",
+        "body": "Nye opgaver lander her hver dag. Dem spiller du alene, og dine streaks vokser."
+      },
+      "matches": {
+        "title": "Kampe",
+        "body": "Livespil med venner. Spil sammen på én telefon, eller hver på sin egen."
+      },
+      "tabDaily": {
+        "title": "Fanen Daglig",
+        "body": "Alle fire daglige opgaver bor her, med dine resultater og streaks."
+      },
+      "tabPlay": {
+        "title": "Fanen Spil",
+        "body": "Kampene bor her. Friendlies er for sjov, Competitive tæller på ranglisten."
+      },
+      "tabProfile": {
+        "title": "Fanen Profil",
+        "body": "Din profil, dine venner og din historik."
+      },
+      "finish": {
+        "title": "Så er du klar",
+        "body": "Din første daglige opgave venter."
+      }
+    }
+  },
   "transfer": {
     "title": "Skift til ny telefon",
     "intro": "Din profil bor på denne telefon, ikke i en konto. For at flytte den til en ny telefon skal du åbne Miflo der, indtaste din kode og derefter godkende flytningen her. Hav denne telefon i nærheden, indtil det er færdigt.",

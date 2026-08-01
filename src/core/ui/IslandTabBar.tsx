@@ -12,8 +12,17 @@ import {
   type Palette,
 } from '../../theme';
 import {usePressScale} from './usePressScale';
+import {TourTarget} from './tour/TourTarget';
+import type {TourTargetId} from './tour/tourStore';
 
 export type TabId = 'home' | 'daily' | 'play' | 'profile';
+
+/** Tabs the guided tour spotlights (Home needs no explaining, it's on it). */
+const TOUR_IDS: Partial<Record<TabId, TourTargetId>> = {
+  daily: 'tabDaily',
+  play: 'tabPlay',
+  profile: 'tabProfile',
+};
 
 /**
  * Vertical clearance the nav island reserves at the bottom of a screen — the pill
@@ -72,9 +81,9 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
             const color = on ? colors.primary : colors.muted;
             const label = t(labelKey);
             const dotted = badge?.[id] === true;
-            return (
+            const tourId = TOUR_IDS[id];
+            const item = (
               <Pressable
-                key={id}
                 onPress={() => onSelect?.(id)}
                 onPressIn={press.onPressIn}
                 onPressOut={press.onPressOut}
@@ -98,6 +107,15 @@ export function IslandTabBar({active, onSelect, badge}: Props) {
                   {label}
                 </Text>
               </Pressable>
+            );
+            // Wrapped so the guided tour can spotlight the item; the plain
+            // View wrapper hugs the Pressable and doesn't change the row.
+            return tourId != null ? (
+              <TourTarget key={id} id={tourId}>
+                {item}
+              </TourTarget>
+            ) : (
+              <React.Fragment key={id}>{item}</React.Fragment>
             );
           })}
         </View>

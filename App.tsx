@@ -24,7 +24,9 @@ import {
   BootSplash,
   ErrorBoundary,
   ToastHost,
+  TourOverlay,
   initReduceMotion,
+  startTour,
 } from './src/core/ui';
 import {SearchProvider} from './src/games/shared/SearchScreen';
 import {WelcomeScreen} from './src/screens/onboarding/WelcomeScreen';
@@ -34,7 +36,7 @@ import {ensureSession} from './src/core/supabase/client';
 import {getCachedProfile} from './src/core/social/socialService';
 // Side-effect: initialize i18next (device language) before any screen renders.
 import {loadStoredLanguage} from './src/core/i18n';
-import {loadHapticsPreference} from './src/core/settings/preferences';
+import {getTourSeen, loadHapticsPreference} from './src/core/settings/preferences';
 import {syncNudges} from './src/core/notifications/scoutReminder';
 import {startHabitTracking} from './src/core/notifications/habit';
 import {
@@ -166,8 +168,19 @@ function AppBody(): React.JSX.Element {
   const [splashDone, setSplashDone] = useState(false);
   useEffect(() => {
     let alive = true;
-    getCachedProfile()
-      .then(profile => alive && setGate(profile ? 'app' : 'welcome'))
+    // The tour flag rides the same gate read: a profiled device that has never
+    // seen the guided tour (an install that predates it) gets it once on this
+    // launch, exactly like a fresh setup does via onProfileReady below.
+    Promise.all([getCachedProfile(), getTourSeen()])
+      .then(([profile, tourSeen]) => {
+        if (!alive) {
+          return;
+        }
+        setGate(profile ? 'app' : 'welcome');
+        if (profile && !tourSeen) {
+          startTour();
+        }
+      })
       .catch(() => alive && setGate('welcome'));
     return () => {
       alive = false;
@@ -186,7 +199,13 @@ function AppBody(): React.JSX.Element {
   // the gate the moment setup finishes or a moved profile lands.
   return (
     <SearchProvider>
-      <WelcomeScreen onProfileReady={() => setGate('app')} />
+      <WelcomeScreen
+        onProfileReady={() => {
+          setGate('app');
+          // Fresh setup done → walk the new user through the app's map once.
+          startTour();
+        }}
+      />
       <ToastHost />
       <TransferApprovalModal />
     </SearchProvider>
@@ -208,6 +227,8 @@ function NavigatorApp(): React.JSX.Element {
           <RootNavigator />
         </NavigationContainer>
       </UpdateGate>
+      {/* Above the navigator AND the nav island; under toasts on purpose. */}
+      <TourOverlay />
       <ToastHost />
       {/* Old-phone approval prompt for a profile move — global so it pops
           wherever the owner is when their new phone asks. */}
