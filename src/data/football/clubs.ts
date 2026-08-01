@@ -54,7 +54,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'schalke', name: 'Schalke 04', country: 'Germany', league: 'bundesliga'},
   {id: 'rb-leipzig', name: 'RB Leipzig', country: 'Germany', league: 'bundesliga'},
   {id: 'wolfsburg', name: 'VfL Wolfsburg', country: 'Germany', league: 'bundesliga'},
-  {id: 'monchengladbach', name: "Borussia M'gladbach", country: 'Germany', league: 'bundesliga'},
+  {id: 'monchengladbach', name: 'Borussia Mönchengladbach', country: 'Germany', league: 'bundesliga'},
 
   // Ligue 1
   {id: 'psg', name: 'Paris Saint-Germain', country: 'France', league: 'ligue-1'},

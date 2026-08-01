@@ -1288,6 +1288,32 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['legends'],
   },
   {
+    id: 'Angeliño',
+    name: 'Angeliño',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '1997-01-04',
+    shirtNumbers: [3],
+    clubs: [
+      {clubId: 'man-city', from: 2015, to: 2018},
+      {clubId: 'girona', from: 2017, to: 2017, loan: true},
+      {clubId: 'real-mallorca', from: 2017, to: 2017, loan: true},
+      {clubId: 'psv', from: 2018, to: 2019},
+      {clubId: 'man-city', from: 2019, to: 2021},
+      {clubId: 'rb-leipzig', from: 2020, to: 2021, loan: true},
+      {clubId: 'rb-leipzig', from: 2021, to: 2024},
+      {clubId: 'hoffenheim', from: 2022, to: 2023, loan: true},
+      {clubId: 'galatasaray', from: 2023, to: 2024, loan: true},
+      {clubId: 'roma', from: 2024, to: 2024, loan: true},
+      {clubId: 'roma', from: 2024},
+      {clubId: 'deportivo', from: 2026, to: 2027, loan: true},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2022], clubId: 'rb-leipzig'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Angloma, Jocelyn',
     name: 'Jocelyn Angloma',
     nationality: ['France'],
@@ -1307,23 +1333,6 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 2, years: [1992, 2002]},
       {type: 'domestic-cup', count: 1, years: [1999]},
     ],
-  },
-  {
-    id: 'Anguissa, Frank',
-    name: 'Frank Anguissa',
-    nationality: ['Cameroon'],
-    positions: ['MF'],
-    born: '1995-11-16',
-    shirtNumbers: [99, 8],
-    clubs: [
-      {clubId: 'marseille', from: 2016, to: 2018},
-      {clubId: 'fulham', from: 2018, to: 2021},
-      {clubId: 'napoli', from: 2021},
-    ],
-    honours: [
-      {type: 'league-title', count: 2, years: [2023, 2025]},
-    ],
-    tags: ['current-stars'],
   },
   {
     id: 'Antonio, Michail',
@@ -7715,13 +7724,12 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'inter', from: 2020, to: 2021},
       {clubId: 'brentford', from: 2021, to: 2022},
       {clubId: 'man-utd', from: 2022, to: 2025},
-      {clubId: 'wolfsburg', from: 2025},
+      {clubId: 'wolfsburg', from: 2025, to: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
       {type: 'league-title', count: 4, years: [2011, 2012, 2013, 2021]},
     ],
-    tags: ['current-stars'],
   },
   {
     id: 'Essien, Michael',
@@ -9057,6 +9065,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'García, Gonzalo',
+    name: 'Gonzalo García',
+    nationality: ['Spain'],
+    positions: ['FW'],
+    born: '2004-03-24',
+    shirtNumbers: [16],
+    clubs: [
+      {clubId: 'real-madrid', from: 2023, to: 2026},
+      {clubId: 'fulham', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2024]},
+      {type: 'champions-league', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'García, Joan',
     name: 'Joan García',
     nationality: ['Spain'],
@@ -10177,7 +10202,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'liverpool', from: 2008, to: 2013},
       {clubId: 'salzburg', from: 2013, to: 2015},
-      {clubId: 'rb-leipzig', from: 2015},
+      {clubId: 'rb-leipzig', from: 2015, to: 2026},
+      {clubId: 'villarreal', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 2, years: [2014, 2015], clubId: 'salzburg'},
@@ -13366,6 +13392,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Koulierakis, Konstantinos',
+    name: 'Konstantinos Koulierakis',
+    nationality: ['Greece'],
+    positions: ['DF'],
+    born: '2003-11-28',
+    shirtNumbers: [4],
+    clubs: [
+      {clubId: 'wolfsburg', from: 2024, to: 2026},
+      {clubId: 'roma', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2024]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Koundé, Jules',
     name: 'Jules Koundé',
     nationality: ['France'],
@@ -16247,7 +16289,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'real-betis', from: 2023, to: 2026},
       {clubId: 'rayo-vallecano', from: 2025, to: 2026, loan: true},
-      {clubId: 'rayo-vallecano', from: 2026},
+      {clubId: 'rayo-vallecano', from: 2026, to: 2026},
+      {clubId: 'hull', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -18790,6 +18833,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'domestic-cup', count: 1, years: [2024], clubId: 'feyenoord'},
       {type: 'league-title', count: 1, years: [2023]},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Palacios, César',
+    name: 'César Palacios',
+    nationality: ['Spain'],
+    positions: ['MF'],
+    born: '2004-11-11',
+    shirtNumbers: [10],
+    clubs: [
+      {clubId: 'real-madrid', from: 2026, to: 2026},
+      {clubId: 'fulham', from: 2026},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {
@@ -22122,6 +22179,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
   },
   {
+    id: 'Sangaré, Mamadou',
+    name: 'Mamadou Sangaré',
+    nationality: ['Mali'],
+    positions: ['MF'],
+    born: '2002-06-26',
+    shirtNumbers: [8],
+    clubs: [
+      {clubId: 'salzburg', from: 2020, to: 2024},
+      {clubId: 'lens', from: 2025, to: 2026},
+      {clubId: 'brentford', from: 2026},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2026], clubId: 'lens'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Sanson, Morgan',
     name: 'Morgan Sanson',
     nationality: ['France'],
@@ -22956,6 +23030,22 @@ export const FOOTBALLERS: readonly Footballer[] = [
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2022], clubId: 'rb-leipzig'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Silva, António',
+    name: 'António Silva',
+    nationality: ['Portugal'],
+    positions: ['DF'],
+    born: '2003-10-30',
+    shirtNumbers: [4],
+    clubs: [
+      {clubId: 'benfica', from: 2022, to: 2026},
+      {clubId: 'bournemouth', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2023]},
     ],
     tags: ['current-stars'],
   },
@@ -27170,7 +27260,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     nationality: ['Cameroon'],
     positions: ['MF'],
     born: '1995-11-16',
-    shirtNumbers: [29],
+    shirtNumbers: [29, 99],
     clubs: [
       {clubId: 'marseille', from: 2015, to: 2018},
       {clubId: 'fulham', from: 2018, to: 2022},
@@ -27178,7 +27268,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'napoli', from: 2021, to: 2022, loan: true},
       {clubId: 'napoli', from: 2022},
     ],
-    honours: [],
+    honours: [
+      {type: 'league-title', count: 2, years: [2023, 2025]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Zambrano, Carlos',
