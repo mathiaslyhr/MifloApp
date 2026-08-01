@@ -41,6 +41,7 @@ export {ToastHost} from './toast/ToastHost';
 export {toast, useToast, useToastStore} from './toast/toastStore';
 export type {Toast, ToastTone, ToastOptions} from './toast/toastStore';
 export {StepProgress} from './StepProgress';
+export {showChoiceSheet} from './actionSheet';
 export {TourOverlay} from './tour/TourOverlay';
 export {TourTarget} from './tour/TourTarget';
 export {startTour, useTourStore} from './tour/tourStore';

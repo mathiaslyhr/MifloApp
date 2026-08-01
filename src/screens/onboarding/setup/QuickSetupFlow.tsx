@@ -15,8 +15,7 @@
  */
 import React, {useState} from 'react';
 import {
-  ActionSheetIOS,
-  Image,
+    Image,
   Keyboard,
   Pressable,
   Share,
@@ -26,7 +25,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ChevronLeft, ChevronRight, Plus, Share as ShareIcon} from 'lucide-react-native';
-import {Button, PressableScale, Text, TextField, toast} from '../../../core/ui';
+import {Button, PressableScale, Text, TextField, showChoiceSheet, toast} from '../../../core/ui';
 import {optInToSocial} from '../../../core/social/onboarding';
 import {isNameTakenError, setDisplayName, setFavorites} from '../../../core/social/socialService';
 import type {SocialProfile} from '../../../core/social/types';
@@ -139,20 +138,17 @@ export function QuickSetupFlow({
       pickFavorite(slot);
       return;
     }
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: [t('setup.favoriteChange'), t('setup.favoriteRemove'), t('common.cancel')],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+    showChoiceSheet({
+      choose: t('setup.favoriteChange'),
+      remove: t('setup.favoriteRemove'),
+      cancel: t('common.cancel'),
+      onChoose: () => {
+        pickFavorite(slot);
       },
-      index => {
-        if (index === 0) {
-          pickFavorite(slot);
-        } else if (index === 1) {
-          setFavoritesState(prev => ({...prev, [slotKey(slot)]: null}));
-        }
+      onRemove: () => {
+        setFavoritesState(prev => ({...prev, [slotKey(slot)]: null}));
       },
-    );
+    });
   }
 
   function shareCode() {

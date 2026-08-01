@@ -35,6 +35,7 @@ import {
   NameSheet,
   Segmented,
   Skeleton,
+  showChoiceSheet,
   Text,
   TextField,
   toast,
@@ -294,24 +295,17 @@ export function ProfileTab({isActive = true, addCode}: Props) {
       pickAvatar();
       return;
     }
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: [
-          t('profile.avatarChoose'),
-          t('profile.avatarRemove'),
-          t('common.cancel'),
-        ],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+    showChoiceSheet({
+      choose: t('profile.avatarChoose'),
+      remove: t('profile.avatarRemove'),
+      cancel: t('common.cancel'),
+      onChoose: () => {
+        pickAvatar();
       },
-      index => {
-        if (index === 0) {
-          pickAvatar();
-        } else if (index === 1) {
-          removeAvatar();
-        }
+      onRemove: () => {
+        removeAvatar();
       },
-    );
+    });
   }
 
   /** Clear the avatar back to initials. Optimistic, mirroring pickAvatar. */

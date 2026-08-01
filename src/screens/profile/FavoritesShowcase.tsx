@@ -16,10 +16,10 @@
  * Profile keeps the one optimistic-update path (mirroring the avatar flow).
  */
 import React from 'react';
-import {ActionSheetIOS, Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {Plus} from 'lucide-react-native';
-import {Card, PressableScale, Text} from '../../core/ui';
+import {Card, PressableScale, Text, showChoiceSheet} from '../../core/ui';
 import {
   fonts,
   radii,
@@ -118,24 +118,17 @@ export function FavoritesShowcase({favorites, editable = false, onChange}: Props
       openPicker(slot);
       return;
     }
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        options: [
-          t('profile.favoriteChange'),
-          t('profile.favoriteRemove'),
-          t('common.cancel'),
-        ],
-        destructiveButtonIndex: 1,
-        cancelButtonIndex: 2,
+    showChoiceSheet({
+      choose: t('profile.favoriteChange'),
+      remove: t('profile.favoriteRemove'),
+      cancel: t('common.cancel'),
+      onChoose: () => {
+        openPicker(slot);
       },
-      index => {
-        if (index === 0) {
-          openPicker(slot);
-        } else if (index === 1) {
-          set(slot, null);
-        }
+      onRemove: () => {
+        set(slot, null);
       },
-    );
+    });
   }
 
   return (
