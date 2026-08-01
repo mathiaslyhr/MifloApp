@@ -1328,8 +1328,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'nottingham-forest', from: 2014, to: 2015},
       {clubId: 'west-ham', from: 2015, to: 2025},
     ],
+    // Free agent since leaving West Ham (2025) — no current-stars tag, so the
+    // Scout daily pool no longer counts him as active (user report 2026-08-01:
+    // he was the daily, shown as a West Ham player).
     honours: [],
-    tags: ['current-stars'],
   },
   {
     id: 'Antony',
