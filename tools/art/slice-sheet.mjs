@@ -117,6 +117,10 @@ const SHEETS = {
   // order (left→right, top→bottom); output goes to --out (default
   // tools/art/portraits/, the OTA staging area — NOT the bundled assets).
   grid16: {
+    // autoGrid: rows/cols are DETECTED from the sheet's ink (ChatGPT never
+    // places the grid at exactly the same coordinates twice) — 4 column runs
+    // and the 4 tallest row bands become the crop boxes. The rows below are
+    // only a fallback shape; detection replaces them.
     refW: 1536, refH: 1024, halfW: 135, size: 256, anchor: 'south',
     out: resolve(HERE, 'portraits'),
     extras: null,
@@ -124,6 +128,7 @@ const SHEETS = {
     key: 'edge',
     tol: 34,
     namesFromCli: 16,
+    autoGrid: {cols: 4, rows: 4},
     rows: [
       {y0: 15, y1: 255, cols: [235, 578, 916, 1265], names: []},
       {y0: 298, y1: 514, cols: [235, 578, 916, 1265], names: []},
@@ -179,6 +184,9 @@ const [, , sheetKey, sheetPath] = process.argv;
 const preview = process.argv.includes('--preview');
 const namesArg = process.argv.find(a => a.startsWith('--names='))?.slice(8);
 const outArg = process.argv.find(a => a.startsWith('--out='))?.slice(6);
+// --y1=name:refY,… hard bottom cuts (skip autoBottom) — for slicing a bust
+// off right above a crest/badge the sheet was not supposed to draw.
+const y1Arg = process.argv.find(a => a.startsWith('--y1='))?.slice(5);
 const cfg = SHEETS[sheetKey];
 if (!cfg || !sheetPath) {
   console.error('usage: node slice-sheet.mjs <players|classics|grid16|…> <sheet.png> [--preview] [--names=a,b,…] [--out=dir]');
@@ -201,8 +209,20 @@ if (cfg.namesFromCli) {
 if (outArg) {
   cfg.out = resolve(outArg);
 }
+if (y1Arg) {
+  cfg.yOverride = {...cfg.yOverride};
+  for (const pair of y1Arg.split(',')) {
+    const [name, y] = pair.split(':');
+    cfg.yOverride[name.trim()] = Number(y);
+  }
+}
 
 const {width: W, height: H} = await sharp(sheetPath).metadata();
+if (cfg.autoGrid) {
+  // Detected coordinates are actual pixels — no ref scaling.
+  cfg.refW = W;
+  cfg.refH = H;
+}
 const sx = W / cfg.refW, sy = H / cfg.refH;
 
 // Full-sheet pixels for the auto-headroom pass, bg sampled from the sheet's
@@ -221,6 +241,73 @@ const isSheetBg = (x, y) => {
   const db = sheetRaw[i + 2] - sheetBg[2];
   return Math.sqrt(dr * dr + dg * dg + db * db) < cfg.tol;
 };
+
+if (cfg.autoGrid) {
+  // Find the bust boxes from the ink itself. Columns: contiguous runs of
+  // ink-bearing pixel columns (busts are wide; inter-column gutters are
+  // clean). Rows: the N tallest ink row-bands are busts — label bands are
+  // ~20px and fall out on height.
+  const colInk = new Array(W).fill(0);
+  const rowInk = new Array(H).fill(0);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      if (!isSheetBg(x, y)) {
+        colInk[x]++;
+        rowInk[y]++;
+      }
+    }
+  }
+  const runs = (arr, min, gapMax) => {
+    const out = [];
+    let start = -1, gap = 0;
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] > min) {
+        if (start < 0) start = i;
+        gap = 0;
+      } else if (start >= 0 && ++gap > gapMax) {
+        out.push([start, i - gap + 1]);
+        start = -1;
+      }
+    }
+    if (start >= 0) out.push([start, arr.length]);
+    return out;
+  };
+  const colRuns = runs(colInk, 15, 12).filter(([a, b]) => b - a > 0.04 * W);
+  const rowRuns = runs(rowInk, 8, 3)
+    .sort((a, b) => (b[1] - b[0]) - (a[1] - a[0]))
+    .slice(0, cfg.autoGrid.rows)
+    .sort((a, b) => a[0] - b[0]);
+  if (colRuns.length !== cfg.autoGrid.cols || rowRuns.length !== cfg.autoGrid.rows) {
+    console.error(
+      `autoGrid: expected ${cfg.autoGrid.cols}×${cfg.autoGrid.rows} but detected ` +
+        `${colRuns.length} columns / ${rowRuns.length} row bands — the sheet's ` +
+        'layout is off (merged cells, extra art?). Regenerate the sheet.',
+    );
+    process.exit(1);
+  }
+  console.log(
+    `autoGrid: columns ${colRuns.map(r => Math.round((r[0] + r[1]) / 2)).join(', ')} · ` +
+      `row bands ${rowRuns.map(r => r.join('-')).join(', ')}`,
+  );
+  // Label bands: short ink runs (printed names are ~20px tall, busts 200+).
+  // A bust band can swallow the label above it when a tall head leaves no
+  // clean gap — every crop row inside a label band is painted background
+  // before keying, so text (and its drop shadow, which can bridge to hair)
+  // never reaches the output.
+  cfg.labelBands = runs(rowInk, 24, 0).filter(([a, b]) => b - a < 40);
+  const flatNames = cfg.rows.flatMap(r => r.names);
+  cfg.rows = rowRuns.map(([ry0, ry1], ri) => ({
+    // ±2px margin; trim() removes surplus background per cell afterwards.
+    y0: Math.max(0, ry0 - 2),
+    y1: Math.min(H, ry1 + 2),
+    cols: colRuns.map(([cx0, cx1]) => Math.round((cx0 + cx1) / 2)),
+    colHalfW: colRuns.map(([cx0, cx1]) => Math.ceil((cx1 - cx0) / 2) + 4),
+    names: flatNames.slice(ri * cfg.autoGrid.cols, (ri + 1) * cfg.autoGrid.cols),
+    // Bands are content-derived; the climb/extend passes are unnecessary and
+    // would walk into the adjacent label bands.
+    noAutoY: true,
+  }));
+}
 const rowHasInk = (y, left, cw) => {
   for (let x = left; x < Math.min(left + cw, W); x++) {
     if (!isSheetBg(x, y)) {
@@ -351,7 +438,7 @@ function keyBackground(data, w, h, {tol, holeTol, dropBottom}) {
       continue;
     }
     const id = stats.length;
-    const st = {size: 0, minX: w, maxX: 0, minY: h};
+    const st = {size: 0, minX: w, maxX: 0, minY: h, maxY: 0};
     const q = [start];
     comp[start] = id;
     while (q.length) {
@@ -361,6 +448,7 @@ function keyBackground(data, w, h, {tol, holeTol, dropBottom}) {
       st.minX = Math.min(st.minX, x);
       st.maxX = Math.max(st.maxX, x);
       st.minY = Math.min(st.minY, y);
+      st.maxY = Math.max(st.maxY, y);
       for (const n of [x > 0 && i - 1, x < w - 1 && i + 1, y > 0 && i - w, y < h - 1 && i + w]) {
         if (n !== false && comp[n] === -1 && data[n * 4 + 3] > 0) {
           comp[n] = id;
@@ -377,7 +465,11 @@ function keyBackground(data, w, h, {tol, holeTol, dropBottom}) {
     }
     const edgeSliver = st.maxX <= w * 0.12 || st.minX >= w * 0.88;
     const bottomText = dropBottom != null && st.minY >= h * dropBottom;
-    return edgeSliver || bottomText || st.size < largest * 0.03;
+    // Disconnected shapes confined to the crop's top band are stray label
+    // text from the row above ("E R" fragments over a head) — a bust never
+    // has meaningful parts floating up there.
+    const topText = st.maxY <= h * 0.2 && st.size < largest * 0.1;
+    return edgeSliver || bottomText || topText || st.size < largest * 0.03;
   });
   for (let i = 0; i < w * h; i++) {
     if (data[i * 4 + 3] > 0 && drop[comp[i]]) {
@@ -396,18 +488,19 @@ let count = 0, shipped = 0;
 for (const row of cfg.rows) {
   for (let c = 0; c < row.cols.length; c++) {
     const name = row.names[c];
-    const halfW = cfg.halfWOverride?.[name] ?? cfg.halfW;
+    const halfW = row.colHalfW?.[c] ?? cfg.halfWOverride?.[name] ?? cfg.halfW;
     const left = Math.max(0, Math.round((row.cols[c] - halfW) * sx));
     const cw = Math.min(Math.round(halfW * 2 * sx), W - left);
     const bandTop = Math.round(row.y0 * sy);
-    const top = autoTop(bandTop, left, cw);
+    const top = row.noAutoY ? bandTop : autoTop(bandTop, left, cw);
     if (top < bandTop) {
       console.log(`  ${name}: top raised ${bandTop - top}px for full headroom`);
     }
     // A yOverride is a hard cut (label touching the artwork) — never walk it.
     const hardY1 = cfg.yOverride?.[name];
     const bandBottom = Math.round((hardY1 ?? row.y1) * sy);
-    const bottom = hardY1 != null ? bandBottom : autoBottom(bandBottom, left, cw);
+    const bottom =
+      hardY1 != null || row.noAutoY ? bandBottom : autoBottom(bandBottom, left, cw);
     if (bottom > bandBottom) {
       console.log(`  ${name}: bottom extended ${bottom - bandBottom}px for the full collar`);
     }
@@ -418,6 +511,16 @@ for (const row of cfg.rows) {
       await crop.png().toFile(resolve(PREVIEW, `${name}.png`));
     } else {
       const {data, info} = await crop.ensureAlpha().raw().toBuffer({resolveWithObject: true});
+      for (const [ly0, ly1] of cfg.labelBands ?? []) {
+        for (let y = Math.max(ly0 - top, 0); y < Math.min(ly1 - top + 1, info.height); y++) {
+          for (let x = 0; x < info.width; x++) {
+            const i = (y * info.width + x) * 4;
+            data[i] = sheetBg[0];
+            data[i + 1] = sheetBg[1];
+            data[i + 2] = sheetBg[2];
+          }
+        }
+      }
       keyBackground(data, info.width, info.height, {
         ...cfg,
         tol: cfg.tolOverride?.[name] ?? cfg.tol,

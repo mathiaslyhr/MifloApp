@@ -53,20 +53,26 @@ any pace is fine, state is durable between sessions.
 4. **Cut**: `node slice-sheet.mjs grid16 <sheet> --names=<16 slugs in reading
    order>`. Slug = the player id lowercased with everything non-alphanumeric
    collapsed to `-` (same rule data:publish uses: `Kane, Harry` → `kane-harry`).
-   The slicer auto-raises each crop's top edge until the full head fits,
-   extends the bottom to the bust's full drawn collar, and anchors every
-   portrait flush with the bottom of the square (card-style — the frame cuts
-   the shirt, nothing floats). It warns `flat-topped` if a head is clipped
-   **in the sheet itself** — a warned cell means that player gets regenerated
-   in a later batch; drop the file, do not ship it.
-5. **Verify**: Read 3–4 outputs (always the warned ones — there should be
+   `grid16` **detects the grid from the sheet's own ink** (columns, row
+   bands, label bands — ChatGPT never places the grid identically twice),
+   blanks the printed labels before keying, keeps each bust's full head and
+   collar, and anchors every portrait flush with the bottom of the square
+   (card-style). It warns `flat-topped` if a head is clipped **in the sheet
+   itself** — a warned cell means that player gets regenerated in a later
+   batch; drop the file, do not ship it. It errors out if it can't find a
+   clean 4×4 → regenerate the sheet.
+5. **Crest check** (ChatGPT often draws badges despite the prompt): zoom the
+   chest strips of all four rows and, for any shirt wearing a crest, re-cut
+   with a hard bottom right above the badge: `--y1=<name>:<sheetY>,…`.
+   Record the used values in `tools/art/batches.md`.
+6. **Verify**: Read 3–4 outputs (always the warned ones — there should be
    none). Full rounded hair, one subject per image, no neighbour bleed.
-6. **Register**: add the 16 entries to `scripts/staging/portraits.json`
+7. **Register**: add the 16 entries to `scripts/staging/portraits.json`
    (create it as `{}` first if missing). Entries are cumulative — never remove
    old ones; the manifest doubles as the progress record.
-7. **Ship**: `git add` + commit (portraits + manifest + sheet is NOT committed,
+8. **Ship**: `git add` + commit (portraits + manifest + sheet is NOT committed,
    see below), then `npm run data:publish`.
-8. **Report per player, added or not** — update each row in
+9. **Report per player, added or not** — update each row in
    `tools/art/batches.md` to `added` or `failed` (with the reason: clipped in
    sheet, wrong face, merged cells…) and give the user the same list as a
    checklist. Failed players go into a later batch's slots. Then immediately
