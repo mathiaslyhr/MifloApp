@@ -3775,7 +3775,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     shirtNumbers: [39],
     clubs: [
       {clubId: 'lyon', from: 2020, to: 2022},
-      {clubId: 'newcastle', from: 2022},
+      {clubId: 'newcastle', from: 2022, to: 2026},
+      {clubId: 'arsenal', from: 2026},
     ],
     honours: [],
     tags: ['current-stars'],
@@ -6948,7 +6949,10 @@ export const FOOTBALLERS: readonly Footballer[] = [
     positions: ['FW'],
     born: '2006-11-27',
     shirtNumbers: [19],
-    clubs: [{clubId: 'rb-leipzig', from: 2025}],
+    clubs: [
+      {clubId: 'rb-leipzig', from: 2025, to: 2026},
+      {clubId: 'real-madrid', from: 2026},
+    ],
     honours: [],
     tags: ['current-stars'],
   },
@@ -10315,6 +10319,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 5, years: [1997, 2001, 2003, 2007, 2008]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Gutiérrez, Miguel',
+    name: 'Miguel Gutiérrez',
+    nationality: ['Spain'],
+    positions: ['DF'],
+    born: '2001-07-27',
+    clubs: [
+      {clubId: 'real-madrid', from: 2021, to: 2022},
+      {clubId: 'girona', from: 2022, to: 2025},
+      {clubId: 'napoli', from: 2025, to: 2026},
+      {clubId: 'leverkusen', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 1, years: [2022]},
+      {type: 'champions-league', count: 1, years: [2022]},
+    ],
+    tags: ['current-stars'],
   },
   {
     id: 'Gvardiol, Joško',
@@ -18071,7 +18093,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'brondby', from: 2013, to: 2018},
       {clubId: 'fiorentina', from: 2018, to: 2019},
       {clubId: 'brentford', from: 2019, to: 2025},
-      {clubId: 'arsenal', from: 2025},
+      {clubId: 'arsenal', from: 2025, to: 2026},
+      {clubId: 'everton', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
@@ -22118,6 +22141,19 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'ajax', from: 2022, to: 2024},
     ],
     honours: [],
+  },
+  {
+    id: 'Sánchez, Juanlu',
+    name: 'Juanlu Sánchez',
+    nationality: ['Spain'],
+    positions: ['DF', 'MF'],
+    born: '2003-08-15',
+    clubs: [
+      {clubId: 'sevilla', from: 2021, to: 2026},
+      {clubId: 'bournemouth', from: 2026},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Sánchez, Robert',
