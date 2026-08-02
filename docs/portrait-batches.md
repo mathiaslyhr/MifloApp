@@ -47,10 +47,12 @@ any pace is fine, state is durable between sessions.
 4. **Cut**: `node slice-sheet.mjs grid16 <sheet> --names=<16 slugs in reading
    order>`. Slug = the player id lowercased with everything non-alphanumeric
    collapsed to `-` (same rule data:publish uses: `Kane, Harry` → `kane-harry`).
-   The slicer auto-raises each crop's top edge until the full head fits and
-   warns `flat-topped` if a head is clipped **in the sheet itself** — a warned
-   cell means that player gets regenerated in a later batch; drop the file, do
-   not ship it.
+   The slicer auto-raises each crop's top edge until the full head fits,
+   extends the bottom to the bust's full drawn collar, and anchors every
+   portrait flush with the bottom of the square (card-style — the frame cuts
+   the shirt, nothing floats). It warns `flat-topped` if a head is clipped
+   **in the sheet itself** — a warned cell means that player gets regenerated
+   in a later batch; drop the file, do not ship it.
 5. **Verify**: Read 3–4 outputs (always the warned ones — there should be
    none). Full rounded hair, one subject per image, no neighbour bleed.
 6. **Register**: add the 16 entries to `scripts/staging/portraits.json`

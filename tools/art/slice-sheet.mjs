@@ -27,7 +27,7 @@ const PREVIEW = resolve(HERE, 'preview');
 const SHEETS = {
   // spillere.png — 21 teammate portraits (July 2026).
   players: {
-    refW: 1536, refH: 1024, halfW: 122, size: 256,
+    refW: 1536, refH: 1024, halfW: 122, size: 256, anchor: 'south',
     out: resolve(ASSETS, 'players'),
     extras: null,
     use: null,
@@ -45,7 +45,7 @@ const SHEETS = {
   // classics sheet (00ad07e0…, 1536×1024) — the 16 classic hub players, 4×4.
   // Portraits sit very close together: narrow halfW + edge-sliver dropping.
   classics: {
-    refW: 1536, refH: 1024, halfW: 135, size: 256,
+    refW: 1536, refH: 1024, halfW: 135, size: 256, anchor: 'south',
     out: resolve(ASSETS, 'players'),
     extras: null,
     use: null,
@@ -117,7 +117,7 @@ const SHEETS = {
   // order (left→right, top→bottom); output goes to --out (default
   // tools/art/portraits/, the OTA staging area — NOT the bundled assets).
   grid16: {
-    refW: 1536, refH: 1024, halfW: 135, size: 256,
+    refW: 1536, refH: 1024, halfW: 135, size: 256, anchor: 'south',
     out: resolve(HERE, 'portraits'),
     extras: null,
     use: null,
@@ -260,6 +260,21 @@ function autoTop(top, left, cw) {
  * boundary, and anything past it is label text.
  */
 function autoBottom(bottom, left, cw) {
+  // Only walk when the band cuts through a real chest cross-section: busts
+  // are wide where they end, label text is not. Without this, a band sitting
+  // just above a label walks straight through the letters instead.
+  const inkWidth = y => {
+    let n = 0;
+    for (let x = left; x < Math.min(left + cw, W); x++) {
+      if (!isSheetBg(x, y)) {
+        n++;
+      }
+    }
+    return n;
+  };
+  if (inkWidth(bottom) < 0.4 * cw) {
+    return bottom;
+  }
   const ceilY = Math.min(H - 1, bottom + Math.round(0.12 * H));
   let y = bottom;
   while (y < ceilY && rowHasInk(y, left, cw)) {
@@ -410,7 +425,13 @@ for (const row of cfg.rows) {
       const dest = resolve(baseOut, `${name}.png`);
       await sharp(data, {raw: {width: info.width, height: info.height, channels: 4}})
         .trim()
-        .resize(cfg.size, cfg.size, {fit: 'contain', background: {r: 0, g: 0, b: 0, alpha: 0}})
+        .resize(cfg.size, cfg.size, {
+          fit: 'contain',
+          // Portraits sit flush with the bottom edge (football-card style) so
+          // the bust's painted cut reads as framed, never floating mid-air.
+          position: cfg.anchor ?? 'centre',
+          background: {r: 0, g: 0, b: 0, alpha: 0},
+        })
         .png()
         .toFile(dest);
       // Dome check: a rounded head starts narrow at its apex. A wide topmost
