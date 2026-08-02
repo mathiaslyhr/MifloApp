@@ -36,6 +36,7 @@ import {clubSource, nationSource, playerSource} from '../../../games/shared/sear
 import {getById, getClub} from '../../../data/football';
 import {flagImage, logoImage, type ChipImage} from '../../../games/hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../../../games/hattrick/assets/playerAvatars';
+import {remotePortraitSource} from '../../../games/hattrick/assets/remoteArt';
 import {fonts, radii, spacing, useColors, useThemedStyles, type Palette} from '../../../theme';
 import {StepProgress} from '../../../core/ui/StepProgress';
 
@@ -46,7 +47,12 @@ type Slot = 'player' | 'club' | 'nation';
 
 /** Portrait for a footballer id, falling back to their nationality flag. */
 function playerImage(id: string): ChipImage {
-  return PLAYER_AVATARS[id] ?? flagImage(getById(id)?.nationality[0]) ?? null;
+  return (
+    PLAYER_AVATARS[id] ??
+    remotePortraitSource(id) ??
+    flagImage(getById(id)?.nationality[0]) ??
+    null
+  );
 }
 
 export function QuickSetupFlow({

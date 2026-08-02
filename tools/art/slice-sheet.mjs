@@ -111,6 +111,26 @@ const SHEETS = {
       {y0: 950, y1: 1165, cols: [173, 468, 761, 1067], names: ['delbosque', 'low', 'vangaal', 'capello']},
     ],
   },
+  // Generic 4×4 portrait grid — the layout every NEW portrait batch uses
+  // (see docs/portrait-batches.md). Same geometry as the classics sheet,
+  // which ChatGPT reproduced reliably. Names come from --names in reading
+  // order (left→right, top→bottom); output goes to --out (default
+  // tools/art/portraits/, the OTA staging area — NOT the bundled assets).
+  grid16: {
+    refW: 1536, refH: 1024, halfW: 135, size: 256,
+    out: resolve(HERE, 'portraits'),
+    extras: null,
+    use: null,
+    key: 'edge',
+    tol: 34,
+    namesFromCli: 16,
+    rows: [
+      {y0: 15, y1: 255, cols: [235, 578, 916, 1265], names: []},
+      {y0: 298, y1: 514, cols: [235, 578, 916, 1265], names: []},
+      {y0: 566, y1: 764, cols: [235, 578, 916, 1265], names: []},
+      {y0: 814, y1: 990, cols: [235, 578, 916, 1265], names: []},
+    ],
+  },
   // trophies.png — 23 trophies; only 8 map onto the game's HonourType set,
   // the rest land in extras/ for future honour kinds.
   trophies: {
@@ -157,14 +177,79 @@ const SHEETS = {
 
 const [, , sheetKey, sheetPath] = process.argv;
 const preview = process.argv.includes('--preview');
+const namesArg = process.argv.find(a => a.startsWith('--names='))?.slice(8);
+const outArg = process.argv.find(a => a.startsWith('--out='))?.slice(6);
 const cfg = SHEETS[sheetKey];
 if (!cfg || !sheetPath) {
-  console.error('usage: node slice-sheet.mjs <players|trophies> <sheet.png> [--preview]');
+  console.error('usage: node slice-sheet.mjs <players|classics|grid16|…> <sheet.png> [--preview] [--names=a,b,…] [--out=dir]');
   process.exit(1);
+}
+if (cfg.namesFromCli) {
+  const names = namesArg?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
+  if (names.length !== cfg.namesFromCli && !preview) {
+    console.error(`${sheetKey} needs exactly --names=<${cfg.namesFromCli} comma-separated output names in reading order>`);
+    process.exit(1);
+  }
+  let i = 0;
+  for (const row of cfg.rows) {
+    row.names = names.length
+      ? names.slice(i, i + row.cols.length)
+      : row.cols.map((_, c) => `cell-${cfg.rows.indexOf(row)}-${c}`);
+    i += row.cols.length;
+  }
+}
+if (outArg) {
+  cfg.out = resolve(outArg);
 }
 
 const {width: W, height: H} = await sharp(sheetPath).metadata();
 const sx = W / cfg.refW, sy = H / cfg.refH;
+
+// Full-sheet pixels for the auto-headroom pass, bg sampled from the sheet's
+// own corners (all sheets use one flat background color).
+const sheetRaw = await sharp(sheetPath).ensureAlpha().raw().toBuffer();
+const sheetBg = (() => {
+  const px = i => [sheetRaw[i * 4], sheetRaw[i * 4 + 1], sheetRaw[i * 4 + 2]];
+  const corners = [0, W - 1, (H - 1) * W, H * W - 1].map(px);
+  return [0, 1, 2].map(c => corners.reduce((s, p) => s + p[c], 0) / 4);
+})();
+
+/**
+ * Walk a crop's top edge upward until one clean background row separates the
+ * subject from whatever sits above (the previous row's label). The generated
+ * sheets never align hair to the hand-tuned y bands exactly, and a band that
+ * starts inside the hair ships a flat-topped portrait — this makes the top
+ * edge content-aware so it cannot happen, on this sheet or any future one.
+ */
+function autoTop(top, left, cw) {
+  const isBg = (x, y) => {
+    const i = (y * W + x) * 4;
+    const dr = sheetRaw[i] - sheetBg[0];
+    const dg = sheetRaw[i + 1] - sheetBg[1];
+    const db = sheetRaw[i + 2] - sheetBg[2];
+    return Math.sqrt(dr * dr + dg * dg + db * db) < cfg.tol;
+  };
+  const rowHasInk = y => {
+    for (let x = left; x < Math.min(left + cw, W); x++) {
+      if (!isBg(x, y)) {
+        return true;
+      }
+    }
+    return false;
+  };
+  // Never climb more than ~12% of the sheet: if no clean row shows up by
+  // then, the band is misconfigured — keep the hand-tuned value and say so.
+  const floor = Math.max(0, top - Math.round(0.12 * H));
+  let y = top;
+  while (y > floor && rowHasInk(y)) {
+    y--;
+  }
+  if (y === floor && rowHasInk(y)) {
+    console.warn(`  ! no headroom found above y=${top} — keeping the configured band`);
+    return top;
+  }
+  return Math.max(0, y - 2);
+}
 
 function keyBackground(data, w, h, {tol, holeTol, dropBottom}) {
   // Sample bg from the 4 corners (average).
@@ -277,10 +362,14 @@ for (const row of cfg.rows) {
     const name = row.names[c];
     const halfW = cfg.halfWOverride?.[name] ?? cfg.halfW;
     const left = Math.max(0, Math.round((row.cols[c] - halfW) * sx));
-    const top = Math.round(row.y0 * sy);
     const cw = Math.min(Math.round(halfW * 2 * sx), W - left);
+    const bandTop = Math.round(row.y0 * sy);
+    const top = autoTop(bandTop, left, cw);
+    if (top < bandTop) {
+      console.log(`  ${name}: top raised ${bandTop - top}px for full headroom`);
+    }
     const y1 = cfg.yOverride?.[name] ?? row.y1;
-    const ch = Math.round((y1 - row.y0) * sy);
+    const ch = Math.round(y1 * sy) - top;
     const crop = sharp(sheetPath).extract({left, top, width: cw, height: ch});
 
     if (preview) {
@@ -297,6 +386,28 @@ for (const row of cfg.rows) {
         .resize(cfg.size, cfg.size, {fit: 'contain', background: {r: 0, g: 0, b: 0, alpha: 0}})
         .png()
         .toFile(dest);
+      // Dome check: a rounded head starts narrow at its apex. A wide topmost
+      // row means the crop (or the sheet itself) cut the hair flat — never
+      // ship that silently.
+      {
+        const {data: out, info: oi} = await sharp(dest).ensureAlpha().raw().toBuffer({resolveWithObject: true});
+        const rowW = y => {
+          let n = 0;
+          for (let x = 0; x < oi.width; x++) {
+            if (out[(y * oi.width + x) * 4 + 3] > 128) n++;
+          }
+          return n;
+        };
+        let top = -1, max = 0;
+        for (let y = 0; y < oi.height; y++) {
+          const n = rowW(y);
+          if (n > 0 && top < 0) top = y;
+          max = Math.max(max, n);
+        }
+        if (top >= 0 && rowW(top) / max > 0.3) {
+          console.warn(`  ! ${name}: flat-topped (apex ${rowW(top)}/${max}px) — head may be clipped, check the sheet/crop`);
+        }
+      }
       const shipAs = cfg.use === null ? [] : [cfg.use[name] ?? []].flat();
       for (const target of shipAs) {
         copyFileSync(dest, resolve(cfg.out, target));

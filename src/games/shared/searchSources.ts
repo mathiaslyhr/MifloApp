@@ -18,6 +18,7 @@ import {searchSuggestions} from '../tenball/suggestions';
 import type {TenballKind} from '../tenball/types';
 import {flagImage, logoImage} from '../hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
+import {remotePortraitSource} from '../hattrick/assets/remoteArt';
 import {filterFriends, shouldOfferRequest} from '../../core/social/friendSearch';
 import type {DirectoryPerson, SocialProfile} from '../../core/social/types';
 
@@ -59,7 +60,7 @@ export type SearchSource = {
 /** Portrait for a footballer id, falling back to their nationality flag (the
  * same rule the profile favorites use). */
 function playerImage(id: string): ImageSourcePropType | undefined {
-  const portrait = PLAYER_AVATARS[id];
+  const portrait = PLAYER_AVATARS[id] ?? remotePortraitSource(id);
   if (portrait != null) {
     return portrait;
   }

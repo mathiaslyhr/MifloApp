@@ -11,6 +11,7 @@ import {spacing, useThemedStyles, type Palette} from '../../theme';
 import {getById, POSITION_LABELS} from '../../data/football';
 import {flagImage, logoImage} from '../hattrick/criterionIcon';
 import {PLAYER_AVATARS} from '../hattrick/assets/playerAvatars';
+import {remotePortraitSource} from '../hattrick/assets/remoteArt';
 
 export function FootballerCard({footballerId}: {footballerId: string}) {
   const styles = useThemedStyles(makeStyles);
@@ -18,7 +19,8 @@ export function FootballerCard({footballerId}: {footballerId: string}) {
   if (!f) {
     return null;
   }
-  const portrait = PLAYER_AVATARS[footballerId] ?? null;
+  const portrait =
+    PLAYER_AVATARS[footballerId] ?? remotePortraitSource(footballerId) ?? null;
   const flag = flagImage(f.nationality[0]);
   // "Current" club: the most recent spell in the list.
   const clubId = f.clubs.length ? f.clubs[f.clubs.length - 1].clubId : undefined;
