@@ -214,6 +214,22 @@ const sheetBg = (() => {
   return [0, 1, 2].map(c => corners.reduce((s, p) => s + p[c], 0) / 4);
 })();
 
+const isSheetBg = (x, y) => {
+  const i = (y * W + x) * 4;
+  const dr = sheetRaw[i] - sheetBg[0];
+  const dg = sheetRaw[i + 1] - sheetBg[1];
+  const db = sheetRaw[i + 2] - sheetBg[2];
+  return Math.sqrt(dr * dr + dg * dg + db * db) < cfg.tol;
+};
+const rowHasInk = (y, left, cw) => {
+  for (let x = left; x < Math.min(left + cw, W); x++) {
+    if (!isSheetBg(x, y)) {
+      return true;
+    }
+  }
+  return false;
+};
+
 /**
  * Walk a crop's top edge upward until one clean background row separates the
  * subject from whatever sits above (the previous row's label). The generated
@@ -222,33 +238,38 @@ const sheetBg = (() => {
  * edge content-aware so it cannot happen, on this sheet or any future one.
  */
 function autoTop(top, left, cw) {
-  const isBg = (x, y) => {
-    const i = (y * W + x) * 4;
-    const dr = sheetRaw[i] - sheetBg[0];
-    const dg = sheetRaw[i + 1] - sheetBg[1];
-    const db = sheetRaw[i + 2] - sheetBg[2];
-    return Math.sqrt(dr * dr + dg * dg + db * db) < cfg.tol;
-  };
-  const rowHasInk = y => {
-    for (let x = left; x < Math.min(left + cw, W); x++) {
-      if (!isBg(x, y)) {
-        return true;
-      }
-    }
-    return false;
-  };
   // Never climb more than ~12% of the sheet: if no clean row shows up by
   // then, the band is misconfigured — keep the hand-tuned value and say so.
   const floor = Math.max(0, top - Math.round(0.12 * H));
   let y = top;
-  while (y > floor && rowHasInk(y)) {
+  while (y > floor && rowHasInk(y, left, cw)) {
     y--;
   }
-  if (y === floor && rowHasInk(y)) {
+  if (y === floor && rowHasInk(y, left, cw)) {
     console.warn(`  ! no headroom found above y=${top} — keeping the configured band`);
     return top;
   }
   return Math.max(0, y - 2);
+}
+
+/**
+ * Walk a crop's bottom edge down until one clean background row separates the
+ * bust from its printed label. The hand-tuned bands stopped mid-chest, so how
+ * much collar survived varied portrait to portrait — this keeps each bust's
+ * full drawn extent. No margin is added downward: the first clean row is the
+ * boundary, and anything past it is label text.
+ */
+function autoBottom(bottom, left, cw) {
+  const ceilY = Math.min(H - 1, bottom + Math.round(0.12 * H));
+  let y = bottom;
+  while (y < ceilY && rowHasInk(y, left, cw)) {
+    y++;
+  }
+  if (y === ceilY && rowHasInk(y, left, cw)) {
+    console.warn(`  ! no gap found below y=${bottom} — keeping the configured band`);
+    return bottom;
+  }
+  return y;
 }
 
 function keyBackground(data, w, h, {tol, holeTol, dropBottom}) {
@@ -368,8 +389,14 @@ for (const row of cfg.rows) {
     if (top < bandTop) {
       console.log(`  ${name}: top raised ${bandTop - top}px for full headroom`);
     }
-    const y1 = cfg.yOverride?.[name] ?? row.y1;
-    const ch = Math.round(y1 * sy) - top;
+    // A yOverride is a hard cut (label touching the artwork) — never walk it.
+    const hardY1 = cfg.yOverride?.[name];
+    const bandBottom = Math.round((hardY1 ?? row.y1) * sy);
+    const bottom = hardY1 != null ? bandBottom : autoBottom(bandBottom, left, cw);
+    if (bottom > bandBottom) {
+      console.log(`  ${name}: bottom extended ${bottom - bandBottom}px for the full collar`);
+    }
+    const ch = bottom - top;
     const crop = sharp(sheetPath).extract({left, top, width: cw, height: ch});
 
     if (preview) {
