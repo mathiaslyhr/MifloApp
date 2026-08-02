@@ -32,8 +32,11 @@ any pace is fine, state is durable between sessions.
 
 1. **Pick the next 16.** Eligible = every id in `FOOTBALLERS` that is NOT in
    `PLAYER_AVATARS` and NOT already in `scripts/staging/portraits.json`.
-   Order: `current-stars` before `legends`, then alphabetical by id. This is
-   the whole progress state — no counter files, any session can resume.
+   Order: **fame-first** — the agent curates each batch as the 16 most
+   recognizable players remaining (global icons and stars before squad
+   players, current era and legends mixed freely). This is a judgment call,
+   not a formula; the manifest is the progress state, so any session can
+   resume without notes (user decision, 2026-08-02 — replaced alphabetical).
 2. **Send the user the prompt** (template below) filled with the 16 names in
    grid reading order (left→right, top→bottom). Ask them to paste it in
    ChatGPT, download the generated image, and drop it in `tools/art/sheets/`
@@ -82,11 +85,13 @@ Row by row, left to right:
 16. ...
 ```
 
-Kit lines: derive from the player's current club or national team colours
-("sky blue jersey", "red and black vertically striped jersey") — describe the
-colours, never name the club/brand on the shirt. ChatGPT knows famous faces;
-for obscure players the result is a plausible generic face in the right kit —
-that's accepted, the uniform style is what matters.
+Kit lines: use the kit the player is **most known for** — the club (or
+national team) where they "popped off", not necessarily their current club
+(user decision, 2026-08-02: Adingra → Brighton stripes, not Monaco; Kane →
+Spurs white; Zidane → France navy). Describe the colours only, never name the
+club/brand on the shirt. ChatGPT knows famous faces; for obscure players the
+result is a plausible generic face in the right kit — that's accepted, the
+uniform style is what matters.
 
 ## Rules
 
