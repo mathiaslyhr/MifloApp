@@ -67,12 +67,19 @@ any pace is fine, state is durable between sessions.
    Record the used values in `tools/art/batches.md`.
 6. **Verify**: Read 3–4 outputs (always the warned ones — there should be
    none). Full rounded hair, one subject per image, no neighbour bleed.
-7. **Register**: add the 16 entries to `scripts/staging/portraits.json`
+7. **User approval on the review page**: add the batch's portraits as a new
+   section at the TOP of the review artifact (Artifact tool, `url` from
+   `tools/art/batches.md` header — same URL every time, do NOT mint a new
+   one), mark it `awaiting approval`, then `open <url>` in the browser and
+   wait for the user's go-ahead. Only ship after they accept; if they reject
+   cells, mark those `failed` and continue with the rest.
+8. **Register**: add the approved entries to `scripts/staging/portraits.json`
    (create it as `{}` first if missing). Entries are cumulative — never remove
    old ones; the manifest doubles as the progress record.
-8. **Ship**: `git add` + commit (portraits + manifest + sheet is NOT committed,
-   see below), then `npm run data:publish`.
-9. **Report per player, added or not** — update each row in
+9. **Ship**: `git add` + commit (portraits + manifest + sheet is NOT committed,
+   see below), then `npm run data:publish`. Flip the review page's section
+   pill to `published`.
+10. **Report per player, added or not** — update each row in
    `tools/art/batches.md` to `added` or `failed` (with the reason: clipped in
    sheet, wrong face, merged cells…) and give the user the same list as a
    checklist. Failed players go into a later batch's slots. Then immediately

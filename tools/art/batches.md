@@ -1,5 +1,9 @@
 # Portrait batch checklist
 
+Review page (update THIS artifact URL each batch, then `open` it for the
+user's approval before publishing — never mint a new artifact):
+https://claude.ai/code/artifact/f4e7d854-e8ac-43b5-9028-611ebbac55b2
+
 The durable record of every portrait batch: who was requested, in what grid
 order, and what happened to each cut. The agent writes a batch here when the
 prompt is SENT to the user, and updates every player's status after cutting —
