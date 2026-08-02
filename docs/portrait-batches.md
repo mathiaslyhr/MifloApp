@@ -38,9 +38,12 @@ any pace is fine, state is durable between sessions.
    not a formula; the manifest is the progress state, so any session can
    resume without notes (user decision, 2026-08-02 — replaced alphabetical).
 2. **Send the user the prompt** (template below) filled with the 16 names in
-   grid reading order (left→right, top→bottom). Ask them to paste it in
-   ChatGPT, download the generated image, and drop it in `tools/art/sheets/`
-   (or tell you the filename in `~/Downloads`).
+   grid reading order (left→right, top→bottom), and **record the batch in
+   `tools/art/batches.md`** — players, dataset ids, file names, reading
+   order, status `sent`. The checklist is how a different session later knows
+   what's on the sheet. Ask the user to paste the prompt in ChatGPT, download
+   the image, and drop it in `tools/art/sheets/` (or tell you the filename in
+   `~/Downloads`).
 3. **Preview the sheet**: `cd tools/art && node slice-sheet.mjs grid16 <sheet>
    --preview`, then Read a few `preview/*.png` and the sheet itself. Check:
    4×4 layout, one full portrait per box, generous space above every head,
@@ -63,8 +66,11 @@ any pace is fine, state is durable between sessions.
    old ones; the manifest doubles as the progress record.
 7. **Ship**: `git add` + commit (portraits + manifest + sheet is NOT committed,
    see below), then `npm run data:publish`.
-8. **Report** which batch shipped, then immediately print the next batch's
-   prompt so the user can keep going.
+8. **Report per player, added or not** — update each row in
+   `tools/art/batches.md` to `added` or `failed` (with the reason: clipped in
+   sheet, wrong face, merged cells…) and give the user the same list as a
+   checklist. Failed players go into a later batch's slots. Then immediately
+   print the next batch's prompt so the user can keep going.
 
 ## The ChatGPT prompt template
 

@@ -277,6 +277,7 @@ if (existsSync(portraitManifest)) {
     const png = await rasterizePortrait(readFileSync(file));
     const slug = playerId
       .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
       .replace(/[^a-zA-Z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
       .toLowerCase();
