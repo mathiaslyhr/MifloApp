@@ -78,20 +78,27 @@ head and shoulders, warm friendly expressions, all busts the same size. One
 single flat dark-green background (#1f6f3f) across the whole image. Leave
 generous empty green space above every head - never crop or touch the hair.
 Under each portrait print the player's SURNAME in small white capital letters.
-Plain jerseys only: no club crests, no brand logos, no sponsor text anywhere.
+No club crests, no brand logos, no sponsor text on the shirts.
 Row by row, left to right:
-1. <Full name> - <nationality> - plain <color> jersey with <trim>
+1. <Full name> - <club or nation> - <shirt colours>
 2. ...
 16. ...
 ```
 
-Kit lines: use the kit the player is **most known for** — the club (or
-national team) where they "popped off", not necessarily their current club
-(user decision, 2026-08-02: Adingra → Brighton stripes, not Monaco; Kane →
-Spurs white; Zidane → France navy). Describe the colours only, never name the
-club/brand on the shirt. ChatGPT knows famous faces; for obscure players the
-result is a plausible generic face in the right kit — that's accepted, the
-uniform style is what matters.
+Kit lines (user decisions, 2026-08-02):
+- **Name the club/nation and the colours**: `Lamine Yamal - Barcelona - blue
+  and red stripes`. Naming the club in the prompt text helps ChatGPT get the
+  face and kit right; the no-crest line keeps the artwork itself clean.
+- Use the kit the player is **most known for** — where they "popped off",
+  not necessarily their current club (Adingra → Brighton stripes, not
+  Monaco; Kane → Spurs white; Zidane → France navy).
+- When two players in one sheet share a club across eras, pin the era so the
+  shirts differ: `Ronaldinho - Barcelona - blue and red stripes, mid-2000s
+  style` vs `Yamal - Barcelona - modern kit different from the older style`.
+
+ChatGPT knows famous faces; for obscure players the result is a plausible
+generic face in the right kit — that's accepted, the uniform style is what
+matters.
 
 ## Rules
 
