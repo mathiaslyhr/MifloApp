@@ -4863,6 +4863,23 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Chalobah, Trevoh',
+    name: 'Trevoh Chalobah',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '1999-07-05',
+    shirtNumbers: [23, 14],
+    clubs: [
+      {clubId: 'chelsea', from: 2018},
+      {clubId: 'ipswich', from: 2018, to: 2019, loan: true},
+      {clubId: 'huddersfield', from: 2019, to: 2020, loan: true},
+      {clubId: 'lorient', from: 2020, to: 2021, loan: true},
+      {clubId: 'crystal-palace', from: 2024, to: 2025, loan: true},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Chambers, Harry',
     name: 'Harry Chambers',
     nationality: ['England'],
