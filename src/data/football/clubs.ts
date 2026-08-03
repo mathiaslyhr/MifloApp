@@ -64,6 +64,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'lille', name: 'Lille', country: 'France', league: 'ligue-1'},
   {id: 'rennes', name: 'Stade Rennais', country: 'France', league: 'ligue-1'},
   {id: 'paris-fc', name: 'Paris FC', country: 'France', league: 'ligue-1'},
+  {id: 'strasbourg', name: 'RC Strasbourg', country: 'France', league: 'ligue-1'},
 
   // Other (used by career history but not a primary quiz league)
   {id: 'barnsley', name: 'Barnsley', country: 'England', league: 'championship'},
@@ -92,6 +93,7 @@ export const CLUBS: readonly Club[] = [
   {id: 'besiktas', name: 'Beşiktaş', country: 'Turkey', league: 'super-lig'},
   {id: 'fenerbahce', name: 'Fenerbahçe', country: 'Turkey', league: 'super-lig'},
   {id: 'celtic', name: 'Celtic', country: 'Scotland', league: 'scottish-premiership'},
+  {id: 'rangers', name: 'Rangers', country: 'Scotland', league: 'scottish-premiership'},
 
   // --- WC 2026 batch: CONCACAF / hosts / OFC ---
   {id: 'nottingham-forest', name: 'Nottingham Forest', country: 'England', league: 'premier-league'},

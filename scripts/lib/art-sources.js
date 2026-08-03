@@ -128,6 +128,8 @@ const CLUB_SLUG = {
   'al-gharafa': 'al-gharafa-sc',
   // Transfers 2026-07 wave 3
   basaksehir: 'basaksehir', excelsior: 'excelsior',
+  // Transfers 2026-08
+  strasbourg: 'rc-strasbourg-alsace', rangers: 'rangers',
 };
 
 const slugify = s =>

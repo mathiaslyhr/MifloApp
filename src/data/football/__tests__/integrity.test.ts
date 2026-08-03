@@ -112,12 +112,21 @@ describe('referential integrity', () => {
           .split(/\s+/)
           .filter(Boolean),
       );
+    // Verified distinct people who genuinely share a name. Only add a pair
+    // here after confirming different birth dates and careers.
+    const distinctNamesakes = new Set([
+      // 1993 Euro-winning midfielder vs the 2000-born Porto right-back.
+      "'João Mário' and 'Lopes, João Mário'",
+    ]);
     const players = all().map(f => ({f, t: tokens(f.name)}));
     const dupes: string[] = [];
     for (let i = 0; i < players.length; i++) {
       for (let j = i + 1; j < players.length; j++) {
         const a = players[i];
         const b = players[j];
+        if (distinctNamesakes.has(`'${a.f.id}' and '${b.f.id}'`)) {
+          continue;
+        }
         if (!a.f.nationality.some(n => b.f.nationality.includes(n))) {
           continue;
         }
