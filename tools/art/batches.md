@@ -153,26 +153,26 @@ deleted before this rule; the user can re-download them from ChatGPT history
 (batch 1's is still wanted for the yamal/vandijk re-cut). Zico wanted but not
 in the dataset — swapped for Bobby Charlton.
 
-## Batch 4 — sent 2026-08-04 — status: cut, awaiting approval
+## Batch 4 — sent 2026-08-04 — status: ADDED (approved + published 2026-08-04)
 
 | #  | Player                  | Dataset id                  | File (`--names`)  | Status |
 |----|-------------------------|-----------------------------|-------------------|--------|
-| 1  | Robin van Persie        | `van Persie, Robin`         | `vanpersie`       | sent   |
-| 2  | Patrick Vieira          | `Vieira, Patrick`           | `vieira`          | sent   |
-| 3  | Roy Keane               | `Keane, Roy`                | `roykeane`        | sent   |
-| 4  | Gary Lineker            | `Lineker, Gary`             | `lineker`         | sent   |
-| 5  | Alan Shearer            | `Shearer, Alan`             | `shearer`         | sent   |
-| 6  | N'Golo Kanté            | `Kanté, N'Golo`             | `kante`           | sent   |
-| 7  | John Terry              | `Terry, John`               | `terry`           | sent   |
-| 8  | Rio Ferdinand           | `Ferdinand, Rio`            | `ferdinand`       | sent   |
-| 9  | Paulo Dybala            | `Dybala, Paulo`             | `dybala`          | sent   |
-| 10 | Lautaro Martínez        | `Martínez, Lautaro`         | `lautaro`         | sent   |
-| 11 | Phil Foden              | `Foden, Phil`               | `foden`           | sent   |
-| 12 | Florian Wirtz           | `Wirtz, Florian`            | `wirtz`           | sent   |
-| 13 | Khvicha Kvaratskhelia   | `Kvaratskhelia, Khvicha`    | `kvaratskhelia`   | sent   |
-| 14 | Victor Osimhen          | `Osimhen, Victor`           | `osimhen`         | sent   |
-| 15 | Marcelo                 | `Marcelo`                   | `marcelo`         | sent   |
-| 16 | Philippe Coutinho       | `Coutinho, Philippe`        | `coutinho`        | sent   |
+| 1  | Robin van Persie        | `van Persie, Robin`         | `vanpersie`       | added  |
+| 2  | Patrick Vieira          | `Vieira, Patrick`           | `vieira`          | added  |
+| 3  | Roy Keane               | `Keane, Roy`                | `roykeane`        | added  |
+| 4  | Gary Lineker            | `Lineker, Gary`             | `lineker`         | added  |
+| 5  | Alan Shearer            | `Shearer, Alan`             | `shearer`         | added  |
+| 6  | N'Golo Kanté            | `Kanté, N'Golo`             | `kante`           | added  |
+| 7  | John Terry              | `Terry, John`               | `terry`           | added  |
+| 8  | Rio Ferdinand           | `Ferdinand, Rio`            | `ferdinand`       | added  |
+| 9  | Paulo Dybala            | `Dybala, Paulo`             | `dybala`          | added  |
+| 10 | Lautaro Martínez        | `Martínez, Lautaro`         | `lautaro`         | added  |
+| 11 | Phil Foden              | `Foden, Phil`               | `foden`           | added  |
+| 12 | Florian Wirtz           | `Wirtz, Florian`            | `wirtz`           | added  |
+| 13 | Khvicha Kvaratskhelia   | `Kvaratskhelia, Khvicha`    | `kvaratskhelia`   | added  |
+| 14 | Victor Osimhen          | `Osimhen, Victor`           | `osimhen`         | added  |
+| 15 | Marcelo                 | `Marcelo`                   | `marcelo`         | added  |
+| 16 | Philippe Coutinho       | `Coutinho, Philippe`        | `coutinho`        | added  |
 
 Batch 4 notes: crests cut with --y1 (vanpersie:235, dybala:768, lautaro:765).
 Keane/Coutinho chest marks verified as collar detail, kept full.
