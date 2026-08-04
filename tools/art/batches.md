@@ -117,7 +117,7 @@ node slice-sheet.mjs grid16 sheets/<file>.png \
   --names=beckenbauer,platini,vanbasten,romario,baggio,delpiero,shevchenko,etoo,bergkamp,saka,rodri,musiala,ribery,scholes,puyol,sneijder
 ```
 
-## Batch 4 — sent 2026-08-04 — status: sent
+## Batch 5 — sent 2026-08-04 — status: sent
 
 | #  | Player                 | Dataset id                 | File (`--names`)  | Status |
 |----|------------------------|----------------------------|-------------------|--------|
@@ -145,15 +145,15 @@ node slice-sheet.mjs grid16 sheets/<file>.png \
   --names=eusebio,best,charlton,gerdmuller,gullit,batistuta,cannavaro,torres,owen,villa,xabialonso,schweinsteiger,ozil,vidic,tevez,falcao
 ```
 
-Note: the user numbers sheets by their own count, which can drift from the
-checklist — ALWAYS identify a sheet by the printed player names, never the
-filename, then rename it `batch <n>.png` to the checklist number. Sheets are
+Note: renumbered 2026-08-04 to match the user's count — the Van Persie
+batch is 4, the Eusébio batch is 5 (its prompt was skipped and re-sent).
+ALWAYS identify a sheet by the printed player names, never the filename. Sheets are
 never deleted (folder = permanent archive). Sheets for batches 1-3 were
 deleted before this rule; the user can re-download them from ChatGPT history
 (batch 1's is still wanted for the yamal/vandijk re-cut). Zico wanted but not
 in the dataset — swapped for Bobby Charlton.
 
-## Batch 5 — sent 2026-08-04 — status: sent
+## Batch 4 — sent 2026-08-04 — status: cut, awaiting approval
 
 | #  | Player                  | Dataset id                  | File (`--names`)  | Status |
 |----|-------------------------|-----------------------------|-------------------|--------|
@@ -173,6 +173,9 @@ in the dataset — swapped for Bobby Charlton.
 | 14 | Victor Osimhen          | `Osimhen, Victor`           | `osimhen`         | sent   |
 | 15 | Marcelo                 | `Marcelo`                   | `marcelo`         | sent   |
 | 16 | Philippe Coutinho       | `Coutinho, Philippe`        | `coutinho`        | sent   |
+
+Batch 4 notes: crests cut with --y1 (vanpersie:235, dybala:768, lautaro:765).
+Keane/Coutinho chest marks verified as collar detail, kept full.
 
 Cut command once the sheet is in `tools/art/sheets/`:
 
