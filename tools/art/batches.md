@@ -116,3 +116,35 @@ Cut command once the sheet is in `tools/art/sheets/`:
 node slice-sheet.mjs grid16 sheets/<file>.png \
   --names=beckenbauer,platini,vanbasten,romario,baggio,delpiero,shevchenko,etoo,bergkamp,saka,rodri,musiala,ribery,scholes,puyol,sneijder
 ```
+
+## Batch 4 — sent 2026-08-04 — status: sent
+
+| #  | Player                 | Dataset id                 | File (`--names`)  | Status |
+|----|------------------------|----------------------------|-------------------|--------|
+| 1  | Eusébio                | `Eusébio`                  | `eusebio`         | sent   |
+| 2  | George Best            | `Best, George`             | `best`            | sent   |
+| 3  | Bobby Charlton         | `Charlton, Bobby`          | `charlton`        | sent   |
+| 4  | Gerd Müller            | `Müller, Gerd`             | `gerdmuller`      | sent   |
+| 5  | Ruud Gullit            | `Gullit, Ruud`             | `gullit`          | sent   |
+| 6  | Gabriel Batistuta      | `Batistuta, Gabriel`       | `batistuta`       | sent   |
+| 7  | Fabio Cannavaro        | `Cannavaro, Fabio`         | `cannavaro`       | sent   |
+| 8  | Fernando Torres        | `Torres, Fernando`         | `torres`          | sent   |
+| 9  | Michael Owen           | `Owen, Michael`            | `owen`            | sent   |
+| 10 | David Villa            | `Villa, David`             | `villa`           | sent   |
+| 11 | Xabi Alonso            | `Alonso, Xabi`             | `xabialonso`      | sent   |
+| 12 | Bastian Schweinsteiger | `Schweinsteiger, Bastian`  | `schweinsteiger`  | sent   |
+| 13 | Mesut Özil             | `Özil, Mesut`              | `ozil`            | sent   |
+| 14 | Nemanja Vidić          | `Vidić, Nemanja`           | `vidic`           | sent   |
+| 15 | Carlos Tevez           | `Tevez, Carlos`            | `tevez`           | sent   |
+| 16 | Radamel Falcao         | `Falcao, Radamel`          | `falcao`          | sent   |
+
+Cut command once the sheet is in `tools/art/sheets/`:
+
+```
+node slice-sheet.mjs grid16 sheets/<file>.png \
+  --names=eusebio,best,charlton,gerdmuller,gullit,batistuta,cannavaro,torres,owen,villa,xabialonso,schweinsteiger,ozil,vidic,tevez,falcao
+```
+
+Note: user's sheet filenames run one ahead ("batch 4.png" = batch 3, the
+Beckenbauer sheet). Zico wanted but not in the dataset — swapped for Bobby
+Charlton.
