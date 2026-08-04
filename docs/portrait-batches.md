@@ -123,11 +123,12 @@ matters.
 
 - Check first, as with all data: a player already in `PLAYER_AVATARS` or the
   staging manifest never re-enters a batch.
-- Sheets are disposable working files (`tools/art/sheets/` is gitignored —
-  ~2.5 MB each × ~97 batches would sink the repo). The committed cut PNGs +
-  manifest are canonical. Keep a sheet until the user has APPROVED the batch on the review page
-  AND it is published — never delete it before their review; a too-tight
-  crest cut is only fixable from the sheet.
+- **Sheets are NEVER deleted** (user decision, 2026-08-04). `tools/art/sheets/`
+  is the permanent local archive: on arrival, rename each sheet to
+  `batch <n>.png` matching its checklist number and leave it there forever —
+  a re-cut (too-tight crest trim, style complaint) is only possible from the
+  sheet. The folder is gitignored (local only, ~2.5 MB each), so the repo
+  stays lean; the committed cut PNGs + manifest remain canonical.
 - The bundled 37 regenerate ONLY from their own committed layouts
   (`players` / `classics` in slice-sheet.mjs) — sources for those live in
   `~/Downloads` (`spillere.png`, `00ad07e0-…​.png`).

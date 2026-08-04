@@ -145,9 +145,13 @@ node slice-sheet.mjs grid16 sheets/<file>.png \
   --names=eusebio,best,charlton,gerdmuller,gullit,batistuta,cannavaro,torres,owen,villa,xabialonso,schweinsteiger,ozil,vidic,tevez,falcao
 ```
 
-Note: user's sheet filenames run one ahead ("batch 4.png" = batch 3, the
-Beckenbauer sheet). Zico wanted but not in the dataset — swapped for Bobby
-Charlton.
+Note: the user numbers sheets by their own count, which can drift from the
+checklist — ALWAYS identify a sheet by the printed player names, never the
+filename, then rename it `batch <n>.png` to the checklist number. Sheets are
+never deleted (folder = permanent archive). Sheets for batches 1-3 were
+deleted before this rule; the user can re-download them from ChatGPT history
+(batch 1's is still wanted for the yamal/vandijk re-cut). Zico wanted but not
+in the dataset — swapped for Bobby Charlton.
 
 ## Batch 5 — sent 2026-08-04 — status: sent
 
