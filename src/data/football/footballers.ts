@@ -16830,6 +16830,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Mings, Tyrone',
+    name: 'Tyrone Mings',
+    nationality: ['England'],
+    positions: ['DF'],
+    born: '1993-03-13',
+    clubs: [
+      {clubId: 'ipswich', from: 2012, to: 2015},
+      {clubId: 'bournemouth', from: 2015, to: 2019},
+      {clubId: 'aston-villa', from: 2019},
+    ],
+    honours: [],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Mingueza, Óscar',
     name: 'Óscar Mingueza',
     nationality: ['Spain'],
