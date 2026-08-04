@@ -37,8 +37,8 @@ Reading order left→right, top→bottom = `--names` order for `grid16`.
 | 12 | Harry Kane        | `Kane, Harry`       | `kane`           | added  |
 | 13 | Jude Bellingham   | `Bellingham, Jude`  | `bellingham`     | added  |
 | 14 | Vinícius Júnior   | `Vinícius Júnior`   | `vinicius`       | added  |
-| 15 | Lamine Yamal      | `Yamal, Lamine`     | `yamal`          | added  |
-| 16 | Virgil van Dijk   | `van Dijk, Virgil`  | `vandijk`        | added  |
+| 15 | Lamine Yamal      | `Yamal, Lamine`     | `yamal`          | re-cut |
+| 16 | Virgil van Dijk   | `van Dijk, Virgil`  | `vandijk`        | re-cut |
 
 Cut command once the sheet is in `tools/art/sheets/`:
 
@@ -52,6 +52,10 @@ with `--y1` hard bottoms right above each badge (pele:244, mbappe:245,
 haaland:250, zidane:497, ronaldo-r9:502, beckham:497, henry:747, rooney:731,
 salah:745, yamal:974, vandijk:972). Clean: maradona, ronaldinho, kane,
 bellingham, vinicius.
+
+User review 2026-08-04: yamal + vandijk bottoms cut too tight (crest margin
+too generous) — re-cut pending; user re-downloads the sheet from ChatGPT
+history (original was deleted post-publish, before the approval gate existed).
 
 ## Batch 2 — sent 2026-08-02 — status: sent
 

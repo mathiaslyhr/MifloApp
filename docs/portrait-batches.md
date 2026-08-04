@@ -125,8 +125,9 @@ matters.
   staging manifest never re-enters a batch.
 - Sheets are disposable working files (`tools/art/sheets/` is gitignored —
   ~2.5 MB each × ~97 batches would sink the repo). The committed cut PNGs +
-  manifest are canonical. Keep a sheet only until its batch is verified and
-  published.
+  manifest are canonical. Keep a sheet until the user has APPROVED the batch on the review page
+  AND it is published — never delete it before their review; a too-tight
+  crest cut is only fixable from the sheet.
 - The bundled 37 regenerate ONLY from their own committed layouts
   (`players` / `classics` in slice-sheet.mjs) — sources for those live in
   `~/Downloads` (`spillere.png`, `00ad07e0-…​.png`).
