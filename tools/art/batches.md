@@ -57,30 +57,62 @@ User review 2026-08-04: yamal + vandijk bottoms cut too tight (crest margin
 too generous) — re-cut pending; user re-downloads the sheet from ChatGPT
 history (original was deleted post-publish, before the approval gate existed).
 
-## Batch 2 — sent 2026-08-02 — status: sent
+## Batch 2 — sent 2026-08-02 — status: ADDED (approved + published 2026-08-04)
 
 | #  | Player           | Dataset id            | File (`--names`) | Status |
 |----|------------------|-----------------------|------------------|--------|
-| 1  | Johan Cruyff     | `Cruyff, Johan`       | `cruyff`         | sent   |
-| 2  | Kaká             | `Kaká`                | `kaka`           | sent   |
-| 3  | Didier Drogba    | `Drogba, Didier`      | `drogba`         | sent   |
-| 4  | Arjen Robben     | `Robben, Arjen`       | `robben`         | sent   |
-| 5  | Iker Casillas    | `Casillas, Iker`      | `casillas`       | sent   |
-| 6  | Manuel Neuer     | `Neuer, Manuel`       | `neuer`          | sent   |
-| 7  | Eden Hazard      | `Hazard, Eden`        | `hazard`         | sent   |
-| 8  | Gareth Bale      | `Bale, Gareth`        | `bale`           | sent   |
-| 9  | Son Heung-min    | `Son, Heung-min`      | `son`            | sent   |
-| 10 | Antoine Griezmann| `Griezmann, Antoine`  | `griezmann`      | sent   |
-| 11 | Sergio Agüero    | `Agüero, Sergio`      | `aguero`         | sent   |
-| 12 | Gerard Piqué     | `Piqué, Gerard`       | `pique`          | sent   |
-| 13 | Roberto Carlos   | `Roberto Carlos`      | `robertocarlos`  | sent   |
-| 14 | Rivaldo          | `Rivaldo`             | `rivaldo`        | sent   |
-| 15 | Luís Figo        | `Figo, Luís`          | `figo`           | sent   |
-| 16 | Eric Cantona     | `Cantona, Eric`       | `cantona`        | sent   |
+| 1  | Johan Cruyff     | `Cruyff, Johan`       | `cruyff`         | added  |
+| 2  | Kaká             | `Kaká`                | `kaka`           | added  |
+| 3  | Didier Drogba    | `Drogba, Didier`      | `drogba`         | added  |
+| 4  | Arjen Robben     | `Robben, Arjen`       | `robben`         | added  |
+| 5  | Iker Casillas    | `Casillas, Iker`      | `casillas`       | added  |
+| 6  | Manuel Neuer     | `Neuer, Manuel`       | `neuer`          | added  |
+| 7  | Eden Hazard      | `Hazard, Eden`        | `hazard`         | added  |
+| 8  | Gareth Bale      | `Bale, Gareth`        | `bale`           | added  |
+| 9  | Son Heung-min    | `Son, Heung-min`      | `son`            | added  |
+| 10 | Antoine Griezmann| `Griezmann, Antoine`  | `griezmann`      | added  |
+| 11 | Sergio Agüero    | `Agüero, Sergio`      | `aguero`         | added  |
+| 12 | Gerard Piqué     | `Piqué, Gerard`       | `pique`          | added  |
+| 13 | Roberto Carlos   | `Roberto Carlos`      | `robertocarlos`  | added  |
+| 14 | Rivaldo          | `Rivaldo`             | `rivaldo`        | added  |
+| 15 | Luís Figo        | `Figo, Luís`          | `figo`           | added  |
+| 16 | Eric Cantona     | `Cantona, Eric`       | `cantona`        | added  |
 
 Cut command once the sheet is in `tools/art/sheets/`:
 
 ```
 node slice-sheet.mjs grid16 sheets/<file>.png \
   --names=cruyff,kaka,drogba,robben,casillas,neuer,hazard,bale,son,griezmann,aguero,pique,robertocarlos,rivaldo,figo,cantona
+```
+
+Batch 2 notes: crests cut with --y1 (cruyff:215, casillas:497,
+robertocarlos:961, rivaldo:974) — tight margins per user feedback on batch 1.
+Griezmann/Piqué/Figo/Cantona chest marks verified as collar detail, kept full.
+
+## Batch 3 — sent 2026-08-04 — status: sent
+
+| #  | Player                | Dataset id               | File (`--names`) | Status |
+|----|-----------------------|--------------------------|------------------|--------|
+| 1  | Franz Beckenbauer     | `Beckenbauer, Franz`     | `beckenbauer`    | sent   |
+| 2  | Michel Platini        | `Platini, Michel`        | `platini`        | sent   |
+| 3  | Marco van Basten      | `van Basten, Marco`      | `vanbasten`      | sent   |
+| 4  | Romário               | `Romário`                | `romario`        | sent   |
+| 5  | Roberto Baggio        | `Baggio, Roberto`        | `baggio`         | sent   |
+| 6  | Alessandro Del Piero  | `Del Piero, Alessandro`  | `delpiero`       | sent   |
+| 7  | Andriy Shevchenko     | `Shevchenko, Andriy`     | `shevchenko`     | sent   |
+| 8  | Samuel Eto'o          | `Eto'o, Samuel`          | `etoo`           | sent   |
+| 9  | Dennis Bergkamp       | `Bergkamp, Dennis`       | `bergkamp`       | sent   |
+| 10 | Bukayo Saka           | `Saka, Bukayo`           | `saka`           | sent   |
+| 11 | Rodri                 | `Rodri`                  | `rodri`          | sent   |
+| 12 | Jamal Musiala         | `Musiala, Jamal`         | `musiala`        | sent   |
+| 13 | Franck Ribéry         | `Ribéry, Franck`         | `ribery`         | sent   |
+| 14 | Paul Scholes          | `Scholes, Paul`          | `scholes`        | sent   |
+| 15 | Carles Puyol          | `Puyol, Carles`          | `puyol`          | sent   |
+| 16 | Wesley Sneijder       | `Sneijder, Wesley`       | `sneijder`       | sent   |
+
+Cut command once the sheet is in `tools/art/sheets/`:
+
+```
+node slice-sheet.mjs grid16 sheets/<file>.png \
+  --names=beckenbauer,platini,vanbasten,romario,baggio,delpiero,shevchenko,etoo,bergkamp,saka,rodri,musiala,ribery,scholes,puyol,sneijder
 ```
