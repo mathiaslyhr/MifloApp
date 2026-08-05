@@ -2546,6 +2546,24 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Bayındır, Altay',
+    name: 'Altay Bayındır',
+    nationality: ['Turkey'],
+    positions: ['GK'],
+    born: '1998-04-14',
+    shirtNumbers: [1],
+    clubs: [
+      {clubId: 'fenerbahce', from: 2019, to: 2023},
+      {clubId: 'man-utd', from: 2023},
+      {clubId: 'celta-vigo', from: 2026, loan: true},
+    ],
+    honours: [
+      {type: 'domestic-cup', count: 1, years: [2023], clubId: 'fenerbahce'},
+      {type: 'domestic-cup', count: 1, years: [2024], clubId: 'man-utd'},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Beausejour, Jean',
     name: 'Jean Beausejour',
     nationality: ['Chile'],
@@ -5651,6 +5669,26 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {type: 'league-title', count: 3, years: [2018, 2019, 2020]},
     ],
     tags: ['legends'],
+  },
+  {
+    id: 'Couto, Yan',
+    name: 'Yan Couto',
+    nationality: ['Brazil'],
+    positions: ['DF'],
+    born: '2002-06-03',
+    shirtNumbers: [2],
+    clubs: [
+      {clubId: 'coritiba', from: 2020, to: 2020},
+      {clubId: 'man-city', from: 2020, to: 2025},
+      {clubId: 'girona', from: 2020, to: 2021, loan: true},
+      {clubId: 'braga', from: 2021, to: 2022, loan: true},
+      {clubId: 'girona', from: 2022, to: 2024, loan: true},
+      {clubId: 'dortmund', from: 2024, to: 2025, loan: true},
+      {clubId: 'dortmund', from: 2025},
+      {clubId: 'como', from: 2026, loan: true},
+    ],
+    honours: [],
+    tags: ['current-stars'],
   },
   {
     id: 'Crépeau, Maxime',
@@ -13470,6 +13508,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'eintracht-frankfurt', from: 2018, to: 2022},
       {clubId: 'juventus', from: 2022, to: 2026},
       {clubId: 'fenerbahce', from: 2024, to: 2025, loan: true},
+      {clubId: 'psv', from: 2026},
     ],
     honours: [
       {type: 'europa-league', count: 1, years: [2022]},
@@ -15863,6 +15902,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'river-plate', from: 2024, to: 2025},
       {clubId: 'real-madrid', from: 2025},
+      {clubId: 'fiorentina', from: 2026, loan: true},
     ],
     honours: [],
     tags: ['current-stars', 'wordle'],
@@ -21964,6 +22004,7 @@ export const FOOTBALLERS: readonly Footballer[] = [
       {clubId: 'roma', from: 2015, to: 2016, loan: true},
       {clubId: 'roma', from: 2016, to: 2017},
       {clubId: 'liverpool', from: 2017, to: 2026},
+      {clubId: 'trabzonspor', from: 2026},
     ],
     honours: [
       {type: 'domestic-cup', count: 1, years: [2022], clubId: 'liverpool'},
@@ -23887,6 +23928,25 @@ export const FOOTBALLERS: readonly Footballer[] = [
     tags: ['current-stars'],
   },
   {
+    id: 'Sow, Djibril',
+    name: 'Djibril Sow',
+    nationality: ['Switzerland'],
+    positions: ['MF'],
+    born: '1997-02-06',
+    shirtNumbers: [20],
+    clubs: [
+      {clubId: 'young-boys', from: 2017, to: 2019},
+      {clubId: 'eintracht-frankfurt', from: 2019, to: 2023},
+      {clubId: 'sevilla', from: 2023, to: 2026},
+      {clubId: 'genoa', from: 2026},
+    ],
+    honours: [
+      {type: 'league-title', count: 2, years: [2018, 2019]},
+      {type: 'europa-league', count: 1, years: [2022]},
+    ],
+    tags: ['current-stars'],
+  },
+  {
     id: 'Söyüncü, Çağlar',
     name: 'Çağlar Söyüncü',
     nationality: ['Turkey'],
@@ -25045,7 +25105,8 @@ export const FOOTBALLERS: readonly Footballer[] = [
     clubs: [
       {clubId: 'bologna', from: 2019, to: 2021},
       {clubId: 'arsenal', from: 2021, to: 2025},
-      {clubId: 'ajax', from: 2025},
+      {clubId: 'ajax', from: 2025, to: 2026},
+      {clubId: 'crystal-palace', from: 2026},
     ],
     honours: [
       {type: 'league-title', count: 1, years: [2026]},
@@ -27198,6 +27259,20 @@ export const FOOTBALLERS: readonly Footballer[] = [
     honours: [
       {type: 'league-title', count: 1, years: [2021], clubId: 'lille'},
     ],
+    tags: ['current-stars'],
+  },
+  {
+    id: 'Yirenkyi, Caleb',
+    name: 'Caleb Yirenkyi',
+    nationality: ['Ghana'],
+    positions: ['MF'],
+    born: '2006-01-15',
+    shirtNumbers: [36],
+    clubs: [
+      {clubId: 'nordsjaelland', from: 2024, to: 2026},
+      {clubId: 'coventry', from: 2026},
+    ],
+    honours: [],
     tags: ['current-stars'],
   },
   {

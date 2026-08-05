@@ -230,6 +230,12 @@ export const CLUBS: readonly Club[] = [
   {id: 'huddersfield', name: 'Huddersfield Town', country: 'England', league: 'championship'},
   {id: 'basaksehir', name: 'Başakşehir', country: 'Turkey', league: 'super-lig'},
   {id: 'excelsior', name: 'Excelsior', country: 'Netherlands', league: 'eredivisie'},
+
+  // --- Transfers 2026-08-05 (crests ship OTA; slugs probed against the logo bucket) ---
+  {id: 'coventry', name: 'Coventry City', country: 'England', league: 'premier-league'},
+  {id: 'nordsjaelland', name: 'FC Nordsjælland', country: 'Denmark', league: 'danish-superliga'},
+  {id: 'young-boys', name: 'Young Boys', country: 'Switzerland', league: 'swiss-super-league'},
+  {id: 'coritiba', name: 'Coritiba', country: 'Brazil', league: 'brasileirao'},
 ];
 
 const clubsById = derivedFromData(

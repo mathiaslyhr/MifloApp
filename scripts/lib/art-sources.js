@@ -44,6 +44,8 @@ const COUNTRY_ISO = {
 // clubId → footylogos slug (verified via probe; extend per dataset batch).
 const CLUB_SLUG = {
   agf: 'agf-aarhus', viborg: 'viborg-ff', cadiz: 'cadiz-cf',
+  coventry: 'coventry-city', nordsjaelland: 'fc-nordsjaelland',
+  'young-boys': 'bsc-young-boys', coritiba: 'coritiba',
   // slugify() turns "D.C. United" into "d-c-united", which 404s.
   'dc-united': 'dc-united',
   'man-city': 'manchester-city', 'man-utd': 'manchester-united',
