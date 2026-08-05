@@ -5,7 +5,8 @@
  *
  * Rules: players alternate turns on a per-player chess clock — your clock ticks
  * only during your turn (thinking + searching). Running it to 0 loses the match.
- * 5 boards, three-in-a-row = a goal, draws stand, no tie mechanic. The starter
+ * Three-in-a-row = a goal and the match (first to 1 win); a dead board loads
+ * the next one, and 5 winless boards end 0-0. No tie mechanic. The starter
  * is server-random on board 1 and alternates every board.
  */
 import {getById, matches, type Criterion} from '../../data/football';

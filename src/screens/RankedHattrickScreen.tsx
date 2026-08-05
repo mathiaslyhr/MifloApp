@@ -190,7 +190,9 @@ export function RankedHattrickScreen({route, navigation}: Props) {
       return;
     }
     advanceRef.current = key;
-    if (state.boardNumber >= MATCH_BOARDS) {
+    // First to 1: a won board ends the match on the spot. Only a dead board
+    // rolls on, and MATCH_BOARDS winless boards end it as a 0-0 draw.
+    if (state.boardWinner !== 'dead' || state.boardNumber >= MATCH_BOARDS) {
       rhAdvance(roomId, decideMatch(state)).catch(() => {});
     } else {
       rhAdvance(
@@ -467,7 +469,7 @@ export function RankedHattrickScreen({route, navigation}: Props) {
                 />
               </View>
               <Text variant="caption" color="muted" align="center" style={styles.boardCaption}>
-                {t('rankedHattrick.board', {n: state.boardNumber, of: MATCH_BOARDS})}
+                {t('rankedHattrick.board', {n: state.boardNumber})}
               </Text>
             </View>
 

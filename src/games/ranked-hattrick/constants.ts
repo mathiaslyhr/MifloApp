@@ -15,7 +15,10 @@ export const MATCH_CLOCK_MS = 120_000;
  */
 export const TURN_GRACE_MS = 15_000;
 
-/** A match is a fixed number of boards (not first-to-N). */
+/**
+ * First to 1: the first won board takes the match. Dead boards roll on, and
+ * this many winless boards end the match as a 0-0 draw.
+ */
 export const MATCH_BOARDS = 5;
 
 /**

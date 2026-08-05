@@ -206,7 +206,7 @@
     "helpCompetitive": "Sådan virker Konkurrence",
     "help": {
       "competitiveTitle": "Sådan virker Konkurrence",
-      "competitive1": "Konkurrence er Hattrick, én mod én. En kamp går over fem baner, og den, der vinder flest, tager den.",
+      "competitive1": "Konkurrence er Hattrick, én mod én. Den første, der vinder en bane, tager kampen.",
       "competitive2": "I skiftes til at spille, og hver tur har to minutter på uret.",
       "competitive3": "Vinder du, stiger din værdi. Taber du, falder den. Værdien er det eneste, du tager med dig, fra €1M op til €250M."
     },
@@ -252,7 +252,7 @@
       "managerSpellCurrent": "{{name}} har været træner for {{club}} siden {{from}}."
     },
     "you": "Dig",
-    "board": "Bane {{n}} af {{of}}",
+    "board": "Bane {{n}}",
     "yourTurn": "Din tur",
     "opponentTurn": "Modstanderens tur",
     "starts": "{{name}} starter",

@@ -206,7 +206,7 @@
     "helpCompetitive": "How Competitive works",
     "help": {
       "competitiveTitle": "How Competitive works",
-      "competitive1": "Competitive is Hattrick, one on one. A match runs over five boards and whoever wins the most takes it.",
+      "competitive1": "Competitive is Hattrick, one on one. First to win a board takes the match.",
       "competitive2": "You take turns, and each turn has two minutes on the clock.",
       "competitive3": "Win and your value climbs, lose and it slips. Value is the only thing you carry, from €1M up to €250M."
     },
@@ -252,7 +252,7 @@
       "managerSpellCurrent": "{{name}} has managed {{club}} since {{from}}."
     },
     "you": "You",
-    "board": "Board {{n}} of {{of}}",
+    "board": "Board {{n}}",
     "yourTurn": "Your turn",
     "opponentTurn": "Opponent's turn",
     "starts": "{{name}} starts",
