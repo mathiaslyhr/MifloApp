@@ -15,11 +15,6 @@ export const MATCH_CLOCK_MS = 120_000;
  */
 export const TURN_GRACE_MS = 15_000;
 
-/**
- * First to 1: the first won board takes the match. Dead boards roll on, and
- * this many winless boards end the match as a 0-0 draw.
- */
-export const MATCH_BOARDS = 5;
 
 /**
  * A board nobody can crack is a DEAD BOARD: after this many consecutive turns

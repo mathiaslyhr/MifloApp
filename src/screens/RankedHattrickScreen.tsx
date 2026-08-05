@@ -63,7 +63,6 @@ import {
 import {
   ABANDON_MS,
   HEARTBEAT_MS,
-  MATCH_BOARDS,
   MAX_BLURS,
   TURN_GRACE_MS,
 } from '../games/ranked-hattrick/constants';
@@ -190,9 +189,10 @@ export function RankedHattrickScreen({route, navigation}: Props) {
       return;
     }
     advanceRef.current = key;
-    // First to 1: a won board ends the match on the spot. Only a dead board
-    // rolls on, and MATCH_BOARDS winless boards end it as a 0-0 draw.
-    if (state.boardWinner !== 'dead' || state.boardNumber >= MATCH_BOARDS) {
+    // First to 1: a won board ends the match on the spot. A dead board just
+    // loads the next one — play runs until somebody wins (the chess clock and
+    // forfeit paths are what bound a match, not a board count).
+    if (state.boardWinner !== 'dead') {
       rhAdvance(roomId, decideMatch(state)).catch(() => {});
     } else {
       rhAdvance(
