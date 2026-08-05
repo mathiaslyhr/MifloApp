@@ -228,4 +228,5 @@ export const TEAMSHEET_SCHEDULE: Record<string, string> = {
   '2027-01-29': 'argentina-1990-world-cup-final',
   '2027-01-30': 'atletico-madrid-2016-ucl-final',
   '2027-01-31': 'juventus-2015-ucl-final',
+  '2027-02-01': 'ac-milan-1995-ucl-final',
 };
