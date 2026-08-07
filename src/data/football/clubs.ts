@@ -18,13 +18,16 @@ export const CLUBS: readonly Club[] = [
   {id: 'aston-villa', name: 'Aston Villa', country: 'England', league: 'premier-league'},
   {id: 'everton', name: 'Everton', country: 'England', league: 'premier-league'},
   {id: 'newcastle', name: 'Newcastle United', country: 'England', league: 'premier-league'},
-  {id: 'west-ham', name: 'West Ham United', country: 'England', league: 'premier-league'},
   {id: 'leicester', name: 'Leicester City', country: 'England', league: 'premier-league'},
   {id: 'leeds', name: 'Leeds United', country: 'England', league: 'premier-league'},
-  {id: 'wolves', name: 'Wolverhampton Wanderers', country: 'England', league: 'premier-league'},
   {id: 'southampton', name: 'Southampton', country: 'England', league: 'premier-league'},
   {id: 'qpr', name: 'Queens Park Rangers', country: 'England', league: 'premier-league'},
   {id: 'fulham', name: 'Fulham', country: 'England', league: 'premier-league'},
+
+  // Championship — relegated from the Premier League in 2025-26
+  {id: 'west-ham', name: 'West Ham United', country: 'England', league: 'championship'},
+  {id: 'wolves', name: 'Wolverhampton Wanderers', country: 'England', league: 'championship'},
+  {id: 'burnley', name: 'Burnley', country: 'England', league: 'championship'},
 
   // La Liga
   {id: 'real-madrid', name: 'Real Madrid', country: 'Spain', league: 'la-liga'},
@@ -99,7 +102,6 @@ export const CLUBS: readonly Club[] = [
   {id: 'nottingham-forest', name: 'Nottingham Forest', country: 'England', league: 'premier-league'},
   {id: 'crystal-palace', name: 'Crystal Palace', country: 'England', league: 'premier-league'},
   {id: 'bournemouth', name: 'AFC Bournemouth', country: 'England', league: 'premier-league'},
-  {id: 'burnley', name: 'Burnley', country: 'England', league: 'premier-league'},
   {id: 'brentford', name: 'Brentford', country: 'England', league: 'premier-league'},
   {id: 'werder-bremen', name: 'Werder Bremen', country: 'Germany', league: 'bundesliga'},
   {id: 'psv', name: 'PSV Eindhoven', country: 'Netherlands', league: 'eredivisie'},
