@@ -229,4 +229,6 @@ export const TENBALL_SCHEDULE: Record<string, string> = {
   '2027-01-30': 'pl-most-appearances',
   '2027-01-31': 'dk-most-caps',
   '2027-02-01': 'last-10-serie-a-champions',
+  '2027-02-02': 'liverpool-appearances',
+  '2027-02-03': 'last-10-pfa-poty',
 };
